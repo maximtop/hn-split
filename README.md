@@ -9,6 +9,8 @@ The project is in product discovery. Hacker News is the only discussion source i
 ## Product documentation
 
 - [MVP product brief](docs/product_brief.md)
+- [HNewhere reference analysis](docs/hnewhere_reference.md)
+- [ADR-0001: HNewhere reference decisions](docs/adr/0001_hnewhere_reference_decisions.md)
 
 ## Product principles
 
