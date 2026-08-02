@@ -27,6 +27,7 @@ export type AutomaticAvailabilitySettingOperation = (enabled: boolean) => Promis
 
 /**
  * Creates a queue that serializes setting changes in request order.
+ * @param apply - The setting operation to serialize.
  */
 export function createAutomaticAvailabilitySettingQueue(
     apply: AutomaticAvailabilitySettingOperation,
@@ -44,6 +45,8 @@ export function createAutomaticAvailabilitySettingQueue(
 
 /**
  * Applies one setting transaction and independently restores state after failure.
+ * @param enabled - Whether automatic availability should be enabled.
+ * @param dependencies - The storage and effect operations used by the transaction.
  */
 export async function applyAutomaticAvailabilitySetting(
     enabled: boolean,

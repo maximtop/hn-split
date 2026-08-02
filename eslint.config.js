@@ -55,6 +55,8 @@ export default tseslint.config(
                     'TSPropertySignature[parent.type="TSInterfaceBody"]',
                 ],
             }],
+            'jsdoc/require-param': 'error',
+            'jsdoc/require-param-description': 'error',
         },
     },
 );

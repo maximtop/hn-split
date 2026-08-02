@@ -25,6 +25,7 @@ export type AvailabilityUpdateResult = typeof AVAILABILITY_UPDATE_RESULT[keyof t
 
 /**
  * Converts an invalid or rejected background response into a useful error.
+ * @param response - The untrusted background response to interpret.
  */
 function responseError(response: unknown): Error {
     const message = readBackgroundError(response);
@@ -33,6 +34,8 @@ function responseError(response: unknown): Error {
 
 /**
  * Requests one background-owned automatic-availability setting transaction.
+ * @param enabled - Whether automatic availability should be enabled.
+ * @param dependencies - The background and storage operations used by the request.
  */
 export async function updateAutomaticAvailability(
     enabled: boolean,

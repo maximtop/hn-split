@@ -24,6 +24,7 @@ export interface AvailabilityBadge {
 
 /**
  * Maps a validated lookup result to localized browser-action badge state.
+ * @param result - The validated Hacker News lookup result to represent.
  */
 export function badgeForLookupResult(result: HnLookupResult): AvailabilityBadge {
     if (result.status !== 'found') {

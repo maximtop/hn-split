@@ -129,6 +129,7 @@ const backgroundRequestSchema = v.variant('type', [
 
 /**
  * Determines whether a runtime value confirms an availability setting update.
+ * @param value - The unknown runtime value to validate.
  */
 export function isAvailabilitySettingResponse(
     value: unknown,
@@ -138,6 +139,7 @@ export function isAvailabilitySettingResponse(
 
 /**
  * Reads a validated background error message from an unknown response.
+ * @param value - The unknown background response to inspect.
  */
 export function readBackgroundError(value: unknown): string | null {
     const result = v.safeParse(errorResponseSchema, value);
@@ -146,6 +148,7 @@ export function readBackgroundError(value: unknown): string | null {
 
 /**
  * Determines whether a runtime value is a lookup response or background error.
+ * @param value - The unknown runtime value to validate.
  */
 export function isLookupResponse(
     value: unknown,
@@ -155,6 +158,7 @@ export function isLookupResponse(
 
 /**
  * Determines whether a runtime value is an opening response or background error.
+ * @param value - The unknown runtime value to validate.
  */
 export function isOpenDiscussionResponse(
     value: unknown,
@@ -164,6 +168,7 @@ export function isOpenDiscussionResponse(
 
 /**
  * Determines whether an unknown runtime message is an accepted background request.
+ * @param value - The unknown runtime message to validate.
  */
 export function isBackgroundRequest(value: unknown): value is BackgroundRequest {
     return v.safeParse(backgroundRequestSchema, value).success;

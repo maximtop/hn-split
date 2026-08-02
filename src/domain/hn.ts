@@ -107,6 +107,7 @@ type AlgoliaHit = v.InferOutput<typeof algoliaHitSchema>;
 
 /**
  * Determines whether an unknown value is a validated discussion.
+ * @param value - The unknown runtime value to validate.
  */
 export function isHnDiscussion(value: unknown): value is HnDiscussion {
     return v.safeParse(hnDiscussionSchema, value).success;
@@ -114,6 +115,7 @@ export function isHnDiscussion(value: unknown): value is HnDiscussion {
 
 /**
  * Determines whether an unknown value is a validated lookup result.
+ * @param value - The unknown runtime value to validate.
  */
 export function isHnLookupResult(value: unknown): value is HnLookupResult {
     return v.safeParse(hnLookupResultSchema, value).success;
@@ -121,6 +123,7 @@ export function isHnLookupResult(value: unknown): value is HnLookupResult {
 
 /**
  * Parses one Algolia hit without trusting the remote response shape.
+ * @param value - The unknown Algolia hit value to validate.
  */
 function parseHit(value: unknown): AlgoliaHit | null {
     const result = v.safeParse(algoliaHitSchema, value);
@@ -129,6 +132,8 @@ function parseHit(value: unknown): AlgoliaHit | null {
 
 /**
  * Orders discussions by engagement, recency, and stable item identifier.
+ * @param left - The first discussion to compare.
+ * @param right - The second discussion to compare.
  */
 function compareDiscussions(left: HnDiscussion, right: HnDiscussion): number {
     return right.comments - left.comments
@@ -139,6 +144,7 @@ function compareDiscussions(left: HnDiscussion, right: HnDiscussion): number {
 
 /**
  * Builds a privacy-sanitized exact-URL Algolia search request.
+ * @param candidate - The eligible article candidate to query.
  */
 function buildSearchUrl(candidate: ArticleCandidate): string {
     const sanitizedCandidateUrl = sanitizeArticleUrl(candidate.url);
@@ -155,6 +161,9 @@ function buildSearchUrl(candidate: ArticleCandidate): string {
 
 /**
  * Fetches and validates all Algolia hits for one article candidate.
+ * @param candidate - The eligible article candidate to query.
+ * @param fetchFn - The fetch implementation used for Algolia requests.
+ * @param signal - The optional abort signal for the request.
  */
 async function fetchHits(
     candidate: ArticleCandidate,
@@ -184,6 +193,7 @@ async function fetchHits(
 
 /**
  * Converts a validated Algolia hit into extension discussion data.
+ * @param hit - The validated Algolia hit to convert.
  */
 function toDiscussion(hit: AlgoliaHit): HnDiscussion {
     return {
@@ -198,6 +208,8 @@ function toDiscussion(hit: AlgoliaHit): HnDiscussion {
 
 /**
  * Looks up and ranks Hacker News discussions for eligible article candidates.
+ * @param candidates - The eligible article candidates to query in preference order.
+ * @param fetchFn - The fetch implementation used for Algolia requests.
  */
 export async function lookupHnDiscussions(
     candidates: ArticleCandidate[],
@@ -262,6 +274,7 @@ export async function lookupHnDiscussions(
 
 /**
  * Determines whether a string is a positive safe Hacker News item identifier.
+ * @param itemId - The candidate Hacker News item identifier.
  */
 export function isValidItemId(itemId: string): boolean {
     return v.safeParse(positiveItemIdSchema, itemId).success;
@@ -269,6 +282,7 @@ export function isValidItemId(itemId: string): boolean {
 
 /**
  * Builds the canonical Hacker News discussion URL for a validated item.
+ * @param itemId - The validated Hacker News item identifier.
  */
 export function discussionUrl(itemId: string): string {
     if (!isValidItemId(itemId)) {

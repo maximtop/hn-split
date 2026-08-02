@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Node.js 22 or newer
+- Node.js 24 or newer
 - pnpm 11.18.0 or newer (`npm install --global pnpm@11.18.0`)
 - Chrome 140 or newer for documented `Tab.splitViewId` detection
 

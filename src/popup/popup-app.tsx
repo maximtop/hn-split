@@ -80,6 +80,7 @@ const theme = createTheme({
 
 /**
  * Sends a typed request to the extension background worker.
+ * @param request - The typed background request to send.
  */
 async function sendMessage(request: LookupRequest | OpenDiscussionRequest): Promise<unknown> {
     return chrome.runtime.sendMessage(request);
@@ -87,13 +88,15 @@ async function sendMessage(request: LookupRequest | OpenDiscussionRequest): Prom
 
 /**
  * Renders one primary or alternative Hacker News discussion action.
+ * @param props - The discussion and interaction state to render.
  */
-function DiscussionButton({
-    discussion,
-    primary,
-    opening,
-    onOpen,
-}: DiscussionButtonProps): React.JSX.Element {
+function DiscussionButton(props: DiscussionButtonProps): React.JSX.Element {
+    const {
+        discussion,
+        primary,
+        opening,
+        onOpen,
+    } = props;
     return (
         <UnstyledButton
             className="discussion"

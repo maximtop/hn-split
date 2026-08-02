@@ -41,6 +41,7 @@ export interface CacheStorage {
 
 /**
  * Builds a versioned cache key from normalized article identities.
+ * @param candidates - The normalized article candidates used for the cache key.
  */
 function cacheKey(candidates: ArticleCandidate[]): string {
     return `${CACHE_KEY_PREFIX}${JSON.stringify(candidates.map(({ identity }) => identity))}`;
@@ -62,6 +63,7 @@ export interface CacheCollectionStorage {
 
 /**
  * Removes only versioned HN lookup entries from session storage.
+ * @param storage - The session-storage adapter that owns lookup cache records.
  */
 export async function clearLookupCacheEntries(storage: CacheCollectionStorage): Promise<void> {
     const entries = await storage.getAll();
@@ -73,6 +75,7 @@ export async function clearLookupCacheEntries(storage: CacheCollectionStorage): 
 
 /**
  * Determines whether an unknown value is a non-null object record.
+ * @param value - The unknown cache value to inspect.
  */
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null;
@@ -80,6 +83,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * Determines whether an unknown value is a valid lookup-cache record.
+ * @param value - The unknown cache value to validate.
  */
 function isCacheRecord(value: unknown): value is CacheRecord {
     if (!isRecord(value)) {
@@ -93,6 +97,10 @@ function isCacheRecord(value: unknown): value is CacheRecord {
 
 /**
  * Returns a fresh cached lookup or performs and conditionally caches a new lookup.
+ * @param candidates - The normalized article candidates used for the lookup.
+ * @param storage - The session-storage adapter that owns lookup cache records.
+ * @param lookup - The lookup operation to run after a cache miss.
+ * @param now - The current timestamp used to evaluate and store expiry.
  */
 export async function lookupWithCache(
     candidates: ArticleCandidate[],

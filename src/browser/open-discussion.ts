@@ -82,6 +82,10 @@ const pendingOpens = new Map<number, Promise<void>>();
 
 /**
  * Performs one serialized discussion open or reuse operation.
+ * @param articleTabId - The source article tab identifier.
+ * @param itemId - The Hacker News discussion item identifier.
+ * @param tabs - The Chrome tabs adapter used to query, update, or create tabs.
+ * @param store - The session store that tracks article-to-discussion associations.
  */
 async function performOpenDiscussion(
     articleTabId: number,
@@ -126,6 +130,10 @@ async function performOpenDiscussion(
 
 /**
  * Opens or reuses one discussion tab while serializing requests per article tab.
+ * @param articleTabId - The source article tab identifier.
+ * @param itemId - The Hacker News discussion item identifier.
+ * @param tabs - The Chrome tabs adapter used to query, update, or create tabs.
+ * @param store - The session store that tracks article-to-discussion associations.
  */
 export async function openDiscussion(
     articleTabId: number,

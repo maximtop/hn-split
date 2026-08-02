@@ -32,6 +32,7 @@ export interface ArticleCandidate {
 
 /**
  * Determines whether an IPv4 literal belongs to non-public or reserved space.
+ * @param hostname - The IPv4 hostname or address literal to inspect.
  */
 function isNonPublicIpv4(hostname: string): boolean {
     const octets = hostname.split('.').map(Number);
@@ -61,6 +62,7 @@ function isNonPublicIpv4(hostname: string): boolean {
 
 /**
  * Parses a bracketed IPv6 hostname into eight numeric words.
+ * @param hostname - The bracketed IPv6 hostname to parse.
  */
 function parseIpv6(hostname: string): number[] | null {
     if (!hostname.startsWith('[') || !hostname.endsWith(']')) {
@@ -91,6 +93,8 @@ function parseIpv6(hostname: string): number[] | null {
 
 /**
  * Converts two IPv6 words into their embedded IPv4 dotted representation.
+ * @param high - The high-order 16-bit IPv6 word.
+ * @param low - The low-order 16-bit IPv6 word.
  */
 function embeddedIpv4(high: number, low: number): string {
     return `${high >> 8}.${high & 0xff}.${low >> 8}.${low & 0xff}`;
@@ -98,6 +102,7 @@ function embeddedIpv4(high: number, low: number): string {
 
 /**
  * Extracts an IPv4-mapped address from IPv6 words when present.
+ * @param words - The eight parsed 16-bit IPv6 words.
  */
 function mappedIpv4(words: number[]): string | null {
     if (!words.slice(0, 5).every((word) => word === 0) || words[5] !== 0xffff) {
@@ -113,6 +118,7 @@ function mappedIpv4(words: number[]): string | null {
 
 /**
  * Extracts the embedded IPv4 address from a 6to4 address when present.
+ * @param words - The eight parsed 16-bit IPv6 words.
  */
 function sixToFourIpv4(words: number[]): string | null {
     const high = words[1];
@@ -125,6 +131,7 @@ function sixToFourIpv4(words: number[]): string | null {
 
 /**
  * Determines whether an IPv6 literal is globally routable public space.
+ * @param hostname - The bracketed IPv6 hostname to inspect.
  */
 function isPublicIpv6(hostname: string): boolean {
     const words = parseIpv6(hostname);
@@ -158,6 +165,7 @@ function isPublicIpv6(hostname: string): boolean {
 
 /**
  * Determines whether a hostname is local, reserved, or lacks an ICANN suffix.
+ * @param hostname - The normalized hostname to inspect.
  */
 function isNonPublicHostname(hostname: string): boolean {
     const normalized = hostname.toLowerCase().replace(/\.+$/, '');
@@ -182,6 +190,8 @@ function isNonPublicHostname(hostname: string): boolean {
 
 /**
  * Parses only credential-free public HTTP or HTTPS URLs.
+ * @param value - The untrusted URL value to parse.
+ * @param base - The optional public base URL for relative resolution.
  */
 function parseEligibleUrl(value: string, base?: string): URL | null {
     try {
@@ -200,6 +210,7 @@ function parseEligibleUrl(value: string, base?: string): URL | null {
 
 /**
  * Removes fragments and recognized tracking parameters from an eligible URL.
+ * @param value - The eligible URL to sanitize.
  */
 function sanitizeParsedUrl(value: URL): URL {
     const url = new URL(value.href);
@@ -216,6 +227,8 @@ function sanitizeParsedUrl(value: URL): URL {
 
 /**
  * Produces the sanitized public URL allowed to leave the extension.
+ * @param value - The untrusted URL value to sanitize.
+ * @param base - The optional public base URL for relative resolution.
  */
 export function sanitizeArticleUrl(value: string, base?: string): string | null {
     const url = parseEligibleUrl(value, base);
@@ -224,6 +237,7 @@ export function sanitizeArticleUrl(value: string, base?: string): string | null 
 
 /**
  * Produces a stable exact-match identity for an eligible article URL.
+ * @param value - The eligible article URL to normalize.
  */
 export function normalizeArticleUrl(value: string): string | null {
     const parsed = parseEligibleUrl(value);
@@ -243,6 +257,8 @@ export function normalizeArticleUrl(value: string): string | null {
 
 /**
  * Builds deduplicated canonical and page candidates in preference order.
+ * @param pageUrl - The active page URL.
+ * @param canonicalHref - The document canonical URL when one is available.
  */
 export function buildArticleCandidates(pageUrl: string, canonicalHref?: string | null): ArticleCandidate[] {
     const rawCandidates: Array<{ source: CandidateSource; url: URL | null }> = [];

@@ -75,6 +75,8 @@ const cacheCollectionStorage = {
 
 /**
  * Resolves one page context through the session-only lookup cache.
+ * @param pageUrl - The active page URL to resolve.
+ * @param canonicalHref - The page canonical URL when one is available.
  */
 async function lookupArticle(pageUrl: string, canonicalHref: string | null) {
     const candidates = buildArticleCandidates(pageUrl, canonicalHref);
@@ -87,6 +89,8 @@ async function lookupArticle(pageUrl: string, canonicalHref: string | null) {
 
 /**
  * Applies localized browser-action badge state to one live tab.
+ * @param tabId - The Chrome tab that receives the badge state.
+ * @param badge - The localized badge state to apply.
  */
 async function applyAvailabilityBadge(tabId: number, badge: AvailabilityBadge): Promise<void> {
     try {
@@ -154,6 +158,7 @@ const applyAutomaticAvailabilityChange = createAutomaticAvailabilitySettingQueue
 
 /**
  * Routes one validated runtime request to its background operation.
+ * @param request - The validated background request to process.
  */
 async function handleRequest(request: BackgroundRequest): Promise<BackgroundResponse> {
     try {

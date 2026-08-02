@@ -42,6 +42,7 @@ export interface AutomaticAvailabilityUpdater {
 
 /**
  * Creates a race-safe updater that serializes badge writes per tab.
+ * @param dependencies - The browser, lookup, and badge operations used by the updater.
  */
 export function createAutomaticAvailabilityUpdater(
     dependencies: AutomaticAvailabilityDependencies,

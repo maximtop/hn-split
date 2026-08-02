@@ -9,6 +9,7 @@ const BASE_LOCALE: Locale = 'en';
 
 /**
  * Returns the bundled English message used when the Chrome i18n API is unavailable.
+ * @param key - The locale catalog key to resolve.
  */
 function getBaseMessage(key: string): string {
     const entry = baseMessages[key as MessageKey];
@@ -45,6 +46,8 @@ const translator = translate.createTranslator(i18n);
 
 /**
  * Translates a user-facing message with optional placeholder values.
+ * @param key - The locale catalog key to translate.
+ * @param values - The optional placeholder values for the translated message.
  */
 export function t(key: MessageKey, values: Record<string, unknown> = {}): string {
     return translator.getMessage(key, values);
