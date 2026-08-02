@@ -1,90 +1,107 @@
+import * as v from 'valibot';
+
 import { normalizeArticleUrl, sanitizeArticleUrl } from './url';
 import type { ArticleCandidate } from './url';
 
 const ALGOLIA_ENDPOINT = 'https://hn.algolia.com/api/v1/search';
 const LOOKUP_TIMEOUT_MS = 5_000;
+const DEFAULT_DISCUSSION_TITLE = 'Hacker News discussion';
 
+const positiveItemIdSchema = v.pipe(
+    v.string(),
+    v.regex(/^\d+$/),
+    v.check((itemId) => {
+        const value = Number(itemId);
+        return Number.isSafeInteger(value) && value > 0;
+    }),
+);
+
+const nonNegativeIntegerSchema = v.pipe(
+    v.number(),
+    v.safeInteger(),
+    v.minValue(0),
+);
+
+/** Describes one validated Hacker News discussion. */
 export interface HnDiscussion {
+    /** Contains the positive Hacker News item identifier. */
     id: string;
+    /** Contains the discussion title. */
     title: string;
+    /** Contains the article URL returned by Algolia. */
     articleUrl: string;
+    /** Contains the non-negative comment count. */
     comments: number;
+    /** Contains the non-negative point count. */
     points: number;
+    /** Contains the non-negative Unix creation timestamp. */
     createdAt: number;
 }
 
+/** Represents every outcome of a Hacker News discussion lookup. */
 export type HnLookupResult =
     | { status: 'found'; primary: HnDiscussion; alternatives: HnDiscussion[] }
     | { status: 'not_found' }
     | { status: 'restricted' }
     | { status: 'error'; reason: 'invalid_response' | 'lookup_failed' };
 
-interface AlgoliaHit {
-    objectID: string;
-    url: string;
-    title?: string;
-    num_comments?: number;
-    points?: number;
-    created_at_i?: number;
-}
+/** Validates discussion data crossing extension boundaries or cache storage. */
+export const hnDiscussionSchema = v.object({
+    id: positiveItemIdSchema,
+    title: v.string(),
+    articleUrl: v.string(),
+    comments: nonNegativeIntegerSchema,
+    points: nonNegativeIntegerSchema,
+    createdAt: nonNegativeIntegerSchema,
+});
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-    return typeof value === 'object' && value !== null;
-}
+/** Validates every supported Hacker News lookup result variant. */
+export const hnLookupResultSchema = v.variant('status', [
+    v.object({
+        status: v.literal('found'),
+        primary: hnDiscussionSchema,
+        alternatives: v.array(hnDiscussionSchema),
+    }),
+    v.object({ status: v.literal('not_found') }),
+    v.object({ status: v.literal('restricted') }),
+    v.object({
+        status: v.literal('error'),
+        reason: v.union([v.literal('invalid_response'), v.literal('lookup_failed')]),
+    }),
+]);
 
-function isNonNegativeInteger(value: unknown): value is number {
-    return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
-}
+const algoliaHitSchema = v.object({
+    objectID: positiveItemIdSchema,
+    url: v.string(),
+    title: v.optional(v.string()),
+    num_comments: v.optional(nonNegativeIntegerSchema),
+    points: v.optional(nonNegativeIntegerSchema),
+    created_at_i: v.optional(nonNegativeIntegerSchema),
+});
 
+const algoliaResponseSchema = v.object({
+    hits: v.array(algoliaHitSchema),
+});
+
+type AlgoliaHit = v.InferOutput<typeof algoliaHitSchema>;
+
+/** Determines whether an unknown value is a validated discussion. */
 export function isHnDiscussion(value: unknown): value is HnDiscussion {
-    return isRecord(value)
-        && typeof value.id === 'string'
-        && isValidItemId(value.id)
-        && typeof value.title === 'string'
-        && typeof value.articleUrl === 'string'
-        && isNonNegativeInteger(value.comments)
-        && isNonNegativeInteger(value.points)
-        && isNonNegativeInteger(value.createdAt);
+    return v.safeParse(hnDiscussionSchema, value).success;
 }
 
+/** Determines whether an unknown value is a validated lookup result. */
 export function isHnLookupResult(value: unknown): value is HnLookupResult {
-    if (!isRecord(value)) {
-        return false;
-    }
-    if (value.status === 'not_found' || value.status === 'restricted') {
-        return true;
-    }
-    if (value.status === 'error') {
-        return value.reason === 'invalid_response' || value.reason === 'lookup_failed';
-    }
-    return value.status === 'found'
-        && isHnDiscussion(value.primary)
-        && Array.isArray(value.alternatives)
-        && value.alternatives.every(isHnDiscussion);
+    return v.safeParse(hnLookupResultSchema, value).success;
 }
 
+/** Parses one Algolia hit without trusting the remote response shape. */
 function parseHit(value: unknown): AlgoliaHit | null {
-    if (!isRecord(value)
-        || typeof value.objectID !== 'string'
-        || !isValidItemId(value.objectID)
-        || typeof value.url !== 'string'
-        || (value.title !== undefined && typeof value.title !== 'string')
-        || (value.num_comments !== undefined && !isNonNegativeInteger(value.num_comments))
-        || (value.points !== undefined && !isNonNegativeInteger(value.points))
-        || (value.created_at_i !== undefined && !isNonNegativeInteger(value.created_at_i))) {
-        return null;
-    }
-
-    return {
-        objectID: value.objectID,
-        url: value.url,
-        ...(value.title === undefined ? {} : { title: value.title }),
-        ...(value.num_comments === undefined ? {} : { num_comments: value.num_comments }),
-        ...(value.points === undefined ? {} : { points: value.points }),
-        ...(value.created_at_i === undefined ? {} : { created_at_i: value.created_at_i }),
-    };
+    const result = v.safeParse(algoliaHitSchema, value);
+    return result.success ? result.output : null;
 }
 
+/** Orders discussions by engagement, recency, and stable item identifier. */
 function compareDiscussions(left: HnDiscussion, right: HnDiscussion): number {
     return right.comments - left.comments
         || right.points - left.points
@@ -92,6 +109,7 @@ function compareDiscussions(left: HnDiscussion, right: HnDiscussion): number {
         || Number(right.id) - Number(left.id);
 }
 
+/** Builds a privacy-sanitized exact-URL Algolia search request. */
 function buildSearchUrl(candidate: ArticleCandidate): string {
     const sanitizedCandidateUrl = sanitizeArticleUrl(candidate.url);
     if (sanitizedCandidateUrl === null) {
@@ -105,6 +123,7 @@ function buildSearchUrl(candidate: ArticleCandidate): string {
     return url.href;
 }
 
+/** Fetches and validates all Algolia hits for one article candidate. */
 async function fetchHits(
     candidate: ArticleCandidate,
     fetchFn: typeof fetch,
@@ -116,11 +135,12 @@ async function fetchHits(
     }
 
     const payload: unknown = await response.json();
-    if (!isRecord(payload) || !Array.isArray(payload.hits)) {
+    const parsed = v.safeParse(algoliaResponseSchema, payload);
+    if (!parsed.success) {
         throw new TypeError('Invalid Algolia response');
     }
     const hits: AlgoliaHit[] = [];
-    for (const value of payload.hits) {
+    for (const value of parsed.output.hits) {
         const hit = parseHit(value);
         if (hit === null) {
             throw new TypeError('Invalid Algolia response');
@@ -130,10 +150,11 @@ async function fetchHits(
     return hits;
 }
 
+/** Converts a validated Algolia hit into extension discussion data. */
 function toDiscussion(hit: AlgoliaHit): HnDiscussion {
     return {
         id: hit.objectID,
-        title: hit.title ?? 'Hacker News discussion',
+        title: hit.title ?? DEFAULT_DISCUSSION_TITLE,
         articleUrl: hit.url,
         comments: hit.num_comments ?? 0,
         points: hit.points ?? 0,
@@ -141,6 +162,7 @@ function toDiscussion(hit: AlgoliaHit): HnDiscussion {
     };
 }
 
+/** Looks up and ranks Hacker News discussions for eligible article candidates. */
 export async function lookupHnDiscussions(
     candidates: ArticleCandidate[],
     fetchFn: typeof fetch = fetch,
@@ -202,11 +224,12 @@ export async function lookupHnDiscussions(
     return { status: 'not_found' };
 }
 
+/** Determines whether a string is a positive safe Hacker News item identifier. */
 export function isValidItemId(itemId: string): boolean {
-    const value = Number(itemId);
-    return /^\d+$/.test(itemId) && Number.isSafeInteger(value) && value > 0;
+    return v.safeParse(positiveItemIdSchema, itemId).success;
 }
 
+/** Builds the canonical Hacker News discussion URL for a validated item. */
 export function discussionUrl(itemId: string): string {
     if (!isValidItemId(itemId)) {
         throw new TypeError('Invalid Hacker News item ID');

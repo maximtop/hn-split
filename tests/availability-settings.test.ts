@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { updateAutomaticAvailability } from '../src/options/availabilitySettings';
-import type { AvailabilitySettingsDependencies } from '../src/options/availabilitySettings';
+import { updateAutomaticAvailability } from '../src/options/availability-settings';
+import type { AvailabilitySettingsDependencies } from '../src/options/availability-settings';
 
 function dependencies(): AvailabilitySettingsDependencies {
     return {

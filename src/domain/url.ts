@@ -12,12 +12,17 @@ const TRACKING_KEYS = new Set([
 
 export type CandidateSource = 'canonical' | 'page';
 
+/** Describes one sanitized URL candidate for exact discussion lookup. */
 export interface ArticleCandidate {
+    /** Contains the sanitized public URL sent to Algolia. */
     url: string;
+    /** Contains the normalized URL identity used for exact matching. */
     identity: string;
+    /** Identifies whether the page or canonical link produced the candidate. */
     source: CandidateSource;
 }
 
+/** Determines whether an IPv4 literal belongs to non-public or reserved space. */
 function isNonPublicIpv4(hostname: string): boolean {
     const octets = hostname.split('.').map(Number);
     if (octets.length !== 4 || octets.some((value) => !Number.isInteger(value) || value < 0 || value > 255)) {
@@ -44,6 +49,7 @@ function isNonPublicIpv4(hostname: string): boolean {
         || first >= 224;
 }
 
+/** Parses a bracketed IPv6 hostname into eight numeric words. */
 function parseIpv6(hostname: string): number[] | null {
     if (!hostname.startsWith('[') || !hostname.endsWith(']')) {
         return null;
@@ -71,10 +77,12 @@ function parseIpv6(hostname: string): number[] | null {
         : null;
 }
 
+/** Converts two IPv6 words into their embedded IPv4 dotted representation. */
 function embeddedIpv4(high: number, low: number): string {
     return `${high >> 8}.${high & 0xff}.${low >> 8}.${low & 0xff}`;
 }
 
+/** Extracts an IPv4-mapped address from IPv6 words when present. */
 function mappedIpv4(words: number[]): string | null {
     if (!words.slice(0, 5).every((word) => word === 0) || words[5] !== 0xffff) {
         return null;
@@ -87,6 +95,7 @@ function mappedIpv4(words: number[]): string | null {
     return embeddedIpv4(high, low);
 }
 
+/** Extracts the embedded IPv4 address from a 6to4 address when present. */
 function sixToFourIpv4(words: number[]): string | null {
     const high = words[1];
     const low = words[2];
@@ -96,6 +105,7 @@ function sixToFourIpv4(words: number[]): string | null {
     return embeddedIpv4(high, low);
 }
 
+/** Determines whether an IPv6 literal is globally routable public space. */
 function isPublicIpv6(hostname: string): boolean {
     const words = parseIpv6(hostname);
     if (words === null) {
@@ -126,6 +136,7 @@ function isPublicIpv6(hostname: string): boolean {
         && !(first === 0x3fff && second <= 0x0fff);
 }
 
+/** Determines whether a hostname is local, reserved, or lacks an ICANN suffix. */
 function isNonPublicHostname(hostname: string): boolean {
     const normalized = hostname.toLowerCase().replace(/\.+$/, '');
     const ipv4Parts = normalized.split('.');
@@ -147,6 +158,7 @@ function isNonPublicHostname(hostname: string): boolean {
     return parseDomain(normalized, { allowPrivateDomains: false }).isIcann !== true;
 }
 
+/** Parses only credential-free public HTTP or HTTPS URLs. */
 function parseEligibleUrl(value: string, base?: string): URL | null {
     try {
         const url = base === undefined ? new URL(value) : new URL(value, base);
@@ -162,6 +174,7 @@ function parseEligibleUrl(value: string, base?: string): URL | null {
     }
 }
 
+/** Removes fragments and recognized tracking parameters from an eligible URL. */
 function sanitizeParsedUrl(value: URL): URL {
     const url = new URL(value.href);
     url.hash = '';
@@ -175,11 +188,13 @@ function sanitizeParsedUrl(value: URL): URL {
     return url;
 }
 
+/** Produces the sanitized public URL allowed to leave the extension. */
 export function sanitizeArticleUrl(value: string, base?: string): string | null {
     const url = parseEligibleUrl(value, base);
     return url === null ? null : sanitizeParsedUrl(url).href;
 }
 
+/** Produces a stable exact-match identity for an eligible article URL. */
 export function normalizeArticleUrl(value: string): string | null {
     const parsed = parseEligibleUrl(value);
     if (parsed === null) {
@@ -196,6 +211,7 @@ export function normalizeArticleUrl(value: string): string | null {
     return `${hostname}${port}${pathname}${url.search}`;
 }
 
+/** Builds deduplicated canonical and page candidates in preference order. */
 export function buildArticleCandidates(pageUrl: string, canonicalHref?: string | null): ArticleCandidate[] {
     const rawCandidates: Array<{ source: CandidateSource; url: URL | null }> = [];
     if (canonicalHref !== undefined && canonicalHref !== null && canonicalHref.trim() !== '') {

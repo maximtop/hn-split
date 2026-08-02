@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { openDiscussion } from '../src/browser/openDiscussion';
-import type { SessionStore, TabClient } from '../src/browser/openDiscussion';
+import { openDiscussion } from '../src/browser/open-discussion';
+import type { SessionStore, TabClient } from '../src/browser/open-discussion';
 
 const createStore = (initial?: number): SessionStore & { value?: number } => {
     const store: SessionStore & { value?: number } = {

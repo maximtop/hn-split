@@ -3,25 +3,27 @@
 ## Requirements
 
 - Node.js 22 or newer
-- Corepack
+- pnpm 11.18.0 or newer (`npm install --global pnpm@11.18.0`)
 - Chrome 140 or newer for documented `Tab.splitViewId` detection
 
 ## Commands
 
 ```bash
-corepack pnpm install
-corepack pnpm exec playwright install chromium
-corepack pnpm dev
-corepack pnpm check
-corepack pnpm test:e2e
-corepack pnpm verify
+pnpm install
+pnpm exec playwright install chromium
+pnpm dev
+pnpm check
+pnpm test:e2e
+pnpm verify
 ```
 
-`test:e2e` builds the extension, launches Playwright's Chromium with `dist` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, a delayed automatic lookup followed by a serialized disable with badge and session-cache cleanup, the real background lookup, and adjacent/reused discussion-tab behavior. It does not claim to create or validate native Chrome Split View, because Chrome does not expose a documented API for that action.
+`pnpm build` creates the unpacked extension with Rspack. `test:e2e` builds the extension, launches Playwright's Chromium with `dist` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, a delayed automatic lookup followed by a serialized disable with badge and session-cache cleanup, the real background lookup, and adjacent/reused discussion-tab behavior. It does not claim to create or validate native Chrome Split View, because Chrome does not expose a documented API for that action.
+
+`pnpm locales:validate` verifies that every locale has the English message keys and that placeholders and tags are structurally valid according to `@adguard/translate`.
 
 ## Load in Chrome
 
-1. Run `corepack pnpm build`.
+1. Run `pnpm build`.
 2. Open `chrome://extensions`.
 3. Enable Developer mode.
 4. Choose **Load unpacked** and select the repository's `dist` directory.

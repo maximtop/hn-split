@@ -14,8 +14,16 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "types": ["chrome", "vitest/globals"]
   },
-  "include": ["src", "tests", "vite.config.ts", "eslint.config.js"]
+  "include": [
+    "src",
+    "tests",
+    "eslint.config.js",
+    "playwright.config.ts",
+    "rspack.config.ts",
+    "vitest.config.ts"
+  ]
 }

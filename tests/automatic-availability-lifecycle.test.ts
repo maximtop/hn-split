@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import {
     applyAutomaticAvailabilitySetting,
     createAutomaticAvailabilitySettingQueue,
-} from '../src/browser/automaticAvailabilityLifecycle';
-import type { AutomaticAvailabilityLifecycleDependencies } from '../src/browser/automaticAvailabilityLifecycle';
+} from '../src/browser/automatic-availability-lifecycle';
+import type { AutomaticAvailabilityLifecycleDependencies } from '../src/browser/automatic-availability-lifecycle';
 
 function dependencies(enabled: boolean): AutomaticAvailabilityLifecycleDependencies {
     return {

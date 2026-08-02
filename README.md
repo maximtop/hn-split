@@ -14,21 +14,22 @@ Hacker News is the only discussion source in the MVP. Chrome is the first implem
 
 ## Product documentation
 
-- [MVP product brief](docs/product_brief.md)
-- [HNewhere reference analysis](docs/hnewhere_reference.md)
-- [URL matching and Hacker News lookup contract](docs/url_matching.md)
+- [MVP product brief](docs/product-brief.md)
+- [HNewhere reference analysis](docs/hnewhere-reference.md)
+- [URL matching and Hacker News lookup contract](docs/url-matching.md)
 - [Development and Chrome loading](docs/development.md)
 - [Privacy](PRIVACY.md)
-- [ADR-0001: HNewhere reference decisions](docs/adr/0001_hnewhere_reference_decisions.md)
+- [ADR-0001: HNewhere reference decisions](docs/adr/0001-hnewhere-reference-decisions.md)
 
 ## Development
 
 ```bash
-corepack pnpm install
-corepack pnpm check
+npm install --global pnpm@11.18.0
+pnpm install
+pnpm check
 ```
 
-Load the generated `dist` directory as an unpacked extension in Chrome 140 or newer.
+Rspack writes the unpacked extension to `dist`. Load that directory in Chrome 140 or newer.
 
 ## Product principles
 
@@ -40,4 +41,4 @@ Load the generated `dist` directory as an unpacked extension in Chrome 140 or ne
 
 ## Repository
 
-The repository is local and private during initial product work. The remote private GitHub repository will be attached when authenticated GitHub access is available to the agent runtime.
+The source is maintained in a private GitHub repository. Feature work is reviewed through pull requests targeting `master`.

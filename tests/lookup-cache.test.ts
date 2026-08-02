@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { clearLookupCacheEntries, lookupWithCache } from '../src/browser/lookupCache';
-import type { CacheStorage } from '../src/browser/lookupCache';
+import { clearLookupCacheEntries, lookupWithCache } from '../src/browser/lookup-cache';
+import type { CacheStorage } from '../src/browser/lookup-cache';
 import type { HnLookupResult } from '../src/domain/hn';
 import type { ArticleCandidate } from '../src/domain/url';
 

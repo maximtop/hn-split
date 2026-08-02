@@ -1,7 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "HN Split",
-  "description": "Open the Hacker News discussion for the current article after an explicit click.",
+  "name": "__MSG_extension_name__",
+  "description": "__MSG_extension_description__",
+  "default_locale": "en",
   "version": "0.1.0",
   "minimum_chrome_version": "140",
   "permissions": [
@@ -19,7 +20,7 @@
   },
   "options_page": "options.html",
   "action": {
-    "default_title": "HN Split",
-    "default_popup": "index.html"
+    "default_title": "__MSG_extension_name__",
+    "default_popup": "popup.html"
   }
 }

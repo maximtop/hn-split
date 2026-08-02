@@ -1,21 +1,30 @@
-import { badgeForLookupResult } from './availabilityBadge';
-import type { AvailabilityBadge } from './availabilityBadge';
+import { badgeForLookupResult } from './availability-badge';
+import type { AvailabilityBadge } from './availability-badge';
 import type { HnLookupResult } from '../domain/hn';
 
 const EMPTY_BADGE: AvailabilityBadge = { text: '', title: 'HN Split' };
 
+/** Defines lookup and badge operations used by the automatic updater. */
 export interface AutomaticAvailabilityDependencies {
+    /** Reads whether automatic availability is currently enabled. */
     isEnabled(): Promise<boolean>;
+    /** Looks up Hacker News availability for one public URL. */
     lookup(url: string): Promise<HnLookupResult>;
+    /** Applies validated badge state to one browser tab. */
     applyBadge(tabId: number, badge: AvailabilityBadge): Promise<void>;
 }
 
+/** Exposes lifecycle operations for automatic per-tab availability. */
 export interface AutomaticAvailabilityUpdater {
+    /** Updates one tab after navigation. */
     update(tabId: number, url: string): Promise<void>;
+    /** Waits for pending work and clears badges for affected tabs. */
     disable(tabIds: number[]): Promise<void>;
+    /** Discards queued state for a tab that no longer exists. */
     forget(tabId: number): void;
 }
 
+/** Creates a race-safe updater that serializes badge writes per tab. */
 export function createAutomaticAvailabilityUpdater(
     dependencies: AutomaticAvailabilityDependencies,
 ): AutomaticAvailabilityUpdater {

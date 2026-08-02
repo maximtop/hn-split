@@ -4,7 +4,7 @@
 - **Date:** 2026-08-02
 - **Decision owners:** HN Split project
 - **Related task:** 02 — Analyze HNewhere as a product and implementation reference
-- **Reference analysis:** [`../hnewhere_reference.md`](../hnewhere_reference.md)
+- **Reference analysis:** [`../hnewhere-reference.md`](../hnewhere-reference.md)
 
 ## Context
 
@@ -130,7 +130,7 @@ These risks are handled by URL fixtures, deterministic alternatives, a real-brow
 
 This decision is implemented when:
 
-- `docs/hnewhere_reference.md` records the verified code path with source permalinks;
+- `docs/hnewhere-reference.md` records the verified code path with source permalinks;
 - URL-normalization tests include raw URL, canonical URL, tracking parameters, fragments, trailing slashes, duplicate query keys, and malformed canonical metadata;
 - HN-provider tests verify exact matching, deduplication, ordering, timeout, malformed response, and no-result behavior;
 - opening tests assert that no tab action occurs before a user gesture and that one selected item ID maps to one HN discussion URL;

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createAutomaticAvailabilityUpdater } from '../src/browser/automaticAvailability';
-import type { AutomaticAvailabilityDependencies } from '../src/browser/automaticAvailability';
+import { createAutomaticAvailabilityUpdater } from '../src/browser/automatic-availability';
+import type { AutomaticAvailabilityDependencies } from '../src/browser/automatic-availability';
 import type { HnLookupResult } from '../src/domain/hn';
 
 function dependencies(): AutomaticAvailabilityDependencies {

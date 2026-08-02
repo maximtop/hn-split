@@ -123,7 +123,7 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
 
         const options = await extensionPage(context, extensionId);
         await expect(options.getByRole('heading', { name: 'Availability indicator' })).toBeVisible();
-        await expect(options.getByRole('checkbox', { name: 'Automatically check article URLs' })).not.toBeChecked();
+        await expect(options.getByRole('switch', { name: 'Automatically check article URLs' })).not.toBeChecked();
 
         const hasRequiredTabsPermission = await worker.evaluate(async () => chrome.permissions.contains({
             permissions: ['tabs'],
@@ -169,18 +169,18 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         });
         expect(algoliaRequests).toBe(2);
 
-        const automaticCheckbox = options.getByRole('checkbox', {
+        const automaticSwitch = options.getByRole('switch', {
             name: 'Automatically check article URLs',
         });
-        await automaticCheckbox.evaluate((element: HTMLInputElement) => element.click());
-        await expect(automaticCheckbox).toBeChecked();
+        await automaticSwitch.press('Space');
+        await expect(automaticSwitch).toBeChecked();
         await expect.poll(async () => worker.evaluate(
             async (tabId) => chrome.action.getBadgeText({ tabId }),
             articleTabId as number,
         )).toBe('37');
 
-        await automaticCheckbox.evaluate((element: HTMLInputElement) => element.click());
-        await expect(automaticCheckbox).not.toBeChecked();
+        await automaticSwitch.press('Space');
+        await expect(automaticSwitch).not.toBeChecked();
         await expect.poll(async () => worker.evaluate(
             async (tabId) => chrome.action.getBadgeText({ tabId }),
             articleTabId as number,

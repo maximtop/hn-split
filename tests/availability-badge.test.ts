@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { badgeForLookupResult } from '../src/browser/availabilityBadge';
+import { badgeForLookupResult } from '../src/browser/availability-badge';
 import type { HnLookupResult } from '../src/domain/hn';
 
 function found(comments: number): HnLookupResult {
