@@ -21,7 +21,9 @@ import {
 const STORAGE_KEY = 'automatic_availability';
 const theme = createTheme({ primaryColor: 'orange' });
 
-/** Renders and coordinates the HN Split options page. */
+/**
+ * Renders and coordinates the HN Split options page.
+ */
 export function OptionsApp(): React.JSX.Element {
     const [enabled, setEnabled] = useState(false);
     const [busy, setBusy] = useState(true);

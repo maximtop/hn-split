@@ -43,6 +43,9 @@ export default tseslint.config(
             },
         },
         rules: {
+            'jsdoc/multiline-blocks': ['error', {
+                noSingleLineBlocks: true,
+            }],
             'jsdoc/require-description': 'error',
             'jsdoc/require-jsdoc': ['error', {
                 contexts: [

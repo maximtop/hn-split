@@ -1,22 +1,38 @@
 import { discussionUrl } from '../domain/hn';
 
-/** Describes the tab fields needed for discussion placement and reuse. */
+/**
+ * Describes the tab fields needed for discussion placement and reuse.
+ */
 export interface TabSummary {
-    /** Contains the optional browser tab identifier. */
+    /**
+     * Contains the optional browser tab identifier.
+     */
     id?: number;
-    /** Contains the tab index within its window. */
+    /**
+     * Contains the tab index within its window.
+     */
     index: number;
-    /** Contains the owning browser window identifier. */
+    /**
+     * Contains the owning browser window identifier.
+     */
     windowId: number;
-    /** Contains Chrome's Split View identifier when available. */
+    /**
+     * Contains Chrome's Split View identifier when available.
+     */
     splitViewId?: number;
 }
 
-/** Defines the browser tab operations used by discussion opening. */
+/**
+ * Defines the browser tab operations used by discussion opening.
+ */
 export interface TabClient {
-    /** Reads one browser tab. */
+    /**
+     * Reads one browser tab.
+     */
     get(tabId: number): Promise<TabSummary>;
-    /** Creates one adjacent browser tab. */
+    /**
+     * Creates one adjacent browser tab.
+     */
     create(properties: {
         active: boolean;
         index: number;
@@ -24,21 +40,33 @@ export interface TabClient {
         url: string;
         windowId: number;
     }): Promise<TabSummary>;
-    /** Navigates and activates an existing browser tab. */
+    /**
+     * Navigates and activates an existing browser tab.
+     */
     update(tabId: number, properties: { active: boolean; url: string }): Promise<TabSummary> | void;
 }
 
-/** Defines session-only article-to-discussion tab associations. */
+/**
+ * Defines session-only article-to-discussion tab associations.
+ */
 export interface SessionStore {
-    /** Reads the remembered discussion tab for an article tab. */
+    /**
+     * Reads the remembered discussion tab for an article tab.
+     */
     get(articleTabId: number): Promise<number | undefined>;
-    /** Remembers a discussion tab for an article tab. */
+    /**
+     * Remembers a discussion tab for an article tab.
+     */
     set(articleTabId: number, discussionTabId: number): Promise<void>;
-    /** Removes a stale article-to-discussion association. */
+    /**
+     * Removes a stale article-to-discussion association.
+     */
     remove(articleTabId: number): Promise<void>;
 }
 
-/** Describes how and where a discussion tab was opened. */
+/**
+ * Describes how and where a discussion tab was opened.
+ */
 export type OpenDiscussionResult = {
     mode: 'adjacent_tab' | 'reused_tab' | 'split_view';
     tabId: number;
@@ -52,7 +80,9 @@ const isSameSplitView = (article: TabSummary, discussion: TabSummary): boolean =
 
 const pendingOpens = new Map<number, Promise<void>>();
 
-/** Performs one serialized discussion open or reuse operation. */
+/**
+ * Performs one serialized discussion open or reuse operation.
+ */
 async function performOpenDiscussion(
     articleTabId: number,
     itemId: string,
@@ -94,7 +124,9 @@ async function performOpenDiscussion(
     return { mode: 'adjacent_tab', tabId: created.id };
 }
 
-/** Opens or reuses one discussion tab while serializing requests per article tab. */
+/**
+ * Opens or reuses one discussion tab while serializing requests per article tab.
+ */
 export async function openDiscussion(
     articleTabId: number,
     itemId: string,

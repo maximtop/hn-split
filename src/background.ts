@@ -73,7 +73,9 @@ const cacheCollectionStorage = {
     },
 };
 
-/** Resolves one page context through the session-only lookup cache. */
+/**
+ * Resolves one page context through the session-only lookup cache.
+ */
 async function lookupArticle(pageUrl: string, canonicalHref: string | null) {
     const candidates = buildArticleCandidates(pageUrl, canonicalHref);
     return lookupWithCache(
@@ -83,7 +85,9 @@ async function lookupArticle(pageUrl: string, canonicalHref: string | null) {
     );
 }
 
-/** Applies localized browser-action badge state to one live tab. */
+/**
+ * Applies localized browser-action badge state to one live tab.
+ */
 async function applyAvailabilityBadge(tabId: number, badge: AvailabilityBadge): Promise<void> {
     try {
         await chrome.action.setBadgeText({ tabId, text: badge.text });
@@ -112,7 +116,9 @@ const automaticAvailability = createAutomaticAvailabilityUpdater({
     applyBadge: applyAvailabilityBadge,
 });
 
-/** Re-evaluates all currently open HTTP tabs after automatic mode is enabled. */
+/**
+ * Re-evaluates all currently open HTTP tabs after automatic mode is enabled.
+ */
 async function updateExistingTabs(): Promise<void> {
     const openTabs = await chrome.tabs.query({});
     await Promise.allSettled(openTabs.map(async (tab) => {
@@ -123,7 +129,9 @@ async function updateExistingTabs(): Promise<void> {
     }));
 }
 
-/** Disables automatic mode after draining work, badges, and derived cache records. */
+/**
+ * Disables automatic mode after draining work, badges, and derived cache records.
+ */
 async function disableAutomaticAvailability(): Promise<void> {
     const openTabs = await chrome.tabs.query({});
     await automaticAvailability.disable(openTabs.flatMap(({ id }) => id === undefined ? [] : [id]));
@@ -144,7 +152,9 @@ const applyAutomaticAvailabilityChange = createAutomaticAvailabilitySettingQueue
     });
 });
 
-/** Routes one validated runtime request to its background operation. */
+/**
+ * Routes one validated runtime request to its background operation.
+ */
 async function handleRequest(request: BackgroundRequest): Promise<BackgroundResponse> {
     try {
         if (request.type === 'lookup') {

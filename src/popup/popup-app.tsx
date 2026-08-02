@@ -18,29 +18,51 @@ import { t } from '../shared/i18n';
 import { isLookupResponse, isOpenDiscussionResponse } from '../shared/messages';
 import type { LookupRequest, OpenDiscussionRequest } from '../shared/messages';
 
-/** Stores the popup's asynchronous lookup and opening state. */
+/**
+ * Stores the popup's asynchronous lookup and opening state.
+ */
 interface PopupState {
-    /** Identifies the article tab whose discussion will be opened. */
+    /**
+     * Identifies the article tab whose discussion will be opened.
+     */
     articleTabId: number | null;
-    /** Contains the validated Hacker News lookup result. */
+    /**
+     * Contains the validated Hacker News lookup result.
+     */
     result: HnLookupResult | null;
-    /** Contains the current user-facing error message. */
+    /**
+     * Contains the current user-facing error message.
+     */
     error: string | null;
-    /** Indicates whether the initial lookup is still running. */
+    /**
+     * Indicates whether the initial lookup is still running.
+     */
     loading: boolean;
-    /** Identifies the discussion currently being opened. */
+    /**
+     * Identifies the discussion currently being opened.
+     */
     openingId: string | null;
 }
 
-/** Describes a discussion action rendered in the popup. */
+/**
+ * Describes a discussion action rendered in the popup.
+ */
 interface DiscussionButtonProps {
-    /** Contains the discussion metadata shown to the user. */
+    /**
+     * Contains the discussion metadata shown to the user.
+     */
     discussion: HnDiscussion;
-    /** Indicates whether this is the primary ranked discussion. */
+    /**
+     * Indicates whether this is the primary ranked discussion.
+     */
     primary: boolean;
-    /** Disables the action while another discussion is opening. */
+    /**
+     * Disables the action while another discussion is opening.
+     */
     opening: boolean;
-    /** Opens the selected Hacker News discussion. */
+    /**
+     * Opens the selected Hacker News discussion.
+     */
     onOpen: () => void;
 }
 
@@ -56,12 +78,16 @@ const theme = createTheme({
     primaryColor: 'orange',
 });
 
-/** Sends a typed request to the extension background worker. */
+/**
+ * Sends a typed request to the extension background worker.
+ */
 async function sendMessage(request: LookupRequest | OpenDiscussionRequest): Promise<unknown> {
     return chrome.runtime.sendMessage(request);
 }
 
-/** Renders one primary or alternative Hacker News discussion action. */
+/**
+ * Renders one primary or alternative Hacker News discussion action.
+ */
 function DiscussionButton({
     discussion,
     primary,
@@ -95,7 +121,9 @@ function DiscussionButton({
     );
 }
 
-/** Renders and coordinates the HN Split browser-action popup. */
+/**
+ * Renders and coordinates the HN Split browser-action popup.
+ */
 export function App(): React.JSX.Element {
     const [state, setState] = useState<PopupState>(initialState);
 

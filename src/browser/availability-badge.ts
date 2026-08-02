@@ -4,17 +4,27 @@ import { t } from '../shared/i18n';
 const HN_ORANGE = '#ff6600';
 const MAX_BADGE_COUNT = 999;
 
-/** Describes browser-action badge state derived from a lookup result. */
+/**
+ * Describes browser-action badge state derived from a lookup result.
+ */
 export interface AvailabilityBadge {
-    /** Contains the compact badge text. */
+    /**
+     * Contains the compact badge text.
+     */
     text: string;
-    /** Contains the localized browser-action tooltip. */
+    /**
+     * Contains the localized browser-action tooltip.
+     */
     title: string;
-    /** Contains the optional badge background color. */
+    /**
+     * Contains the optional badge background color.
+     */
     color?: string;
 }
 
-/** Maps a validated lookup result to localized browser-action badge state. */
+/**
+ * Maps a validated lookup result to localized browser-action badge state.
+ */
 export function badgeForLookupResult(result: HnLookupResult): AvailabilityBadge {
     if (result.status !== 'found') {
         return { text: '', title: 'HN Split' };

@@ -1,19 +1,33 @@
-/** Defines storage and effect operations for automatic availability. */
+/**
+ * Defines storage and effect operations for automatic availability.
+ */
 export interface AutomaticAvailabilityLifecycleDependencies {
-    /** Reads the authoritative persisted setting. */
+    /**
+     * Reads the authoritative persisted setting.
+     */
     getEnabled(): Promise<boolean>;
-    /** Persists the authoritative setting value. */
+    /**
+     * Persists the authoritative setting value.
+     */
     setEnabled(enabled: boolean): Promise<void>;
-    /** Enables automatic availability effects. */
+    /**
+     * Enables automatic availability effects.
+     */
     enable(): Promise<void>;
-    /** Disables automatic availability effects and clears derived state. */
+    /**
+     * Disables automatic availability effects and clears derived state.
+     */
     disable(): Promise<void>;
 }
 
-/** Represents one serialized automatic-availability setting operation. */
+/**
+ * Represents one serialized automatic-availability setting operation.
+ */
 export type AutomaticAvailabilitySettingOperation = (enabled: boolean) => Promise<void>;
 
-/** Creates a queue that serializes setting changes in request order. */
+/**
+ * Creates a queue that serializes setting changes in request order.
+ */
 export function createAutomaticAvailabilitySettingQueue(
     apply: AutomaticAvailabilitySettingOperation,
 ): AutomaticAvailabilitySettingOperation {
@@ -28,7 +42,9 @@ export function createAutomaticAvailabilitySettingQueue(
     };
 }
 
-/** Applies one setting transaction and independently restores state after failure. */
+/**
+ * Applies one setting transaction and independently restores state after failure.
+ */
 export async function applyAutomaticAvailabilitySetting(
     enabled: boolean,
     dependencies: AutomaticAvailabilityLifecycleDependencies,
