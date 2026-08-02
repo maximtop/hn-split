@@ -1,194 +1,14 @@
-import { createAutomaticAvailabilityUpdater } from './browser/automatic-availability';
 import {
-    applyAutomaticAvailabilitySetting,
-    createAutomaticAvailabilitySettingQueue,
-} from './browser/automatic-availability-lifecycle';
-import type { AvailabilityBadge } from './browser/availability-badge';
-import { clearLookupCacheEntries, lookupWithCache } from './browser/lookup-cache';
-import type { CacheStorage } from './browser/lookup-cache';
-import { openDiscussion } from './browser/open-discussion';
-import type { SessionStore, TabClient, TabSummary } from './browser/open-discussion';
-import { lookupHnDiscussions } from './domain/hn';
-import { buildArticleCandidates } from './domain/url';
+    forgetAutomaticAvailabilityTab,
+    updateAutomaticAvailability,
+} from './background/automatic-availability-controller';
+import { sessionStore } from './background/chrome-adapters';
+import { handleRequest } from './background/request-handler';
 import { isBackgroundRequest } from './shared/messages';
-import type { BackgroundRequest, BackgroundResponse } from './shared/messages';
 
-const toTabSummary = (tab: chrome.tabs.Tab): TabSummary => ({
-    ...(tab.id === undefined ? {} : { id: tab.id }),
-    index: tab.index,
-    windowId: tab.windowId,
-    ...(tab.splitViewId === undefined ? {} : { splitViewId: tab.splitViewId }),
-});
-
-const tabs: TabClient = {
-    async get(tabId) {
-        return toTabSummary(await chrome.tabs.get(tabId));
-    },
-    async create(properties) {
-        return toTabSummary(await chrome.tabs.create(properties));
-    },
-    async update(tabId, properties) {
-        const tab = await chrome.tabs.update(tabId, properties);
-        if (tab === undefined) {
-            throw new Error('Chrome did not return the updated discussion tab');
-        }
-        return toTabSummary(tab);
-    },
-};
-
-const sessionStore: SessionStore = {
-    async get(articleTabId) {
-        const key = `discussion_tab:${articleTabId}`;
-        const stored = await chrome.storage.session.get(key);
-        return typeof stored[key] === 'number' ? stored[key] : undefined;
-    },
-    async set(articleTabId, discussionTabId) {
-        await chrome.storage.session.set({ [`discussion_tab:${articleTabId}`]: discussionTabId });
-    },
-    async remove(articleTabId) {
-        await chrome.storage.session.remove(`discussion_tab:${articleTabId}`);
-    },
-};
-
-const AUTOMATIC_AVAILABILITY_KEY = 'automatic_availability';
-
-const cacheStorage: CacheStorage = {
-    async get(key) {
-        return (await chrome.storage.session.get(key))[key];
-    },
-    async set(key, value) {
-        await chrome.storage.session.set({ [key]: value });
-    },
-    async remove(key) {
-        await chrome.storage.session.remove(key);
-    },
-};
-
-const cacheCollectionStorage = {
-    async getAll(): Promise<Record<string, unknown>> {
-        return chrome.storage.session.get(null);
-    },
-    async remove(keys: string[]): Promise<void> {
-        await chrome.storage.session.remove(keys);
-    },
-};
-
-/**
- * Resolves one page context through the session-only lookup cache.
- * @param pageUrl - The active page URL to resolve.
- * @param canonicalHref - The page canonical URL when one is available.
- */
-async function lookupArticle(pageUrl: string, canonicalHref: string | null) {
-    const candidates = buildArticleCandidates(pageUrl, canonicalHref);
-    return lookupWithCache(
-        candidates,
-        cacheStorage,
-        async () => lookupHnDiscussions(candidates),
-    );
-}
-
-/**
- * Applies localized browser-action badge state to one live tab.
- * @param tabId - The Chrome tab that receives the badge state.
- * @param badge - The localized badge state to apply.
- */
-async function applyAvailabilityBadge(tabId: number, badge: AvailabilityBadge): Promise<void> {
-    try {
-        await chrome.action.setBadgeText({ tabId, text: badge.text });
-        if (badge.color !== undefined) {
-            await chrome.action.setBadgeBackgroundColor({ tabId, color: badge.color });
-        }
-        await chrome.action.setTitle({ tabId, title: badge.title });
-    } catch (error) {
-        try {
-            await chrome.tabs.get(tabId);
-        } catch {
-            return;
-        }
-        throw error;
-    }
-}
-
-const automaticAvailability = createAutomaticAvailabilityUpdater({
-    async isEnabled() {
-        const stored = await chrome.storage.local.get(AUTOMATIC_AVAILABILITY_KEY);
-        return stored[AUTOMATIC_AVAILABILITY_KEY] === true;
-    },
-    async lookup(url) {
-        return lookupArticle(url, null);
-    },
-    applyBadge: applyAvailabilityBadge,
-});
-
-/**
- * Re-evaluates all currently open HTTP tabs after automatic mode is enabled.
- */
-async function updateExistingTabs(): Promise<void> {
-    const openTabs = await chrome.tabs.query({});
-    await Promise.allSettled(openTabs.map(async (tab) => {
-        if (tab.id === undefined) {
-            return;
-        }
-        await automaticAvailability.update(tab.id, tab.url ?? '');
-    }));
-}
-
-/**
- * Disables automatic mode after draining work, badges, and derived cache records.
- */
-async function disableAutomaticAvailability(): Promise<void> {
-    const openTabs = await chrome.tabs.query({});
-    await automaticAvailability.disable(openTabs.flatMap(({ id }) => id === undefined ? [] : [id]));
-    await clearLookupCacheEntries(cacheCollectionStorage);
-}
-
-const applyAutomaticAvailabilityChange = createAutomaticAvailabilitySettingQueue(async (enabled) => {
-    await applyAutomaticAvailabilitySetting(enabled, {
-        async getEnabled() {
-            const stored = await chrome.storage.local.get(AUTOMATIC_AVAILABILITY_KEY);
-            return stored[AUTOMATIC_AVAILABILITY_KEY] === true;
-        },
-        async setEnabled(value) {
-            await chrome.storage.local.set({ [AUTOMATIC_AVAILABILITY_KEY]: value });
-        },
-        enable: updateExistingTabs,
-        disable: disableAutomaticAvailability,
-    });
-});
-
-/**
- * Routes one validated runtime request to its background operation.
- * @param request - The validated background request to process.
- */
-async function handleRequest(request: BackgroundRequest): Promise<BackgroundResponse> {
-    try {
-        if (request.type === 'lookup') {
-            const result = await lookupArticle(
-                request.context.pageUrl,
-                request.context.canonicalHref,
-            );
-            return { ok: true, result };
-        }
-
-        if (request.type === 'availability_setting_changed') {
-            await applyAutomaticAvailabilityChange(request.enabled);
-            return { ok: true, result: { status: 'updated' } };
-        }
-
-        const result = await openDiscussion(
-            request.articleTabId,
-            request.itemId,
-            tabs,
-            sessionStore,
-        );
-        return { ok: true, result };
-    } catch (error) {
-        return {
-            ok: false,
-            error: error instanceof Error ? error.message : 'Unexpected extension error',
-        };
-    }
-}
+const TAB_UPDATE_STATUS = {
+    COMPLETE: 'complete',
+} as const;
 
 chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
     if (!isBackgroundRequest(message)) {
@@ -199,14 +19,14 @@ chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) =
 });
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    const url = changeInfo.url ?? (changeInfo.status === 'complete' ? tab.url : undefined);
+    const url = changeInfo.url ?? (changeInfo.status === TAB_UPDATE_STATUS.COMPLETE ? tab.url : undefined);
     if (url === undefined) {
         return;
     }
-    void automaticAvailability.update(tabId, url).catch(() => undefined);
+    void updateAutomaticAvailability(tabId, url).catch(() => undefined);
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => {
-    automaticAvailability.forget(tabId);
+    forgetAutomaticAvailabilityTab(tabId);
     void sessionStore.remove(tabId).catch(() => undefined);
 });

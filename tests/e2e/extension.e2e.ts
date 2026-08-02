@@ -122,6 +122,7 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         expect(typeof articleTabId).toBe('number');
 
         const options = await extensionPage(context, extensionId);
+        await expect(options).toHaveTitle('HN Split settings');
         await expect(options.getByRole('heading', { name: 'Availability indicator' })).toBeVisible();
         await expect(options.getByRole('switch', { name: 'Automatically check article URLs' })).not.toBeChecked();
 
@@ -132,12 +133,12 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
 
         await article.goto(AUTOMATIC_ARTICLE_URL);
         const enableDuringLookup = options.evaluate(async () => chrome.runtime.sendMessage({
-            type: 'availability_setting_changed',
+            type: 'set_availability_setting',
             enabled: true,
         }));
         await automaticLookupStarted;
         const disableDuringLookup = options.evaluate(async () => chrome.runtime.sendMessage({
-            type: 'availability_setting_changed',
+            type: 'set_availability_setting',
             enabled: false,
         }));
         releaseAutomaticLookup();

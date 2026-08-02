@@ -10,7 +10,15 @@ const TRACKING_KEYS = new Set([
     'msclkid',
 ]);
 
-export type CandidateSource = 'canonical' | 'page';
+/**
+ * Names every source used to construct an article candidate.
+ */
+export const ARTICLE_CANDIDATE_SOURCE = {
+    CANONICAL: 'canonical',
+    PAGE: 'page',
+} as const;
+
+export type CandidateSource = typeof ARTICLE_CANDIDATE_SOURCE[keyof typeof ARTICLE_CANDIDATE_SOURCE];
 
 /**
  * Describes one sanitized URL candidate for exact discussion lookup.
@@ -264,12 +272,12 @@ export function buildArticleCandidates(pageUrl: string, canonicalHref?: string |
     const rawCandidates: Array<{ source: CandidateSource; url: URL | null }> = [];
     if (canonicalHref !== undefined && canonicalHref !== null && canonicalHref.trim() !== '') {
         rawCandidates.push({
-            source: 'canonical',
+            source: ARTICLE_CANDIDATE_SOURCE.CANONICAL,
             url: parseEligibleUrl(canonicalHref, pageUrl),
         });
     }
     rawCandidates.push({
-        source: 'page',
+        source: ARTICLE_CANDIDATE_SOURCE.PAGE,
         url: parseEligibleUrl(pageUrl),
     });
 

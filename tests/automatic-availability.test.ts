@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createAutomaticAvailabilityUpdater } from '../src/browser/automatic-availability';
+import { AutomaticAvailabilityUpdater } from '../src/browser/automatic-availability';
 import type { AutomaticAvailabilityDependencies } from '../src/browser/automatic-availability';
 import type { HnLookupResult } from '../src/domain/hn';
 
@@ -12,10 +12,10 @@ function dependencies(): AutomaticAvailabilityDependencies {
     };
 }
 
-describe('createAutomaticAvailabilityUpdater', () => {
+describe('AutomaticAvailabilityUpdater', () => {
     it('looks up the tab URL and applies the resulting badge in automatic mode', async () => {
         const deps = dependencies();
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         await updater.update(7, 'https://example.com/article');
 
@@ -29,7 +29,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
     it('clears the previous page badge before starting the next lookup', async () => {
         const deps = dependencies();
         vi.mocked(deps.lookup).mockReturnValue(new Promise(() => undefined));
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         void updater.update(7, 'https://example.com/next');
         await Promise.resolve();
@@ -44,7 +44,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
     it('clears the badge without looking up when automatic mode is disabled', async () => {
         const deps = dependencies();
         vi.mocked(deps.isEnabled).mockResolvedValue(false);
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         await updater.update(7, 'https://example.com/article');
 
@@ -66,7 +66,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
             resolveSecond = resolve;
         });
         vi.mocked(deps.lookup).mockReturnValueOnce(first).mockReturnValueOnce(second);
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         const oldUpdate = updater.update(7, 'https://example.com/old');
         await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledTimes(1));
@@ -97,7 +97,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
     it('clears the badge when an automatic lookup fails', async () => {
         const deps = dependencies();
         vi.mocked(deps.lookup).mockRejectedValue(new Error('offline'));
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         await expect(updater.update(7, 'https://example.com/article')).resolves.toBeUndefined();
 
@@ -123,7 +123,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
             }
             activeMutations -= 1;
         });
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         const first = updater.update(7, 'https://example.com/first');
         await vi.waitFor(() => expect(deps.applyBadge).toHaveBeenCalledTimes(1));
@@ -148,7 +148,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
             },
             alternatives: [],
         });
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         await updater.update(7, 'https://example.com/article');
 
@@ -162,7 +162,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
         vi.mocked(deps.lookup).mockReturnValue(new Promise((resolve) => {
             resolveLookup = resolve;
         }));
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
         const update = updater.update(7, 'https://example.com/article');
         await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledOnce());
 
@@ -187,7 +187,7 @@ describe('createAutomaticAvailabilityUpdater', () => {
         vi.mocked(deps.lookup).mockReturnValue(new Promise((resolve) => {
             resolveLookup = resolve;
         }));
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
         const update = updater.update(7, 'https://example.com/article');
         await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledOnce());
         let disableCompleted = false;
@@ -206,15 +206,57 @@ describe('createAutomaticAvailabilityUpdater', () => {
     it('reports badge-clear failures while disabling', async () => {
         const deps = dependencies();
         vi.mocked(deps.applyBadge).mockRejectedValue(new Error('action API failed'));
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
 
         await expect(updater.disable([7])).rejects.toThrow('action API failed');
+    });
+
+    it('does not let stale work match a reused tab identifier after forget', async () => {
+        const deps = dependencies();
+        let resolveOld!: (value: HnLookupResult) => void;
+        let resolveNew!: (value: HnLookupResult) => void;
+        vi.mocked(deps.lookup)
+            .mockReturnValueOnce(new Promise((resolve) => {
+                resolveOld = resolve;
+            }))
+            .mockReturnValueOnce(new Promise((resolve) => {
+                resolveNew = resolve;
+            }));
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const oldUpdate = updater.update(7, 'https://example.com/old');
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledTimes(1));
+        updater.forget(7);
+        const newUpdate = updater.update(7, 'https://example.com/new');
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledTimes(2));
+
+        resolveNew({
+            status: 'found',
+            primary: {
+                id: '2', title: 'Current', articleUrl: 'https://example.com/new',
+                comments: 22, points: 2, createdAt: 2,
+            },
+            alternatives: [],
+        });
+        await newUpdate;
+        resolveOld({
+            status: 'found',
+            primary: {
+                id: '1', title: 'Stale', articleUrl: 'https://example.com/old',
+                comments: 11, points: 1, createdAt: 1,
+            },
+            alternatives: [],
+        });
+        await oldUpdate;
+
+        expect(deps.applyBadge).toHaveBeenLastCalledWith(7, expect.objectContaining({ text: '22' }));
+        expect(deps.applyBadge).not.toHaveBeenLastCalledWith(7, expect.objectContaining({ text: '11' }));
     });
 
     it('forgets removed tab generations so future disables do not revisit them', async () => {
         const deps = dependencies();
         vi.mocked(deps.isEnabled).mockResolvedValue(false);
-        const updater = createAutomaticAvailabilityUpdater(deps);
+        const updater = new AutomaticAvailabilityUpdater(deps);
         await updater.update(7, 'https://example.com/article');
         expect(deps.applyBadge).toHaveBeenCalledTimes(1);
 

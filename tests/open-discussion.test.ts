@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { openDiscussion } from '../src/browser/open-discussion';
+import { DiscussionTabManager } from '../src/browser/open-discussion';
 import type { SessionStore, TabClient } from '../src/browser/open-discussion';
 
 const createStore = (initial?: number): SessionStore & { value?: number } => {
@@ -17,7 +17,7 @@ const createStore = (initial?: number): SessionStore & { value?: number } => {
     return store;
 };
 
-describe('openDiscussion', () => {
+describe('DiscussionTabManager', () => {
     it('opens the first discussion in a normal adjacent tab', async () => {
         const tabs: TabClient = {
             get: vi.fn(async (id) => ({ id, index: 4, windowId: 2, splitViewId: -1 })),
@@ -25,8 +25,9 @@ describe('openDiscussion', () => {
             update: vi.fn(),
         };
         const store = createStore();
+        const manager = new DiscussionTabManager(tabs, store);
 
-        const result = await openDiscussion(40, '123', tabs, store);
+        const result = await manager.open(40, '123');
 
         expect(tabs.create).toHaveBeenCalledWith({
             active: true,
@@ -50,8 +51,9 @@ describe('openDiscussion', () => {
             update: vi.fn(async (id) => ({ id, index: 5, windowId: 2, splitViewId: 7 })),
         };
         const store = createStore(91);
+        const manager = new DiscussionTabManager(tabs, store);
 
-        const result = await openDiscussion(40, '456', tabs, store);
+        const result = await manager.open(40, '456');
 
         expect(tabs.update).toHaveBeenCalledWith(91, {
             active: true,
@@ -76,9 +78,10 @@ describe('openDiscussion', () => {
             update: vi.fn(async (id) => ({ id, index: 5, windowId: 2 })),
         };
         const store = createStore();
+        const manager = new DiscussionTabManager(tabs, store);
 
-        const first = openDiscussion(40, '123', tabs, store);
-        const second = openDiscussion(40, '456', tabs, store);
+        const first = manager.open(40, '123');
+        const second = manager.open(40, '456');
         await new Promise((resolve) => setTimeout(resolve, 0));
         const createsBeforeFirstCompleted = vi.mocked(tabs.create).mock.calls.length;
         resolveCreated?.({ id: 91, index: 5, windowId: 2 });
@@ -107,8 +110,9 @@ describe('openDiscussion', () => {
             update: vi.fn(),
         };
         const store = createStore(91);
+        const manager = new DiscussionTabManager(tabs, store);
 
-        const result = await openDiscussion(40, '789', tabs, store);
+        const result = await manager.open(40, '789');
 
         expect(store.remove).toHaveBeenCalledWith(40);
         expect(store.set).toHaveBeenCalledWith(40, 92);
@@ -123,8 +127,9 @@ describe('openDiscussion', () => {
             update: vi.fn(async () => Promise.reject(updateError)),
         };
         const store = createStore(91);
+        const manager = new DiscussionTabManager(tabs, store);
 
-        await expect(openDiscussion(40, '789', tabs, store)).rejects.toBe(updateError);
+        await expect(manager.open(40, '789')).rejects.toBe(updateError);
 
         expect(tabs.create).not.toHaveBeenCalled();
         expect(store.remove).not.toHaveBeenCalled();

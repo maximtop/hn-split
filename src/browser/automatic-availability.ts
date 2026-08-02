@@ -1,8 +1,6 @@
-import { badgeForLookupResult } from './availability-badge';
+import { EMPTY_AVAILABILITY_BADGE, badgeForLookupResult } from './availability-badge';
 import type { AvailabilityBadge } from './availability-badge';
 import type { HnLookupResult } from '../domain/hn';
-
-const EMPTY_BADGE: AvailabilityBadge = { text: '', title: 'HN Split' };
 
 /**
  * Defines lookup and badge operations used by the automatic updater.
@@ -14,123 +12,124 @@ export interface AutomaticAvailabilityDependencies {
     isEnabled(): Promise<boolean>;
     /**
      * Looks up Hacker News availability for one public URL.
+     * @param url - The eligible public article URL to inspect.
      */
     lookup(url: string): Promise<HnLookupResult>;
     /**
      * Applies validated badge state to one browser tab.
+     * @param tabId - The browser tab identifier that receives the badge.
+     * @param badge - The validated availability badge state to apply.
      */
     applyBadge(tabId: number, badge: AvailabilityBadge): Promise<void>;
 }
 
 /**
- * Exposes lifecycle operations for automatic per-tab availability.
+ * Coordinates race-safe automatic lookups and serialized badge mutations.
  */
-export interface AutomaticAvailabilityUpdater {
+export class AutomaticAvailabilityUpdater {
+    private readonly generations = new Map<number, number>();
+    private readonly badgeMutations = new Map<number, Promise<void>>();
+    private readonly inFlightUpdates = new Set<Promise<void>>();
+    private revision = 0;
+
+    /**
+     * Creates an automatic-availability coordinator.
+     * @param dependencies - The browser, lookup, and badge operations used by the updater.
+     */
+    constructor(private readonly dependencies: AutomaticAvailabilityDependencies) {}
+
     /**
      * Updates one tab after navigation.
+     * @param tabId - The updated browser tab identifier.
+     * @param url - The navigated public URL to inspect.
      */
-    update(tabId: number, url: string): Promise<void>;
+    update(tabId: number, url: string): Promise<void> {
+        const tracked = this.runUpdate(tabId, url);
+        this.inFlightUpdates.add(tracked);
+        void tracked.then(
+            () => this.inFlightUpdates.delete(tracked),
+            () => this.inFlightUpdates.delete(tracked),
+        );
+        return tracked;
+    }
+
     /**
      * Waits for pending work and clears badges for affected tabs.
+     * @param tabIds - The currently open browser tab identifiers to clear.
      */
-    disable(tabIds: number[]): Promise<void>;
+    async disable(tabIds: number[]): Promise<void> {
+        const affectedTabs = new Set([
+            ...this.generations.keys(),
+            ...this.badgeMutations.keys(),
+            ...tabIds,
+        ]);
+        const clearGenerations = new Map(
+            [...affectedTabs].map((tabId) => [tabId, this.nextGeneration(tabId)]),
+        );
+        await Promise.allSettled([...this.inFlightUpdates]);
+        const clears = [...clearGenerations].map(([tabId, generation]) => (
+            this.enqueueMutation(tabId, generation, EMPTY_AVAILABILITY_BADGE, false)
+        ));
+        await Promise.all(clears);
+    }
+
     /**
      * Discards queued state for a tab that no longer exists.
+     * @param tabId - The removed browser tab identifier to forget.
      */
-    forget(tabId: number): void;
-}
+    forget(tabId: number): void {
+        this.nextGeneration(tabId);
+        this.generations.delete(tabId);
+    }
 
-/**
- * Creates a race-safe updater that serializes badge writes per tab.
- * @param dependencies - The browser, lookup, and badge operations used by the updater.
- */
-export function createAutomaticAvailabilityUpdater(
-    dependencies: AutomaticAvailabilityDependencies,
-): AutomaticAvailabilityUpdater {
-    const generations = new Map<number, number>();
-    const badgeMutations = new Map<number, Promise<void>>();
-    const inFlightUpdates = new Set<Promise<void>>();
-
-    const nextGeneration = (tabId: number): number => {
-        const generation = (generations.get(tabId) ?? 0) + 1;
-        generations.set(tabId, generation);
+    private nextGeneration(tabId: number): number {
+        this.revision += 1;
+        const generation = this.revision;
+        this.generations.set(tabId, generation);
         return generation;
-    };
+    }
 
-    const enqueueMutation = (
+    private enqueueMutation(
         tabId: number,
         generation: number,
         badge: AvailabilityBadge,
         requireEnabled: boolean,
-    ): Promise<void> => {
-        const previous = badgeMutations.get(tabId) ?? Promise.resolve();
+    ): Promise<void> {
+        const previous = this.badgeMutations.get(tabId) ?? Promise.resolve();
         const mutation = previous.catch(() => undefined).then(async () => {
-            if (generations.get(tabId) !== generation) {
+            if (this.generations.get(tabId) !== generation) {
                 return;
             }
-            if (requireEnabled && !await dependencies.isEnabled()) {
+            if (requireEnabled && !await this.dependencies.isEnabled()) {
                 return;
             }
-            if (generations.get(tabId) !== generation) {
+            if (this.generations.get(tabId) !== generation) {
                 return;
             }
-            await dependencies.applyBadge(tabId, badge);
+            await this.dependencies.applyBadge(tabId, badge);
         });
         const tracked = mutation.finally(() => {
-            if (badgeMutations.get(tabId) === tracked) {
-                badgeMutations.delete(tabId);
+            if (this.badgeMutations.get(tabId) === tracked) {
+                this.badgeMutations.delete(tabId);
             }
         });
-        badgeMutations.set(tabId, tracked);
+        this.badgeMutations.set(tabId, tracked);
         return tracked;
-    };
+    }
 
-    const runUpdate = async (tabId: number, url: string): Promise<void> => {
-        const generation = nextGeneration(tabId);
-        const isCurrent = (): boolean => generations.get(tabId) === generation;
+    private async runUpdate(tabId: number, url: string): Promise<void> {
+        const generation = this.nextGeneration(tabId);
+        const isCurrent = (): boolean => this.generations.get(tabId) === generation;
 
-        await enqueueMutation(tabId, generation, EMPTY_BADGE, false);
-        if (!isCurrent() || !await dependencies.isEnabled() || !isCurrent()) {
+        await this.enqueueMutation(tabId, generation, EMPTY_AVAILABILITY_BADGE, false);
+        if (!isCurrent() || !await this.dependencies.isEnabled() || !isCurrent()) {
             return;
         }
         try {
-            const result = await dependencies.lookup(url);
-            await enqueueMutation(tabId, generation, badgeForLookupResult(result), true);
+            const result = await this.dependencies.lookup(url);
+            await this.enqueueMutation(tabId, generation, badgeForLookupResult(result), true);
         } catch {
-            await enqueueMutation(tabId, generation, EMPTY_BADGE, false);
+            await this.enqueueMutation(tabId, generation, EMPTY_AVAILABILITY_BADGE, false);
         }
-    };
-
-    return {
-        update(tabId, url) {
-            const tracked = runUpdate(tabId, url);
-            inFlightUpdates.add(tracked);
-            void tracked.then(
-                () => inFlightUpdates.delete(tracked),
-                () => inFlightUpdates.delete(tracked),
-            );
-            return tracked;
-        },
-
-        forget(tabId) {
-            nextGeneration(tabId);
-            generations.delete(tabId);
-        },
-
-        async disable(tabIds) {
-            const affectedTabs = new Set([
-                ...generations.keys(),
-                ...badgeMutations.keys(),
-                ...tabIds,
-            ]);
-            const clearGenerations = new Map(
-                [...affectedTabs].map((tabId) => [tabId, nextGeneration(tabId)]),
-            );
-            await Promise.allSettled([...inFlightUpdates]);
-            const clears = [...clearGenerations].map(([tabId, generation]) => (
-                enqueueMutation(tabId, generation, EMPTY_BADGE, false)
-            ));
-            await Promise.all(clears);
-        },
-    };
+    }
 }

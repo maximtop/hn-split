@@ -1,4 +1,6 @@
 import { discussionUrl } from '../domain/hn';
+import { DISCUSSION_OPEN_MODE } from '../shared/messages';
+import type { OpenDiscussionResult } from '../shared/messages';
 
 /**
  * Describes the tab fields needed for discussion placement and reuse.
@@ -28,10 +30,12 @@ export interface TabSummary {
 export interface TabClient {
     /**
      * Reads one browser tab.
+     * @param tabId - The browser tab identifier to read.
      */
     get(tabId: number): Promise<TabSummary>;
     /**
      * Creates one adjacent browser tab.
+     * @param properties - The placement, opener, and URL for the new tab.
      */
     create(properties: {
         active: boolean;
@@ -42,6 +46,8 @@ export interface TabClient {
     }): Promise<TabSummary>;
     /**
      * Navigates and activates an existing browser tab.
+     * @param tabId - The browser tab identifier to update.
+     * @param properties - The active state and URL to apply.
      */
     update(tabId: number, properties: { active: boolean; url: string }): Promise<TabSummary> | void;
 }
@@ -52,110 +58,104 @@ export interface TabClient {
 export interface SessionStore {
     /**
      * Reads the remembered discussion tab for an article tab.
+     * @param articleTabId - The source article tab identifier.
      */
     get(articleTabId: number): Promise<number | undefined>;
     /**
      * Remembers a discussion tab for an article tab.
+     * @param articleTabId - The source article tab identifier.
+     * @param discussionTabId - The associated discussion tab identifier.
      */
     set(articleTabId: number, discussionTabId: number): Promise<void>;
     /**
      * Removes a stale article-to-discussion association.
+     * @param articleTabId - The source article tab identifier to forget.
      */
     remove(articleTabId: number): Promise<void>;
 }
 
 /**
- * Describes how and where a discussion tab was opened.
+ * Serializes discussion opens per article tab and owns tab-reuse state transitions.
  */
-export type OpenDiscussionResult = {
-    mode: 'adjacent_tab' | 'reused_tab' | 'split_view';
-    tabId: number;
-};
+export class DiscussionTabManager {
+    private readonly pendingOpens = new Map<number, Promise<void>>();
 
-const isSameSplitView = (article: TabSummary, discussion: TabSummary): boolean => (
-    article.splitViewId !== undefined
-    && article.splitViewId !== -1
-    && article.splitViewId === discussion.splitViewId
-);
+    /**
+     * Creates a discussion-tab manager.
+     * @param tabs - The Chrome tabs adapter used to query, update, or create tabs.
+     * @param store - The session store that tracks article-to-discussion associations.
+     */
+    constructor(
+        private readonly tabs: TabClient,
+        private readonly store: SessionStore,
+    ) {}
 
-const pendingOpens = new Map<number, Promise<void>>();
+    /**
+     * Opens or reuses one discussion tab while serializing requests per article tab.
+     * @param articleTabId - The source article tab identifier.
+     * @param itemId - The Hacker News discussion item identifier.
+     */
+    async open(articleTabId: number, itemId: string): Promise<OpenDiscussionResult> {
+        const previous = this.pendingOpens.get(articleTabId) ?? Promise.resolve();
+        let release = (): void => undefined;
+        const turn = new Promise<void>((resolve) => {
+            release = resolve;
+        });
+        const pending = previous.catch(() => undefined).then(async () => turn);
+        this.pendingOpens.set(articleTabId, pending);
 
-/**
- * Performs one serialized discussion open or reuse operation.
- * @param articleTabId - The source article tab identifier.
- * @param itemId - The Hacker News discussion item identifier.
- * @param tabs - The Chrome tabs adapter used to query, update, or create tabs.
- * @param store - The session store that tracks article-to-discussion associations.
- */
-async function performOpenDiscussion(
-    articleTabId: number,
-    itemId: string,
-    tabs: TabClient,
-    store: SessionStore,
-): Promise<OpenDiscussionResult> {
-    const article = await tabs.get(articleTabId);
-    const url = discussionUrl(itemId);
-    const rememberedTabId = await store.get(articleTabId);
-
-    if (rememberedTabId !== undefined) {
-        let rememberedTab: TabSummary | undefined;
+        await previous.catch(() => undefined);
         try {
-            rememberedTab = await tabs.get(rememberedTabId);
-        } catch {
-            // The user closed the remembered tab. Create a new adjacent tab below.
+            return await this.performOpen(articleTabId, itemId);
+        } finally {
+            release();
+            if (this.pendingOpens.get(articleTabId) === pending) {
+                this.pendingOpens.delete(articleTabId);
+            }
         }
-        if (rememberedTab !== undefined && rememberedTab.windowId === article.windowId) {
-            await tabs.update(rememberedTabId, { active: true, url });
-            return {
-                mode: isSameSplitView(article, rememberedTab) ? 'split_view' : 'reused_tab',
-                tabId: rememberedTabId,
-            };
-        }
-        await store.remove(articleTabId);
     }
 
-    const created = await tabs.create({
-        active: true,
-        index: article.index + 1,
-        openerTabId: articleTabId,
-        url,
-        windowId: article.windowId,
-    });
-    if (created.id === undefined) {
-        throw new Error('Chrome did not return an ID for the discussion tab');
+    private isSameSplitView(article: TabSummary, discussion: TabSummary): boolean {
+        return article.splitViewId !== undefined
+            && article.splitViewId !== -1
+            && article.splitViewId === discussion.splitViewId;
     }
-    await store.set(articleTabId, created.id);
-    return { mode: 'adjacent_tab', tabId: created.id };
-}
 
-/**
- * Opens or reuses one discussion tab while serializing requests per article tab.
- * @param articleTabId - The source article tab identifier.
- * @param itemId - The Hacker News discussion item identifier.
- * @param tabs - The Chrome tabs adapter used to query, update, or create tabs.
- * @param store - The session store that tracks article-to-discussion associations.
- */
-export async function openDiscussion(
-    articleTabId: number,
-    itemId: string,
-    tabs: TabClient,
-    store: SessionStore,
-): Promise<OpenDiscussionResult> {
-    const previous = pendingOpens.get(articleTabId) ?? Promise.resolve();
-    let release = (): void => undefined;
-    const turn = new Promise<void>((resolve) => {
-        release = resolve;
-    });
-    const pending = previous.catch(() => undefined).then(async () => turn);
-    pendingOpens.set(articleTabId, pending);
+    private async performOpen(articleTabId: number, itemId: string): Promise<OpenDiscussionResult> {
+        const article = await this.tabs.get(articleTabId);
+        const url = discussionUrl(itemId);
+        const rememberedTabId = await this.store.get(articleTabId);
 
-    await previous.catch(() => undefined);
-    try {
-        return await performOpenDiscussion(articleTabId, itemId, tabs, store);
-    } finally {
-        release();
-        if (pendingOpens.get(articleTabId) === pending) {
-            pendingOpens.delete(articleTabId);
+        if (rememberedTabId !== undefined) {
+            let rememberedTab: TabSummary | undefined;
+            try {
+                rememberedTab = await this.tabs.get(rememberedTabId);
+            } catch {
+                // The user closed the remembered tab. Create a new adjacent tab below.
+            }
+            if (rememberedTab !== undefined && rememberedTab.windowId === article.windowId) {
+                await this.tabs.update(rememberedTabId, { active: true, url });
+                return {
+                    mode: this.isSameSplitView(article, rememberedTab)
+                        ? DISCUSSION_OPEN_MODE.SPLIT_VIEW
+                        : DISCUSSION_OPEN_MODE.REUSED_TAB,
+                    tabId: rememberedTabId,
+                };
+            }
+            await this.store.remove(articleTabId);
         }
+
+        const created = await this.tabs.create({
+            active: true,
+            index: article.index + 1,
+            openerTabId: articleTabId,
+            url,
+            windowId: article.windowId,
+        });
+        if (created.id === undefined) {
+            throw new Error('Chrome did not return an ID for the discussion tab');
+        }
+        await this.store.set(articleTabId, created.id);
+        return { mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: created.id };
     }
 }

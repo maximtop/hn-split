@@ -1,4 +1,4 @@
-import { isHnLookupResult } from '../domain/hn';
+import { HN_LOOKUP_STATUS, isHnLookupResult } from '../domain/hn';
 import type { HnLookupResult } from '../domain/hn';
 import type { ArticleCandidate } from '../domain/url';
 
@@ -27,14 +27,18 @@ interface CacheRecord {
 export interface CacheStorage {
     /**
      * Reads one unknown cache value.
+     * @param key - The versioned lookup-cache key to read.
      */
     get(key: string): Promise<unknown>;
     /**
      * Writes one validated cache record.
+     * @param key - The versioned lookup-cache key to write.
+     * @param value - The validated lookup-cache record to persist.
      */
     set(key: string, value: CacheRecord): Promise<void>;
     /**
      * Removes one cache entry.
+     * @param key - The versioned lookup-cache key to remove.
      */
     remove(key: string): Promise<void>;
 }
@@ -57,6 +61,7 @@ export interface CacheCollectionStorage {
     getAll(): Promise<Record<string, unknown>>;
     /**
      * Removes only the provided session-storage keys.
+     * @param keys - The lookup-cache keys to remove from session storage.
      */
     remove(keys: string[]): Promise<void>;
 }
@@ -127,9 +132,9 @@ export async function lookupWithCache(
     }
 
     const result = await lookup();
-    const ttl = result.status === 'found'
+    const ttl = result.status === HN_LOOKUP_STATUS.FOUND
         ? POSITIVE_TTL_MS
-        : result.status === 'not_found' ? NEGATIVE_TTL_MS : null;
+        : result.status === HN_LOOKUP_STATUS.NOT_FOUND ? NEGATIVE_TTL_MS : null;
     if (ttl !== null) {
         try {
             await storage.set(key, {

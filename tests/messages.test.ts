@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    isAvailabilitySettingReadResponse,
     isAvailabilitySettingResponse,
     isBackgroundRequest,
     isLookupResponse,
@@ -25,8 +26,8 @@ describe('isBackgroundRequest', () => {
         { type: 'open_discussion', articleTabId: 1, itemId: '0' },
         { type: 'open_discussion', articleTabId: 1, itemId: String(Number.MAX_SAFE_INTEGER + 1) },
         { type: 'open_discussion', articleTabId: 1, itemId: '12x' },
-        { type: 'availability_setting_changed' },
-        { type: 'availability_setting_changed', enabled: 'yes' },
+        { type: 'set_availability_setting' },
+        { type: 'set_availability_setting', enabled: 'yes' },
     ])('rejects malformed request %#', (request) => {
         expect(isBackgroundRequest(request)).toBe(false);
     });
@@ -36,8 +37,9 @@ describe('isBackgroundRequest', () => {
         { type: 'lookup', context: { pageUrl: 'https://example.com', canonicalHref: 'https://example.com/story' } },
         { type: 'open_discussion', articleTabId: 0, itemId: '1' },
         { type: 'open_discussion', articleTabId: 42, itemId: '123456' },
-        { type: 'availability_setting_changed', enabled: true },
-        { type: 'availability_setting_changed', enabled: false },
+        { type: 'set_availability_setting', enabled: true },
+        { type: 'set_availability_setting', enabled: false },
+        { type: 'get_availability_setting' },
     ])('accepts valid request %#', (request) => {
         expect(isBackgroundRequest(request)).toBe(true);
     });
@@ -92,9 +94,17 @@ describe('background response validation', () => {
     it.each([
         undefined,
         { ok: true },
-        { ok: true, result: { status: 'wrong' } },
+        { ok: true, result: { enabled: 'yes' } },
+        { ok: true, result: { status: 'updated' } },
         { ok: false, error: 'failed' },
     ])('rejects malformed or unsuccessful availability response %#', (response) => {
         expect(isAvailabilitySettingResponse(response)).toBe(false);
+    });
+
+    it('accepts authoritative availability-setting responses', () => {
+        expect(isAvailabilitySettingResponse({ ok: true, result: { enabled: true } })).toBe(true);
+        expect(isAvailabilitySettingReadResponse({ ok: true, result: { enabled: false } })).toBe(true);
+        expect(isAvailabilitySettingReadResponse({ ok: true, result: { enabled: 'yes' } })).toBe(false);
+        expect(isAvailabilitySettingReadResponse({ ok: false, error: 'failed' })).toBe(false);
     });
 });

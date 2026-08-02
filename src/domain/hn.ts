@@ -7,6 +7,26 @@ const ALGOLIA_ENDPOINT = 'https://hn.algolia.com/api/v1/search';
 const LOOKUP_TIMEOUT_MS = 5_000;
 const DEFAULT_DISCUSSION_TITLE = 'Hacker News discussion';
 
+/**
+ * Names every Hacker News lookup outcome.
+ */
+export const HN_LOOKUP_STATUS = {
+    FOUND: 'found',
+    NOT_FOUND: 'not_found',
+    RESTRICTED: 'restricted',
+    ERROR: 'error',
+} as const;
+
+/**
+ * Names every classified Hacker News lookup failure.
+ */
+export const HN_LOOKUP_ERROR_REASON = {
+    INVALID_RESPONSE: 'invalid_response',
+    LOOKUP_FAILED: 'lookup_failed',
+} as const;
+
+class InvalidAlgoliaResponseError extends TypeError {}
+
 const positiveItemIdSchema = v.pipe(
     v.string(),
     v.regex(/^\d+$/),
@@ -56,10 +76,17 @@ export interface HnDiscussion {
  * Represents every outcome of a Hacker News discussion lookup.
  */
 export type HnLookupResult =
-    | { status: 'found'; primary: HnDiscussion; alternatives: HnDiscussion[] }
-    | { status: 'not_found' }
-    | { status: 'restricted' }
-    | { status: 'error'; reason: 'invalid_response' | 'lookup_failed' };
+    | {
+        status: typeof HN_LOOKUP_STATUS.FOUND;
+        primary: HnDiscussion;
+        alternatives: HnDiscussion[];
+    }
+    | { status: typeof HN_LOOKUP_STATUS.NOT_FOUND }
+    | { status: typeof HN_LOOKUP_STATUS.RESTRICTED }
+    | {
+        status: typeof HN_LOOKUP_STATUS.ERROR;
+        reason: typeof HN_LOOKUP_ERROR_REASON[keyof typeof HN_LOOKUP_ERROR_REASON];
+    };
 
 /**
  * Validates discussion data crossing extension boundaries or cache storage.
@@ -78,15 +105,18 @@ export const hnDiscussionSchema = v.object({
  */
 export const hnLookupResultSchema = v.variant('status', [
     v.object({
-        status: v.literal('found'),
+        status: v.literal(HN_LOOKUP_STATUS.FOUND),
         primary: hnDiscussionSchema,
         alternatives: v.array(hnDiscussionSchema),
     }),
-    v.object({ status: v.literal('not_found') }),
-    v.object({ status: v.literal('restricted') }),
+    v.object({ status: v.literal(HN_LOOKUP_STATUS.NOT_FOUND) }),
+    v.object({ status: v.literal(HN_LOOKUP_STATUS.RESTRICTED) }),
     v.object({
-        status: v.literal('error'),
-        reason: v.union([v.literal('invalid_response'), v.literal('lookup_failed')]),
+        status: v.literal(HN_LOOKUP_STATUS.ERROR),
+        reason: v.union([
+            v.literal(HN_LOOKUP_ERROR_REASON.INVALID_RESPONSE),
+            v.literal(HN_LOOKUP_ERROR_REASON.LOOKUP_FAILED),
+        ]),
     }),
 ]);
 
@@ -178,13 +208,13 @@ async function fetchHits(
     const payload: unknown = await response.json();
     const parsed = v.safeParse(algoliaResponseSchema, payload);
     if (!parsed.success) {
-        throw new TypeError('Invalid Algolia response');
+        throw new InvalidAlgoliaResponseError();
     }
     const hits: AlgoliaHit[] = [];
     for (const value of parsed.output.hits) {
         const hit = parseHit(value);
         if (hit === null) {
-            throw new TypeError('Invalid Algolia response');
+            throw new InvalidAlgoliaResponseError();
         }
         hits.push(hit);
     }
@@ -216,7 +246,7 @@ export async function lookupHnDiscussions(
     fetchFn: typeof fetch = fetch,
 ): Promise<HnLookupResult> {
     if (candidates.length === 0) {
-        return { status: 'restricted' };
+        return { status: HN_LOOKUP_STATUS.RESTRICTED };
     }
 
     const controller = new AbortController();
@@ -233,7 +263,7 @@ export async function lookupHnDiscussions(
 
     for (const result of results) {
         if (result.status === 'rejected') {
-            if (result.reason instanceof TypeError && result.reason.message === 'Invalid Algolia response') {
+            if (result.reason instanceof InvalidAlgoliaResponseError) {
                 invalidResponse = true;
             } else {
                 lookupFailure = true;
@@ -258,18 +288,24 @@ export async function lookupHnDiscussions(
     const primary = ranked[0];
     if (primary !== undefined) {
         return {
-            status: 'found',
+            status: HN_LOOKUP_STATUS.FOUND,
             primary,
             alternatives: ranked.slice(1),
         };
     }
     if (invalidResponse) {
-        return { status: 'error', reason: 'invalid_response' };
+        return {
+            status: HN_LOOKUP_STATUS.ERROR,
+            reason: HN_LOOKUP_ERROR_REASON.INVALID_RESPONSE,
+        };
     }
     if (lookupFailure) {
-        return { status: 'error', reason: 'lookup_failed' };
+        return {
+            status: HN_LOOKUP_STATUS.ERROR,
+            reason: HN_LOOKUP_ERROR_REASON.LOOKUP_FAILED,
+        };
     }
-    return { status: 'not_found' };
+    return { status: HN_LOOKUP_STATUS.NOT_FOUND };
 }
 
 /**

@@ -1,15 +1,27 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { updateAutomaticAvailability } from '../src/options/availability-settings';
+import {
+    readAutomaticAvailability,
+    updateAutomaticAvailability,
+} from '../src/options/availability-settings';
 import type { AvailabilitySettingsDependencies } from '../src/options/availability-settings';
 
 function dependencies(): AvailabilitySettingsDependencies {
     return {
-        notifyChanged: vi.fn(async () => ({ ok: true, result: { status: 'updated' } })),
+        readCurrent: vi.fn(async () => ({ ok: true, result: { enabled: false } })),
+        notifyChanged: vi.fn(async (enabled: boolean) => ({ ok: true, result: { enabled } })),
     };
 }
 
 describe('updateAutomaticAvailability', () => {
+    it('reads the authoritative setting through the background client', async () => {
+        const deps = dependencies();
+
+        await expect(readAutomaticAvailability(deps)).resolves.toBe(false);
+
+        expect(deps.readCurrent).toHaveBeenCalledOnce();
+    });
+
     it('enables automatic checks through the background-owned setting operation', async () => {
         const deps = dependencies();
 
@@ -32,7 +44,7 @@ describe('updateAutomaticAvailability', () => {
         null,
         {},
         { ok: true },
-        { ok: true, result: { status: 'wrong' } },
+        { ok: true, result: { status: 'updated' } },
         { ok: false, error: 'badge refresh failed' },
     ])('rejects malformed or unsuccessful response without client-side compensation %#', async (response) => {
         const deps = dependencies();

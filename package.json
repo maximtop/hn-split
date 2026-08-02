@@ -24,6 +24,8 @@
     "@adguard/translate": "2.0.8",
     "@mantine/core": "9.5.1",
     "@mantine/hooks": "9.5.1",
+    "mobx": "7.0.0",
+    "mobx-react-lite": "5.0.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "tldts": "7.4.10",

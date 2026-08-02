@@ -8,6 +8,7 @@ export interface AutomaticAvailabilityLifecycleDependencies {
     getEnabled(): Promise<boolean>;
     /**
      * Persists the authoritative setting value.
+     * @param enabled - Whether automatic availability should be enabled.
      */
     setEnabled(enabled: boolean): Promise<void>;
     /**

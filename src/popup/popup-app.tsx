@@ -12,10 +12,15 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
+import { HN_LOOKUP_ERROR_REASON, HN_LOOKUP_STATUS } from '../domain/hn';
 import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import { readPageContext } from '../page/context';
 import { t } from '../shared/i18n';
-import { isLookupResponse, isOpenDiscussionResponse } from '../shared/messages';
+import {
+    BACKGROUND_REQUEST_TYPE,
+    isLookupResponse,
+    isOpenDiscussionResponse,
+} from '../shared/messages';
 import type { LookupRequest, OpenDiscussionRequest } from '../shared/messages';
 
 /**
@@ -110,7 +115,7 @@ function DiscussionButton(props: DiscussionButtonProps): React.JSX.Element {
         >
             <Stack gap={4} align="flex-start">
                 <Text c="orange.7" fw={700} size="xs">
-                    {t(primary ? 'open_discussion' : 'open_alternative')}
+                    {t(primary ? BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION : 'open_alternative')}
                 </Text>
                 <Text fw={700} size="sm">{discussion.title}</Text>
                 <Text c="dimmed" size="xs">
@@ -146,7 +151,10 @@ export function App(): React.JSX.Element {
                 if (result === undefined) {
                     throw new Error(t('page_not_inspectable'));
                 }
-                const response = await sendMessage({ type: 'lookup', context: result });
+                const response = await sendMessage({
+                    type: BACKGROUND_REQUEST_TYPE.LOOKUP,
+                    context: result,
+                });
                 if (!isLookupResponse(response)) {
                     throw new Error(t('invalid_extension_response'));
                 }
@@ -187,7 +195,7 @@ export function App(): React.JSX.Element {
         setState((current) => ({ ...current, openingId: itemId, error: null }));
         try {
             const response = await sendMessage({
-                type: 'open_discussion',
+                type: BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION,
                 articleTabId: state.articleTabId,
                 itemId,
             });
@@ -209,14 +217,14 @@ export function App(): React.JSX.Element {
         }
     };
 
-    const found = state.result?.status === 'found' ? state.result : null;
+    const found = state.result?.status === HN_LOOKUP_STATUS.FOUND ? state.result : null;
 
     return (
         <MantineProvider theme={theme} defaultColorScheme="auto">
             <Box component="main" p="md" w={380}>
                 <Stack gap="md">
                     <Box component="header">
-                        <Text c="orange.7" fw={800} size="xs" tt="uppercase">HN Split</Text>
+                        <Text c="orange.7" fw={800} size="xs" tt="uppercase">{t('extension_name')}</Text>
                         <Title order={1} size="h3">{t('popup_heading')}</Title>
                     </Box>
 
@@ -224,14 +232,16 @@ export function App(): React.JSX.Element {
                     {state.error !== null && (
                         <Alert className="status status--error" color="red">{state.error}</Alert>
                     )}
-                    {state.result?.status === 'restricted' && (
+                    {state.result?.status === HN_LOOKUP_STATUS.RESTRICTED && (
                         <Text className="status" c="dimmed">{t('restricted_page')}</Text>
                     )}
-                    {state.result?.status === 'not_found' && (
+                    {state.result?.status === HN_LOOKUP_STATUS.NOT_FOUND && (
                         <Text className="status" c="dimmed">{t('discussion_not_found')}</Text>
                     )}
-                    {state.result?.status === 'error' && (
-                        <Alert className="status status--error" color="red">{t('lookup_failed')}</Alert>
+                    {state.result?.status === HN_LOOKUP_STATUS.ERROR && (
+                        <Alert className="status status--error" color="red">
+                            {t(HN_LOOKUP_ERROR_REASON.LOOKUP_FAILED)}
+                        </Alert>
                     )}
 
                     {found !== null && (

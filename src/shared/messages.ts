@@ -1,9 +1,27 @@
 import * as v from 'valibot';
 
-import type { OpenDiscussionResult } from '../browser/open-discussion';
 import { hnLookupResultSchema } from '../domain/hn';
 import type { HnLookupResult } from '../domain/hn';
 import type { PageContext } from '../page/context';
+
+/**
+ * Names every request accepted by the background worker.
+ */
+export const BACKGROUND_REQUEST_TYPE = {
+    LOOKUP: 'lookup',
+    OPEN_DISCUSSION: 'open_discussion',
+    SET_AVAILABILITY_SETTING: 'set_availability_setting',
+    GET_AVAILABILITY_SETTING: 'get_availability_setting',
+} as const;
+
+/**
+ * Names every supported discussion-tab placement result.
+ */
+export const DISCUSSION_OPEN_MODE = {
+    ADJACENT_TAB: 'adjacent_tab',
+    REUSED_TAB: 'reused_tab',
+    SPLIT_VIEW: 'split_view',
+} as const;
 
 const nonNegativeSafeIntegerSchema = v.pipe(v.number(), v.safeInteger(), v.minValue(0));
 const positiveItemIdSchema = v.pipe(
@@ -27,7 +45,7 @@ export interface LookupRequest {
     /**
      * Selects the lookup request handler.
      */
-    type: 'lookup';
+    type: typeof BACKGROUND_REQUEST_TYPE.LOOKUP;
     /**
      * Contains the current and canonical page URLs.
      */
@@ -41,7 +59,7 @@ export interface OpenDiscussionRequest {
     /**
      * Selects the discussion-opening request handler.
      */
-    type: 'open_discussion';
+    type: typeof BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION;
     /**
      * Identifies the article tab that initiated the request.
      */
@@ -55,11 +73,11 @@ export interface OpenDiscussionRequest {
 /**
  * Requests a serialized automatic-availability setting transaction.
  */
-export interface AvailabilitySettingChangedRequest {
+export interface AvailabilitySettingSetRequest {
     /**
      * Selects the automatic-availability setting handler.
      */
-    type: 'availability_setting_changed';
+    type: typeof BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING;
     /**
      * Contains the requested automatic-availability state.
      */
@@ -67,30 +85,61 @@ export interface AvailabilitySettingChangedRequest {
 }
 
 /**
- * Represents every request accepted by the background worker.
+ * Requests the authoritative automatic-availability setting.
  */
-export type BackgroundRequest = LookupRequest | OpenDiscussionRequest | AvailabilitySettingChangedRequest;
+export interface AvailabilitySettingGetRequest {
+    /**
+     * Selects the automatic-availability setting reader.
+     */
+    type: typeof BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING;
+}
 
 /**
- * Confirms that an automatic-availability setting transaction completed.
+ * Represents every request accepted by the background worker.
+ */
+export type BackgroundRequest =
+    | LookupRequest
+    | OpenDiscussionRequest
+    | AvailabilitySettingSetRequest
+    | AvailabilitySettingGetRequest;
+
+/**
+ * Describes how and where a discussion tab was opened.
+ */
+export interface OpenDiscussionResult {
+    /**
+     * Identifies whether Chrome created, reused, or preserved a Split View tab.
+     */
+    mode: typeof DISCUSSION_OPEN_MODE[keyof typeof DISCUSSION_OPEN_MODE];
+    /**
+     * Identifies the resulting discussion tab.
+     */
+    tabId: number;
+}
+
+/**
+ * Returns the authoritative automatic-availability setting after a read or mutation.
  */
 export interface AvailabilitySettingResult {
     /**
-     * Marks the background-owned setting transaction as completed.
+     * Contains the currently persisted setting value.
      */
-    status: 'updated';
+    enabled: boolean;
 }
 
 /**
  * Represents every response returned by the background worker.
  */
 export type BackgroundResponse =
-    | { ok: true; result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult }
+    | {
+        ok: true;
+        result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult;
+    }
     | { ok: false; error: string };
 
 const availabilitySettingResponseSchema = v.object({
     ok: v.literal(true),
-    result: v.object({ status: v.literal('updated') }),
+    result: v.object({ enabled: v.boolean() }),
 });
 
 const errorResponseSchema = v.object({
@@ -105,9 +154,9 @@ const lookupResponseSchema = v.union([
 
 const openDiscussionResultSchema = v.object({
     mode: v.union([
-        v.literal('adjacent_tab'),
-        v.literal('reused_tab'),
-        v.literal('split_view'),
+        v.literal(DISCUSSION_OPEN_MODE.ADJACENT_TAB),
+        v.literal(DISCUSSION_OPEN_MODE.REUSED_TAB),
+        v.literal(DISCUSSION_OPEN_MODE.SPLIT_VIEW),
     ]),
     tabId: nonNegativeSafeIntegerSchema,
 });
@@ -118,10 +167,14 @@ const openDiscussionResponseSchema = v.union([
 ]);
 
 const backgroundRequestSchema = v.variant('type', [
-    v.object({ type: v.literal('lookup'), context: pageContextSchema }),
-    v.object({ type: v.literal('availability_setting_changed'), enabled: v.boolean() }),
+    v.object({ type: v.literal(BACKGROUND_REQUEST_TYPE.LOOKUP), context: pageContextSchema }),
     v.object({
-        type: v.literal('open_discussion'),
+        type: v.literal(BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING),
+        enabled: v.boolean(),
+    }),
+    v.object({ type: v.literal(BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING) }),
+    v.object({
+        type: v.literal(BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION),
         articleTabId: nonNegativeSafeIntegerSchema,
         itemId: positiveItemIdSchema,
     }),
@@ -135,6 +188,16 @@ export function isAvailabilitySettingResponse(
     value: unknown,
 ): value is { ok: true; result: AvailabilitySettingResult } {
     return v.safeParse(availabilitySettingResponseSchema, value).success;
+}
+
+/**
+ * Determines whether a runtime value contains the authoritative availability setting.
+ * @param value - The unknown runtime value to validate.
+ */
+export function isAvailabilitySettingReadResponse(
+    value: unknown,
+): value is { ok: true; result: AvailabilitySettingResult } {
+    return isAvailabilitySettingResponse(value);
 }
 
 /**
