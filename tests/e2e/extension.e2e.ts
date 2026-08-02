@@ -1,0 +1,237 @@
+import { expect, test } from '@playwright/test';
+import { chromium } from '@playwright/test';
+import type { BrowserContext, Page, Worker } from '@playwright/test';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { resolve } from 'node:path';
+
+const ARTICLE_URL = 'https://article.hn-split.example.com/story';
+const AUTOMATIC_ARTICLE_URL = 'https://article.hn-split.example.com/automatic-story';
+const FIRST_ITEM_ID = '424242';
+const SECOND_ITEM_ID = '424243';
+
+interface LookupResponse {
+    ok: boolean;
+    result?: {
+        status: string;
+        primary?: { id: string; comments: number };
+    };
+    error?: string;
+}
+
+interface OpenResponse {
+    ok: boolean;
+    result?: {
+        tabId: number;
+        mode: 'adjacent_tab' | 'reused_tab' | 'split_view';
+    };
+    error?: string;
+}
+
+async function extensionWorker(context: BrowserContext): Promise<Worker> {
+    const existing = context.serviceWorkers().find((worker) => worker.url().startsWith('chrome-extension://'));
+    return existing ?? context.waitForEvent(
+        'serviceworker',
+        (worker) => worker.url().startsWith('chrome-extension://'),
+    );
+}
+
+async function extensionPage(context: BrowserContext, extensionId: string): Promise<Page> {
+    const page = await context.newPage();
+    await page.goto(`chrome-extension://${extensionId}/options.html`);
+    return page;
+}
+
+test('loads the unpacked extension and verifies lookup plus adjacent tab reuse', async () => {
+    const extensionPath = resolve(import.meta.dirname, '../../dist');
+    const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn_split_playwright_'));
+    let context: BrowserContext | undefined;
+
+    try {
+        context = await chromium.launchPersistentContext(userDataDir, {
+            channel: 'chromium',
+            headless: true,
+            args: [
+                `--disable-extensions-except=${extensionPath}`,
+                `--load-extension=${extensionPath}`,
+            ],
+        });
+
+        let algoliaRequests = 0;
+        let signalAutomaticLookup!: () => void;
+        let releaseAutomaticLookup!: () => void;
+        const automaticLookupStarted = new Promise<void>((resolveStarted) => {
+            signalAutomaticLookup = resolveStarted;
+        });
+        const automaticLookupGate = new Promise<void>((resolveLookup) => {
+            releaseAutomaticLookup = resolveLookup;
+        });
+        await context.route(ARTICLE_URL, async (route) => {
+            await route.fulfill({
+                contentType: 'text/html',
+                body: `<!doctype html><title>HN Split fixture article</title>
+                    <link rel="canonical" href="${ARTICLE_URL}">
+                    <main><h1>Fixture article</h1></main>`,
+            });
+        });
+        await context.route(AUTOMATIC_ARTICLE_URL, async (route) => {
+            await route.fulfill({
+                contentType: 'text/html',
+                body: '<!doctype html><title>Automatic fixture article</title><main><h1>Automatic fixture</h1></main>',
+            });
+        });
+        await context.route('https://hn.algolia.com/api/v1/search**', async (route) => {
+            algoliaRequests += 1;
+            const query = new URL(route.request().url()).searchParams.get('query');
+            if (query === AUTOMATIC_ARTICLE_URL) {
+                signalAutomaticLookup();
+                await automaticLookupGate;
+            }
+            await route.fulfill({
+                contentType: 'application/json',
+                json: {
+                    hits: [{
+                        objectID: FIRST_ITEM_ID,
+                        url: query === AUTOMATIC_ARTICLE_URL ? AUTOMATIC_ARTICLE_URL : ARTICLE_URL,
+                        title: 'Fixture Hacker News discussion',
+                        num_comments: 37,
+                        points: 81,
+                        created_at_i: 1_700_000_000,
+                    }],
+                },
+            });
+        });
+        await context.route('https://news.ycombinator.com/item?**', async (route) => {
+            await route.fulfill({
+                contentType: 'text/html',
+                body: '<!doctype html><title>Fixture Hacker News comments</title>',
+            });
+        });
+
+        const worker = await extensionWorker(context);
+        const extensionId = new URL(worker.url()).host;
+        const article = context.pages()[0] ?? await context.newPage();
+        await article.goto(ARTICLE_URL);
+        await article.bringToFront();
+        await expect(article.locator('h1')).toHaveText('Fixture article');
+
+        const articleTabId = await worker.evaluate(async () => {
+            const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            return activeTab?.id;
+        });
+        expect(typeof articleTabId).toBe('number');
+
+        const options = await extensionPage(context, extensionId);
+        await expect(options.getByRole('heading', { name: 'Availability indicator' })).toBeVisible();
+        await expect(options.getByRole('checkbox', { name: 'Automatically check article URLs' })).not.toBeChecked();
+
+        const hasRequiredTabsPermission = await worker.evaluate(async () => chrome.permissions.contains({
+            permissions: ['tabs'],
+        }));
+        expect(hasRequiredTabsPermission).toBe(true);
+
+        await article.goto(AUTOMATIC_ARTICLE_URL);
+        const enableDuringLookup = options.evaluate(async () => chrome.runtime.sendMessage({
+            type: 'availability_setting_changed',
+            enabled: true,
+        }));
+        await automaticLookupStarted;
+        const disableDuringLookup = options.evaluate(async () => chrome.runtime.sendMessage({
+            type: 'availability_setting_changed',
+            enabled: false,
+        }));
+        releaseAutomaticLookup();
+        await expect(enableDuringLookup).resolves.toMatchObject({ ok: true });
+        await expect(disableDuringLookup).resolves.toMatchObject({ ok: true });
+        const stateAfterConcurrentDisable = await worker.evaluate(async (tabId) => ({
+            enabled: (await chrome.storage.local.get('automatic_availability')).automatic_availability,
+            badge: await chrome.action.getBadgeText({ tabId }),
+            sessionKeys: Object.keys(await chrome.storage.session.get(null)),
+        }), articleTabId as number);
+        expect(stateAfterConcurrentDisable.enabled).toBe(false);
+        expect(stateAfterConcurrentDisable.badge).toBe('');
+        expect(stateAfterConcurrentDisable.sessionKeys.filter((key) => key.startsWith('hn_lookup_v1:')))
+            .toEqual([]);
+
+        await article.goto(ARTICLE_URL);
+        const lookup = await options.evaluate(async ({ pageUrl }) => (
+            chrome.runtime.sendMessage({
+                type: 'lookup',
+                context: { pageUrl, canonicalHref: pageUrl },
+            }) as Promise<LookupResponse>
+        ), { pageUrl: ARTICLE_URL });
+        expect(lookup).toMatchObject({
+            ok: true,
+            result: {
+                status: 'found',
+                primary: { id: FIRST_ITEM_ID, comments: 37 },
+            },
+        });
+        expect(algoliaRequests).toBe(2);
+
+        const automaticCheckbox = options.getByRole('checkbox', {
+            name: 'Automatically check article URLs',
+        });
+        await automaticCheckbox.evaluate((element: HTMLInputElement) => element.click());
+        await expect(automaticCheckbox).toBeChecked();
+        await expect.poll(async () => worker.evaluate(
+            async (tabId) => chrome.action.getBadgeText({ tabId }),
+            articleTabId as number,
+        )).toBe('37');
+
+        await automaticCheckbox.evaluate((element: HTMLInputElement) => element.click());
+        await expect(automaticCheckbox).not.toBeChecked();
+        await expect.poll(async () => worker.evaluate(
+            async (tabId) => chrome.action.getBadgeText({ tabId }),
+            articleTabId as number,
+        )).toBe('');
+        const sessionKeysAfterDisable = await worker.evaluate(async () => (
+            Object.keys(await chrome.storage.session.get(null))
+        ));
+        expect(sessionKeysAfterDisable.filter((key) => key.startsWith('hn_lookup_v1:'))).toEqual([]);
+
+        const firstOpen = await options.evaluate(async ({ tabId, itemId }) => (
+            chrome.runtime.sendMessage({
+                type: 'open_discussion',
+                articleTabId: tabId,
+                itemId,
+            }) as Promise<OpenResponse>
+        ), { tabId: articleTabId as number, itemId: FIRST_ITEM_ID });
+        expect(firstOpen).toMatchObject({ ok: true, result: { mode: 'adjacent_tab' } });
+
+        const firstDiscussionTabId = firstOpen.result?.tabId;
+        expect(typeof firstDiscussionTabId).toBe('number');
+        const firstTabs = await options.evaluate(async () => chrome.tabs.query({ currentWindow: true }));
+        const articleTab = firstTabs.find(({ id }) => id === articleTabId);
+        const firstDiscussionTab = firstTabs.find(({ id }) => id === firstDiscussionTabId);
+        expect(firstDiscussionTab?.index).toBe((articleTab?.index ?? -2) + 1);
+        const firstDiscussionUrl = `https://news.ycombinator.com/item?id=${FIRST_ITEM_ID}`;
+        await expect.poll(() => context?.pages().map((page) => page.url()) ?? [])
+            .toContain(firstDiscussionUrl);
+        const discussionPage = context.pages().find((page) => page.url() === firstDiscussionUrl);
+        expect(discussionPage).toBeDefined();
+
+        const secondOpen = await options.evaluate(async ({ tabId, itemId }) => (
+            chrome.runtime.sendMessage({
+                type: 'open_discussion',
+                articleTabId: tabId,
+                itemId,
+            }) as Promise<OpenResponse>
+        ), { tabId: articleTabId as number, itemId: SECOND_ITEM_ID });
+        expect(secondOpen).toMatchObject({
+            ok: true,
+            result: { tabId: firstDiscussionTabId, mode: 'reused_tab' },
+        });
+
+        const finalTabs = await options.evaluate(async () => chrome.tabs.query({ currentWindow: true }));
+        expect(finalTabs).toHaveLength(firstTabs.length);
+        const secondDiscussionUrl = `https://news.ycombinator.com/item?id=${SECOND_ITEM_ID}`;
+        await discussionPage?.waitForURL(secondDiscussionUrl);
+        expect(discussionPage?.url()).toBe(secondDiscussionUrl);
+        expect(context.pages().filter((page) => page.url().startsWith('https://news.ycombinator.com/item?')))
+            .toHaveLength(1);
+    } finally {
+        await context?.close();
+        await rm(userDataDir, { force: true, recursive: true });
+    }
+});
