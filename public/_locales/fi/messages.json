@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Avaa sivupaneelissa", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News estää upottamisen. Kun tämä paneeli on auki, laajennus poistaa eston vain Hacker Newsin kehyksiltä ja palauttaa sen, kun suljet paneelin.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Avaa Hacker Newsissä", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Valitse keskustelu laajennuksen ponnahdusikkunassa.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Valitse keskustelu laajennuksen ponnahdusikkunassa.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Avaa Splitissä", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Etsitään Hacker News -keskustelua…", "description": "Side panel status while a discussion lookup runs" }
 }

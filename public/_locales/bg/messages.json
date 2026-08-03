@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Отваряне в страничния панел", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News блокира вграждането. Докато този панел е отворен, разширението премахва тази блокировка само за рамки на Hacker News и я възстановява, когато затворите панела.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Отваряне в Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Изберете дискусия в изскачащия прозорец на разширението.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Изберете дискусия в изскачащия прозорец на разширението.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Отваряне в Split", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Търсене на дискусията в Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

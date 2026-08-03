@@ -19,6 +19,7 @@ describe('extension manifest', () => {
 
         expect([...manifest.permissions].sort()).toEqual([
             'activeTab',
+            'contextMenus',
             'declarativeNetRequestWithHostAccess',
             'scripting',
             'sidePanel',

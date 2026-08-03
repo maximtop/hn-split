@@ -2,8 +2,11 @@ import type { ContentScriptRegistry } from '../browser/article-click-registratio
 import type { AvailabilityBadge } from '../browser/availability-badge';
 import type { CacheCollectionStorage, CacheStorage } from '../browser/lookup-cache';
 import type { SessionStore, TabClient, TabSummary } from '../browser/open-discussion';
+import type { OpenInSplitMenuRegistry } from '../browser/open-in-split-menu';
 import { HN_ORIGIN } from '../domain/hn';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../shared/content-scripts';
+import { isSidePanelContent } from '../shared/side-panel-content';
+import type { SidePanelContent } from '../shared/side-panel-content';
 import { SESSION_STORAGE_KEY, SESSION_STORAGE_KEY_PREFIX, STORAGE_KEY } from '../shared/storage-keys';
 
 /**
@@ -91,20 +94,21 @@ export const cacheCollectionStorage: CacheCollectionStorage = {
 };
 
 /**
- * Reads the discussion selected for the side panel in this browser session.
+ * Reads what the side panel should display in this browser session. Anything
+ * the current model does not recognize reads as an empty panel.
  */
-export async function getSidePanelDiscussion(): Promise<string | null> {
+export async function getSidePanelContent(): Promise<SidePanelContent | null> {
     const stored = await chrome.storage.session.get(SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION);
-    const itemId: unknown = stored[SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION];
-    return typeof itemId === 'string' ? itemId : null;
+    const content: unknown = stored[SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION];
+    return isSidePanelContent(content) ? content : null;
 }
 
 /**
- * Records the discussion the side panel should display.
- * @param itemId - The validated Hacker News item identifier to display.
+ * Records what the side panel should display.
+ * @param content - The validated panel content to display.
  */
-export async function setSidePanelDiscussion(itemId: string): Promise<void> {
-    await chrome.storage.session.set({ [SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION]: itemId });
+export async function setSidePanelContent(content: SidePanelContent): Promise<void> {
+    await chrome.storage.session.set({ [SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION]: content });
 }
 
 /**
@@ -165,6 +169,34 @@ export const contentScriptRegistry: ContentScriptRegistry = {
     async unregister() {
         await chrome.scripting.unregisterContentScripts({
             ids: [ARTICLE_CLICK_CONTENT_SCRIPT.ID],
+        });
+    },
+};
+
+/**
+ * Adapts the Chrome context-menu API to the link action. Unlike most of the
+ * Chrome APIs used here, `create` reports failures through `runtime.lastError`
+ * inside its callback instead of rejecting, so the failure is surfaced here.
+ */
+export const contextMenuRegistry: OpenInSplitMenuRegistry = {
+    async removeAll() {
+        await chrome.contextMenus.removeAll();
+    },
+    async create(properties) {
+        await new Promise<void>((resolve, reject) => {
+            chrome.contextMenus.create({
+                id: properties.id,
+                title: properties.title,
+                contexts: properties.contexts as [chrome.contextMenus.ContextType, ...chrome.contextMenus.ContextType[]],
+                targetUrlPatterns: [...properties.targetUrlPatterns],
+            }, () => {
+                const failure = chrome.runtime.lastError;
+                if (failure === undefined) {
+                    resolve();
+                    return;
+                }
+                reject(new Error(failure.message));
+            });
         });
     },
 };

@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Openen in zijpaneel", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News blokkeert insluiten. Zolang dit paneel open is, verwijdert de extensie die blokkade alleen voor Hacker News-frames en herstelt deze wanneer je het paneel sluit.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Openen op Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Kies een discussie in de pop-up van de extensie.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Kies een discussie in de pop-up van de extensie.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Openen in Split", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Zoeken naar de discussie op Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Öppna i sidopanelen", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News blockerar inbäddning. Medan den här panelen är öppen tar tillägget bort blockeringen enbart för Hacker News-ramar och återställer den när du stänger panelen.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Öppna på Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Välj en diskussion i tilläggets popup.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Välj en diskussion i tilläggets popup.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Öppna i Split", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Söker efter diskussionen på Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

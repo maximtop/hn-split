@@ -9,8 +9,8 @@ import {
     getArticleClickDiscussionEnabled,
     openSidePanel,
     setArticleClickDiscussionEnabled,
-    setSidePanelDiscussion,
 } from './chrome-adapters';
+import { selectSidePanelDiscussion } from './side-panel-content-controller';
 
 /**
  * Mirrors the persisted article-click setting so the message listener can
@@ -78,7 +78,11 @@ export function handleArticleClickMessage(
             cachedEnabled: () => cachedEnabled,
             readEnabled: getArticleClickDiscussionEnabled,
             openSidePanel,
-            setSelection: setSidePanelDiscussion,
+            // Routed through the shared owner so a clicked story supersedes any
+            // link lookup still in flight instead of racing it.
+            setSelection: async (itemId) => {
+                await selectSidePanelDiscussion(itemId);
+            },
             warn: logWarning,
         },
     );

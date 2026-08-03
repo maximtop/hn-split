@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Otwórz w panelu bocznym", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News blokuje osadzanie. Gdy ten panel jest otwarty, rozszerzenie usuwa tę blokadę wyłącznie dla ramek Hacker News i przywraca ją po zamknięciu panelu.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Otwórz w Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Wybierz dyskusję w wyskakującym okienku rozszerzenia.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Wybierz dyskusję w wyskakującym okienku rozszerzenia.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Otwórz w Split", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Wyszukiwanie dyskusji na Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Abrir no painel lateral", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "O Hacker News bloqueia a incorporação. Enquanto este painel está aberto, a extensão remove esse bloqueio apenas para quadros do Hacker News e o restaura quando você fecha o painel.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Abrir no Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Escolha uma discussão no popup da extensão.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Escolha uma discussão no popup da extensão.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Abrir no Split", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Procurando a discussão no Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

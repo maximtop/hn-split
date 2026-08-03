@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Отвори у бочној табли", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News блокира уграђивање. Док је ова табла отворена, проширење уклања ту блокаду само за оквире Hacker News-а и враћа је када затворите таблу.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Отвори на Hacker News-у", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Изаберите дискусију у искачућем прозору проширења.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Изаберите дискусију у искачућем прозору проширења.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Отвори у Split-у", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Тражење дискусије на Hacker News-у…", "description": "Side panel status while a discussion lookup runs" }
 }

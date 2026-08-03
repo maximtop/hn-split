@@ -10,6 +10,8 @@ Users may enable automatic availability badges in the options page. The extensio
 
 Chrome 140 documents Split View detection through `Tab.splitViewId`, but not Split View creation through `tabs.create`. The MVP therefore opens the first discussion in an adjacent tab and remembers it. If the user pairs that tab with the article using native Chrome Split View, later selections reuse the same browser-managed pane.
 
+Any `http:` or `https:` link offers an **Open in Split** item in the right-click menu. Selecting it opens that link in the current tab and shows its Hacker News discussion in the side panel beside it; nothing runs before that selection, and the panel says so plainly when no discussion exists or the lookup fails.
+
 A separate opt-in setting (off by default) turns story clicks on Hacker News into a split reading flow: the article opens in the current tab as usual, while its discussion opens in Chrome's side panel beside it. A content script is registered for `news.ycombinator.com` only while this setting is on. It acts only on unmodified primary clicks on external story links and resolves the discussion from the item id already present in the page, so the flow makes no network requests.
 
 Hacker News is the only discussion source in the MVP. Chrome is the first implementation target; Firefox, Edge, and Safari follow after the Chrome behavior is validated.

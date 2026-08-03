@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "サイドパネルで開く", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News は埋め込みをブロックしています。このパネルを開いている間だけ、拡張機能は Hacker News のフレームに限ってそのブロックを解除し、パネルを閉じると元に戻します。", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Hacker News で開く", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "拡張機能のポップアップでディスカッションを選んでください。", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "拡張機能のポップアップでディスカッションを選んでください。", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Split で開く", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Hacker News のディスカッションを検索しています…", "description": "Side panel status while a discussion lookup runs" }
 }

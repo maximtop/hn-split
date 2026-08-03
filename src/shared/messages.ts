@@ -3,6 +3,7 @@ import * as v from 'valibot';
 import { hnLookupResultSchema } from '../domain/hn';
 import type { HnLookupResult } from '../domain/hn';
 import { ARTICLE_CLICK_MESSAGE_TYPE } from './content-scripts';
+import { sidePanelContentSchema } from './side-panel-content';
 
 /**
  * Names every request accepted by the background worker.
@@ -189,15 +190,15 @@ const availabilitySettingResultSchema = v.object({
     enabled: v.boolean(),
 });
 
-const sidePanelSelectionResultSchema = v.object({
-    itemId: v.nullable(positiveItemIdSchema),
+const sidePanelContentResultSchema = v.object({
+    content: v.nullable(sidePanelContentSchema),
 });
 
 /**
- * Carries the discussion currently selected for the side panel, or null when
- * the user has not selected one in this browser session.
+ * Carries what the side panel should display, or null when nothing has been
+ * selected in this browser session.
  */
-export type SidePanelSelectionResult = v.InferOutput<typeof sidePanelSelectionResultSchema>;
+export type SidePanelContentResult = v.InferOutput<typeof sidePanelContentResultSchema>;
 
 /**
  * Returns the authoritative automatic-availability setting after a read or mutation.
@@ -220,23 +221,23 @@ export type BackgroundErrorResponse = v.InferOutput<typeof errorResponseSchema>;
 export type BackgroundResponse =
     | {
         ok: true;
-        result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult | SidePanelSelectionResult;
+        result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult | SidePanelContentResult;
     }
     | BackgroundErrorResponse;
 
-const sidePanelSelectionResponseSchema = v.union([
-    v.object({ ok: v.literal(true), result: sidePanelSelectionResultSchema }),
+const sidePanelContentResponseSchema = v.union([
+    v.object({ ok: v.literal(true), result: sidePanelContentResultSchema }),
     errorResponseSchema,
 ]);
 
 /**
- * Determines whether a runtime value carries the side panel selection.
+ * Determines whether a runtime value carries the side panel content.
  * @param value - The unknown runtime value to validate.
  */
-export function isSidePanelSelectionResponse(
+export function isSidePanelContentResponse(
     value: unknown,
-): value is { ok: true; result: SidePanelSelectionResult } | BackgroundErrorResponse {
-    return v.safeParse(sidePanelSelectionResponseSchema, value).success;
+): value is { ok: true; result: SidePanelContentResult } | BackgroundErrorResponse {
+    return v.safeParse(sidePanelContentResponseSchema, value).success;
 }
 
 const availabilitySettingResponseSchema = v.object({

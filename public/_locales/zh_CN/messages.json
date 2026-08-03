@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "在侧边栏中打开", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News 禁止被嵌入。此面板打开期间，扩展程序仅针对 Hacker News 框架解除该限制，并在你关闭面板时恢复。", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "在 Hacker News 上打开", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "请在扩展程序弹出窗口中选择一个讨论。", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "请在扩展程序弹出窗口中选择一个讨论。", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "在 Split 中打开", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "正在查找 Hacker News 讨论…", "description": "Side panel status while a discussion lookup runs" }
 }

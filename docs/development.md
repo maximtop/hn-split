@@ -46,7 +46,9 @@ Hacker News discussion embedded. With the opt-in article-click setting enabled,
 clicking a story link on Hacker News opens the same panel for that story's
 discussion; `chrome.sidePanel.open` accepts that click's user gesture only while
 the background message listener runs synchronously, which is why the click
-message is handled outside the async request/response protocol. Hacker News
+message is handled outside the async request/response protocol. The same rule
+governs the link context menu below, whose click listener is synchronous for
+exactly this reason. Hacker News
 blocks framing, so the background
 worker installs one dynamic `declarativeNetRequest` rule that removes
 `X-Frame-Options` and `Content-Security-Policy` from Hacker News **sub-frame**
@@ -67,6 +69,32 @@ also drops Hacker News's own script restrictions inside the frame; and Hacker
 News can add frame-busting or change cookie attributes at any time, which would
 break framing without warning. The adjacent-tab flow keeps working in that case,
 and the panel always links out to the full site.
+
+## Open in Split link context menu
+
+Right-clicking an `http:` or `https:` link offers **Open in Split**. Chrome draws
+the item from the declared target pattern alone; the extension learns nothing
+about a right-click and is handed the link URL only when the item is selected.
+Selecting it opens the side panel, loads the link in the tab it was clicked in
+(the selection is the explicit user action that permits replacing that page),
+and looks the link up through the same cached Algolia path the popup uses.
+Because that lookup is a network round-trip rather than an item id already
+present in the page, the panel goes through visible states: a pending line while
+the lookup runs, then the discussion frame, or the same not-found, ineligible,
+or lookup-failed message the popup shows for that outcome.
+
+The panel displays one thing at a time, so a single owner
+(`src/browser/side-panel-content-manager.ts`) holds that selection for every
+entry point — popup, article click, and this menu. Each request takes the next
+generation, cancels the lookup it supersedes, and its writes are queued and
+re-check that generation as they run, so a slow lookup can never overwrite
+whatever the user picked while it was in flight. A worker that stops mid-lookup
+would strand a pending state, so worker startup resolves any leftover pending
+state into the failure message, alongside the framing-rule reset.
+
+Menu items, like dynamically registered content scripts, are dropped on
+extension updates and browser restarts, so the item is republished on every
+worker start by clearing first and creating again.
 
 ## Split View behavior
 

@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "সাইড প্যানেলে খুলুন", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News এমবেড করা আটকায়। এই প্যানেল খোলা থাকা অবস্থায় এক্সটেনশনটি শুধু Hacker News ফ্রেমের জন্য সেই বাধা সরায় এবং প্যানেল বন্ধ করলে তা ফিরিয়ে দেয়।", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Hacker News-এ খুলুন", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "এক্সটেনশন পপআপে একটি আলোচনা বেছে নিন।", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "এক্সটেনশন পপআপে একটি আলোচনা বেছে নিন।", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Split-এ খুলুন", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Hacker News-এর আলোচনা খোঁজা হচ্ছে…", "description": "Side panel status while a discussion lookup runs" }
 }
