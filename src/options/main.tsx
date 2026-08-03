@@ -18,15 +18,17 @@ document.title = t('options_document_title');
 
 const store = new OptionsStore({
     async readCurrent() {
-        return chrome.runtime.sendMessage({
+        const response: unknown = await chrome.runtime.sendMessage({
             type: BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING,
         });
+        return response;
     },
     async requestUpdate(enabled) {
-        return chrome.runtime.sendMessage({
+        const response: unknown = await chrome.runtime.sendMessage({
             type: BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING,
             enabled,
         });
+        return response;
     },
 });
 void store.load();

@@ -20,7 +20,33 @@ export default tseslint.config(
         ignores: ['coverage/**', 'dist/**', 'node_modules/**'],
     },
     eslint.configs.recommended,
-    ...tseslint.configs.recommended,
+    // Type-aware linting backed by the TypeScript project service.
+    ...tseslint.configs.recommendedTypeChecked,
+    {
+        languageOptions: {
+            parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
+            },
+        },
+    },
+    {
+        files: ['**/*.{js,mjs}'],
+        ...tseslint.configs.disableTypeChecked,
+    },
+    {
+        files: ['tests/**/*.{ts,tsx}'],
+        rules: {
+            // Vitest assertions pass method references (vi.mocked, toHaveBeenCalled)
+            // and use awaitless async stubs to build promise-returning fakes.
+            '@typescript-eslint/unbound-method': 'off',
+            '@typescript-eslint/require-await': 'off',
+            // Test doubles and malformed-input fixtures bypass strict typing on purpose.
+            '@typescript-eslint/no-unsafe-argument': 'off',
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/no-unsafe-return': 'off',
+        },
+    },
     // Formatting conventions matching the existing codebase style.
     stylistic.configs.customize({
         arrowParens: true,

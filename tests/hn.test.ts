@@ -95,7 +95,8 @@ describe('lookupHnDiscussions', () => {
             ),
         ], fetchFn);
 
-        const requestUrl = new URL(String(fetchFn.mock.calls[0]?.[0]));
+        const requestInput = fetchFn.mock.calls[0]?.[0];
+        const requestUrl = new URL(typeof requestInput === 'string' ? requestInput : '');
         expect(requestUrl.searchParams.get('query')).toBe('https://example.com/story?id=7');
     });
 

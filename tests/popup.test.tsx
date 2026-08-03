@@ -40,7 +40,7 @@ function installChrome(sendMessage: ReturnType<typeof vi.fn>): ReturnType<typeof
             }]),
         },
         tabs: { query: vi.fn(async () => [{ id: 40 }]) },
-    } as unknown as typeof chrome);
+    });
     return openOptionsPage;
 }
 

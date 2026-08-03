@@ -155,11 +155,11 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
             .toEqual([]);
 
         await article.goto(ARTICLE_URL);
-        const lookup = await options.evaluate(async ({ pageUrl }) => (
+        const lookup = await options.evaluate(async ({ pageUrl }): Promise<LookupResponse> => (
             chrome.runtime.sendMessage({
                 type: 'lookup',
                 context: { pageUrl, canonicalHref: pageUrl },
-            }) as Promise<LookupResponse>
+            })
         ), { pageUrl: ARTICLE_URL });
         expect(lookup).toMatchObject({
             ok: true,
@@ -191,12 +191,12 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         ));
         expect(sessionKeysAfterDisable.filter((key) => key.startsWith('hn_lookup_v1:'))).toEqual([]);
 
-        const firstOpen = await options.evaluate(async ({ tabId, itemId }) => (
+        const firstOpen = await options.evaluate(async ({ tabId, itemId }): Promise<OpenResponse> => (
             chrome.runtime.sendMessage({
                 type: 'open_discussion',
                 articleTabId: tabId,
                 itemId,
-            }) as Promise<OpenResponse>
+            })
         ), { tabId: articleTabId as number, itemId: FIRST_ITEM_ID });
         expect(firstOpen).toMatchObject({ ok: true, result: { mode: 'adjacent_tab' } });
 
@@ -212,12 +212,12 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         const discussionPage = context.pages().find((page) => page.url() === firstDiscussionUrl);
         expect(discussionPage).toBeDefined();
 
-        const secondOpen = await options.evaluate(async ({ tabId, itemId }) => (
+        const secondOpen = await options.evaluate(async ({ tabId, itemId }): Promise<OpenResponse> => (
             chrome.runtime.sendMessage({
                 type: 'open_discussion',
                 articleTabId: tabId,
                 itemId,
-            }) as Promise<OpenResponse>
+            })
         ), { tabId: articleTabId as number, itemId: SECOND_ITEM_ID });
         expect(secondOpen).toMatchObject({
             ok: true,

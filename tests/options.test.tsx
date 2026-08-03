@@ -41,7 +41,7 @@ function installChrome({
     });
     vi.stubGlobal('chrome', {
         runtime: { sendMessage },
-    } as unknown as typeof chrome);
+    });
     return { sendMessage };
 }
 
