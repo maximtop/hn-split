@@ -2,7 +2,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { App } from './popup-app';
-import { getUiLocale, t } from '../shared/i18n';
+import { applyDocumentLocale, t } from '../shared/i18n';
 import '@mantine/core/styles.css';
 import './styles.css';
 
@@ -11,7 +11,7 @@ if (root === null) {
     throw new Error('Popup root element is missing');
 }
 
-document.documentElement.lang = getUiLocale();
+applyDocumentLocale();
 document.title = t('extension_name');
 
 createRoot(root).render(
