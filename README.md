@@ -21,7 +21,6 @@ Hacker News is the only discussion source in the MVP. Chrome is the first implem
 - [Development and Chrome loading](docs/development.md)
 - [Store listing and visual assets](docs/store-listing.md)
 - [Privacy](PRIVACY.md)
-- [ADR-0001: HNewhere reference decisions](docs/adr/0001-hnewhere-reference-decisions.md)
 
 ## Development
 
