@@ -82,7 +82,25 @@ describe('App discussion opens', () => {
 
         expect(buttons.every(({ disabled }) => !disabled)).toBe(true);
         expect(view.container.querySelector('.status--error')?.textContent)
-            .toBe('Unable to open discussion: Extension context invalidated');
+            .toBe('Unable to open discussion: The extension did not respond.');
+        await view.unmount();
+    });
+
+    it('translates a stable background error code instead of showing raw text', async () => {
+        const sendMessage = vi.fn()
+            .mockResolvedValueOnce(foundResponse)
+            .mockResolvedValueOnce({ ok: false, error: 'open_discussion_failed' });
+        installChrome(sendMessage);
+        const view = await renderLoadedApp();
+        const buttons = [...view.container.querySelectorAll<HTMLButtonElement>('button.discussion')];
+
+        await act(async () => {
+            buttons[0]?.click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+        });
+
+        expect(view.container.querySelector('.status--error')?.textContent)
+            .toBe('Unable to open the discussion tab.');
         await view.unmount();
     });
 

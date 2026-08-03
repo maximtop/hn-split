@@ -12,9 +12,10 @@ import {
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-import { HN_LOOKUP_ERROR_REASON, HN_LOOKUP_STATUS } from '../domain/hn';
+import { HN_LOOKUP_STATUS } from '../domain/hn';
 import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import { readPageContext } from '../page/context';
+import { UserFacingError, messageKeyForBackgroundError, userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
 import {
     BACKGROUND_REQUEST_TYPE,
@@ -115,7 +116,7 @@ function DiscussionButton(props: DiscussionButtonProps): React.JSX.Element {
         >
             <Stack gap={4} align="flex-start">
                 <Text c="orange.7" fw={700} size="xs">
-                    {t(primary ? BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION : 'open_alternative')}
+                    {t(primary ? 'open_primary_discussion' : 'open_alternative')}
                 </Text>
                 <Text fw={700} size="sm">{discussion.title}</Text>
                 <Text c="dimmed" size="xs">
@@ -141,7 +142,7 @@ export function App(): React.JSX.Element {
             try {
                 const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
                 if (tab?.id === undefined) {
-                    throw new Error(t('no_active_tab'));
+                    throw new UserFacingError(t('no_active_tab'));
                 }
                 const injections = await chrome.scripting.executeScript({
                     target: { tabId: tab.id },
@@ -149,17 +150,17 @@ export function App(): React.JSX.Element {
                 });
                 const result = injections[0]?.result;
                 if (result === undefined) {
-                    throw new Error(t('page_not_inspectable'));
+                    throw new UserFacingError(t('page_not_inspectable'));
                 }
                 const response = await sendMessage({
                     type: BACKGROUND_REQUEST_TYPE.LOOKUP,
                     context: result,
                 });
                 if (!isLookupResponse(response)) {
-                    throw new Error(t('invalid_extension_response'));
+                    throw new UserFacingError(t('invalid_extension_response'));
                 }
                 if (!response.ok) {
-                    throw new Error(response.error);
+                    throw new UserFacingError(t(messageKeyForBackgroundError(response.error)));
                 }
                 if (!cancelled) {
                     setState({
@@ -171,11 +172,12 @@ export function App(): React.JSX.Element {
                     });
                 }
             } catch (error) {
+                console.warn('HN Split: popup lookup failed.', error);
                 if (!cancelled) {
                     setState({
                         articleTabId: null,
                         result: null,
-                        error: error instanceof Error ? error.message : t('unable_to_inspect'),
+                        error: userFacingMessage(error, 'unable_to_inspect'),
                         loading: false,
                         openingId: null,
                     });
@@ -200,15 +202,16 @@ export function App(): React.JSX.Element {
                 itemId,
             });
             if (!isOpenDiscussionResponse(response)) {
-                throw new Error(t('invalid_extension_response'));
+                throw new UserFacingError(t('invalid_extension_response'));
             }
             setState((current) => ({
                 ...current,
                 openingId: null,
-                error: response.ok ? null : response.error,
+                error: response.ok ? null : t(messageKeyForBackgroundError(response.error)),
             }));
         } catch (error) {
-            const reason = error instanceof Error ? error.message : t('extension_no_response');
+            console.warn('HN Split: opening the discussion failed.', error);
+            const reason = userFacingMessage(error, 'extension_no_response');
             setState((current) => ({
                 ...current,
                 openingId: null,
@@ -240,7 +243,7 @@ export function App(): React.JSX.Element {
                     )}
                     {state.result?.status === HN_LOOKUP_STATUS.ERROR && (
                         <Alert className="status status--error" color="red">
-                            {t(HN_LOOKUP_ERROR_REASON.LOOKUP_FAILED)}
+                            {t('lookup_error')}
                         </Alert>
                     )}
 

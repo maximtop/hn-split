@@ -34,7 +34,7 @@ export interface OptionsAppProps {
 function OptionsView(props: OptionsAppProps): React.JSX.Element {
     const { store } = props;
     return (
-        <MantineProvider theme={theme} defaultColorScheme="light">
+        <MantineProvider theme={theme} defaultColorScheme="auto">
             <Container component="main" size="md" py={64}>
                 <Stack gap="xl">
                     <header>

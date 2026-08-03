@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import { OptionsApp } from './options-app';
 import { OptionsStore } from './options-store';
-import { t } from '../shared/i18n';
+import { getUiLocale, t } from '../shared/i18n';
 import { BACKGROUND_REQUEST_TYPE } from '../shared/messages';
 import '@mantine/core/styles.css';
 import './styles.css';
@@ -13,6 +13,7 @@ if (root === null) {
     throw new Error('Options root element is missing');
 }
 
+document.documentElement.lang = getUiLocale();
 document.title = t('options_document_title');
 
 const store = new OptionsStore({
@@ -21,7 +22,7 @@ const store = new OptionsStore({
             type: BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING,
         });
     },
-    async notifyChanged(enabled) {
+    async requestUpdate(enabled) {
         return chrome.runtime.sendMessage({
             type: BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING,
             enabled,

@@ -1,6 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { discussionUrl, lookupHnDiscussions } from '../src/domain/hn';
+import { buildArticleCandidates } from '../src/domain/url';
 import type { ArticleCandidate } from '../src/domain/url';
 
 const candidate = (url: string, identity: string): ArticleCandidate => ({
@@ -12,6 +13,23 @@ const candidate = (url: string, identity: string): ArticleCandidate => ({
 const jsonResponse = (hits: unknown[]): Response => new Response(JSON.stringify({ hits }), {
     headers: { 'content-type': 'application/json' },
     status: 200,
+});
+
+/**
+ * Creates a fetch stub that stays pending until its abort signal fires.
+ */
+const signalBoundFetch = (): ReturnType<typeof vi.fn<typeof fetch>> => vi.fn<typeof fetch>(
+    async (_input, init) => new Promise<Response>((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () => {
+            reject(init.signal?.reason instanceof Error
+                ? init.signal.reason
+                : new DOMException('Aborted', 'AbortError'));
+        }, { once: true });
+    }),
+);
+
+afterEach(() => {
+    vi.useRealTimers();
 });
 
 describe('lookupHnDiscussions', () => {
@@ -123,6 +141,50 @@ describe('lookupHnDiscussions', () => {
         ], fetchFn)).resolves.toEqual({ status: 'error', reason: 'lookup_failed' });
     });
 
+    it('aborts at the five-second deadline and reports a lookup failure', async () => {
+        vi.useFakeTimers();
+        const fetchFn = signalBoundFetch();
+
+        const pending = lookupHnDiscussions([
+            candidate('https://example.com/story', 'example.com/story'),
+        ], fetchFn);
+        await vi.advanceTimersByTimeAsync(4_999);
+        expect(fetchFn.mock.calls[0]?.[1]?.signal?.aborted).toBe(false);
+        await vi.advanceTimersByTimeAsync(1);
+
+        await expect(pending).resolves.toEqual({ status: 'error', reason: 'lookup_failed' });
+        expect(fetchFn.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+    });
+
+    it('cancels the lookup as soon as the caller signal aborts', async () => {
+        vi.useFakeTimers();
+        const fetchFn = signalBoundFetch();
+        const caller = new AbortController();
+
+        const pending = lookupHnDiscussions([
+            candidate('https://example.com/story', 'example.com/story'),
+        ], fetchFn, caller.signal);
+        await vi.advanceTimersByTimeAsync(10);
+        caller.abort();
+
+        await expect(pending).resolves.toEqual({ status: 'error', reason: 'lookup_failed' });
+        expect(fetchFn.mock.calls[0]?.[1]?.signal?.aborted).toBe(true);
+    });
+
+    it('never fetches for special-use or credential-bearing page URLs', async () => {
+        const fetchFn = vi.fn<typeof fetch>();
+
+        await expect(lookupHnDiscussions(
+            buildArticleCandidates('http://hiddenservice.onion/story'),
+            fetchFn,
+        )).resolves.toEqual({ status: 'restricted' });
+        await expect(lookupHnDiscussions(
+            buildArticleCandidates('https://example.com/reset?token=abc123'),
+            fetchFn,
+        )).resolves.toEqual({ status: 'restricted' });
+        expect(fetchFn).not.toHaveBeenCalled();
+    });
+
     it.each([
         {},
         { objectID: '0', url: 'https://example.com/story' },
@@ -144,6 +206,16 @@ describe('lookupHnDiscussions', () => {
 
     it('returns an error for a malformed successful response', async () => {
         const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(new Response('{"wrong":true}', {
+            status: 200,
+        }));
+
+        await expect(lookupHnDiscussions([
+            candidate('https://example.com/story', 'example.com/story'),
+        ], fetchFn)).resolves.toEqual({ status: 'error', reason: 'invalid_response' });
+    });
+
+    it('classifies syntactically malformed JSON as an invalid response', async () => {
+        const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(new Response('<!doctype html>Not JSON', {
             status: 200,
         }));
 

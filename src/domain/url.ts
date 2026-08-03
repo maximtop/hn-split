@@ -10,6 +10,45 @@ const TRACKING_KEYS = new Set([
     'msclkid',
 ]);
 
+// IANA special-use and locally-served namespaces that must never reach public
+// lookup, including suffixes tldts still reports as ICANN (`.arpa`, `.onion`).
+const SPECIAL_USE_SUFFIXES = [
+    'alt',
+    'arpa',
+    'example',
+    'internal',
+    'invalid',
+    'local',
+    'localhost',
+    'onion',
+    'test',
+];
+
+// Query keys that commonly carry credentials or capability secrets, matched as
+// separated words so `api_key` and `reset-token` fail closed while `keyword`
+// and `zipcode` stay eligible.
+const CREDENTIAL_KEY_PATTERN = new RegExp(
+    '(?:^|[-_.])(?:'
+    + 'token|secret|password|passwd|pwd|auth|authorization|credential|credentials'
+    + '|apikey|key|jwt|otp|sig|signature|sas|assertion|bearer|ticket'
+    + '|session|sessionid|sid|code'
+    + ')(?:$|[-_.])',
+);
+
+// Credential keys written without separators that the word pattern cannot see.
+const CREDENTIAL_EXACT_KEYS = new Set([
+    'accesstoken',
+    'authtoken',
+    'awsaccesskeyid',
+    'idtoken',
+    'jsessionid',
+    'phpsessid',
+    'refreshtoken',
+]);
+
+// Signed-URL parameter families used by AWS and Google Cloud storage.
+const CREDENTIAL_KEY_PREFIXES = ['x-amz-', 'x-goog-'];
+
 /**
  * Names every source used to construct an article candidate.
  */
@@ -60,8 +99,11 @@ function isNonPublicIpv4(hostname: string): boolean {
         || (first === 169 && second === 254)
         || (first === 172 && second >= 16 && second <= 31)
         || (first === 192 && second === 0 && (third === 0 || third === 2))
+        || (first === 192 && second === 31 && third === 196)
+        || (first === 192 && second === 52 && third === 193)
         || (first === 192 && second === 88 && third === 99)
         || (first === 192 && second === 168)
+        || (first === 192 && second === 175 && third === 48)
         || (first === 198 && (second === 18 || second === 19))
         || (first === 198 && second === 51 && third === 100)
         || (first === 203 && second === 0 && third === 113)
@@ -172,7 +214,17 @@ function isPublicIpv6(hostname: string): boolean {
 }
 
 /**
- * Determines whether a hostname is local, reserved, or lacks an ICANN suffix.
+ * Determines whether a hostname belongs to an IANA special-use namespace.
+ * @param hostname - The normalized lowercase hostname to inspect.
+ */
+function isSpecialUseHostname(hostname: string): boolean {
+    return SPECIAL_USE_SUFFIXES.some(
+        (suffix) => hostname === suffix || hostname.endsWith(`.${suffix}`),
+    );
+}
+
+/**
+ * Determines whether a hostname is local, reserved, special-use, or lacks an ICANN suffix.
  * @param hostname - The normalized hostname to inspect.
  */
 function isNonPublicHostname(hostname: string): boolean {
@@ -186,18 +238,31 @@ function isNonPublicHostname(hostname: string): boolean {
     if (normalized.startsWith('[')) {
         return !isPublicIpv6(normalized);
     }
-    if (!normalized.includes('.')
-        || normalized === 'localhost'
-        || normalized.endsWith('.localhost')
-        || normalized.endsWith('.local')
-        || normalized.endsWith('.internal')) {
+    if (!normalized.includes('.') || isSpecialUseHostname(normalized)) {
         return true;
     }
     return parseDomain(normalized, { allowPrivateDomains: false }).isIcann !== true;
 }
 
 /**
- * Parses only credential-free public HTTP or HTTPS URLs.
+ * Determines whether a URL query carries recognizable credential material.
+ * @param url - The parsed URL whose query keys are inspected.
+ */
+function hasCredentialQueryParams(url: URL): boolean {
+    for (const key of url.searchParams.keys()) {
+        const normalized = key.toLowerCase();
+        if (CREDENTIAL_KEY_PATTERN.test(normalized)
+            || CREDENTIAL_EXACT_KEYS.has(normalized)
+            || CREDENTIAL_KEY_PREFIXES.some((prefix) => normalized.startsWith(prefix))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Parses only credential-free public HTTP or HTTPS URLs, failing closed on
+ * URLs whose query carries recognizable secrets.
  * @param value - The untrusted URL value to parse.
  * @param base - The optional public base URL for relative resolution.
  */
@@ -207,7 +272,8 @@ function parseEligibleUrl(value: string, base?: string): URL | null {
         if (!['http:', 'https:'].includes(url.protocol)
             || url.username !== ''
             || url.password !== ''
-            || isNonPublicHostname(url.hostname)) {
+            || isNonPublicHostname(url.hostname)
+            || hasCredentialQueryParams(url)) {
             return null;
         }
         return url;
@@ -217,7 +283,9 @@ function parseEligibleUrl(value: string, base?: string): URL | null {
 }
 
 /**
- * Removes fragments and recognized tracking parameters from an eligible URL.
+ * Removes fragments and recognized tracking parameters from an eligible URL,
+ * then reserializes the query so candidate and Algolia-hit identities use one
+ * canonical urlencoded form regardless of the input's percent-encoding.
  * @param value - The eligible URL to sanitize.
  */
 function sanitizeParsedUrl(value: URL): URL {
@@ -230,6 +298,7 @@ function sanitizeParsedUrl(value: URL): URL {
             url.searchParams.delete(key);
         }
     }
+    url.search = url.searchParams.toString();
     return url;
 }
 

@@ -17,12 +17,18 @@ const createStore = (initial?: number): SessionStore & { value?: number } => {
     return store;
 };
 
+const unexpectedUpdate = (): ReturnType<typeof vi.fn<TabClient['update']>> => vi.fn<TabClient['update']>(
+    async () => {
+        throw new Error('update is not expected in this scenario');
+    },
+);
+
 describe('DiscussionTabManager', () => {
     it('opens the first discussion in a normal adjacent tab', async () => {
         const tabs: TabClient = {
             get: vi.fn(async (id) => ({ id, index: 4, windowId: 2, splitViewId: -1 })),
             create: vi.fn(async () => ({ id: 91, index: 5, windowId: 2, splitViewId: -1 })),
-            update: vi.fn(),
+            update: unexpectedUpdate(),
         };
         const store = createStore();
         const manager = new DiscussionTabManager(tabs, store);
@@ -107,7 +113,7 @@ describe('DiscussionTabManager', () => {
                 return { id, index: 1, windowId: 2, splitViewId: -1 };
             }),
             create: vi.fn(async () => ({ id: 92, index: 2, windowId: 2, splitViewId: -1 })),
-            update: vi.fn(),
+            update: unexpectedUpdate(),
         };
         const store = createStore(91);
         const manager = new DiscussionTabManager(tabs, store);
@@ -117,6 +123,39 @@ describe('DiscussionTabManager', () => {
         expect(store.remove).toHaveBeenCalledWith(40);
         expect(store.set).toHaveBeenCalledWith(40, 92);
         expect(result).toEqual({ mode: 'adjacent_tab', tabId: 92 });
+    });
+
+    it('reports success when the tab opened but remembering the association failed', async () => {
+        const tabs: TabClient = {
+            get: vi.fn(async (id) => ({ id, index: 4, windowId: 2, splitViewId: -1 })),
+            create: vi.fn(async () => ({ id: 91, index: 5, windowId: 2, splitViewId: -1 })),
+            update: unexpectedUpdate(),
+        };
+        const store = createStore();
+        vi.mocked(store.set).mockRejectedValue(new Error('session storage unavailable'));
+        const manager = new DiscussionTabManager(tabs, store);
+
+        await expect(manager.open(40, '123')).resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+        expect(tabs.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('still opens a replacement tab when clearing a stale association fails', async () => {
+        const tabs: TabClient = {
+            get: vi.fn(async (id) => {
+                if (id === 91) {
+                    throw new Error('No tab with id');
+                }
+                return { id, index: 1, windowId: 2, splitViewId: -1 };
+            }),
+            create: vi.fn(async () => ({ id: 92, index: 2, windowId: 2, splitViewId: -1 })),
+            update: unexpectedUpdate(),
+        };
+        const store = createStore(91);
+        vi.mocked(store.remove).mockRejectedValue(new Error('session storage unavailable'));
+        const manager = new DiscussionTabManager(tabs, store);
+
+        await expect(manager.open(40, '789')).resolves.toEqual({ mode: 'adjacent_tab', tabId: 92 });
+        expect(store.set).toHaveBeenCalledWith(40, 92);
     });
 
     it('propagates an update failure and preserves the remembered association', async () => {

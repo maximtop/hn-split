@@ -10,6 +10,11 @@ describe('normalizeArticleUrl', () => {
         ['https://example.com/story?utm_source=hn&id=7', 'example.com/story?id=7'],
         ['https://example.com/story?ID=7&utm_campaign=x', 'example.com/story?ID=7'],
         ['https://example.com/story?id=1&id=2', 'example.com/story?id=1&id=2'],
+        ['https://example.com/story?q=a%20b&utm_source=x', 'example.com/story?q=a+b'],
+        ['https://example.com/story?q=a+b', 'example.com/story?q=a+b'],
+        ['https://example.com/story?q=a~b', 'example.com/story?q=a%7Eb'],
+        ['https://example.com/story?q=a%7Eb', 'example.com/story?q=a%7Eb'],
+        ['https://example.com/story?keyword=key&zipcode=1', 'example.com/story?keyword=key&zipcode=1'],
         ['https://www.example.com/Story', 'www.example.com/Story'],
         ['https://example.com/amp/story', 'example.com/amp/story'],
         ['https://example.com./story', 'example.com/story'],
@@ -31,8 +36,24 @@ describe('normalizeArticleUrl', () => {
         'https://article.hn-split.invalid/story',
         'https://wiki.corp/story',
         'https://service.internal/story',
+        'http://hiddenservice.onion/story',
+        'http://router.home.arpa/story',
+        'http://1.0.0.127.in-addr.arpa/story',
+        'https://ipv4only.arpa/story',
+        'https://service.alt/story',
+        'https://example.com/callback?code=oauth-code&state=x',
+        'https://example.com/reset?token=abc123',
+        'https://example.com/story?access_token=abc123',
+        'https://example.com/api?api_key=abc123',
+        'https://example.com/download?sig=abc123',
+        'https://example.com/download?X-Amz-Signature=abc&X-Amz-Credential=xyz',
+        'https://example.com/download?X-Goog-Signature=abc',
+        'https://example.com/session?JSESSIONID=abc123',
         'http://127.0.0.1/story',
         'http://192.168.1.3/story',
+        'http://192.31.196.10/story',
+        'http://192.52.193.10/story',
+        'http://192.175.48.10/story',
         'http://100.64.0.1/story',
         'http://100.127.255.254/story',
         'http://198.18.0.1/story',
@@ -113,5 +134,25 @@ describe('buildArticleCandidates', () => {
                 source: 'page',
             },
         ]);
+    });
+
+    it.each([
+        'http://hiddenservice.onion/story',
+        'http://router.home.arpa/story',
+        'https://example.com/reset?token=abc123',
+        'https://example.com/download?X-Amz-Signature=abc',
+    ])('produces no candidate for special-use or credential-bearing URL %s', (pageUrl) => {
+        expect(buildArticleCandidates(pageUrl)).toEqual([]);
+    });
+
+    it('drops only the credential-bearing candidate when the other one is clean', () => {
+        expect(buildArticleCandidates(
+            'https://example.com/story?token=abc123',
+            'https://example.com/story',
+        )).toEqual([{
+            url: 'https://example.com/story',
+            identity: 'example.com/story',
+            source: 'canonical',
+        }]);
     });
 });

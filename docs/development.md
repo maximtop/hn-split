@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Node.js 24 or newer
+- Node.js 24.15 or newer within the 24 line, or Node.js 26 or newer (Node.js 25 and earlier 24 releases are outside the range supported by the `jsdom` dev dependency)
 - pnpm 11.18.0 or newer (`npm install --global pnpm@11.18.0`)
 - Chrome 140 or newer for documented `Tab.splitViewId` detection
 

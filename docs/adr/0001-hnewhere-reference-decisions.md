@@ -144,3 +144,10 @@ Revisit this ADR only if one of the following is true:
 - Chrome publishes a stable extension API that materially changes the Split View design;
 - Algolia becomes unsuitable and the provider architecture needs a different public index;
 - users consistently need alternative submissions in the primary flow rather than as a secondary action.
+
+## Amendment — 2026-08-03, MVP implementation outcome
+
+The shipped MVP resolved two items recorded above without changing the decision itself:
+
+- **Defer item 1 is implemented, not deferred.** The popup ships the deterministic primary discussion together with a secondary list of exact alternative submissions. The "chooser after the primary flow is proven" formulation is superseded: alternatives are already available as the secondary action this ADR intended, and only richer chooser interactions remain future work.
+- **The Split View capability question is settled for Chrome 140.** Chrome documents Split View state (`Tab.splitViewId`) but no supported creation API, so the MVP ships the adjacent-tab fallback: the first explicit click opens an adjacent tab, and the extension reuses it so a user-created native Split View pairing is preserved. See the decision log in [`../product-brief.md`](../product-brief.md).

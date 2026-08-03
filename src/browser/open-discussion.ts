@@ -45,11 +45,12 @@ export interface TabClient {
         windowId: number;
     }): Promise<TabSummary>;
     /**
-     * Navigates and activates an existing browser tab.
+     * Navigates and activates an existing browser tab, resolving only after
+     * the browser accepts the navigation.
      * @param tabId - The browser tab identifier to update.
      * @param properties - The active state and URL to apply.
      */
-    update(tabId: number, properties: { active: boolean; url: string }): Promise<TabSummary> | void;
+    update(tabId: number, properties: { active: boolean; url: string }): Promise<TabSummary>;
 }
 
 /**
@@ -142,7 +143,11 @@ export class DiscussionTabManager {
                     tabId: rememberedTabId,
                 };
             }
-            await this.store.remove(articleTabId);
+            try {
+                await this.store.remove(articleTabId);
+            } catch {
+                // The association is overwritten or re-validated on the next open.
+            }
         }
 
         const created = await this.tabs.create({
@@ -155,7 +160,12 @@ export class DiscussionTabManager {
         if (created.id === undefined) {
             throw new Error('Chrome did not return an ID for the discussion tab');
         }
-        await this.store.set(articleTabId, created.id);
+        try {
+            await this.store.set(articleTabId, created.id);
+        } catch {
+            // The discussion tab is already visible, so the open succeeded;
+            // losing the association only downgrades the next open to a new tab.
+        }
         return { mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: created.id };
     }
 }

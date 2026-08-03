@@ -5,7 +5,10 @@ import type { ArticleCandidate } from '../domain/url';
 const POSITIVE_TTL_MS = 60 * 60 * 1_000;
 const NEGATIVE_TTL_MS = 10 * 60 * 1_000;
 const CACHE_VERSION = 1;
-const CACHE_KEY_PREFIX = `hn_lookup_v${CACHE_VERSION}:`;
+// The version-independent family prefix keeps cleanup effective across schema
+// versions; writes always use the current versioned prefix.
+const CACHE_KEY_FAMILY_PREFIX = 'hn_lookup_';
+const CACHE_KEY_PREFIX = `${CACHE_KEY_FAMILY_PREFIX}v${CACHE_VERSION}:`;
 
 /**
  * Describes one validated session-cache record.
@@ -67,12 +70,12 @@ export interface CacheCollectionStorage {
 }
 
 /**
- * Removes only versioned HN lookup entries from session storage.
+ * Removes HN lookup entries of every cache version from session storage.
  * @param storage - The session-storage adapter that owns lookup cache records.
  */
 export async function clearLookupCacheEntries(storage: CacheCollectionStorage): Promise<void> {
     const entries = await storage.getAll();
-    const lookupKeys = Object.keys(entries).filter((key) => key.startsWith(CACHE_KEY_PREFIX));
+    const lookupKeys = Object.keys(entries).filter((key) => key.startsWith(CACHE_KEY_FAMILY_PREFIX));
     if (lookupKeys.length > 0) {
         await storage.remove(lookupKeys);
     }

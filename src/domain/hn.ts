@@ -43,52 +43,6 @@ const nonNegativeIntegerSchema = v.pipe(
 );
 
 /**
- * Describes one validated Hacker News discussion.
- */
-export interface HnDiscussion {
-    /**
-     * Contains the positive Hacker News item identifier.
-     */
-    id: string;
-    /**
-     * Contains the discussion title.
-     */
-    title: string;
-    /**
-     * Contains the article URL returned by Algolia.
-     */
-    articleUrl: string;
-    /**
-     * Contains the non-negative comment count.
-     */
-    comments: number;
-    /**
-     * Contains the non-negative point count.
-     */
-    points: number;
-    /**
-     * Contains the non-negative Unix creation timestamp.
-     */
-    createdAt: number;
-}
-
-/**
- * Represents every outcome of a Hacker News discussion lookup.
- */
-export type HnLookupResult =
-    | {
-        status: typeof HN_LOOKUP_STATUS.FOUND;
-        primary: HnDiscussion;
-        alternatives: HnDiscussion[];
-    }
-    | { status: typeof HN_LOOKUP_STATUS.NOT_FOUND }
-    | { status: typeof HN_LOOKUP_STATUS.RESTRICTED }
-    | {
-        status: typeof HN_LOOKUP_STATUS.ERROR;
-        reason: typeof HN_LOOKUP_ERROR_REASON[keyof typeof HN_LOOKUP_ERROR_REASON];
-    };
-
-/**
  * Validates discussion data crossing extension boundaries or cache storage.
  */
 export const hnDiscussionSchema = v.object({
@@ -99,6 +53,11 @@ export const hnDiscussionSchema = v.object({
     points: nonNegativeIntegerSchema,
     createdAt: nonNegativeIntegerSchema,
 });
+
+/**
+ * Describes one validated Hacker News discussion.
+ */
+export type HnDiscussion = v.InferOutput<typeof hnDiscussionSchema>;
 
 /**
  * Validates every supported Hacker News lookup result variant.
@@ -119,6 +78,11 @@ export const hnLookupResultSchema = v.variant('status', [
         ]),
     }),
 ]);
+
+/**
+ * Represents every outcome of a Hacker News discussion lookup.
+ */
+export type HnLookupResult = v.InferOutput<typeof hnLookupResultSchema>;
 
 const algoliaHitSchema = v.object({
     objectID: positiveItemIdSchema,
@@ -149,15 +113,6 @@ export function isHnDiscussion(value: unknown): value is HnDiscussion {
  */
 export function isHnLookupResult(value: unknown): value is HnLookupResult {
     return v.safeParse(hnLookupResultSchema, value).success;
-}
-
-/**
- * Parses one Algolia hit without trusting the remote response shape.
- * @param value - The unknown Algolia hit value to validate.
- */
-function parseHit(value: unknown): AlgoliaHit | null {
-    const result = v.safeParse(algoliaHitSchema, value);
-    return result.success ? result.output : null;
 }
 
 /**
@@ -193,7 +148,7 @@ function buildSearchUrl(candidate: ArticleCandidate): string {
  * Fetches and validates all Algolia hits for one article candidate.
  * @param candidate - The eligible article candidate to query.
  * @param fetchFn - The fetch implementation used for Algolia requests.
- * @param signal - The optional abort signal for the request.
+ * @param signal - The abort signal that cancels the request.
  */
 async function fetchHits(
     candidate: ArticleCandidate,
@@ -205,20 +160,22 @@ async function fetchHits(
         throw new Error(`Lookup failed with HTTP ${response.status}`);
     }
 
-    const payload: unknown = await response.json();
+    let payload: unknown;
+    try {
+        payload = await response.json();
+    } catch (error) {
+        // A cancelled body read stays a lookup failure; only syntactically
+        // malformed JSON is a service-response problem.
+        if (signal.aborted) {
+            throw error;
+        }
+        throw new InvalidAlgoliaResponseError('Malformed JSON payload', { cause: error });
+    }
     const parsed = v.safeParse(algoliaResponseSchema, payload);
     if (!parsed.success) {
         throw new InvalidAlgoliaResponseError();
     }
-    const hits: AlgoliaHit[] = [];
-    for (const value of parsed.output.hits) {
-        const hit = parseHit(value);
-        if (hit === null) {
-            throw new InvalidAlgoliaResponseError();
-        }
-        hits.push(hit);
-    }
-    return hits;
+    return parsed.output.hits;
 }
 
 /**
@@ -240,21 +197,38 @@ function toDiscussion(hit: AlgoliaHit): HnDiscussion {
  * Looks up and ranks Hacker News discussions for eligible article candidates.
  * @param candidates - The eligible article candidates to query in preference order.
  * @param fetchFn - The fetch implementation used for Algolia requests.
+ * @param signal - The optional caller signal that cancels the whole lookup early.
  */
 export async function lookupHnDiscussions(
     candidates: ArticleCandidate[],
     fetchFn: typeof fetch = fetch,
+    signal?: AbortSignal,
 ): Promise<HnLookupResult> {
     if (candidates.length === 0) {
         return { status: HN_LOOKUP_STATUS.RESTRICTED };
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), LOOKUP_TIMEOUT_MS);
-    const results = await Promise.allSettled(
-        candidates.map(async (candidate) => fetchHits(candidate, fetchFn, controller.signal)),
-    );
-    clearTimeout(timeout);
+    const abortFromCaller = (): void => {
+        controller.abort();
+    };
+    if (signal?.aborted === true) {
+        controller.abort();
+    } else {
+        signal?.addEventListener('abort', abortFromCaller, { once: true });
+    }
+    const timeout = setTimeout(() => {
+        controller.abort();
+    }, LOOKUP_TIMEOUT_MS);
+    let results: Array<PromiseSettledResult<AlgoliaHit[]>>;
+    try {
+        results = await Promise.allSettled(
+            candidates.map(async (candidate) => fetchHits(candidate, fetchFn, controller.signal)),
+        );
+    } finally {
+        clearTimeout(timeout);
+        signal?.removeEventListener('abort', abortFromCaller);
+    }
 
     const identities = new Set(candidates.map(({ identity }) => identity));
     const discussions = new Map<string, HnDiscussion>();

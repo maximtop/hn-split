@@ -86,9 +86,14 @@ describe('background response validation', () => {
         expect(isOpenDiscussionResponse(response)).toBe(false);
     });
 
-    it('accepts well-formed errors for popup operations', () => {
-        expect(isLookupResponse({ ok: false, error: 'failed' })).toBe(true);
-        expect(isOpenDiscussionResponse({ ok: false, error: 'failed' })).toBe(true);
+    it('accepts stable error codes for popup operations', () => {
+        expect(isLookupResponse({ ok: false, error: 'lookup_request_failed' })).toBe(true);
+        expect(isOpenDiscussionResponse({ ok: false, error: 'open_discussion_failed' })).toBe(true);
+    });
+
+    it('rejects error responses carrying arbitrary text instead of a stable code', () => {
+        expect(isLookupResponse({ ok: false, error: 'Unexpected extension error' })).toBe(false);
+        expect(isOpenDiscussionResponse({ ok: false, error: 'No tab with id: 42' })).toBe(false);
     });
 
     it.each([

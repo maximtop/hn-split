@@ -7,12 +7,13 @@ import { cacheStorage } from './chrome-adapters';
  * Resolves one page context through the session-only lookup cache.
  * @param pageUrl - The active page URL to resolve.
  * @param canonicalHref - The page canonical URL when one is available.
+ * @param signal - The optional abort signal that cancels a superseded lookup.
  */
-export async function lookupArticle(pageUrl: string, canonicalHref: string | null) {
+export async function lookupArticle(pageUrl: string, canonicalHref: string | null, signal?: AbortSignal) {
     const candidates = buildArticleCandidates(pageUrl, canonicalHref);
     return lookupWithCache(
         candidates,
         cacheStorage,
-        async () => lookupHnDiscussions(candidates),
+        async () => lookupHnDiscussions(candidates, undefined, signal),
     );
 }

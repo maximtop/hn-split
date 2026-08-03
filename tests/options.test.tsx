@@ -50,7 +50,7 @@ async function renderOptions(): Promise<{ container: HTMLDivElement; unmount: ()
         readCurrent: async () => chrome.runtime.sendMessage({
             type: BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING,
         }),
-        notifyChanged: async (enabled) => chrome.runtime.sendMessage({
+        requestUpdate: async (enabled) => chrome.runtime.sendMessage({
             type: BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING,
             enabled,
         }),

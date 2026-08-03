@@ -2,7 +2,6 @@ import * as v from 'valibot';
 
 import { hnLookupResultSchema } from '../domain/hn';
 import type { HnLookupResult } from '../domain/hn';
-import type { PageContext } from '../page/context';
 
 /**
  * Names every request accepted by the background worker.
@@ -23,6 +22,24 @@ export const DISCUSSION_OPEN_MODE = {
     SPLIT_VIEW: 'split_view',
 } as const;
 
+/**
+ * Names every stable background failure code carried by the protocol instead
+ * of raw error text, so each UI surface translates failures in its own locale.
+ */
+export const BACKGROUND_ERROR_CODE = {
+    LOOKUP_REQUEST_FAILED: 'lookup_request_failed',
+    OPEN_DISCUSSION_FAILED: 'open_discussion_failed',
+    SETTING_READ_FAILED: 'setting_read_failed',
+    SETTING_UPDATE_FAILED: 'setting_update_failed',
+} as const;
+
+/**
+ * Represents one stable background failure code.
+ */
+export type BackgroundErrorCode = typeof BACKGROUND_ERROR_CODE[keyof typeof BACKGROUND_ERROR_CODE];
+
+const backgroundErrorCodeSchema = v.picklist(Object.values(BACKGROUND_ERROR_CODE));
+
 const nonNegativeSafeIntegerSchema = v.pipe(v.number(), v.safeInteger(), v.minValue(0));
 const positiveItemIdSchema = v.pipe(
     v.string(),
@@ -33,99 +50,99 @@ const positiveItemIdSchema = v.pipe(
     }),
 );
 
-const pageContextSchema = v.object({
+/**
+ * Validates the browser page URLs captured for discussion lookup.
+ */
+export const pageContextSchema = v.object({
     pageUrl: v.string(),
     canonicalHref: v.nullable(v.string()),
 });
 
 /**
+ * Describes the browser page URLs used for discussion lookup.
+ */
+export type PageContext = v.InferOutput<typeof pageContextSchema>;
+
+const lookupRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.LOOKUP),
+    context: pageContextSchema,
+});
+
+const openDiscussionRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION),
+    articleTabId: nonNegativeSafeIntegerSchema,
+    itemId: positiveItemIdSchema,
+});
+
+const availabilitySettingSetRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING),
+    enabled: v.boolean(),
+});
+
+const availabilitySettingGetRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING),
+});
+
+const backgroundRequestSchema = v.variant('type', [
+    lookupRequestSchema,
+    availabilitySettingSetRequestSchema,
+    availabilitySettingGetRequestSchema,
+    openDiscussionRequestSchema,
+]);
+
+/**
  * Requests a Hacker News lookup for one validated page context.
  */
-export interface LookupRequest {
-    /**
-     * Selects the lookup request handler.
-     */
-    type: typeof BACKGROUND_REQUEST_TYPE.LOOKUP;
-    /**
-     * Contains the current and canonical page URLs.
-     */
-    context: PageContext;
-}
+export type LookupRequest = v.InferOutput<typeof lookupRequestSchema>;
 
 /**
  * Requests opening one validated Hacker News discussion.
  */
-export interface OpenDiscussionRequest {
-    /**
-     * Selects the discussion-opening request handler.
-     */
-    type: typeof BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION;
-    /**
-     * Identifies the article tab that initiated the request.
-     */
-    articleTabId: number;
-    /**
-     * Identifies the positive Hacker News item to open.
-     */
-    itemId: string;
-}
+export type OpenDiscussionRequest = v.InferOutput<typeof openDiscussionRequestSchema>;
 
 /**
  * Requests a serialized automatic-availability setting transaction.
  */
-export interface AvailabilitySettingSetRequest {
-    /**
-     * Selects the automatic-availability setting handler.
-     */
-    type: typeof BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING;
-    /**
-     * Contains the requested automatic-availability state.
-     */
-    enabled: boolean;
-}
+export type AvailabilitySettingSetRequest = v.InferOutput<typeof availabilitySettingSetRequestSchema>;
 
 /**
  * Requests the authoritative automatic-availability setting.
  */
-export interface AvailabilitySettingGetRequest {
-    /**
-     * Selects the automatic-availability setting reader.
-     */
-    type: typeof BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING;
-}
+export type AvailabilitySettingGetRequest = v.InferOutput<typeof availabilitySettingGetRequestSchema>;
 
 /**
  * Represents every request accepted by the background worker.
  */
-export type BackgroundRequest =
-    | LookupRequest
-    | OpenDiscussionRequest
-    | AvailabilitySettingSetRequest
-    | AvailabilitySettingGetRequest;
+export type BackgroundRequest = v.InferOutput<typeof backgroundRequestSchema>;
+
+const openDiscussionResultSchema = v.object({
+    mode: v.picklist(Object.values(DISCUSSION_OPEN_MODE)),
+    tabId: nonNegativeSafeIntegerSchema,
+});
 
 /**
  * Describes how and where a discussion tab was opened.
  */
-export interface OpenDiscussionResult {
-    /**
-     * Identifies whether Chrome created, reused, or preserved a Split View tab.
-     */
-    mode: typeof DISCUSSION_OPEN_MODE[keyof typeof DISCUSSION_OPEN_MODE];
-    /**
-     * Identifies the resulting discussion tab.
-     */
-    tabId: number;
-}
+export type OpenDiscussionResult = v.InferOutput<typeof openDiscussionResultSchema>;
+
+const availabilitySettingResultSchema = v.object({
+    enabled: v.boolean(),
+});
 
 /**
  * Returns the authoritative automatic-availability setting after a read or mutation.
  */
-export interface AvailabilitySettingResult {
-    /**
-     * Contains the currently persisted setting value.
-     */
-    enabled: boolean;
-}
+export type AvailabilitySettingResult = v.InferOutput<typeof availabilitySettingResultSchema>;
+
+const errorResponseSchema = v.object({
+    ok: v.literal(false),
+    error: backgroundErrorCodeSchema,
+});
+
+/**
+ * Represents one failed background response carrying a stable error code.
+ */
+export type BackgroundErrorResponse = v.InferOutput<typeof errorResponseSchema>;
 
 /**
  * Represents every response returned by the background worker.
@@ -135,16 +152,11 @@ export type BackgroundResponse =
         ok: true;
         result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult;
     }
-    | { ok: false; error: string };
+    | BackgroundErrorResponse;
 
 const availabilitySettingResponseSchema = v.object({
     ok: v.literal(true),
-    result: v.object({ enabled: v.boolean() }),
-});
-
-const errorResponseSchema = v.object({
-    ok: v.literal(false),
-    error: v.string(),
+    result: availabilitySettingResultSchema,
 });
 
 const lookupResponseSchema = v.union([
@@ -152,32 +164,9 @@ const lookupResponseSchema = v.union([
     errorResponseSchema,
 ]);
 
-const openDiscussionResultSchema = v.object({
-    mode: v.union([
-        v.literal(DISCUSSION_OPEN_MODE.ADJACENT_TAB),
-        v.literal(DISCUSSION_OPEN_MODE.REUSED_TAB),
-        v.literal(DISCUSSION_OPEN_MODE.SPLIT_VIEW),
-    ]),
-    tabId: nonNegativeSafeIntegerSchema,
-});
-
 const openDiscussionResponseSchema = v.union([
     v.object({ ok: v.literal(true), result: openDiscussionResultSchema }),
     errorResponseSchema,
-]);
-
-const backgroundRequestSchema = v.variant('type', [
-    v.object({ type: v.literal(BACKGROUND_REQUEST_TYPE.LOOKUP), context: pageContextSchema }),
-    v.object({
-        type: v.literal(BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING),
-        enabled: v.boolean(),
-    }),
-    v.object({ type: v.literal(BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING) }),
-    v.object({
-        type: v.literal(BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION),
-        articleTabId: nonNegativeSafeIntegerSchema,
-        itemId: positiveItemIdSchema,
-    }),
 ]);
 
 /**
@@ -201,10 +190,10 @@ export function isAvailabilitySettingReadResponse(
 }
 
 /**
- * Reads a validated background error message from an unknown response.
+ * Reads a validated background error code from an unknown response.
  * @param value - The unknown background response to inspect.
  */
-export function readBackgroundError(value: unknown): string | null {
+export function readBackgroundError(value: unknown): BackgroundErrorCode | null {
     const result = v.safeParse(errorResponseSchema, value);
     return result.success ? result.output.error : null;
 }
@@ -215,7 +204,7 @@ export function readBackgroundError(value: unknown): string | null {
  */
 export function isLookupResponse(
     value: unknown,
-): value is { ok: true; result: HnLookupResult } | { ok: false; error: string } {
+): value is { ok: true; result: HnLookupResult } | BackgroundErrorResponse {
     return v.safeParse(lookupResponseSchema, value).success;
 }
 
@@ -225,7 +214,7 @@ export function isLookupResponse(
  */
 export function isOpenDiscussionResponse(
     value: unknown,
-): value is { ok: true; result: OpenDiscussionResult } | { ok: false; error: string } {
+): value is { ok: true; result: OpenDiscussionResult } | BackgroundErrorResponse {
     return v.safeParse(openDiscussionResponseSchema, value).success;
 }
 

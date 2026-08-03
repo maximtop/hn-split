@@ -17,9 +17,10 @@ function getBaseMessage(key: string): string {
 }
 
 /**
- * Maps Chrome locale identifiers to locales supported by AdGuard Translate.
+ * Maps Chrome locale identifiers to locales supported by AdGuard Translate,
+ * exposed so extension pages can stamp the resolved language on the document.
  */
-function getUiLocale(): Locale {
+export function getUiLocale(): Locale {
     if (typeof chrome === 'undefined' || chrome.i18n?.getUILanguage === undefined) {
         return BASE_LOCALE;
     }

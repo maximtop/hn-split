@@ -211,6 +211,25 @@ describe('clearLookupCacheEntries', () => {
         ]);
     });
 
+    it('removes lookup entries left behind by older cache schema versions', async () => {
+        const remove = vi.fn(async () => undefined);
+        const storage = {
+            getAll: vi.fn(async () => ({
+                'hn_lookup_v1:["example.com/one"]': { result: { status: 'not_found' } },
+                'hn_lookup_v0:["example.com/legacy"]': { result: { status: 'not_found' } },
+                'discussion_tab:7': 8,
+            })),
+            remove,
+        };
+
+        await clearLookupCacheEntries(storage);
+
+        expect(remove).toHaveBeenCalledWith([
+            'hn_lookup_v1:["example.com/one"]',
+            'hn_lookup_v0:["example.com/legacy"]',
+        ]);
+    });
+
     it('does not issue a broad remove when no lookup entries exist', async () => {
         const remove = vi.fn(async () => undefined);
 

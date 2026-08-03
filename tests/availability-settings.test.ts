@@ -9,7 +9,7 @@ import type { AvailabilitySettingsDependencies } from '../src/options/availabili
 function dependencies(): AvailabilitySettingsDependencies {
     return {
         readCurrent: vi.fn(async () => ({ ok: true, result: { enabled: false } })),
-        notifyChanged: vi.fn(async (enabled: boolean) => ({ ok: true, result: { enabled } })),
+        requestUpdate: vi.fn(async (enabled: boolean) => ({ ok: true, result: { enabled } })),
     };
 }
 
@@ -22,21 +22,29 @@ describe('updateAutomaticAvailability', () => {
         expect(deps.readCurrent).toHaveBeenCalledOnce();
     });
 
-    it('enables automatic checks through the background-owned setting operation', async () => {
+    it('returns the authoritative boolean from the background-owned setting operation', async () => {
         const deps = dependencies();
 
-        await expect(updateAutomaticAvailability(true, deps)).resolves.toBe('enabled');
+        await expect(updateAutomaticAvailability(true, deps)).resolves.toBe(true);
 
-        expect(deps.notifyChanged).toHaveBeenCalledExactlyOnceWith(true);
+        expect(deps.requestUpdate).toHaveBeenCalledExactlyOnceWith(true);
     });
 
-    it('does not send a stale compensating value when notification rejects', async () => {
+    it('does not send a stale compensating value when the request rejects', async () => {
         const deps = dependencies();
-        vi.mocked(deps.notifyChanged).mockRejectedValue(new Error('worker unavailable'));
+        vi.mocked(deps.requestUpdate).mockRejectedValue(new Error('worker unavailable'));
 
         await expect(updateAutomaticAvailability(true, deps)).rejects.toThrow('worker unavailable');
 
-        expect(deps.notifyChanged).toHaveBeenCalledExactlyOnceWith(true);
+        expect(deps.requestUpdate).toHaveBeenCalledExactlyOnceWith(true);
+    });
+
+    it('translates a stable background error code into localized copy', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.requestUpdate).mockResolvedValue({ ok: false, error: 'setting_read_failed' });
+
+        await expect(updateAutomaticAvailability(false, deps))
+            .rejects.toThrow('Unable to load settings.');
     });
 
     it.each([
@@ -46,15 +54,13 @@ describe('updateAutomaticAvailability', () => {
         { ok: true },
         { ok: true, result: { status: 'updated' } },
         { ok: false, error: 'badge refresh failed' },
-    ])('rejects malformed or unsuccessful response without client-side compensation %#', async (response) => {
+    ])('rejects malformed or unknown responses with localized fallback copy %#', async (response) => {
         const deps = dependencies();
-        vi.mocked(deps.notifyChanged).mockResolvedValue(response);
+        vi.mocked(deps.requestUpdate).mockResolvedValue(response);
 
         await expect(updateAutomaticAvailability(false, deps))
-            .rejects.toThrow(response !== null && typeof response === 'object' && 'error' in response
-                ? 'badge refresh failed'
-                : 'Background did not confirm the setting change');
+            .rejects.toThrow('Unable to update settings.');
 
-        expect(deps.notifyChanged).toHaveBeenCalledExactlyOnceWith(false);
+        expect(deps.requestUpdate).toHaveBeenCalledExactlyOnceWith(false);
     });
 });

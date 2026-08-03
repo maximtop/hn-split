@@ -19,11 +19,122 @@ describe('AutomaticAvailabilityUpdater', () => {
 
         await updater.update(7, 'https://example.com/article');
 
-        expect(deps.lookup).toHaveBeenCalledWith('https://example.com/article');
+        expect(deps.lookup).toHaveBeenCalledWith('https://example.com/article', expect.any(AbortSignal));
         expect(deps.applyBadge).toHaveBeenLastCalledWith(7, {
             text: '',
             title: 'HN Split',
         });
+    });
+
+    it('ignores the duplicate event Chrome fires for one navigation', async () => {
+        const deps = dependencies();
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        await updater.update(7, 'https://example.com/article');
+        await updater.update(7, 'https://example.com/article');
+
+        expect(deps.lookup).toHaveBeenCalledTimes(1);
+    });
+
+    it('re-evaluates an already-scheduled URL through refresh', async () => {
+        const deps = dependencies();
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        await updater.update(7, 'https://example.com/article');
+        await updater.refresh(7, 'https://example.com/article');
+
+        expect(deps.lookup).toHaveBeenCalledTimes(2);
+    });
+
+    it('lets the same URL retry after a failed lookup result', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.lookup)
+            .mockResolvedValueOnce({ status: 'error', reason: 'lookup_failed' })
+            .mockResolvedValueOnce({ status: 'not_found' });
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        await updater.update(7, 'https://example.com/article');
+        await updater.update(7, 'https://example.com/article');
+
+        expect(deps.lookup).toHaveBeenCalledTimes(2);
+    });
+
+    it('re-checks a URL scheduled for a tab after that tab was forgotten', async () => {
+        const deps = dependencies();
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        await updater.update(7, 'https://example.com/article');
+        updater.forget(7);
+        await updater.update(7, 'https://example.com/article');
+
+        expect(deps.lookup).toHaveBeenCalledTimes(2);
+    });
+
+    it('aborts the superseded lookup when the tab navigates again', async () => {
+        const deps = dependencies();
+        const signals: AbortSignal[] = [];
+        let releaseFirst!: (value: HnLookupResult) => void;
+        vi.mocked(deps.lookup)
+            .mockImplementationOnce(async (_url, signal) => {
+                signals.push(signal);
+                return new Promise((resolve) => {
+                    releaseFirst = resolve;
+                });
+            })
+            .mockImplementationOnce(async (_url, signal) => {
+                signals.push(signal);
+                return { status: 'not_found' };
+            });
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const first = updater.update(7, 'https://example.com/old');
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledTimes(1));
+        const second = updater.update(7, 'https://example.com/current');
+        expect(signals[0]?.aborted).toBe(true);
+        releaseFirst({ status: 'not_found' });
+        await Promise.all([first, second]);
+
+        expect(signals[1]?.aborted).toBe(false);
+    });
+
+    it('aborts an in-flight lookup when its tab is forgotten', async () => {
+        const deps = dependencies();
+        const signals: AbortSignal[] = [];
+        let release!: (value: HnLookupResult) => void;
+        vi.mocked(deps.lookup).mockImplementation(async (_url, signal) => {
+            signals.push(signal);
+            return new Promise((resolve) => {
+                release = resolve;
+            });
+        });
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const update = updater.update(7, 'https://example.com/article');
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledTimes(1));
+        updater.forget(7);
+        expect(signals[0]?.aborted).toBe(true);
+        release({ status: 'not_found' });
+        await update;
+    });
+
+    it('aborts every in-flight lookup when automatic mode is disabled', async () => {
+        const deps = dependencies();
+        const signals: AbortSignal[] = [];
+        let release!: (value: HnLookupResult) => void;
+        vi.mocked(deps.lookup).mockImplementation(async (_url, signal) => {
+            signals.push(signal);
+            return new Promise((resolve) => {
+                release = resolve;
+            });
+        });
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const update = updater.update(7, 'https://example.com/article');
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledTimes(1));
+        const disable = updater.disable([7]);
+        expect(signals[0]?.aborted).toBe(true);
+        release({ status: 'not_found' });
+        await Promise.all([disable, update]);
     });
 
     it('clears the previous page badge before starting the next lookup', async () => {

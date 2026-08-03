@@ -6,7 +6,7 @@ import type { AvailabilitySettingsDependencies } from '../src/options/availabili
 function dependencies(): AvailabilitySettingsDependencies {
     return {
         readCurrent: vi.fn(async () => ({ ok: true, result: { enabled: false } })),
-        notifyChanged: vi.fn(async (enabled: boolean) => ({ ok: true, result: { enabled } })),
+        requestUpdate: vi.fn(async (enabled: boolean) => ({ ok: true, result: { enabled } })),
     };
 }
 
@@ -31,13 +31,13 @@ describe('OptionsStore', () => {
         expect(store.enabled).toBe(true);
         expect(store.busy).toBe(false);
         expect(store.message).not.toBe('');
-        expect(deps.notifyChanged).toHaveBeenCalledExactlyOnceWith(true);
+        expect(deps.requestUpdate).toHaveBeenCalledExactlyOnceWith(true);
     });
 
     it('resynchronizes through the background client after an invalid mutation response', async () => {
         const deps = dependencies();
         vi.mocked(deps.readCurrent).mockResolvedValue({ ok: true, result: { enabled: true } });
-        vi.mocked(deps.notifyChanged).mockResolvedValue({ ok: true });
+        vi.mocked(deps.requestUpdate).mockResolvedValue({ ok: true });
         const store = new OptionsStore(deps);
 
         await store.changeAutomaticAvailability(false);

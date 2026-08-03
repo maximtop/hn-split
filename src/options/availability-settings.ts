@@ -1,3 +1,6 @@
+import { UserFacingError, messageKeyForBackgroundError } from '../shared/error-messages';
+import { t } from '../shared/i18n';
+import type { MessageKey } from '../shared/i18n';
 import {
     isAvailabilitySettingReadResponse,
     isAvailabilitySettingResponse,
@@ -5,7 +8,7 @@ import {
 } from '../shared/messages';
 
 /**
- * Defines the side effects required to update automatic availability.
+ * Defines the background messaging operations used by the options page.
  */
 export interface AvailabilitySettingsDependencies {
     /**
@@ -13,24 +16,22 @@ export interface AvailabilitySettingsDependencies {
      */
     readCurrent(): Promise<unknown>;
     /**
-     * Notifies the background worker of the requested setting value.
+     * Requests one background-owned setting transaction and resolves with the
+     * worker's raw response.
      * @param enabled - Whether automatic availability should be enabled.
      */
-    notifyChanged(enabled: boolean): Promise<unknown>;
+    requestUpdate(enabled: boolean): Promise<unknown>;
 }
 
 /**
- * Names every successful automatic-availability update result.
+ * Converts an invalid or rejected background response into localized copy.
+ * @param response - The untrusted background response to interpret.
+ * @param fallbackKey - The locale key used when the response carries no known code.
  */
-export const AVAILABILITY_UPDATE_RESULT = {
-    ENABLED: 'enabled',
-    DISABLED: 'disabled',
-} as const;
-
-/**
- * Represents the result of a successful automatic-availability update.
- */
-export type AvailabilityUpdateResult = typeof AVAILABILITY_UPDATE_RESULT[keyof typeof AVAILABILITY_UPDATE_RESULT];
+function responseError(response: unknown, fallbackKey: MessageKey): UserFacingError {
+    const code = readBackgroundError(response);
+    return new UserFacingError(t(code === null ? fallbackKey : messageKeyForBackgroundError(code)));
+}
 
 /**
  * Reads the authoritative automatic-availability setting through the background worker.
@@ -41,34 +42,24 @@ export async function readAutomaticAvailability(
 ): Promise<boolean> {
     const response = await dependencies.readCurrent();
     if (!isAvailabilitySettingReadResponse(response)) {
-        throw responseError(response);
+        throw responseError(response, 'unable_to_load_settings');
     }
     return response.result.enabled;
 }
 
 /**
- * Converts an invalid or rejected background response into a useful error.
- * @param response - The untrusted background response to interpret.
- */
-function responseError(response: unknown): Error {
-    const message = readBackgroundError(response);
-    return new Error(message ?? 'Background did not confirm the setting change');
-}
-
-/**
- * Requests one background-owned automatic-availability setting transaction.
+ * Requests one background-owned automatic-availability setting transaction and
+ * returns the authoritative persisted value.
  * @param enabled - Whether automatic availability should be enabled.
  * @param dependencies - The background messaging operations used by the request.
  */
 export async function updateAutomaticAvailability(
     enabled: boolean,
     dependencies: AvailabilitySettingsDependencies,
-): Promise<AvailabilityUpdateResult> {
-    const response = await dependencies.notifyChanged(enabled);
+): Promise<boolean> {
+    const response = await dependencies.requestUpdate(enabled);
     if (!isAvailabilitySettingResponse(response)) {
-        throw responseError(response);
+        throw responseError(response, 'unable_to_update_settings');
     }
-    return response.result.enabled
-        ? AVAILABILITY_UPDATE_RESULT.ENABLED
-        : AVAILABILITY_UPDATE_RESULT.DISABLED;
+    return response.result.enabled;
 }

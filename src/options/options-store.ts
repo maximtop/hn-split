@@ -1,8 +1,8 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 
+import { userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
 import {
-    AVAILABILITY_UPDATE_RESULT,
     readAutomaticAvailability,
     updateAutomaticAvailability,
 } from './availability-settings';
@@ -36,8 +36,9 @@ export class OptionsStore {
                 this.enabled = enabled;
             });
         } catch (error) {
+            console.warn('HN Split: loading the availability setting failed.', error);
             runInAction(() => {
-                this.message = error instanceof Error ? error.message : t('unable_to_load_settings');
+                this.message = userFacingMessage(error, 'unable_to_load_settings');
             });
         } finally {
             runInAction(() => {
@@ -54,15 +55,14 @@ export class OptionsStore {
         this.busy = true;
         this.message = '';
         try {
-            const result = await updateAutomaticAvailability(nextEnabled, this.dependencies);
+            const enabled = await updateAutomaticAvailability(nextEnabled, this.dependencies);
             runInAction(() => {
-                this.enabled = result === AVAILABILITY_UPDATE_RESULT.ENABLED;
-                this.message = result === AVAILABILITY_UPDATE_RESULT.ENABLED
-                    ? t('automatic_enabled')
-                    : t('automatic_disabled');
+                this.enabled = enabled;
+                this.message = enabled ? t('automatic_enabled') : t('automatic_disabled');
             });
         } catch (error) {
-            const updateMessage = error instanceof Error ? error.message : t('unable_to_update_settings');
+            console.warn('HN Split: updating the availability setting failed.', error);
+            const updateMessage = userFacingMessage(error, 'unable_to_update_settings');
             try {
                 const enabled = await readAutomaticAvailability(this.dependencies);
                 runInAction(() => {
@@ -70,9 +70,8 @@ export class OptionsStore {
                     this.message = updateMessage;
                 });
             } catch (resyncError) {
-                const resyncMessage = resyncError instanceof Error
-                    ? resyncError.message
-                    : t('unable_to_reload_settings');
+                console.warn('HN Split: reloading the availability setting failed.', resyncError);
+                const resyncMessage = userFacingMessage(resyncError, 'unable_to_reload_settings');
                 runInAction(() => {
                     this.message = `${updateMessage} ${resyncMessage}`;
                 });

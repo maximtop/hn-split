@@ -3,7 +3,9 @@ import {
     applyAutomaticAvailabilitySetting,
     createAutomaticAvailabilitySettingQueue,
 } from '../browser/automatic-availability-lifecycle';
+import { refreshTabsBounded } from '../browser/bounded-tab-refresh';
 import { clearLookupCacheEntries } from '../browser/lookup-cache';
+import { sanitizeArticleUrl } from '../domain/url';
 import { lookupArticle } from './article-lookup';
 import {
     applyAvailabilityBadge,
@@ -12,25 +14,39 @@ import {
     setAutomaticAvailabilityEnabled,
 } from './chrome-adapters';
 
+const ENABLE_REFRESH_CONCURRENCY = 4;
+
 const automaticAvailability = new AutomaticAvailabilityUpdater({
     isEnabled: getAutomaticAvailabilityEnabled,
-    async lookup(url) {
-        return lookupArticle(url, null);
+    async lookup(url, signal) {
+        return lookupArticle(url, null, signal);
     },
     applyBadge: applyAvailabilityBadge,
 });
 
 /**
- * Re-evaluates all currently open tabs after automatic mode is enabled.
+ * Re-evaluates eligible open tabs with bounded concurrency after automatic
+ * mode is enabled, and fails the enable transaction when refreshes reject.
  */
 async function updateExistingTabs(): Promise<void> {
     const openTabs = await chrome.tabs.query({});
-    await Promise.allSettled(openTabs.map(async (tab) => {
-        if (tab.id === undefined) {
-            return;
-        }
-        await automaticAvailability.update(tab.id, tab.url ?? '');
-    }));
+    const eligibleTabs = openTabs.flatMap((tab) => (
+        tab.id === undefined || tab.url === undefined || sanitizeArticleUrl(tab.url) === null
+            ? []
+            : [{ tabId: tab.id, url: tab.url }]
+    ));
+    const failures = await refreshTabsBounded(
+        eligibleTabs,
+        async (tabId, url) => automaticAvailability.refresh(tabId, url),
+        ENABLE_REFRESH_CONCURRENCY,
+    );
+    if (failures.length > 0) {
+        // Counts only: the diagnostic must stay free of visited URLs.
+        throw new AggregateError(
+            failures,
+            `Unable to refresh ${failures.length} of ${eligibleTabs.length} open tabs`,
+        );
+    }
 }
 
 /**

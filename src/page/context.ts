@@ -1,16 +1,6 @@
-/**
- * Describes the browser page URLs used for discussion lookup.
- */
-export interface PageContext {
-    /**
-     * Contains the page's current browser URL.
-     */
-    pageUrl: string;
-    /**
-     * Contains the resolved canonical URL when the document declares one.
-     */
-    canonicalHref: string | null;
-}
+import type { PageContext } from '../shared/messages';
+
+export type { PageContext } from '../shared/messages';
 
 /**
  * Reads the current and canonical URLs from the inspected page.
