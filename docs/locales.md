@@ -10,6 +10,8 @@ The canonical list of the 40 priority locales lives in [`src/shared/locales.ts`]
 
 This document records the decisions around that registry; it deliberately does not duplicate the list.
 
+All 40 catalogs ship in `public/_locales/`. English is the authored source, Russian is hand-translated, and the other 38 catalogs are machine-translated: structurally validated (keys, placeholders, tags) by `pnpm locales:validate`, but pending native-speaker review before store listings are localized.
+
 ## Scope decision: Chrome only
 
 The set is validated against Chrome only for now. Firefox Add-ons, Microsoft Edge Add-ons, and the Apple App Store use their own locale inventories and remain out of scope until those ports begin (see the product brief's release-work section).
@@ -18,11 +20,11 @@ The set is validated against Chrome only for now. Firefox Add-ons, Microsoft Edg
 
 All 40 codes are directly supported Chrome `_locales` directory codes, verified against the chrome.i18n extension reference (`developer.chrome.com/docs/extensions/reference/api/i18n`, checked 2026-08-03; Chrome supports 55 codes in total). Notable confirmations: `es_419`, `fil`, `no` (Chrome uses `no`, not `nb`), `pt_BR`/`pt_PT` (no bare `pt`), `sr`, `zh_CN`/`zh_TW`, `he` and `id` under their modern codes. Because every code is store-supported, no store-level fallback mapping is required in the Chrome-only scope; the mappings below are library-level.
 
-Chrome's runtime message lookup falls back on its own: a regional locale first strips its region, then falls to `default_locale` (`en`). Consequences worth remembering:
+Chrome's runtime message lookup falls back on its own: a regional locale first strips its region, then falls to `default_locale` (`en`). With all 40 catalogs shipped these chains matter only for UI languages outside the set:
 
-- `es_419` users without an `es_419` catalog fall through to `es` — the chain works because `es` is in the set;
-- `pt_BR`/`pt_PT` users fall through to `en` (there is no bare `pt` directory and Chrome does not offer one between the two regional codes); shipping both regional catalogs is therefore required, which the set does;
-- `zh_CN`/`zh_TW` likewise fall to `en` (`zh` is not a Chrome directory code).
+- a Spanish regional variant that Chrome does not map to `es_419` still lands on `es`;
+- Portuguese variants beyond `pt_BR`/`pt_PT` fall to `en` (there is no bare `pt` directory code), which is why both regional catalogs ship;
+- unlisted Chinese variants fall to `en` (`zh` is not a Chrome directory code).
 
 ## Library mappings (@adguard/translate 2.0.8)
 
@@ -41,10 +43,7 @@ The validation script passes `adguardCode` (never the directory name) to `valida
 
 ## RTL requirements
 
-`ar`, `fa`, and `he` are right-to-left (flagged in the registry). Before shipping them:
-
-- stamp `document.documentElement.dir` from the resolved locale alongside the existing `lang` stamping in both page bootstraps;
-- add an RTL pass to the accessibility E2E matrix (`tests/e2e/a11y.e2e.ts`) covering layout mirroring and overflow.
+`ar`, `fa`, and `he` are right-to-left (flagged in the registry). Both page bootstraps stamp `document.documentElement.dir` (and a BCP-47 `lang`) from the resolved registry entry through `applyDocumentLocale` in `src/shared/i18n.ts`. Remaining work before promoting RTL locales in store listings: an RTL pass in the accessibility E2E matrix (`tests/e2e/a11y.e2e.ts`) covering layout mirroring and overflow.
 
 ## Selection rationale
 

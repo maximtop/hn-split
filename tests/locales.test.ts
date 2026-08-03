@@ -54,11 +54,19 @@ describe('resolveShippedLocale', () => {
         ['en', 'en'],
         ['en_us', 'en'],
         ['en_gb', 'en'],
+        ['de', 'de'],
+        ['zh_cn', 'zh_cn'],
+        ['zh_tw', 'zh_tw'],
+        ['zh', 'zh_cn'],
+        ['pt', 'pt_br'],
+        ['pt_pt', 'pt_pt'],
+        ['es_419', 'es'],
+        ['es_mx', 'es'],
     ])('resolves %s to shipped locale %s', (uiLanguage, expected) => {
         expect(resolveShippedLocale(uiLanguage)?.adguardCode).toBe(expected);
     });
 
-    it.each(['de', 'zh_cn', 'es_419', ''])('returns undefined for unshipped language %s', (uiLanguage) => {
+    it.each(['lv', 'xx', ''])('returns undefined for unsupported language %s', (uiLanguage) => {
         expect(resolveShippedLocale(uiLanguage)).toBeUndefined();
     });
 });

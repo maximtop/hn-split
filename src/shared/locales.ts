@@ -80,10 +80,10 @@ export const LOCALE_REGISTRY: readonly LocaleEntry[] = [
 
 /**
  * Names the registry codes whose catalogs actually ship in `public/_locales`.
- * The locale validation script asserts this list matches the directories, so
- * it cannot drift from reality.
+ * Every priority locale ships a catalog; the locale validation script asserts
+ * this list matches the directories, so it cannot drift from reality.
  */
-export const SHIPPED_LOCALES: readonly string[] = ['en', 'ru'];
+export const SHIPPED_LOCALES: readonly string[] = LOCALE_REGISTRY.map(({ code }) => code);
 
 /**
  * Resolves a normalized browser UI language to a shipped registry entry.

@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import { OptionsApp } from './options-app';
 import { OptionsStore } from './options-store';
-import { getUiLocale, t } from '../shared/i18n';
+import { applyDocumentLocale, t } from '../shared/i18n';
 import { BACKGROUND_REQUEST_TYPE } from '../shared/messages';
 import '@mantine/core/styles.css';
 import './styles.css';
@@ -13,7 +13,7 @@ if (root === null) {
     throw new Error('Options root element is missing');
 }
 
-document.documentElement.lang = getUiLocale();
+applyDocumentLocale();
 document.title = t('options_document_title');
 
 const store = new OptionsStore({
