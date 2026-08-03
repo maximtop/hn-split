@@ -2,10 +2,9 @@ import { translate } from '@adguard/translate';
 import type { I18nInterface, Locale } from '@adguard/translate';
 
 import baseMessages from '../../public/_locales/en/messages.json';
+import { BASE_LOCALE, resolveShippedLocale } from './locales';
 
 export type MessageKey = keyof typeof baseMessages;
-
-const BASE_LOCALE: Locale = 'en';
 
 /**
  * Returns the bundled English message used when the Chrome i18n API is unavailable.
@@ -17,18 +16,15 @@ function getBaseMessage(key: string): string {
 }
 
 /**
- * Maps Chrome locale identifiers to locales supported by AdGuard Translate,
- * exposed so extension pages can stamp the resolved language on the document.
+ * Maps the Chrome UI language onto a shipped registry locale, exposed so
+ * extension pages can stamp the resolved language on the document.
  */
 export function getUiLocale(): Locale {
     if (typeof chrome === 'undefined' || chrome.i18n?.getUILanguage === undefined) {
         return BASE_LOCALE;
     }
-    const locale = chrome.i18n.getUILanguage().toLowerCase().replace('-', '_');
-    if (locale === 'ru' || locale.startsWith('ru_')) {
-        return 'ru';
-    }
-    return BASE_LOCALE;
+    const normalized = chrome.i18n.getUILanguage().toLowerCase().replace('-', '_');
+    return resolveShippedLocale(normalized)?.adguardCode ?? BASE_LOCALE;
 }
 
 const i18n: I18nInterface = {
