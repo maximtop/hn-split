@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-    applyAutomaticAvailabilitySetting,
-    createAutomaticAvailabilitySettingQueue,
-} from '../src/browser/automatic-availability-lifecycle';
-import type { AutomaticAvailabilityLifecycleDependencies } from '../src/browser/automatic-availability-lifecycle';
+    applySettingTransaction,
+    createSettingQueue,
+} from '../src/browser/setting-lifecycle';
+import type { SettingLifecycleDependencies } from '../src/browser/setting-lifecycle';
 
-function dependencies(enabled: boolean): AutomaticAvailabilityLifecycleDependencies {
+function dependencies(enabled: boolean): SettingLifecycleDependencies {
     return {
         getEnabled: vi.fn(async () => enabled),
         setEnabled: vi.fn(async () => undefined),
@@ -15,11 +15,11 @@ function dependencies(enabled: boolean): AutomaticAvailabilityLifecycleDependenc
     };
 }
 
-describe('applyAutomaticAvailabilitySetting', () => {
+describe('applySettingTransaction', () => {
     it('persists and applies an enabled setting in the background', async () => {
         const deps = dependencies(false);
 
-        await applyAutomaticAvailabilitySetting(true, deps);
+        await applySettingTransaction(true, deps);
 
         expect(deps.setEnabled).toHaveBeenCalledExactlyOnceWith(true);
         expect(deps.enable).toHaveBeenCalledOnce();
@@ -30,7 +30,7 @@ describe('applyAutomaticAvailabilitySetting', () => {
         const deps = dependencies(false);
         vi.mocked(deps.enable).mockRejectedValueOnce(new Error('tab closed'));
 
-        await expect(applyAutomaticAvailabilitySetting(true, deps)).rejects.toThrow('tab closed');
+        await expect(applySettingTransaction(true, deps)).rejects.toThrow('tab closed');
 
         expect(deps.setEnabled).toHaveBeenNthCalledWith(1, true);
         expect(deps.setEnabled).toHaveBeenNthCalledWith(2, false);
@@ -41,7 +41,7 @@ describe('applyAutomaticAvailabilitySetting', () => {
         const deps = dependencies(true);
         vi.mocked(deps.disable).mockRejectedValueOnce(new Error('cache unavailable'));
 
-        await expect(applyAutomaticAvailabilitySetting(false, deps)).rejects.toThrow('cache unavailable');
+        await expect(applySettingTransaction(false, deps)).rejects.toThrow('cache unavailable');
 
         expect(deps.setEnabled).toHaveBeenNthCalledWith(1, false);
         expect(deps.setEnabled).toHaveBeenNthCalledWith(2, true);
@@ -55,8 +55,8 @@ describe('applyAutomaticAvailabilitySetting', () => {
             .mockResolvedValueOnce(undefined)
             .mockRejectedValueOnce(new Error('restore failed'));
 
-        await expect(applyAutomaticAvailabilitySetting(true, deps))
-            .rejects.toThrow('Unable to restore automatic availability consistently');
+        await expect(applySettingTransaction(true, deps))
+            .rejects.toThrow('Unable to restore the setting consistently');
 
         expect(deps.disable).toHaveBeenCalledOnce();
     });
@@ -66,8 +66,8 @@ describe('applyAutomaticAvailabilitySetting', () => {
         vi.mocked(deps.enable).mockRejectedValueOnce(new Error('enable failed'));
         vi.mocked(deps.disable).mockRejectedValueOnce(new Error('disable compensation failed'));
 
-        await expect(applyAutomaticAvailabilitySetting(true, deps))
-            .rejects.toThrow('Unable to restore automatic availability consistently');
+        await expect(applySettingTransaction(true, deps))
+            .rejects.toThrow('Unable to restore the setting consistently');
     });
 
     it('serializes concurrent opposite setting changes', async () => {
@@ -76,7 +76,7 @@ describe('applyAutomaticAvailabilitySetting', () => {
         const enableGate = new Promise<void>((resolve) => {
             releaseEnable = resolve;
         });
-        const queued = createAutomaticAvailabilitySettingQueue(async (enabled) => {
+        const queued = createSettingQueue(async (enabled) => {
             order.push(`start:${enabled}`);
             if (enabled) {
                 await enableGate;

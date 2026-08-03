@@ -3,6 +3,13 @@ import { resolve } from 'node:path';
 import { rspack } from '@rspack/core';
 import type { Configuration } from '@rspack/core';
 
+import { ARTICLE_CLICK_CONTENT_SCRIPT } from './src/shared/content-scripts';
+
+// The manifest references background.js by name, and the dynamic
+// content-script registration references its bundle file the same way, so
+// both chunks must keep stable, hash-free filenames.
+const FIXED_FILENAME_CHUNKS = new Set(['background', ARTICLE_CLICK_CONTENT_SCRIPT.ID]);
+
 const config: Configuration = {
     mode: 'production',
     entry: {
@@ -10,11 +17,12 @@ const config: Configuration = {
         'options': resolve(import.meta.dirname, 'src/options/main.tsx'),
         'popup': resolve(import.meta.dirname, 'src/popup/main.tsx'),
         'side-panel': resolve(import.meta.dirname, 'src/side-panel/main.tsx'),
+        [ARTICLE_CLICK_CONTENT_SCRIPT.ID]: resolve(import.meta.dirname, 'src/content/main.ts'),
     },
     output: {
         path: resolve(import.meta.dirname, 'dist'),
-        filename: ({ chunk }) => chunk?.name === 'background'
-            ? 'background.js'
+        filename: ({ chunk }) => chunk?.name !== undefined && FIXED_FILENAME_CHUNKS.has(chunk.name)
+            ? '[name].js'
             : 'assets/[name]-[contenthash].js',
         chunkFilename: 'assets/[name]-[contenthash].js',
         cssFilename: 'assets/[name]-[contenthash].css',

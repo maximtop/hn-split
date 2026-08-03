@@ -6,12 +6,12 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 const restrictedControlString = {
-    selector: 'Literal[value=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|get_availability_setting|set_availability_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|discussion_tab:)$/]',
+    selector: 'Literal[value=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|open_discussion_for_click|get_availability_setting|set_availability_setting|get_article_click_setting|set_article_click_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|article_click_discussion|discussion_tab:)$/]',
     message: 'Use the named domain, protocol, or storage constant instead of a magic string.',
 };
 
 const restrictedControlTemplate = {
-    selector: 'TemplateElement[value.raw=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|get_availability_setting|set_availability_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|discussion_tab:)$/]',
+    selector: 'TemplateElement[value.raw=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|open_discussion_for_click|get_availability_setting|set_availability_setting|get_article_click_setting|set_article_click_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|article_click_discussion|discussion_tab:)$/]',
     message: 'Use the named domain, protocol, or storage constant instead of a magic template value.',
 };
 
@@ -116,6 +116,7 @@ export default tseslint.config(
         ignores: [
             'src/domain/hn.ts',
             'src/domain/url.ts',
+            'src/shared/content-scripts.ts',
             'src/shared/messages.ts',
             'src/shared/storage-keys.ts',
         ],

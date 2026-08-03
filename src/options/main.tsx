@@ -16,7 +16,7 @@ if (root === null) {
 applyDocumentLocale();
 document.title = t('options_document_title');
 
-const store = new OptionsStore({
+const availabilityStore = new OptionsStore({
     async readCurrent() {
         const response: unknown = await chrome.runtime.sendMessage({
             type: BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING,
@@ -30,11 +30,34 @@ const store = new OptionsStore({
         });
         return response;
     },
+}, {
+    enabledKey: 'automatic_enabled',
+    disabledKey: 'automatic_disabled',
 });
-void store.load();
+void availabilityStore.load();
+
+const articleClickStore = new OptionsStore({
+    async readCurrent() {
+        const response: unknown = await chrome.runtime.sendMessage({
+            type: BACKGROUND_REQUEST_TYPE.GET_ARTICLE_CLICK_SETTING,
+        });
+        return response;
+    },
+    async requestUpdate(enabled) {
+        const response: unknown = await chrome.runtime.sendMessage({
+            type: BACKGROUND_REQUEST_TYPE.SET_ARTICLE_CLICK_SETTING,
+            enabled,
+        });
+        return response;
+    },
+}, {
+    enabledKey: 'article_click_open_enabled',
+    disabledKey: 'article_click_open_disabled',
+});
+void articleClickStore.load();
 
 createRoot(root).render(
     <StrictMode>
-        <OptionsApp store={store} />
+        <OptionsApp availability={availabilityStore} articleClick={articleClickStore} />
     </StrictMode>,
 );

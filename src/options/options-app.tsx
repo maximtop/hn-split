@@ -20,17 +20,21 @@ import type { OptionsStore } from './options-store';
  */
 export interface OptionsAppProps {
     /**
-     * Owns the background-backed options state and actions.
+     * Owns the automatic-availability toggle state and actions.
      */
-    store: OptionsStore;
+    availability: OptionsStore;
+    /**
+     * Owns the article-click discussion toggle state and actions.
+     */
+    articleClick: OptionsStore;
 }
 
 /**
  * Renders the HN Split options page from observable MobX state.
- * @param props - The observable options store to render.
+ * @param props - The observable options stores to render.
  */
 function OptionsView(props: OptionsAppProps): React.JSX.Element {
-    const { store } = props;
+    const { availability, articleClick } = props;
     return (
         <MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} defaultColorScheme="auto">
             <Container component="main" size="md" py={64}>
@@ -48,13 +52,13 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                                 <Text c="dimmed">{t('automatic_badge_description')}</Text>
                             </Stack>
                             <Switch
-                                checked={store.enabled}
-                                disabled={store.busy}
+                                checked={availability.enabled}
+                                disabled={availability.busy}
                                 size="lg"
                                 label={t('automatic_badge_label')}
                                 labelPosition="left"
                                 onChange={(event) => {
-                                    void store.changeAutomaticAvailability(event.currentTarget.checked);
+                                    void availability.changeEnabled(event.currentTarget.checked);
                                 }}
                             />
                         </Group>
@@ -63,17 +67,44 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                     <Text c="dimmed" size="sm">{t('privacy_note')}</Text>
 
                     <Paper withBorder radius="lg" p="xl" shadow="sm">
+                        <Group justify="space-between" align="center" wrap="nowrap" gap="xl">
+                            <Stack gap="xs">
+                                <Title order={2} size="h4">{t('article_click_open')}</Title>
+                                <Text c="dimmed">{t('article_click_open_description')}</Text>
+                            </Stack>
+                            <Switch
+                                checked={articleClick.enabled}
+                                disabled={articleClick.busy}
+                                size="lg"
+                                label={t('article_click_open_label')}
+                                labelPosition="left"
+                                onChange={(event) => {
+                                    void articleClick.changeEnabled(event.currentTarget.checked);
+                                }}
+                            />
+                        </Group>
+                    </Paper>
+
+                    <Paper withBorder radius="lg" p="xl" shadow="sm">
                         <Stack gap="xs">
                             <Title order={2} size="h4">{t('open_in_side_panel')}</Title>
                             <Text c="dimmed">{t('side_panel_notice')}</Text>
                         </Stack>
                     </Paper>
 
-                    {store.message === ''
+                    {availability.message === ''
                         ? null
                         : (
                                 <Alert className="settings-status" color="orange" role="status">
-                                    {store.message}
+                                    {availability.message}
+                                </Alert>
+                            )}
+
+                    {articleClick.message === ''
+                        ? null
+                        : (
+                                <Alert className="settings-status" color="orange" role="status">
+                                    {articleClick.message}
                                 </Alert>
                             )}
                 </Stack>
