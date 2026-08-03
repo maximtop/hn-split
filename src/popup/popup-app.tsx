@@ -8,7 +8,6 @@ import {
     Text,
     Title,
     UnstyledButton,
-    createTheme,
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +16,7 @@ import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import { readPageContext } from '../page/context';
 import { UserFacingError, messageKeyForBackgroundError, userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
+import { cssVariablesResolver, theme } from '../shared/theme';
 import {
     BACKGROUND_REQUEST_TYPE,
     isLookupResponse,
@@ -80,10 +80,6 @@ const initialState: PopupState = {
     openingId: null,
 };
 
-const theme = createTheme({
-    primaryColor: 'orange',
-});
-
 /**
  * Sends a typed request to the extension background worker.
  * @param request - The typed background request to send.
@@ -115,7 +111,7 @@ function DiscussionButton(props: DiscussionButtonProps): React.JSX.Element {
             })}
         >
             <Stack gap={4} align="flex-start">
-                <Text c="orange.7" fw={700} size="xs">
+                <Text c="brand.7" fw={700} size="xs">
                     {t(primary ? 'open_primary_discussion' : 'open_alternative')}
                 </Text>
                 <Text fw={700} size="sm">{discussion.title}</Text>
@@ -223,26 +219,30 @@ export function App(): React.JSX.Element {
     const found = state.result?.status === HN_LOOKUP_STATUS.FOUND ? state.result : null;
 
     return (
-        <MantineProvider theme={theme} defaultColorScheme="auto">
+        <MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} defaultColorScheme="auto">
             <Box component="main" p="md" w={380}>
                 <Stack gap="md">
                     <Box component="header">
-                        <Text c="orange.7" fw={800} size="xs" tt="uppercase">{t('extension_name')}</Text>
+                        <Text c="brand.7" fw={800} size="xs" tt="uppercase">{t('extension_name')}</Text>
                         <Title order={1} size="h3">{t('popup_heading')}</Title>
                     </Box>
 
-                    {state.loading && <Text className="status" c="dimmed">{t('checking_article')}</Text>}
+                    {/* Persistent live region: async status changes are announced
+                        reliably only when the container already exists. */}
+                    <Box role="status">
+                        {state.loading && <Text className="status" c="dimmed">{t('checking_article')}</Text>}
+                        {state.result?.status === HN_LOOKUP_STATUS.RESTRICTED && (
+                            <Text className="status" c="dimmed">{t('restricted_page')}</Text>
+                        )}
+                        {state.result?.status === HN_LOOKUP_STATUS.NOT_FOUND && (
+                            <Text className="status" c="dimmed">{t('discussion_not_found')}</Text>
+                        )}
+                    </Box>
                     {state.error !== null && (
-                        <Alert className="status status--error" color="red">{state.error}</Alert>
-                    )}
-                    {state.result?.status === HN_LOOKUP_STATUS.RESTRICTED && (
-                        <Text className="status" c="dimmed">{t('restricted_page')}</Text>
-                    )}
-                    {state.result?.status === HN_LOOKUP_STATUS.NOT_FOUND && (
-                        <Text className="status" c="dimmed">{t('discussion_not_found')}</Text>
+                        <Alert className="status status--error" color="red" role="alert">{state.error}</Alert>
                     )}
                     {state.result?.status === HN_LOOKUP_STATUS.ERROR && (
-                        <Alert className="status status--error" color="red">
+                        <Alert className="status status--error" color="red" role="alert">
                             {t('lookup_error')}
                         </Alert>
                     )}
