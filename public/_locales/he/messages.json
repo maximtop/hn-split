@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "תגובות זמינות ב‑Hacker News: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "לא נמצא דיון ב‑Hacker News", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "דף זה אינו מתאים לחיפוש", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "החיפוש ב‑Hacker News נכשל", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "החיפוש ב‑Hacker News נכשל", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "פתיחה בחלונית הצדדית", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News חוסם הטמעה. כל עוד החלונית פתוחה, ההרחבה מסירה את החסימה עבור מסגרות Hacker News בלבד, ומשחזרת אותה כשסוגרים את החלונית.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "פתיחה ב-Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "בחרו דיון בחלון הקופץ של ההרחבה.", "description": "Side panel empty state" }
 }

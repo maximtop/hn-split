@@ -8,6 +8,7 @@ const ERROR_MESSAGE_KEY: Record<BackgroundErrorCode, MessageKey> = {
     [BACKGROUND_ERROR_CODE.OPEN_DISCUSSION_FAILED]: 'open_discussion_failed',
     [BACKGROUND_ERROR_CODE.SETTING_READ_FAILED]: 'unable_to_load_settings',
     [BACKGROUND_ERROR_CODE.SETTING_UPDATE_FAILED]: 'unable_to_update_settings',
+    [BACKGROUND_ERROR_CODE.SIDE_PANEL_SELECTION_FAILED]: 'side_panel_empty',
 };
 
 /**

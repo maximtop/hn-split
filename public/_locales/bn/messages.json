@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "উপলব্ধ Hacker News মন্তব্য: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "কোনো Hacker News আলোচনা পাওয়া যায়নি", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "এই পৃষ্ঠাটি অনুসন্ধানের উপযুক্ত নয়", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News অনুসন্ধান ব্যর্থ হয়েছে", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News অনুসন্ধান ব্যর্থ হয়েছে", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "সাইড প্যানেলে খুলুন", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News এমবেড করা আটকায়। এই প্যানেল খোলা থাকা অবস্থায় এক্সটেনশনটি শুধু Hacker News ফ্রেমের জন্য সেই বাধা সরায় এবং প্যানেল বন্ধ করলে তা ফিরিয়ে দেয়।", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Hacker News-এ খুলুন", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "এক্সটেনশন পপআপে একটি আলোচনা বেছে নিন।", "description": "Side panel empty state" }
 }

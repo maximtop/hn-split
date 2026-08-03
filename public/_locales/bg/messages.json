@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "Налични коментари в Hacker News: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Не е намерена дискусия в Hacker News", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Тази страница не е допустима за търсене", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Търсенето в Hacker News беше неуспешно", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Търсенето в Hacker News беше неуспешно", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Отваряне в страничния панел", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News блокира вграждането. Докато този панел е отворен, разширението премахва тази блокировка само за рамки на Hacker News и я възстановява, когато затворите панела.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Отваряне в Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Изберете дискусия в изскачащия прозорец на разширението.", "description": "Side panel empty state" }
 }

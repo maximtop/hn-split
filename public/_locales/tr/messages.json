@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% Hacker News yorumu mevcut", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Hacker News tartışması bulunamadı", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Bu sayfa arama için uygun değil", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News araması başarısız oldu", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News araması başarısız oldu", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Yan panelde aç", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News gömülmeyi engelliyor. Bu panel açıkken uzantı bu engeli yalnızca Hacker News çerçeveleri için kaldırır ve paneli kapattığınızda geri getirir.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Hacker News'te aç", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Uzantının açılır penceresinde bir tartışma seçin.", "description": "Side panel empty state" }
 }

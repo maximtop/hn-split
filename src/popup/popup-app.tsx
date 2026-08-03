@@ -23,7 +23,7 @@ import {
     isLookupResponse,
     isOpenDiscussionResponse,
 } from '../shared/messages';
-import type { LookupRequest, OpenDiscussionRequest } from '../shared/messages';
+import type { LookupRequest, OpenDiscussionRequest, SidePanelSelectRequest } from '../shared/messages';
 
 /**
  * Stores the popup's asynchronous lookup and opening state.
@@ -85,7 +85,9 @@ const initialState: PopupState = {
  * Sends a typed request to the extension background worker.
  * @param request - The typed background request to send.
  */
-async function sendMessage(request: LookupRequest | OpenDiscussionRequest): Promise<unknown> {
+async function sendMessage(
+    request: LookupRequest | OpenDiscussionRequest | SidePanelSelectRequest,
+): Promise<unknown> {
     return chrome.runtime.sendMessage(request);
 }
 
@@ -217,6 +219,22 @@ export function App(): React.JSX.Element {
         }
     };
 
+    const openInSidePanel = (itemId: string): void => {
+        if (state.articleTabId === null) {
+            return;
+        }
+        // chrome.sidePanel.open must run inside the click gesture, so the panel
+        // is opened first and the selection is recorded right after; the panel
+        // reads it once its own page loads.
+        void chrome.sidePanel.open({ tabId: state.articleTabId });
+        void sendMessage({
+            type: BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION,
+            itemId,
+        }).catch((error: unknown) => {
+            logWarning('selecting the side panel discussion failed.', error);
+        });
+    };
+
     const found = state.result?.status === HN_LOOKUP_STATUS.FOUND ? state.result : null;
 
     return (
@@ -265,6 +283,16 @@ export function App(): React.JSX.Element {
                                     onOpen={() => { void open(discussion.id); }}
                                 />
                             ))}
+                            {/* The default variant keeps WCAG AA contrast in
+                                both schemes; the brand-tinted light variant
+                                does not. */}
+                            <Button
+                                variant="default"
+                                size="compact-sm"
+                                onClick={() => { openInSidePanel(found.primary.id); }}
+                            >
+                                {t('open_in_side_panel')}
+                            </Button>
                         </Stack>
                     )}
 

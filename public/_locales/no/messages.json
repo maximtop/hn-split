@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% Hacker News-kommentarer tilgjengelig", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Ingen Hacker News-diskusjon funnet", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Denne siden er ikke gyldig for søk", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News-søket mislyktes", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News-søket mislyktes", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Åpne i sidepanel", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News blokkerer innbygging. Mens dette panelet er åpent, fjerner utvidelsen blokkeringen bare for Hacker News-rammer, og gjenoppretter den når du lukker panelet.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Åpne på Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Velg en diskusjon i utvidelsens popup.", "description": "Side panel empty state" }
 }

@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "有 %comments% 条 Hacker News 评论", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "未找到 Hacker News 讨论", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "此页面不符合搜索条件", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News 搜索失败", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News 搜索失败", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "在侧边栏中打开", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News 禁止被嵌入。此面板打开期间，扩展程序仅针对 Hacker News 框架解除该限制，并在你关闭面板时恢复。", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "在 Hacker News 上打开", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "请在扩展程序弹出窗口中选择一个讨论。", "description": "Side panel empty state" }
 }

@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% comentarii Hacker News disponibile", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Nu s-a găsit nicio discuție pe Hacker News", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Această pagină nu este eligibilă pentru căutare", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Căutarea pe Hacker News a eșuat", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Căutarea pe Hacker News a eșuat", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Deschide în panoul lateral", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News blochează încorporarea. Cât timp acest panou este deschis, extensia elimină acea blocare doar pentru cadrele Hacker News și o restabilește când închizi panoul.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Deschide pe Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Alege o discuție în fereastra pop-up a extensiei.", "description": "Side panel empty state" }
 }

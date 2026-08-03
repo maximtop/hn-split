@@ -14,7 +14,10 @@ Every installed permission exists for one documented purpose:
 - **`activeTab`** — scopes popup-triggered page inspection to the tab the user is looking at when they open the extension action. No page is touched without that explicit action.
 - **`scripting`** — runs one short-lived function in the active page after the popup opens. The function reads only `location.href` and the `<link rel="canonical">` element; no persistent content script is registered and no page content beyond that link element is read.
 - **`storage`** — persists the automatic-availability on/off setting in `chrome.storage.local`, and keeps time-bounded lookup results plus article-to-discussion tab associations in `chrome.storage.session`, which Chrome discards when the browser session ends. No browsing history is written to persistent storage.
-- **Host access to `https://hn.algolia.com/*`** — the only remote endpoint the extension may contact. It receives sanitized public article URL candidates as search queries and returns matching Hacker News submissions. No account, API key, or identifying header is used.
+- **Host access to `https://hn.algolia.com/*`** — the lookup endpoint. It receives sanitized public article URL candidates as search queries and returns matching Hacker News submissions. No account, API key, or identifying header is used.
+- **`sidePanel`** — opens the browser side panel, and only after the user clicks the side panel button in the popup.
+- **`declarativeNetRequestWithHostAccess`** — declares one dynamic rule that removes the `X-Frame-Options` and `Content-Security-Policy` response headers from Hacker News **sub-frame** requests, which is what allows the discussion to render inside the side panel. The rule is installed when a side panel opens and removed when it closes, so it does not exist while no panel is open; top-level Hacker News navigation keeps its headers, and no other site is affected. The extension does not read, block, or redirect any request. Two limits are worth stating plainly: while a panel is open the exception applies to any Hacker News sub-frame in that browser profile, not only to this extension's panel, because rule conditions cannot target a single extension frame; and removing `Content-Security-Policy` wholesale also drops Hacker News's own script restrictions inside the frame, because a header cannot be edited in part.
+- **Host access to `https://news.ycombinator.com/*`** — required for the header rule above and for the side panel to embed the discussion page. The embedded page is the real Hacker News site: the user's own Hacker News session applies inside the panel exactly as it does in a tab, and the extension neither reads nor stores anything from it.
 
 ## Outbound URL boundary
 
@@ -26,3 +29,7 @@ Only public `http:`/`https:` article URLs may reach the lookup endpoint. Before 
 - URLs with embedded credentials, and URLs whose query string carries recognizable secrets (for example `token`, `access_token`, `code`, `sig`, or `X-Amz-*` signature parameters), which fail closed and are never sent or cached.
 
 Split for Hacker News does not persist browsing history, store article content, use analytics, or access Hacker News credentials. A discussion tab is opened only after the user selects it.
+
+## Side panel
+
+The side panel embeds `news.ycombinator.com` directly instead of re-rendering it. The extension does not read the framed page, and the only state it keeps is the selected discussion identifier in session storage. The framing exception described above is the entire mechanism, its lifetime is the panel's lifetime, and the panel itself states what is being modified while it is open.

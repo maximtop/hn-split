@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "उपलब्ध Hacker News टिप्पणियाँ: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "कोई Hacker News चर्चा नहीं मिली", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "यह पृष्ठ खोज के योग्य नहीं है", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News खोज विफल रही", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News खोज विफल रही", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "साइड पैनल में खोलें", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News एम्बेड करने से रोकता है। जब तक यह पैनल खुला है, एक्सटेंशन यह रोक केवल Hacker News फ़्रेम के लिए हटाता है और पैनल बंद करने पर उसे बहाल कर देता है।", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Hacker News पर खोलें", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "एक्सटेंशन पॉपअप में कोई चर्चा चुनें।", "description": "Side panel empty state" }
 }

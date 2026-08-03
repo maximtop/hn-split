@@ -4,7 +4,7 @@
 - Use React, TypeScript, Manifest V3, Rspack, and minimal permissions.
 - Never open, move, or replace a tab without an explicit user action.
 - One result selection must open one concrete Hacker News item URL.
-- Do not imitate Split View with an iframe or undocumented Chrome API.
+- Do not use undocumented Chrome APIs, and do not re-render Hacker News inside a page the user is reading. The side panel may frame the real Hacker News site, but only on these terms: the framing exception lives exactly as long as the panel is open, covers only Hacker News sub-frames, and is disclosed on the options page and in `PRIVACY.md`.
 - Keep URL matching conservative and covered by tests.
 - Do not add telemetry, a backend, credentials, or authenticated HN actions.
 - Name project files with lowercase kebab-case except conventional tool files such as `README.md` and `AGENTS.md`.

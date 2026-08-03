@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "تعليقات Hacker News المتوفرة: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "لم يُعثر على مناقشة في Hacker News", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "هذه الصفحة غير مؤهلة للبحث", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "فشل البحث في Hacker News", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "فشل البحث في Hacker News", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "فتح في اللوحة الجانبية", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "يمنع Hacker News التضمين. أثناء فتح هذه اللوحة، يزيل الامتداد هذا المنع لإطارات Hacker News فقط، ويعيده عند إغلاق اللوحة.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "الفتح في Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "اختر مناقشة من نافذة الامتداد المنبثقة.", "description": "Side panel empty state" }
 }

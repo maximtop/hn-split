@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "Доступни коментари на Hacker News-у: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Није пронађена дискусија на Hacker News-у", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Ова страница није погодна за претрагу", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Претрага на Hacker News-у није успела", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Претрага на Hacker News-у није успела", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Отвори у бочној табли", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News блокира уграђивање. Док је ова табла отворена, проширење уклања ту блокаду само за оквире Hacker News-а и враћа је када затворите таблу.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Отвори на Hacker News-у", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Изаберите дискусију у искачућем прозору проширења.", "description": "Side panel empty state" }
 }

@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% Hacker News-reacties beschikbaar", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Geen Hacker News-discussie gevonden", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Deze pagina komt niet in aanmerking voor zoeken", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News-zoekopdracht mislukt", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News-zoekopdracht mislukt", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Openen in zijpaneel", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News blokkeert insluiten. Zolang dit paneel open is, verwijdert de extensie die blokkade alleen voor Hacker News-frames en herstelt deze wanneer je het paneel sluit.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Openen op Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Kies een discussie in de pop-up van de extensie.", "description": "Side panel empty state" }
 }

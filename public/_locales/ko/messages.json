@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "사용 가능한 Hacker News 댓글: %comments%개", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Hacker News 토론을 찾을 수 없습니다", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "이 페이지는 검색 대상이 아닙니다", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News 검색에 실패했습니다", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News 검색에 실패했습니다", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "사이드 패널에서 열기", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News는 삽입을 차단합니다. 이 패널이 열려 있는 동안에만 확장 프로그램이 Hacker News 프레임에 한해 차단을 해제하고, 패널을 닫으면 복원합니다.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Hacker News에서 열기", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "확장 프로그램 팝업에서 토론을 선택하세요.", "description": "Side panel empty state" }
 }

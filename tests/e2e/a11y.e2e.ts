@@ -157,6 +157,10 @@ test.describe('extension accessibility (en)', () => {
         await expectVisibleFocusIndicator(page);
 
         await page.keyboard.press('Tab');
+        await expect(page.getByRole('button', { name: 'Open in side panel' })).toBeFocused();
+        await expectVisibleFocusIndicator(page);
+
+        await page.keyboard.press('Tab');
         await expect(page.getByRole('button', { name: 'Availability settings' })).toBeFocused();
         await expectVisibleFocusIndicator(page);
 
