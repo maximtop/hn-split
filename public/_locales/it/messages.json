@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% commenti di Hacker News disponibili", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Nessuna discussione di Hacker News trovata", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Questa pagina non è idonea alla ricerca", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Ricerca su Hacker News non riuscita", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Ricerca su Hacker News non riuscita", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Apri nel pannello laterale", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News blocca l'incorporamento. Mentre questo pannello è aperto, l'estensione rimuove il blocco solo per i frame di Hacker News e lo ripristina alla chiusura.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Apri su Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Scegli una discussione nel popup dell'estensione.", "description": "Side panel empty state" }
 }

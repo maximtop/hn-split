@@ -291,6 +291,11 @@ export function isValidItemId(itemId: string): boolean {
 }
 
 /**
+ * Names the Hacker News web origin that hosts every discussion page.
+ */
+export const HN_ORIGIN = 'https://news.ycombinator.com';
+
+/**
  * Builds the canonical Hacker News discussion URL for a validated item.
  * @param itemId - The validated Hacker News item identifier.
  */
@@ -298,5 +303,5 @@ export function discussionUrl(itemId: string): string {
     if (!isValidItemId(itemId)) {
         throw new TypeError('Invalid Hacker News item ID');
     }
-    return `https://news.ycombinator.com/item?id=${itemId}`;
+    return `${HN_ORIGIN}/item?id=${itemId}`;
 }

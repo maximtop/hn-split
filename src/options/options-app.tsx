@@ -61,6 +61,14 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                     </Paper>
 
                     <Text c="dimmed" size="sm">{t('privacy_note')}</Text>
+
+                    <Paper withBorder radius="lg" p="xl" shadow="sm">
+                        <Stack gap="xs">
+                            <Title order={2} size="h4">{t('open_in_side_panel')}</Title>
+                            <Text c="dimmed">{t('side_panel_notice')}</Text>
+                        </Stack>
+                    </Paper>
+
                     {store.message === ''
                         ? null
                         : (

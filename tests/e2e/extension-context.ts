@@ -136,7 +136,7 @@ export async function shimPopupBrowserCalls(
  */
 export async function openExtensionPage(
     extension: ExtensionContext,
-    file: 'popup.html' | 'options.html',
+    file: 'popup.html' | 'options.html' | 'side-panel.html',
     options: {
         colorScheme?: 'light' | 'dark';
         beforeNavigate?: (page: Page) => Promise<void>;

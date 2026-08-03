@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "Комментариев на Hacker News: %comments%", "description": "Заголовок значка с числом комментариев" },
   "badge_not_found": { "message": "Обсуждение на Hacker News не найдено", "description": "Заголовок значка без обсуждения" },
   "badge_restricted": { "message": "Эта страница недоступна для поиска", "description": "Заголовок значка для недоступной страницы" },
-  "badge_lookup_failed": { "message": "Не удалось выполнить поиск на Hacker News", "description": "Заголовок значка при ошибке" }
+  "badge_lookup_failed": { "message": "Не удалось выполнить поиск на Hacker News", "description": "Заголовок значка при ошибке" },
+  "open_in_side_panel": { "message": "Открыть в боковой панели", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News запрещает встраивание. Пока эта панель открыта, расширение снимает запрет только для фреймов Hacker News и возвращает его, когда вы закрываете панель.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Открыть на Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Выберите обсуждение во всплывающем окне расширения.", "description": "Side panel empty state" }
 }

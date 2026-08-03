@@ -38,6 +38,30 @@ The installed extension includes `tabs` access. Automatic URL checks remain off 
 
 Neither mode reads page contents automatically or opens a discussion without an explicit user selection.
 
+## Side panel
+
+The popup's **Open in side panel** button opens Chrome's side panel with the real
+Hacker News discussion embedded. Hacker News blocks framing, so the background
+worker installs one dynamic `declarativeNetRequest` rule that removes
+`X-Frame-Options` and `Content-Security-Policy` from Hacker News **sub-frame**
+responses. The rule's lifetime is tied to a runtime port the panel holds open:
+it is installed when the panel connects, removed when the panel closes, and
+cleared on worker startup. The panel frames the discussion only after the worker
+confirms the rule is in place, and it states what is being modified.
+
+Because the panel embeds the real site inside an extension page for which the
+extension holds host permissions, Chrome treats the frame as same-site: the
+user's own Hacker News session applies, so voting and replies work as they do in
+a tab.
+
+Known costs of this approach: the exception is not surgical (while a panel is
+open it applies to any Hacker News sub-frame in the profile, since rule
+conditions cannot target one extension frame); removing `Content-Security-Policy`
+also drops Hacker News's own script restrictions inside the frame; and Hacker
+News can add frame-busting or change cookie attributes at any time, which would
+break framing without warning. The adjacent-tab flow keeps working in that case,
+and the panel always links out to the full site.
+
 ## Split View behavior
 
 Chrome 140 documents `Tab.splitViewId`, Split View queries, and Split View update events, but does not document a `tabs.create` option that creates a Split View. HN Split therefore uses only documented behavior:

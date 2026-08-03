@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "دیدگاه‌های موجود در Hacker News: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "بحثی در Hacker News یافت نشد", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "این صفحه واجد شرایط جست‌وجو نیست", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "جست‌وجو در Hacker News ناموفق بود", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "جست‌وجو در Hacker News ناموفق بود", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "باز کردن در پنل کناری", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News جاسازی را مسدود می‌کند. تا زمانی که این پنل باز است، افزونه این مسدودسازی را فقط برای فریم‌های Hacker News برمی‌دارد و با بستن پنل آن را بازمی‌گرداند.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "باز کردن در Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "یک گفتگو را در پنجره بازشوی افزونه انتخاب کنید.", "description": "Side panel empty state" }
 }

@@ -6,7 +6,9 @@ import { lookupArticle } from './article-lookup';
 import { setAutomaticAvailability } from './automatic-availability-controller';
 import {
     getAutomaticAvailabilityEnabled,
+    getSidePanelDiscussion,
     sessionStore,
+    setSidePanelDiscussion,
     tabs,
 } from './chrome-adapters';
 
@@ -15,6 +17,8 @@ const REQUEST_ERROR_CODE: Record<BackgroundRequest['type'], BackgroundErrorCode>
     [BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION]: BACKGROUND_ERROR_CODE.OPEN_DISCUSSION_FAILED,
     [BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING]: BACKGROUND_ERROR_CODE.SETTING_READ_FAILED,
     [BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING]: BACKGROUND_ERROR_CODE.SETTING_UPDATE_FAILED,
+    [BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION]: BACKGROUND_ERROR_CODE.SIDE_PANEL_SELECTION_FAILED,
+    [BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION]: BACKGROUND_ERROR_CODE.SIDE_PANEL_SELECTION_FAILED,
 };
 
 const discussionTabs = new DiscussionTabManager(tabs, sessionStore);
@@ -45,6 +49,15 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
                 ok: true,
                 result: { enabled: await setAutomaticAvailability(request.enabled) },
             };
+        }
+
+        if (request.type === BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION) {
+            await setSidePanelDiscussion(request.itemId);
+            return { ok: true, result: { itemId: request.itemId } };
+        }
+
+        if (request.type === BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION) {
+            return { ok: true, result: { itemId: await getSidePanelDiscussion() } };
         }
 
         return {

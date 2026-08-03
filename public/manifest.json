@@ -13,13 +13,19 @@
   },
   "permissions": [
     "activeTab",
+    "declarativeNetRequestWithHostAccess",
     "scripting",
+    "sidePanel",
     "storage",
     "tabs"
   ],
   "host_permissions": [
-    "https://hn.algolia.com/*"
+    "https://hn.algolia.com/*",
+    "https://news.ycombinator.com/*"
   ],
+  "side_panel": {
+    "default_path": "side-panel.html"
+  },
   "background": {
     "service_worker": "background.js",
     "type": "module"

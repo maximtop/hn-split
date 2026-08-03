@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% Hacker News -kommenttia saatavilla", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Hacker News -keskustelua ei löytynyt", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Tämä sivu ei kelpaa hakuun", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News -haku epäonnistui", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News -haku epäonnistui", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Avaa sivupaneelissa", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News estää upottamisen. Kun tämä paneeli on auki, laajennus poistaa eston vain Hacker Newsin kehyksiltä ja palauttaa sen, kun suljet paneelin.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Avaa Hacker Newsissä", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Valitse keskustelu laajennuksen ponnahdusikkunassa.", "description": "Side panel empty state" }
 }

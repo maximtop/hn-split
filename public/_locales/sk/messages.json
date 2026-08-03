@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "Dostupné komentáre na Hacker News: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Nenašla sa žiadna diskusia na Hacker News", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Táto stránka nie je vhodná na vyhľadávanie", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Vyhľadávanie na Hacker News zlyhalo", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Vyhľadávanie na Hacker News zlyhalo", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Otvoriť v bočnom paneli", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News blokuje vkladanie. Kým je tento panel otvorený, rozšírenie odstraňuje túto blokáciu iba pre rámce Hacker News a po zatvorení panela ju obnoví.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Otvoriť na Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Vyberte diskusiu vo vyskakovacom okne rozšírenia.", "description": "Side panel empty state" }
 }

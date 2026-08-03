@@ -6,9 +6,10 @@ import type { Configuration } from '@rspack/core';
 const config: Configuration = {
     mode: 'production',
     entry: {
-        background: resolve(import.meta.dirname, 'src/background.ts'),
-        options: resolve(import.meta.dirname, 'src/options/main.tsx'),
-        popup: resolve(import.meta.dirname, 'src/popup/main.tsx'),
+        'background': resolve(import.meta.dirname, 'src/background.ts'),
+        'options': resolve(import.meta.dirname, 'src/options/main.tsx'),
+        'popup': resolve(import.meta.dirname, 'src/popup/main.tsx'),
+        'side-panel': resolve(import.meta.dirname, 'src/side-panel/main.tsx'),
     },
     output: {
         path: resolve(import.meta.dirname, 'dist'),
@@ -68,6 +69,11 @@ const config: Configuration = {
             chunks: ['options'],
             filename: 'options.html',
             template: resolve(import.meta.dirname, 'src/pages/options.html'),
+        }),
+        new rspack.HtmlRspackPlugin({
+            chunks: ['side-panel'],
+            filename: 'side-panel.html',
+            template: resolve(import.meta.dirname, 'src/pages/side-panel.html'),
         }),
         new rspack.CopyRspackPlugin({
             patterns: [

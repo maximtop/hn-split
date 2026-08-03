@@ -19,11 +19,16 @@ describe('extension manifest', () => {
 
         expect([...manifest.permissions].sort()).toEqual([
             'activeTab',
+            'declarativeNetRequestWithHostAccess',
             'scripting',
+            'sidePanel',
             'storage',
             'tabs',
         ]);
-        expect(manifest.host_permissions).toEqual(['https://hn.algolia.com/*']);
+        expect(manifest.host_permissions).toEqual([
+            'https://hn.algolia.com/*',
+            'https://news.ycombinator.com/*',
+        ]);
         expect(manifest).not.toHaveProperty('optional_permissions');
         expect(manifest).not.toHaveProperty('optional_host_permissions');
     });

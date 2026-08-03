@@ -4,12 +4,48 @@ import {
 } from './background/automatic-availability-controller';
 import { sessionStore } from './background/chrome-adapters';
 import { handleRequest } from './background/request-handler';
+import { SidePanelFraming } from './background/side-panel-framing';
 import { logWarning } from './shared/logger';
-import { isBackgroundRequest } from './shared/messages';
+import { SIDE_PANEL_PORT, SIDE_PANEL_READY, isBackgroundRequest } from './shared/messages';
 
 const TAB_UPDATE_STATUS = {
     COMPLETE: 'complete',
 } as const;
+
+const sidePanelFraming = new SidePanelFraming(chrome.declarativeNetRequest);
+
+// A rule left behind by a crashed worker would outlive the panel that asked
+// for it, so the exception is cleared on every worker start.
+void sidePanelFraming.reset().catch((error: unknown) => {
+    logWarning('clearing the side panel framing exception failed.', error);
+});
+
+chrome.runtime.onConnect.addListener((port) => {
+    if (port.name !== SIDE_PANEL_PORT) {
+        return;
+    }
+    // The exception exists only while a panel holds this port open: the panel
+    // waits for the ready signal before framing, and Chrome disconnects the
+    // port as soon as the panel closes.
+    let connected = true;
+    port.onDisconnect.addListener(() => {
+        connected = false;
+        void sidePanelFraming.release().catch((error: unknown) => {
+            logWarning('removing the side panel framing exception failed.', error);
+        });
+    });
+    void sidePanelFraming.acquire()
+        .then(() => {
+            // The panel can close before the rule lands, and posting into a
+            // closed port throws.
+            if (connected) {
+                port.postMessage({ type: SIDE_PANEL_READY });
+            }
+        })
+        .catch((error: unknown) => {
+            logWarning('installing the side panel framing exception failed.', error);
+        });
+});
 
 chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
     if (!isBackgroundRequest(message)) {

@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% Hacker News-kommentarer tillgängliga", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Ingen Hacker News-diskussion hittades", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Den här sidan är inte godkänd för sökning", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News-sökningen misslyckades", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News-sökningen misslyckades", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Öppna i sidopanelen", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News blockerar inbäddning. Medan den här panelen är öppen tar tillägget bort blockeringen enbart för Hacker News-ramar och återställer den när du stänger panelen.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Öppna på Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Välj en diskussion i tilläggets popup.", "description": "Side panel empty state" }
 }

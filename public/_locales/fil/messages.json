@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% komento sa Hacker News ang available", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Walang nahanap na talakayan sa Hacker News", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Hindi kwalipikado ang pahinang ito para sa paghahanap", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Nabigo ang paghahanap sa Hacker News", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Nabigo ang paghahanap sa Hacker News", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Buksan sa side panel", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hinaharangan ng Hacker News ang pag-embed. Habang bukas ang panel na ito, inaalis ng extension ang harang na iyon para lang sa mga frame ng Hacker News, at ibinabalik ito kapag isinara mo ang panel.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Buksan sa Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Pumili ng talakayan sa popup ng extension.", "description": "Side panel empty state" }
 }

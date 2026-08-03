@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% comentaris de Hacker News disponibles", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "No s’ha trobat cap discussió de Hacker News", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Aquesta pàgina no és apta per a la cerca", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "La cerca a Hacker News ha fallat", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "La cerca a Hacker News ha fallat", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Obre al plafó lateral", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News bloqueja la incrustació. Mentre aquest plafó és obert, l'extensió elimina aquest bloqueig només per als marcs de Hacker News i el restaura quan tanques el plafó.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Obre a Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Tria una discussió a la finestra emergent de l'extensió.", "description": "Side panel empty state" }
 }

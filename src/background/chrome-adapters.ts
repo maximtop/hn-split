@@ -1,7 +1,7 @@
 import type { AvailabilityBadge } from '../browser/availability-badge';
 import type { CacheCollectionStorage, CacheStorage } from '../browser/lookup-cache';
 import type { SessionStore, TabClient, TabSummary } from '../browser/open-discussion';
-import { SESSION_STORAGE_KEY_PREFIX, STORAGE_KEY } from '../shared/storage-keys';
+import { SESSION_STORAGE_KEY, SESSION_STORAGE_KEY_PREFIX, STORAGE_KEY } from '../shared/storage-keys';
 
 /**
  * Converts a Chrome tab into the fields used by discussion placement.
@@ -86,6 +86,23 @@ export const cacheCollectionStorage: CacheCollectionStorage = {
         await chrome.storage.session.remove(keys);
     },
 };
+
+/**
+ * Reads the discussion selected for the side panel in this browser session.
+ */
+export async function getSidePanelDiscussion(): Promise<string | null> {
+    const stored = await chrome.storage.session.get(SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION);
+    const itemId: unknown = stored[SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION];
+    return typeof itemId === 'string' ? itemId : null;
+}
+
+/**
+ * Records the discussion the side panel should display.
+ * @param itemId - The validated Hacker News item identifier to display.
+ */
+export async function setSidePanelDiscussion(itemId: string): Promise<void> {
+    await chrome.storage.session.set({ [SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION]: itemId });
+}
 
 /**
  * Reads the authoritative automatic-availability setting.

@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "Hacker News のコメントが %comments% 件あります", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Hacker News のディスカッションは見つかりませんでした", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "このページは検索の対象外です", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Hacker News の検索に失敗しました", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Hacker News の検索に失敗しました", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "サイドパネルで開く", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News は埋め込みをブロックしています。このパネルを開いている間だけ、拡張機能は Hacker News のフレームに限ってそのブロックを解除し、パネルを閉じると元に戻します。", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Hacker News で開く", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "拡張機能のポップアップでディスカッションを選んでください。", "description": "Side panel empty state" }
 }

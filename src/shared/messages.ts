@@ -11,7 +11,21 @@ export const BACKGROUND_REQUEST_TYPE = {
     OPEN_DISCUSSION: 'open_discussion',
     SET_AVAILABILITY_SETTING: 'set_availability_setting',
     GET_AVAILABILITY_SETTING: 'get_availability_setting',
+    SELECT_SIDE_PANEL_DISCUSSION: 'select_side_panel_discussion',
+    GET_SIDE_PANEL_DISCUSSION: 'get_side_panel_discussion',
 } as const;
+
+/**
+ * Names the runtime port the side panel keeps open for its whole lifetime, so
+ * the background worker can scope the framing exception to a visible panel.
+ */
+export const SIDE_PANEL_PORT = 'side_panel';
+
+/**
+ * Signals that the framing exception is installed and the panel may load the
+ * discussion frame.
+ */
+export const SIDE_PANEL_READY = 'side_panel_ready';
 
 /**
  * Names every supported discussion-tab placement result.
@@ -31,6 +45,7 @@ export const BACKGROUND_ERROR_CODE = {
     OPEN_DISCUSSION_FAILED: 'open_discussion_failed',
     SETTING_READ_FAILED: 'setting_read_failed',
     SETTING_UPDATE_FAILED: 'setting_update_failed',
+    SIDE_PANEL_SELECTION_FAILED: 'side_panel_selection_failed',
 } as const;
 
 /**
@@ -83,11 +98,22 @@ const availabilitySettingGetRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING),
 });
 
+const sidePanelSelectRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION),
+    itemId: positiveItemIdSchema,
+});
+
+const sidePanelGetRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION),
+});
+
 const backgroundRequestSchema = v.variant('type', [
     lookupRequestSchema,
     availabilitySettingSetRequestSchema,
     availabilitySettingGetRequestSchema,
     openDiscussionRequestSchema,
+    sidePanelSelectRequestSchema,
+    sidePanelGetRequestSchema,
 ]);
 
 /**
@@ -111,6 +137,16 @@ export type AvailabilitySettingSetRequest = v.InferOutput<typeof availabilitySet
 export type AvailabilitySettingGetRequest = v.InferOutput<typeof availabilitySettingGetRequestSchema>;
 
 /**
+ * Requests that one validated discussion becomes the side panel selection.
+ */
+export type SidePanelSelectRequest = v.InferOutput<typeof sidePanelSelectRequestSchema>;
+
+/**
+ * Requests the discussion currently selected for the side panel.
+ */
+export type SidePanelGetRequest = v.InferOutput<typeof sidePanelGetRequestSchema>;
+
+/**
  * Represents every request accepted by the background worker.
  */
 export type BackgroundRequest = v.InferOutput<typeof backgroundRequestSchema>;
@@ -128,6 +164,16 @@ export type OpenDiscussionResult = v.InferOutput<typeof openDiscussionResultSche
 const availabilitySettingResultSchema = v.object({
     enabled: v.boolean(),
 });
+
+const sidePanelSelectionResultSchema = v.object({
+    itemId: v.nullable(positiveItemIdSchema),
+});
+
+/**
+ * Carries the discussion currently selected for the side panel, or null when
+ * the user has not selected one in this browser session.
+ */
+export type SidePanelSelectionResult = v.InferOutput<typeof sidePanelSelectionResultSchema>;
 
 /**
  * Returns the authoritative automatic-availability setting after a read or mutation.
@@ -150,9 +196,24 @@ export type BackgroundErrorResponse = v.InferOutput<typeof errorResponseSchema>;
 export type BackgroundResponse =
     | {
         ok: true;
-        result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult;
+        result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult | SidePanelSelectionResult;
     }
     | BackgroundErrorResponse;
+
+const sidePanelSelectionResponseSchema = v.union([
+    v.object({ ok: v.literal(true), result: sidePanelSelectionResultSchema }),
+    errorResponseSchema,
+]);
+
+/**
+ * Determines whether a runtime value carries the side panel selection.
+ * @param value - The unknown runtime value to validate.
+ */
+export function isSidePanelSelectionResponse(
+    value: unknown,
+): value is { ok: true; result: SidePanelSelectionResult } | BackgroundErrorResponse {
+    return v.safeParse(sidePanelSelectionResponseSchema, value).success;
+}
 
 const availabilitySettingResponseSchema = v.object({
     ok: v.literal(true),

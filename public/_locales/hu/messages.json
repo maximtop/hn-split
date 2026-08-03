@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "%comments% Hacker News-hozzászólás érhető el", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Nem található Hacker News-vita", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Ez az oldal nem alkalmas a keresésre", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "A Hacker News-keresés nem sikerült", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "A Hacker News-keresés nem sikerült", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Megnyitás az oldalsávban", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "A Hacker News tiltja a beágyazást. Amíg ez a panel nyitva van, a bővítmény csak a Hacker News kereteinél oldja fel ezt a tiltást, és a panel bezárásakor visszaállítja.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Megnyitás a Hacker Newson", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Válasszon beszélgetést a bővítmény felugró ablakában.", "description": "Side panel empty state" }
 }

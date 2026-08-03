@@ -35,5 +35,9 @@
   "badge_comments_available": { "message": "Доступні коментарі на Hacker News: %comments%", "description": "Toolbar badge title with comment count" },
   "badge_not_found": { "message": "Обговорення на Hacker News не знайдено", "description": "Toolbar badge title when no discussion exists" },
   "badge_restricted": { "message": "Ця сторінка непридатна для пошуку", "description": "Toolbar badge title for restricted pages" },
-  "badge_lookup_failed": { "message": "Пошук на Hacker News не вдався", "description": "Toolbar badge title on lookup errors" }
+  "badge_lookup_failed": { "message": "Пошук на Hacker News не вдався", "description": "Toolbar badge title on lookup errors" },
+  "open_in_side_panel": { "message": "Відкрити на бічній панелі", "description": "Side panel button in the popup" },
+  "side_panel_notice": { "message": "Hacker News блокує вбудовування. Поки ця панель відкрита, розширення знімає блокування лише для фреймів Hacker News і повертає його, коли ви закриваєте панель.", "description": "Side panel framing explanation" },
+  "side_panel_open_on_hn": { "message": "Відкрити на Hacker News", "description": "Side panel link to the full site" },
+  "side_panel_empty": { "message": "Виберіть обговорення у спливаючому вікні розширення.", "description": "Side panel empty state" }
 }
