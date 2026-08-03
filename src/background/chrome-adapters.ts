@@ -1,6 +1,9 @@
+import type { ContentScriptRegistry } from '../browser/article-click-registration';
 import type { AvailabilityBadge } from '../browser/availability-badge';
 import type { CacheCollectionStorage, CacheStorage } from '../browser/lookup-cache';
 import type { SessionStore, TabClient, TabSummary } from '../browser/open-discussion';
+import { HN_ORIGIN } from '../domain/hn';
+import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../shared/content-scripts';
 import { SESSION_STORAGE_KEY, SESSION_STORAGE_KEY_PREFIX, STORAGE_KEY } from '../shared/storage-keys';
 
 /**
@@ -118,6 +121,62 @@ export async function getAutomaticAvailabilityEnabled(): Promise<boolean> {
  */
 export async function setAutomaticAvailabilityEnabled(enabled: boolean): Promise<void> {
     await chrome.storage.local.set({ [STORAGE_KEY.AUTOMATIC_AVAILABILITY]: enabled });
+}
+
+/**
+ * Reads the authoritative article-click setting.
+ */
+export async function getArticleClickDiscussionEnabled(): Promise<boolean> {
+    const stored = await chrome.storage.local.get(STORAGE_KEY.ARTICLE_CLICK_DISCUSSION);
+    return stored[STORAGE_KEY.ARTICLE_CLICK_DISCUSSION] === true;
+}
+
+/**
+ * Persists the authoritative article-click setting.
+ * @param enabled - Whether article clicks should open the discussion panel.
+ */
+export async function setArticleClickDiscussionEnabled(enabled: boolean): Promise<void> {
+    await chrome.storage.local.set({ [STORAGE_KEY.ARTICLE_CLICK_DISCUSSION]: enabled });
+}
+
+/**
+ * Adapts the Chrome scripting API to the article-click content script, which
+ * exists only while the article-click setting is enabled. Registration is
+ * limited to top-level Hacker News documents, so the discussion frame inside
+ * the side panel never receives the script.
+ */
+export const contentScriptRegistry: ContentScriptRegistry = {
+    async isRegistered() {
+        const scripts = await chrome.scripting.getRegisteredContentScripts({
+            ids: [ARTICLE_CLICK_CONTENT_SCRIPT.ID],
+        });
+        return scripts.length > 0;
+    },
+    async register() {
+        await chrome.scripting.registerContentScripts([{
+            id: ARTICLE_CLICK_CONTENT_SCRIPT.ID,
+            js: [ARTICLE_CLICK_CONTENT_SCRIPT.FILE],
+            matches: [`${HN_ORIGIN}/*`],
+            runAt: 'document_end',
+            allFrames: false,
+            persistAcrossSessions: true,
+        }]);
+    },
+    async unregister() {
+        await chrome.scripting.unregisterContentScripts({
+            ids: [ARTICLE_CLICK_CONTENT_SCRIPT.ID],
+        });
+    },
+};
+
+/**
+ * Opens the extension side panel in the window of one tab. Chrome accepts the
+ * call only while the originating user gesture is valid, so callers must not
+ * await anything before invoking this.
+ * @param tabId - The browser tab whose window shows the panel.
+ */
+export async function openSidePanel(tabId: number): Promise<void> {
+    await chrome.sidePanel.open({ tabId });
 }
 
 /**

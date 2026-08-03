@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
+import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import {
     ARTICLE_ORIGIN,
     installLookupFixtures,
@@ -167,7 +168,7 @@ test.describe('extension accessibility (en)', () => {
         await page.close();
     });
 
-    test('options switch is reachable from the keyboard', async () => {
+    test('options switches are reachable from the keyboard', async () => {
         const page = await openExtensionPage(extension, 'options.html', { colorScheme: 'light' });
         const automaticSwitch = page.getByRole('switch', {
             name: 'Automatically check article URLs',
@@ -176,6 +177,13 @@ test.describe('extension accessibility (en)', () => {
 
         await page.keyboard.press('Tab');
         await expect(automaticSwitch).toBeFocused();
+        await expectVisibleFocusIndicator(page);
+
+        const articleClickSwitch = page.getByRole('switch', {
+            name: enMessages.article_click_open_label.message,
+        });
+        await page.keyboard.press('Tab');
+        await expect(articleClickSwitch).toBeFocused();
         await expectVisibleFocusIndicator(page);
 
         await page.close();

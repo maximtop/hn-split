@@ -1,4 +1,8 @@
 import {
+    handleArticleClickMessage,
+    reconcileArticleClickRegistration,
+} from './background/article-click-controller';
+import {
     forgetAutomaticAvailabilityTab,
     updateAutomaticAvailability,
 } from './background/automatic-availability-controller';
@@ -6,7 +10,12 @@ import { sessionStore } from './background/chrome-adapters';
 import { handleRequest } from './background/request-handler';
 import { SidePanelFraming } from './background/side-panel-framing';
 import { logWarning } from './shared/logger';
-import { SIDE_PANEL_PORT, SIDE_PANEL_READY, isBackgroundRequest } from './shared/messages';
+import {
+    SIDE_PANEL_PORT,
+    SIDE_PANEL_READY,
+    isArticleClickMessage,
+    isBackgroundRequest,
+} from './shared/messages';
 
 const TAB_UPDATE_STATUS = {
     COMPLETE: 'complete',
@@ -18,6 +27,12 @@ const sidePanelFraming = new SidePanelFraming(chrome.declarativeNetRequest);
 // for it, so the exception is cleared on every worker start.
 void sidePanelFraming.reset().catch((error: unknown) => {
     logWarning('clearing the side panel framing exception failed.', error);
+});
+
+// Chrome drops dynamically registered content scripts on extension updates,
+// so every worker start replays the persisted article-click setting.
+void reconcileArticleClickRegistration().catch((error: unknown) => {
+    logWarning('reconciling the article-click content script failed.', error);
 });
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -47,7 +62,14 @@ chrome.runtime.onConnect.addListener((port) => {
         });
 });
 
-chrome.runtime.onMessage.addListener((message: unknown, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) => {
+    if (isArticleClickMessage(message)) {
+        // Handled synchronously and without a response: chrome.sidePanel.open
+        // accepts the click's user gesture only before the first await, and
+        // the sending page is usually navigating away already.
+        handleArticleClickMessage(message, sender);
+        return false;
+    }
     if (!isBackgroundRequest(message)) {
         return false;
     }

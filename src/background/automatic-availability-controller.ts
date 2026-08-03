@@ -1,8 +1,8 @@
 import { AutomaticAvailabilityUpdater } from '../browser/automatic-availability';
 import {
-    applyAutomaticAvailabilitySetting,
-    createAutomaticAvailabilitySettingQueue,
-} from '../browser/automatic-availability-lifecycle';
+    applySettingTransaction,
+    createSettingQueue,
+} from '../browser/setting-lifecycle';
 import { refreshTabsBounded } from '../browser/bounded-tab-refresh';
 import { clearLookupCacheEntries } from '../browser/lookup-cache';
 import { sanitizeArticleUrl } from '../domain/url';
@@ -58,8 +58,8 @@ async function disableAutomaticAvailability(): Promise<void> {
     await clearLookupCacheEntries(cacheCollectionStorage);
 }
 
-const applyAutomaticAvailabilityChange = createAutomaticAvailabilitySettingQueue(async (enabled) => {
-    await applyAutomaticAvailabilitySetting(enabled, {
+const applyAutomaticAvailabilityChange = createSettingQueue(async (enabled) => {
+    await applySettingTransaction(enabled, {
         getEnabled: getAutomaticAvailabilityEnabled,
         setEnabled: setAutomaticAvailabilityEnabled,
         enable: updateExistingTabs,

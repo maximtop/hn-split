@@ -3,6 +3,7 @@
  */
 export const STORAGE_KEY = {
     AUTOMATIC_AVAILABILITY: 'automatic_availability',
+    ARTICLE_CLICK_DISCUSSION: 'article_click_discussion',
 } as const;
 
 /**

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    isArticleClickMessage,
     isAvailabilitySettingReadResponse,
     isAvailabilitySettingResponse,
     isBackgroundRequest,
@@ -28,6 +29,9 @@ describe('isBackgroundRequest', () => {
         { type: 'open_discussion', articleTabId: 1, itemId: '12x' },
         { type: 'set_availability_setting' },
         { type: 'set_availability_setting', enabled: 'yes' },
+        { type: 'set_article_click_setting' },
+        { type: 'set_article_click_setting', enabled: 'yes' },
+        { type: 'open_discussion_for_click', itemId: '123' },
     ])('rejects malformed request %#', (request) => {
         expect(isBackgroundRequest(request)).toBe(false);
     });
@@ -40,8 +44,35 @@ describe('isBackgroundRequest', () => {
         { type: 'set_availability_setting', enabled: true },
         { type: 'set_availability_setting', enabled: false },
         { type: 'get_availability_setting' },
+        { type: 'set_article_click_setting', enabled: true },
+        { type: 'set_article_click_setting', enabled: false },
+        { type: 'get_article_click_setting' },
     ])('accepts valid request %#', (request) => {
         expect(isBackgroundRequest(request)).toBe(true);
+    });
+});
+
+describe('isArticleClickMessage', () => {
+    it.each([
+        null,
+        {},
+        { type: 'open_discussion_for_click' },
+        { type: 'open_discussion_for_click', itemId: 123 },
+        { type: 'open_discussion_for_click', itemId: '' },
+        { type: 'open_discussion_for_click', itemId: '0' },
+        { type: 'open_discussion_for_click', itemId: '12x' },
+        { type: 'open_discussion_for_click', itemId: String(Number.MAX_SAFE_INTEGER + 1) },
+        { type: 'open_discussion', articleTabId: 1, itemId: '123' },
+        { type: 'lookup', context: { pageUrl: 'https://example.com', canonicalHref: null } },
+    ])('rejects non-click or malformed message %#', (message) => {
+        expect(isArticleClickMessage(message)).toBe(false);
+    });
+
+    it.each([
+        { type: 'open_discussion_for_click', itemId: '1' },
+        { type: 'open_discussion_for_click', itemId: '424242' },
+    ])('accepts valid click message %#', (message) => {
+        expect(isArticleClickMessage(message)).toBe(true);
     });
 });
 

@@ -2,6 +2,7 @@ import * as v from 'valibot';
 
 import { hnLookupResultSchema } from '../domain/hn';
 import type { HnLookupResult } from '../domain/hn';
+import { ARTICLE_CLICK_MESSAGE_TYPE } from './content-scripts';
 
 /**
  * Names every request accepted by the background worker.
@@ -11,6 +12,8 @@ export const BACKGROUND_REQUEST_TYPE = {
     OPEN_DISCUSSION: 'open_discussion',
     SET_AVAILABILITY_SETTING: 'set_availability_setting',
     GET_AVAILABILITY_SETTING: 'get_availability_setting',
+    SET_ARTICLE_CLICK_SETTING: 'set_article_click_setting',
+    GET_ARTICLE_CLICK_SETTING: 'get_article_click_setting',
     SELECT_SIDE_PANEL_DISCUSSION: 'select_side_panel_discussion',
     GET_SIDE_PANEL_DISCUSSION: 'get_side_panel_discussion',
 } as const;
@@ -98,6 +101,15 @@ const availabilitySettingGetRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING),
 });
 
+const articleClickSettingSetRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.SET_ARTICLE_CLICK_SETTING),
+    enabled: v.boolean(),
+});
+
+const articleClickSettingGetRequestSchema = v.object({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.GET_ARTICLE_CLICK_SETTING),
+});
+
 const sidePanelSelectRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION),
     itemId: positiveItemIdSchema,
@@ -111,6 +123,8 @@ const backgroundRequestSchema = v.variant('type', [
     lookupRequestSchema,
     availabilitySettingSetRequestSchema,
     availabilitySettingGetRequestSchema,
+    articleClickSettingSetRequestSchema,
+    articleClickSettingGetRequestSchema,
     openDiscussionRequestSchema,
     sidePanelSelectRequestSchema,
     sidePanelGetRequestSchema,
@@ -135,6 +149,16 @@ export type AvailabilitySettingSetRequest = v.InferOutput<typeof availabilitySet
  * Requests the authoritative automatic-availability setting.
  */
 export type AvailabilitySettingGetRequest = v.InferOutput<typeof availabilitySettingGetRequestSchema>;
+
+/**
+ * Requests a serialized article-click setting transaction.
+ */
+export type ArticleClickSettingSetRequest = v.InferOutput<typeof articleClickSettingSetRequestSchema>;
+
+/**
+ * Requests the authoritative article-click setting.
+ */
+export type ArticleClickSettingGetRequest = v.InferOutput<typeof articleClickSettingGetRequestSchema>;
 
 /**
  * Requests that one validated discussion becomes the side panel selection.
@@ -285,4 +309,26 @@ export function isOpenDiscussionResponse(
  */
 export function isBackgroundRequest(value: unknown): value is BackgroundRequest {
     return v.safeParse(backgroundRequestSchema, value).success;
+}
+
+const articleClickMessageSchema = v.object({
+    type: v.literal(ARTICLE_CLICK_MESSAGE_TYPE),
+    itemId: positiveItemIdSchema,
+});
+
+/**
+ * Carries one qualifying story-link click observed by the Hacker News content
+ * script. This message stays outside the request/response protocol: the
+ * background listener must react synchronously to keep the click's user
+ * gesture valid for `chrome.sidePanel.open`, and no response is read.
+ */
+export type ArticleClickMessage = v.InferOutput<typeof articleClickMessageSchema>;
+
+/**
+ * Determines whether an unknown runtime message reports a story-link click
+ * from the Hacker News content script.
+ * @param value - The unknown runtime message to validate.
+ */
+export function isArticleClickMessage(value: unknown): value is ArticleClickMessage {
+    return v.is(articleClickMessageSchema, value);
 }

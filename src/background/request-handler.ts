@@ -2,9 +2,11 @@ import { DiscussionTabManager } from '../browser/open-discussion';
 import { logWarning } from '../shared/logger';
 import { BACKGROUND_ERROR_CODE, BACKGROUND_REQUEST_TYPE } from '../shared/messages';
 import type { BackgroundErrorCode, BackgroundRequest, BackgroundResponse } from '../shared/messages';
+import { setArticleClickSetting } from './article-click-controller';
 import { lookupArticle } from './article-lookup';
 import { setAutomaticAvailability } from './automatic-availability-controller';
 import {
+    getArticleClickDiscussionEnabled,
     getAutomaticAvailabilityEnabled,
     getSidePanelDiscussion,
     sessionStore,
@@ -17,6 +19,8 @@ const REQUEST_ERROR_CODE: Record<BackgroundRequest['type'], BackgroundErrorCode>
     [BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION]: BACKGROUND_ERROR_CODE.OPEN_DISCUSSION_FAILED,
     [BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING]: BACKGROUND_ERROR_CODE.SETTING_READ_FAILED,
     [BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING]: BACKGROUND_ERROR_CODE.SETTING_UPDATE_FAILED,
+    [BACKGROUND_REQUEST_TYPE.GET_ARTICLE_CLICK_SETTING]: BACKGROUND_ERROR_CODE.SETTING_READ_FAILED,
+    [BACKGROUND_REQUEST_TYPE.SET_ARTICLE_CLICK_SETTING]: BACKGROUND_ERROR_CODE.SETTING_UPDATE_FAILED,
     [BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION]: BACKGROUND_ERROR_CODE.SIDE_PANEL_SELECTION_FAILED,
     [BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION]: BACKGROUND_ERROR_CODE.SIDE_PANEL_SELECTION_FAILED,
 };
@@ -48,6 +52,20 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
             return {
                 ok: true,
                 result: { enabled: await setAutomaticAvailability(request.enabled) },
+            };
+        }
+
+        if (request.type === BACKGROUND_REQUEST_TYPE.GET_ARTICLE_CLICK_SETTING) {
+            return {
+                ok: true,
+                result: { enabled: await getArticleClickDiscussionEnabled() },
+            };
+        }
+
+        if (request.type === BACKGROUND_REQUEST_TYPE.SET_ARTICLE_CLICK_SETTING) {
+            return {
+                ok: true,
+                result: { enabled: await setArticleClickSetting(request.enabled) },
             };
         }
 
