@@ -1,16 +1,17 @@
 import eslint from '@eslint/js';
+import stylistic from '@stylistic/eslint-plugin';
 import jsdoc from 'eslint-plugin-jsdoc';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
 const restrictedControlString = {
-    selector: "Literal[value=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|get_availability_setting|set_availability_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|discussion_tab:)$/]",
+    selector: 'Literal[value=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|get_availability_setting|set_availability_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|discussion_tab:)$/]',
     message: 'Use the named domain, protocol, or storage constant instead of a magic string.',
 };
 
 const restrictedControlTemplate = {
-    selector: "TemplateElement[value.raw=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|get_availability_setting|set_availability_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|discussion_tab:)$/]",
+    selector: 'TemplateElement[value.raw=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|get_availability_setting|set_availability_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|discussion_tab:)$/]',
     message: 'Use the named domain, protocol, or storage constant instead of a magic template value.',
 };
 
@@ -20,6 +21,21 @@ export default tseslint.config(
     },
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
+    // Formatting conventions matching the existing codebase style.
+    stylistic.configs.customize({
+        arrowParens: true,
+        braceStyle: '1tbs',
+        indent: 4,
+        jsx: true,
+        quotes: 'single',
+        semi: true,
+    }),
+    {
+        rules: {
+            // Multiline assignments keep `=` on the declaration line.
+            '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
+        },
+    },
     {
         files: ['scripts/**/*.mjs'],
         languageOptions: {
@@ -89,7 +105,7 @@ export default tseslint.config(
                 restrictedControlString,
                 restrictedControlTemplate,
                 {
-                    selector: "MemberExpression[object.object.name='chrome'][object.property.name='storage']",
+                    selector: 'MemberExpression[object.object.name="chrome"][object.property.name="storage"]',
                     message: 'Options code must access settings through background messages, not chrome.storage.',
                 },
             ],

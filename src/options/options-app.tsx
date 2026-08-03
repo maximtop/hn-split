@@ -63,11 +63,13 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                     </Paper>
 
                     <Text c="dimmed" size="sm">{t('privacy_note')}</Text>
-                    {store.message === '' ? null : (
-                        <Alert className="settings-status" color="orange" role="status">
-                            {store.message}
-                        </Alert>
-                    )}
+                    {store.message === ''
+                        ? null
+                        : (
+                                <Alert className="settings-status" color="orange" role="status">
+                                    {store.message}
+                                </Alert>
+                            )}
                 </Stack>
             </Container>
         </MantineProvider>

@@ -196,7 +196,7 @@ describe('clearLookupCacheEntries', () => {
             getAll: vi.fn(async () => ({
                 'hn_lookup_v1:["example.com/one"]': { result: { status: 'not_found' } },
                 'discussion_tab:7': 8,
-                unrelated: 'preserve me',
+                'unrelated': 'preserve me',
                 'hn_lookup_v1:["example.com/two"]': { result: { status: 'not_found' } },
             })),
             remove,
