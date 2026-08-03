@@ -8,7 +8,7 @@
     "node": "^24.15.0 || >=26.0.0"
   },
   "scripts": {
-    "dev": "rspack build --watch --mode development",
+    "dev": "rspack build --mode development",
     "build": "rspack build --mode production",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

@@ -17,7 +17,7 @@ pnpm test:e2e
 pnpm verify
 ```
 
-`pnpm build` creates the unpacked extension with Rspack. `test:e2e` builds the extension, launches Playwright's Chromium with `dist` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, a delayed automatic lookup followed by a serialized disable with badge and session-cache cleanup, the real background lookup, and adjacent/reused discussion-tab behavior. It does not claim to create or validate native Chrome Split View, because Chrome does not expose a documented API for that action.
+`pnpm dev` produces a one-shot development build; pass `--watch` (`pnpm dev --watch`) to rebuild on file changes. `pnpm build` creates the unpacked extension with Rspack. `test:e2e` builds the extension, launches Playwright's Chromium with `dist` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, a delayed automatic lookup followed by a serialized disable with badge and session-cache cleanup, the real background lookup, and adjacent/reused discussion-tab behavior. It does not claim to create or validate native Chrome Split View, because Chrome does not expose a documented API for that action.
 
 `pnpm locales:validate` verifies that every locale has the English message keys and that placeholders and tags are structurally valid according to `@adguard/translate`.
 
