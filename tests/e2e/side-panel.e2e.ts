@@ -31,7 +31,9 @@ test('installs the framing exception only while the side panel is open', async (
         expect(rulesBefore).toEqual([]);
 
         await worker.evaluate(async (itemId) => {
-            await chrome.storage.session.set({ side_panel_discussion: itemId });
+            await chrome.storage.session.set({
+                side_panel_discussion: { kind: 'discussion', itemId },
+            });
         }, ITEM_ID);
 
         const panel = await openExtensionPage(extension, 'side-panel.html');

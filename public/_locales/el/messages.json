@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Άνοιγμα στον πλευρικό πίνακα", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Το Hacker News αποκλείει την ενσωμάτωση. Όσο αυτός ο πίνακας είναι ανοιχτός, η επέκταση αφαιρεί τον αποκλεισμό μόνο για πλαίσια του Hacker News και τον επαναφέρει όταν κλείσετε τον πίνακα.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Άνοιγμα στο Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Επιλέξτε μια συζήτηση στο αναδυόμενο παράθυρο της επέκτασης.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Επιλέξτε μια συζήτηση στο αναδυόμενο παράθυρο της επέκτασης.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Άνοιγμα στο Split", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Αναζήτηση της συζήτησης στο Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

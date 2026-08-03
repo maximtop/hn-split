@@ -73,14 +73,15 @@ async function registeredScriptIds(extension: ExtensionContext): Promise<string[
 }
 
 /**
- * Reads the discussion currently selected for the side panel.
+ * Reads the item identifier of the discussion currently shown in the panel, or
+ * undefined while the panel has nothing to show.
  * @param extension - The launched extension context.
  */
 async function sidePanelSelection(extension: ExtensionContext): Promise<unknown> {
-    return extension.worker.evaluate(
-        async (key) => (await chrome.storage.session.get(key))[key],
-        SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION,
-    );
+    return extension.worker.evaluate(async (key) => {
+        const content: unknown = (await chrome.storage.session.get(key))[key];
+        return (content as { itemId?: string } | undefined)?.itemId;
+    }, SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION);
 }
 
 /**

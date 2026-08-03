@@ -1,30 +1,45 @@
 import {
     Anchor,
+    Box,
     MantineProvider,
     Stack,
     Text,
 } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-import { HN_ORIGIN, discussionUrl } from '../domain/hn';
+import { HN_LOOKUP_STATUS, HN_ORIGIN, discussionUrl } from '../domain/hn';
 import { t } from '../shared/i18n';
+import type { MessageKey } from '../shared/i18n';
 import { logWarning } from '../shared/logger';
 import { cssVariablesResolver, theme } from '../shared/theme';
+import { SIDE_PANEL_CONTENT_KIND } from '../shared/side-panel-content';
+import type { SidePanelContent, SidePanelUnavailableReason } from '../shared/side-panel-content';
 import {
     BACKGROUND_REQUEST_TYPE,
     SIDE_PANEL_PORT,
     SIDE_PANEL_READY,
-    isSidePanelSelectionResponse,
+    isSidePanelContentResponse,
 } from '../shared/messages';
 
 /**
- * Describes the side panel's asynchronous framing and selection state.
+ * Maps each reason a discussion cannot be shown onto the message the popup
+ * already uses for the same lookup outcome.
+ */
+const UNAVAILABLE_MESSAGE_KEY: Record<SidePanelUnavailableReason, MessageKey> = {
+    [HN_LOOKUP_STATUS.NOT_FOUND]: 'discussion_not_found',
+    [HN_LOOKUP_STATUS.RESTRICTED]: 'restricted_page',
+    [HN_LOOKUP_STATUS.ERROR]: 'lookup_error',
+};
+
+/**
+ * Describes the side panel's asynchronous framing and content state.
  */
 interface SidePanelState {
     /**
-     * Contains the selected Hacker News item identifier.
+     * Contains what the panel was asked to display, or null when nothing has
+     * been selected in this browser session.
      */
-    itemId: string | null;
+    content: SidePanelContent | null;
     /**
      * Indicates whether the background worker confirmed the framing exception,
      * which must happen before the discussion frame is allowed to load.
@@ -33,16 +48,33 @@ interface SidePanelState {
 }
 
 /**
- * Reads the discussion the popup selected for this panel.
+ * Reads what the background worker asks this panel to display.
  */
-async function readSelection(): Promise<string | null> {
+async function readContent(): Promise<SidePanelContent | null> {
     const response: unknown = await chrome.runtime.sendMessage({
         type: BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION,
     });
-    if (!isSidePanelSelectionResponse(response) || !response.ok) {
+    if (!isSidePanelContentResponse(response) || !response.ok) {
         return null;
     }
-    return response.result.itemId;
+    return response.result.content;
+}
+
+/**
+ * Resolves the status line shown while no discussion frame can be displayed.
+ * @param content - The current panel content.
+ */
+function statusMessage(content: SidePanelContent | null): string | null {
+    if (content === null) {
+        return t('side_panel_empty');
+    }
+    if (content.kind === SIDE_PANEL_CONTENT_KIND.PENDING) {
+        return t('side_panel_pending');
+    }
+    if (content.kind === SIDE_PANEL_CONTENT_KIND.UNAVAILABLE) {
+        return t(UNAVAILABLE_MESSAGE_KEY[content.reason]);
+    }
+    return null;
 }
 
 /**
@@ -55,7 +87,7 @@ async function readSelection(): Promise<string | null> {
  * the options page and in `PRIVACY.md`.
  */
 export function SidePanelApp(): React.JSX.Element {
-    const [state, setState] = useState<SidePanelState>({ itemId: null, ready: false });
+    const [state, setState] = useState<SidePanelState>({ content: null, ready: false });
 
     useEffect(() => {
         const port = chrome.runtime.connect({ name: SIDE_PANEL_PORT });
@@ -73,12 +105,12 @@ export function SidePanelApp(): React.JSX.Element {
         let cancelled = false;
         const load = async (): Promise<void> => {
             try {
-                const itemId = await readSelection();
+                const content = await readContent();
                 if (!cancelled) {
-                    setState((current) => ({ ...current, itemId }));
+                    setState((current) => ({ ...current, content }));
                 }
             } catch (error) {
-                logWarning('reading the side panel selection failed.', error);
+                logWarning('reading the side panel content failed.', error);
             }
         };
         void load();
@@ -92,26 +124,32 @@ export function SidePanelApp(): React.JSX.Element {
         };
     }, []);
 
-    const target = state.itemId === null ? HN_ORIGIN : discussionUrl(state.itemId);
+    const status = statusMessage(state.content);
+    const showFrame = state.content?.kind === SIDE_PANEL_CONTENT_KIND.DISCUSSION && state.ready;
 
     return (
         <MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} defaultColorScheme="auto">
             <Stack component="main" gap={0} h="100%">
-                {state.itemId === null
-                    ? (
-                            <Stack gap="xs" p="md">
-                                <Text c="dimmed" size="sm">{t('side_panel_empty')}</Text>
-                                <Anchor href={HN_ORIGIN} target="_blank" rel="noreferrer" size="sm">
-                                    {t('side_panel_open_on_hn')}
-                                </Anchor>
-                            </Stack>
-                        )
-                    : null}
-                {state.itemId !== null && state.ready
+                {/* Persistent live region: the lookup resolves after the panel
+                    is already open, and only an existing container announces
+                    that change reliably. */}
+                <Box role="status">
+                    {status !== null
+                        ? (
+                                <Stack gap="xs" p="md">
+                                    <Text c="dimmed" size="sm">{status}</Text>
+                                    <Anchor href={HN_ORIGIN} target="_blank" rel="noreferrer" size="sm">
+                                        {t('side_panel_open_on_hn')}
+                                    </Anchor>
+                                </Stack>
+                            )
+                        : null}
+                </Box>
+                {showFrame && state.content?.kind === SIDE_PANEL_CONTENT_KIND.DISCUSSION
                     ? (
                             <iframe
                                 className="discussion-frame"
-                                src={target}
+                                src={discussionUrl(state.content.itemId)}
                                 title={t('popup_heading')}
                             />
                         )

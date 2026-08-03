@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Megnyitás az oldalsávban", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "A Hacker News tiltja a beágyazást. Amíg ez a panel nyitva van, a bővítmény csak a Hacker News kereteinél oldja fel ezt a tiltást, és a panel bezárásakor visszaállítja.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Megnyitás a Hacker Newson", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Válasszon beszélgetést a bővítmény felugró ablakában.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Válasszon beszélgetést a bővítmény felugró ablakában.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Megnyitás a Splitben", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "A Hacker News-beszélgetés keresése…", "description": "Side panel status while a discussion lookup runs" }
 }

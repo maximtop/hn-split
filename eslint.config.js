@@ -5,13 +5,17 @@ import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import tseslint from 'typescript-eslint';
 
+// `discussion` is deliberately absent: it is also a CSS class name in the popup
+// markup, where a literal is the only way to write it.
+const CONTROL_VALUE_PATTERN = '^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|open_discussion_for_click|get_availability_setting|set_availability_setting|get_article_click_setting|set_article_click_setting|adjacent_tab|reused_tab|split_view|canonical|page|pending|unavailable|open_in_split_link|automatic_availability|article_click_discussion|discussion_tab:)$';
+
 const restrictedControlString = {
-    selector: 'Literal[value=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|open_discussion_for_click|get_availability_setting|set_availability_setting|get_article_click_setting|set_article_click_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|article_click_discussion|discussion_tab:)$/]',
+    selector: `Literal[value=/${CONTROL_VALUE_PATTERN}/]`,
     message: 'Use the named domain, protocol, or storage constant instead of a magic string.',
 };
 
 const restrictedControlTemplate = {
-    selector: 'TemplateElement[value.raw=/^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|open_discussion_for_click|get_availability_setting|set_availability_setting|get_article_click_setting|set_article_click_setting|adjacent_tab|reused_tab|split_view|canonical|page|automatic_availability|article_click_discussion|discussion_tab:)$/]',
+    selector: `TemplateElement[value.raw=/${CONTROL_VALUE_PATTERN}/]`,
     message: 'Use the named domain, protocol, or storage constant instead of a magic template value.',
 };
 
@@ -117,7 +121,9 @@ export default tseslint.config(
             'src/domain/hn.ts',
             'src/domain/url.ts',
             'src/shared/content-scripts.ts',
+            'src/shared/context-menus.ts',
             'src/shared/messages.ts',
+            'src/shared/side-panel-content.ts',
             'src/shared/storage-keys.ts',
         ],
         rules: {

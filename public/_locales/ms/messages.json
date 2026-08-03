@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Buka dalam panel sisi", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News menyekat pembenaman. Semasa panel ini dibuka, sambungan ini membuang sekatan itu untuk bingkai Hacker News sahaja, dan memulihkannya apabila anda menutup panel.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Buka di Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Pilih perbincangan dalam pop timbul sambungan.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Pilih perbincangan dalam pop timbul sambungan.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Buka dalam Split", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Mencari perbincangan Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

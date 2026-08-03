@@ -7,6 +7,7 @@ import {
     isBackgroundRequest,
     isLookupResponse,
     isOpenDiscussionResponse,
+    isSidePanelContentResponse,
 } from '../src/shared/messages';
 
 describe('isBackgroundRequest', () => {
@@ -142,5 +143,27 @@ describe('background response validation', () => {
         expect(isAvailabilitySettingReadResponse({ ok: true, result: { enabled: false } })).toBe(true);
         expect(isAvailabilitySettingReadResponse({ ok: true, result: { enabled: 'yes' } })).toBe(false);
         expect(isAvailabilitySettingReadResponse({ ok: false, error: 'failed' })).toBe(false);
+    });
+
+    it.each([
+        { ok: true, result: { content: null } },
+        { ok: true, result: { content: { kind: 'discussion', itemId: '424242' } } },
+        { ok: true, result: { content: { kind: 'pending' } } },
+        { ok: true, result: { content: { kind: 'unavailable', reason: 'not_found' } } },
+        { ok: false, error: 'side_panel_selection_failed' },
+    ])('accepts side panel content response %#', (response) => {
+        expect(isSidePanelContentResponse(response)).toBe(true);
+    });
+
+    it.each([
+        undefined,
+        { ok: true },
+        // The bare item id this response carried before panel states existed.
+        { ok: true, result: { itemId: '424242' } },
+        { ok: true, result: { content: '424242' } },
+        { ok: true, result: { content: { kind: 'discussion' } } },
+        { ok: true, result: { content: { kind: 'unavailable', reason: 'found' } } },
+    ])('rejects malformed side panel content response %#', (response) => {
+        expect(isSidePanelContentResponse(response)).toBe(false);
     });
 });

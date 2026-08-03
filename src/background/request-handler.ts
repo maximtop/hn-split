@@ -8,11 +8,11 @@ import { setAutomaticAvailability } from './automatic-availability-controller';
 import {
     getArticleClickDiscussionEnabled,
     getAutomaticAvailabilityEnabled,
-    getSidePanelDiscussion,
+    getSidePanelContent,
     sessionStore,
-    setSidePanelDiscussion,
     tabs,
 } from './chrome-adapters';
+import { selectSidePanelDiscussion } from './side-panel-content-controller';
 
 const REQUEST_ERROR_CODE: Record<BackgroundRequest['type'], BackgroundErrorCode> = {
     [BACKGROUND_REQUEST_TYPE.LOOKUP]: BACKGROUND_ERROR_CODE.LOOKUP_REQUEST_FAILED,
@@ -70,12 +70,11 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
         }
 
         if (request.type === BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION) {
-            await setSidePanelDiscussion(request.itemId);
-            return { ok: true, result: { itemId: request.itemId } };
+            return { ok: true, result: { content: await selectSidePanelDiscussion(request.itemId) } };
         }
 
         if (request.type === BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION) {
-            return { ok: true, result: { itemId: await getSidePanelDiscussion() } };
+            return { ok: true, result: { content: await getSidePanelContent() } };
         }
 
         return {

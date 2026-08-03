@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "Otvoriť v bočnom paneli", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News blokuje vkladanie. Kým je tento panel otvorený, rozšírenie odstraňuje túto blokáciu iba pre rámce Hacker News a po zatvorení panela ju obnoví.", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "Otvoriť na Hacker News", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "Vyberte diskusiu vo vyskakovacom okne rozšírenia.", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "Vyberte diskusiu vo vyskakovacom okne rozšírenia.", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "Otvoriť v Splite", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "Hľadá sa diskusia na Hacker News…", "description": "Side panel status while a discussion lookup runs" }
 }

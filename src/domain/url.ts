@@ -49,6 +49,9 @@ const CREDENTIAL_EXACT_KEYS = new Set([
 // Signed-URL parameter families used by AWS and Google Cloud storage.
 const CREDENTIAL_KEY_PREFIXES = ['x-amz-', 'x-goog-'];
 
+// The only schemes the extension ever navigates a tab to or looks up.
+const WEB_PROTOCOLS = ['http:', 'https:'];
+
 /**
  * Names every source used to construct an article candidate.
  */
@@ -269,7 +272,7 @@ function hasCredentialQueryParams(url: URL): boolean {
 function parseEligibleUrl(value: string, base?: string): URL | null {
     try {
         const url = base === undefined ? new URL(value) : new URL(value, base);
-        if (!['http:', 'https:'].includes(url.protocol)
+        if (!WEB_PROTOCOLS.includes(url.protocol)
             || url.username !== ''
             || url.password !== ''
             || isNonPublicHostname(url.hostname)
@@ -279,6 +282,21 @@ function parseEligibleUrl(value: string, base?: string): URL | null {
         return url;
     } catch {
         return null;
+    }
+}
+
+/**
+ * Determines whether a URL uses a scheme the extension may navigate a tab to.
+ * This is deliberately weaker than article eligibility: a user who asks to open
+ * an intranet page beside its discussion still gets the page, and the lookup
+ * separately reports that such a URL is not eligible for a public search.
+ * @param value - The untrusted URL value to inspect.
+ */
+export function isWebUrl(value: string): boolean {
+    try {
+        return WEB_PROTOCOLS.includes(new URL(value).protocol);
+    } catch {
+        return false;
     }
 }
 

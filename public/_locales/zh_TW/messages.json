@@ -44,5 +44,7 @@
   "open_in_side_panel": { "message": "在側邊欄開啟", "description": "Side panel button in the popup" },
   "side_panel_notice": { "message": "Hacker News 禁止被嵌入。此面板開啟期間，擴充功能僅針對 Hacker News 框架解除該限制，並在你關閉面板時還原。", "description": "Side panel framing explanation" },
   "side_panel_open_on_hn": { "message": "在 Hacker News 上開啟", "description": "Side panel link to the full site" },
-  "side_panel_empty": { "message": "請在擴充功能彈出視窗中選擇一則討論。", "description": "Side panel empty state" }
+  "side_panel_empty": { "message": "請在擴充功能彈出視窗中選擇一則討論。", "description": "Side panel empty state" },
+  "context_menu_open_in_split": { "message": "在 Split 中開啟", "description": "Context menu item shown on links" },
+  "side_panel_pending": { "message": "正在尋找 Hacker News 討論…", "description": "Side panel status while a discussion lookup runs" }
 }

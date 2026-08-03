@@ -8,6 +8,11 @@ import {
 } from './background/automatic-availability-controller';
 import { sessionStore } from './background/chrome-adapters';
 import { handleRequest } from './background/request-handler';
+import {
+    handleOpenInSplitClick,
+    normalizeSidePanelContent,
+    reconcileOpenInSplitMenu,
+} from './background/side-panel-content-controller';
 import { SidePanelFraming } from './background/side-panel-framing';
 import { logWarning } from './shared/logger';
 import {
@@ -33,6 +38,24 @@ void sidePanelFraming.reset().catch((error: unknown) => {
 // so every worker start replays the persisted article-click setting.
 void reconcileArticleClickRegistration().catch((error: unknown) => {
     logWarning('reconciling the article-click content script failed.', error);
+});
+
+// Menu items are dropped on extension updates and browser restarts too.
+void reconcileOpenInSplitMenu().catch((error: unknown) => {
+    logWarning('publishing the link context menu failed.', error);
+});
+
+// A worker that stopped mid-lookup would leave the panel waiting for a result
+// that can no longer arrive, so that state is resolved on every worker start.
+void normalizeSidePanelContent().catch((error: unknown) => {
+    logWarning('normalizing the side panel content failed.', error);
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+    // Handled synchronously for the same reason as the article-click message
+    // below: chrome.sidePanel.open accepts the click's user gesture only
+    // before the first await.
+    handleOpenInSplitClick(info, tab);
 });
 
 chrome.runtime.onConnect.addListener((port) => {
