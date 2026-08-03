@@ -1,0 +1,54 @@
+{
+  "name": "hn_split",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.18.0",
+  "engines": {
+    "node": "^24.15.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "rspack build --watch --mode development",
+    "build": "rspack build --mode production",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "locales:validate": "node scripts/validate-locales.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "pnpm build && playwright test --config=playwright.config.ts",
+    "check": "pnpm lint && pnpm typecheck && pnpm locales:validate && pnpm test && pnpm build",
+    "verify": "pnpm check && pnpm test:e2e"
+  },
+  "dependencies": {
+    "@adguard/translate": "2.0.8",
+    "@mantine/core": "9.5.1",
+    "@mantine/hooks": "9.5.1",
+    "mobx": "7.0.0",
+    "mobx-react-lite": "5.0.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "tldts": "7.4.10",
+    "valibot": "1.4.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.62.1",
+    "@rspack/cli": "2.1.7",
+    "@rspack/core": "2.1.7",
+    "@stylistic/eslint-plugin": "5.10.0",
+    "@types/chrome": "0.2.5",
+    "@types/node": "25.5.0",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitest/coverage-v8": "4.1.10",
+    "eslint": "10.8.0",
+    "eslint-plugin-jsdoc": "63.3.3",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.4.0",
+    "jsdom": "30.0.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.65.0",
+    "vitest": "4.1.10"
+  }
+}

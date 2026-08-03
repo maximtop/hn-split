@@ -125,19 +125,21 @@ Success is measured through deterministic fixtures, CI, local performance runs, 
 
 ## 9. Constraints and assumptions
 
-- Public Chrome documentation currently exposes `splitViewId` on tab data, but this does not by itself prove that extensions can create Split View. A technical spike must decide the behavior.
+- Public Chrome documentation currently exposes `splitViewId` on tab data, but this does not by itself prove that extensions can create Split View. The capability check during implementation confirmed there is no supported creation API; section 10 records the shipped fallback.
 - Publisher canonical metadata is inconsistent. Normalization must remain conservative and preserve multiple candidate URLs when necessary.
 - Hacker News can contain multiple submissions for the same article. The top result must be deterministic, while alternatives remain available as a secondary path.
 - Manifest V3 service workers can be suspended. The architecture must not assume a permanently running background process.
 - Store APIs, action versions, policy questions, and manifest requirements must be checked against current documentation before deployment workflows are adapted.
 
-## 10. Open decisions delegated to planned spikes
+## 10. Decision log for questions this brief had left open
 
-- Whether Chrome exposes a supported extension API for creating or changing Split View.
-- The exact adjacent-tab or native-action fallback if it does not.
-- The final public product name and branding.
-- The final HN lookup endpoint combination after reliability tests.
-- The exact permission set after architecture validation.
+The MVP implementation resolved most of the questions originally delegated to spikes:
+
+- **Split View creation — resolved.** Chrome 140 documents Split View state (`Tab.splitViewId`, Split View queries and update events) but no extension API that creates Split View. The MVP uses only documented behavior.
+- **Fallback — resolved.** The first explicit click opens a normal adjacent tab and the extension remembers it. If the user pairs that tab with the article through native Chrome Split View, later selections reuse the same tab, preserving the browser-managed pane. No iframe or undocumented API is involved.
+- **HN lookup endpoint — resolved.** The public Algolia Hacker News Search API (`https://hn.algolia.com/api/v1/search`) with `tags=story`, `restrictSearchableAttributes=url`, and local exact-identity verification of every hit, under one five-second lookup timeout. No API key, backend, or fallback endpoint is required; the full contract lives in [docs/url-matching.md](url-matching.md).
+- **Permission set — resolved.** `tabs`, `activeTab`, `scripting`, and `storage`, plus host access to `https://hn.algolia.com/*` only. Each permission is justified per purpose in [PRIVACY.md](../PRIVACY.md).
+- **The final public product name and branding — still open.** "HN Split" remains the private working name until store submission work begins.
 
 ## 11. Acceptance of this brief
 

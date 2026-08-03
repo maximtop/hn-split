@@ -4,7 +4,7 @@
 - **Date:** 2026-08-02
 - **Decision owners:** HN Split project
 - **Related task:** 02 — Analyze HNewhere as a product and implementation reference
-- **Reference analysis:** [`../hnewhere_reference.md`](../hnewhere_reference.md)
+- **Reference analysis:** [`../hnewhere-reference.md`](../hnewhere-reference.md)
 
 ## Context
 
@@ -130,7 +130,7 @@ These risks are handled by URL fixtures, deterministic alternatives, a real-brow
 
 This decision is implemented when:
 
-- `docs/hnewhere_reference.md` records the verified code path with source permalinks;
+- `docs/hnewhere-reference.md` records the verified code path with source permalinks;
 - URL-normalization tests include raw URL, canonical URL, tracking parameters, fragments, trailing slashes, duplicate query keys, and malformed canonical metadata;
 - HN-provider tests verify exact matching, deduplication, ordering, timeout, malformed response, and no-result behavior;
 - opening tests assert that no tab action occurs before a user gesture and that one selected item ID maps to one HN discussion URL;
@@ -144,3 +144,10 @@ Revisit this ADR only if one of the following is true:
 - Chrome publishes a stable extension API that materially changes the Split View design;
 - Algolia becomes unsuitable and the provider architecture needs a different public index;
 - users consistently need alternative submissions in the primary flow rather than as a secondary action.
+
+## Amendment — 2026-08-03, MVP implementation outcome
+
+The shipped MVP resolved two items recorded above without changing the decision itself:
+
+- **Defer item 1 is implemented, not deferred.** The popup ships the deterministic primary discussion together with a secondary list of exact alternative submissions. The "chooser after the primary flow is proven" formulation is superseded: alternatives are already available as the secondary action this ADR intended, and only richer chooser interactions remain future work.
+- **The Split View capability question is settled for Chrome 140.** Chrome documents Split View state (`Tab.splitViewId`) but no supported creation API, so the MVP ships the adjacent-tab fallback: the first explicit click opens an adjacent tab, and the extension reuses it so a user-created native Split View pairing is preserved. See the decision log in [`../product-brief.md`](../product-brief.md).
