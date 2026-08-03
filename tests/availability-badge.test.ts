@@ -46,7 +46,7 @@ describe('badgeForLookupResult', () => {
     ])('clears the badge when no discussion is available', (result) => {
         expect(badgeForLookupResult(result)).toEqual({
             text: '',
-            title: 'HN Split',
+            title: 'Split for Hacker News',
         });
     });
 });

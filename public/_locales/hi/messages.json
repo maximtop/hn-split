@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "वर्तमान लेख के लिए Hacker News चर्चाएँ खोजें और खोलें।", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News चर्चा", "description": "Popup heading" },
   "checking_article": { "message": "लेख की जाँच हो रही है…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "पहला क्लिक एक बगल का टैब खोलता है। इसे Chrome Split View से लेख के साथ जोड़ें; बाद के चयन उसी टैब का पुन: उपयोग करेंगे।", "description": "Split View usage guidance" },
   "availability_settings": { "message": "उपलब्धता सेटिंग", "description": "Options page link" },
   "options_heading": { "message": "उपलब्धता संकेतक", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split सेटिंग", "description": "Options browser-tab title" },
-  "options_intro": { "message": "चुनें कि HN Split कब जाँच सकता है कि वर्तमान लेख की कोई Hacker News चर्चा है या नहीं।", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News सेटिंग", "description": "Options browser-tab title" },
+  "options_intro": { "message": "चुनें कि Split for Hacker News कब जाँच सकता है कि वर्तमान लेख की कोई Hacker News चर्चा है या नहीं।", "description": "Options page introduction" },
   "automatic_badge": { "message": "स्वचालित टूलबार बैज", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "टैब नेविगेट करते समय लेखों के URL जाँचें। जब चर्चा मौजूद हो, तो टिप्पणियों की संख्या के साथ नारंगी बैज दिखाएँ।", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "लेखों के URL स्वचालित रूप से जाँचें", "description": "Automatic availability switch accessible label" },

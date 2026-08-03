@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "現在の記事に対応する Hacker News のディスカッションを見つけて開きます。", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News のディスカッション", "description": "Popup heading" },
   "checking_article": { "message": "記事を確認しています…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "最初のクリックで隣のタブが開きます。Chrome Split View で記事とペアにすると、以降の選択では同じタブが再利用されます。", "description": "Split View usage guidance" },
   "availability_settings": { "message": "利用可否の設定", "description": "Options page link" },
   "options_heading": { "message": "利用可否インジケーター", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split の設定", "description": "Options browser-tab title" },
-  "options_intro": { "message": "現在の記事に Hacker News のディスカッションがあるかを HN Split がいつ確認できるかを選択します。", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News の設定", "description": "Options browser-tab title" },
+  "options_intro": { "message": "現在の記事に Hacker News のディスカッションがあるかを Split for Hacker News がいつ確認できるかを選択します。", "description": "Options page introduction" },
   "automatic_badge": { "message": "ツールバーの自動バッジ", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "タブの移動時に記事の URL を確認します。ディスカッションがある場合は、コメント数付きのオレンジ色のバッジを表示します。", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "記事の URL を自動的に確認する", "description": "Automatic availability switch accessible label" },

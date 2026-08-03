@@ -1,7 +1,8 @@
 # HN Split MVP Product Brief
 
 - **Status:** Approved working brief
-- **Working name:** HN Split
+- **Public name:** Split for Hacker News (approved 2026-08-03)
+- **Working name:** HN Split (remains the internal slug for the repository, package, and identifiers)
 - **Primary browser:** Chrome
 - **Discussion source:** Hacker News only
 - **Business model:** Free
@@ -139,7 +140,7 @@ The MVP implementation resolved most of the questions originally delegated to sp
 - **Fallback — resolved.** The first explicit click opens a normal adjacent tab and the extension remembers it. If the user pairs that tab with the article through native Chrome Split View, later selections reuse the same tab, preserving the browser-managed pane. No iframe or undocumented API is involved.
 - **HN lookup endpoint — resolved.** The public Algolia Hacker News Search API (`https://hn.algolia.com/api/v1/search`) with `tags=story`, `restrictSearchableAttributes=url`, and local exact-identity verification of every hit, under one five-second lookup timeout. No API key, backend, or fallback endpoint is required; the full contract lives in [docs/url-matching.md](url-matching.md).
 - **Permission set — resolved.** `tabs`, `activeTab`, `scripting`, and `storage`, plus host access to `https://hn.algolia.com/*` only. Each permission is justified per purpose in [PRIVACY.md](../PRIVACY.md).
-- **The final public product name and branding — still open.** "HN Split" remains the private working name until store submission work begins.
+- **The final public product name and branding — resolved.** The public name is "Split for Hacker News"; "HN Split" stays as the internal working slug. The store listing copy and visual identity are documented in [docs/store-listing.md](store-listing.md).
 
 ## 11. Acceptance of this brief
 

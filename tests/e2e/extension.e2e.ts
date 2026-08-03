@@ -96,7 +96,7 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         expect(typeof articleTabId).toBe('number');
 
         const options = await openExtensionPage(extension, 'options.html');
-        await expect(options).toHaveTitle('HN Split settings');
+        await expect(options).toHaveTitle('Split for Hacker News settings');
         await expect(options.getByRole('heading', { name: 'Availability indicator' })).toBeVisible();
         await expect(options.getByRole('switch', { name: 'Automatically check article URLs' })).not.toBeChecked();
 

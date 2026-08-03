@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="560" viewBox="0 0 1400 560" role="img" aria-label="Split for Hacker News marquee: brand lockup beside a browser window split between an article and its Hacker News discussion">
+  <defs>
+    <radialGradient id="glow-m" cx="80%" cy="0%" r="95%">
+      <stop offset="0%" stop-color="#3A2A1C"/>
+      <stop offset="55%" stop-color="#1B202B"/>
+      <stop offset="100%" stop-color="#151922"/>
+    </radialGradient>
+    <clipPath id="panes-m">
+      <rect x="110" y="130" width="118" height="118" rx="20"/>
+    </clipPath>
+    <clipPath id="win-m">
+      <rect x="880" y="80" width="440" height="400" rx="18"/>
+    </clipPath>
+  </defs>
+  <rect width="1400" height="560" fill="url(#glow-m)"/>
+
+  <!-- brand mark 144x144 at (97,117) -->
+  <rect x="99" y="119" width="140" height="140" rx="32" fill="#232733"/>
+  <g clip-path="url(#panes-m)">
+    <rect x="110" y="130" width="59" height="118" fill="#F7F3EA"/>
+    <rect x="176" y="130" width="52" height="118" fill="#FF6600"/>
+    <rect x="117" y="146" width="45" height="10" rx="5" fill="#232733"/>
+    <rect x="117" y="169" width="43" height="7" rx="3.5" fill="#A79F90"/>
+    <rect x="117" y="185" width="38" height="7" rx="3.5" fill="#A79F90"/>
+    <rect x="117" y="201" width="45" height="7" rx="3.5" fill="#A79F90"/>
+    <rect x="117" y="217" width="34" height="7" rx="3.5" fill="#A79F90"/>
+    <rect x="117" y="233" width="41" height="7" rx="3.5" fill="#A79F90"/>
+    <rect x="185" y="146" width="34" height="8" rx="4" fill="#FFFFFF"/>
+    <rect x="194" y="166" width="27" height="8" rx="4" fill="#FFD8BD"/>
+    <rect x="194" y="184" width="23" height="8" rx="4" fill="#FFD8BD"/>
+    <rect x="185" y="204" width="36" height="8" rx="4" fill="#FFFFFF"/>
+    <rect x="194" y="224" width="25" height="8" rx="4" fill="#FFD8BD"/>
+  </g>
+
+  <!-- lockup -->
+  <text x="280" y="185" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="700" fill="#F4F6F9">Split <tspan fill="#FF7A26">for Hacker News</tspan></text>
+  <text x="280" y="232" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="23" fill="#A8B0BF">Find and open the Hacker News discussion</text>
+  <text x="280" y="264" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="23" fill="#A8B0BF">for the article you are reading.</text>
+  <text x="110" y="330" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="19" fill="#6E7787">Free · No telemetry · One explicit click · Unofficial, not affiliated with Y Combinator</text>
+
+  <!-- browser window illustration -->
+  <rect x="876" y="76" width="448" height="408" rx="21" fill="#0E1118" opacity="0.55"/>
+  <rect x="880" y="80" width="440" height="400" rx="18" fill="#232733"/>
+  <g clip-path="url(#win-m)">
+    <rect x="880" y="80" width="440" height="44" fill="#2B3140"/>
+    <circle cx="906" cy="102" r="7" fill="#57606F"/>
+    <circle cx="928" cy="102" r="7" fill="#57606F"/>
+    <circle cx="950" cy="102" r="7" fill="#57606F"/>
+    <rect x="978" y="92" width="316" height="20" rx="10" fill="#1B202B"/>
+    <!-- article pane -->
+    <rect x="880" y="124" width="216" height="356" fill="#F7F3EA"/>
+    <rect x="904" y="152" width="140" height="14" rx="7" fill="#232733"/>
+    <rect x="904" y="174" width="98" height="14" rx="7" fill="#232733"/>
+    <rect x="904" y="206" width="164" height="9" rx="4.5" fill="#A79F90"/>
+    <rect x="904" y="226" width="152" height="9" rx="4.5" fill="#A79F90"/>
+    <rect x="904" y="246" width="168" height="9" rx="4.5" fill="#A79F90"/>
+    <rect x="904" y="266" width="128" height="9" rx="4.5" fill="#A79F90"/>
+    <rect x="904" y="298" width="164" height="9" rx="4.5" fill="#C9C2B2"/>
+    <rect x="904" y="318" width="156" height="9" rx="4.5" fill="#C9C2B2"/>
+    <rect x="904" y="338" width="140" height="9" rx="4.5" fill="#C9C2B2"/>
+    <rect x="904" y="370" width="164" height="9" rx="4.5" fill="#C9C2B2"/>
+    <rect x="904" y="390" width="148" height="9" rx="4.5" fill="#C9C2B2"/>
+    <rect x="904" y="410" width="160" height="9" rx="4.5" fill="#C9C2B2"/>
+    <rect x="904" y="430" width="120" height="9" rx="4.5" fill="#C9C2B2"/>
+    <!-- gutter -->
+    <rect x="1096" y="124" width="8" height="356" fill="#232733"/>
+    <!-- discussion pane -->
+    <rect x="1104" y="124" width="216" height="356" fill="#FF6600"/>
+    <rect x="1126" y="152" width="120" height="11" rx="5.5" fill="#FFFFFF"/>
+    <rect x="1126" y="172" width="86" height="8" rx="4" fill="#FFC49B"/>
+    <rect x="1148" y="198" width="132" height="9" rx="4.5" fill="#FFE3CF"/>
+    <rect x="1148" y="216" width="112" height="9" rx="4.5" fill="#FFE3CF"/>
+    <rect x="1170" y="242" width="110" height="9" rx="4.5" fill="#FFD8BD"/>
+    <rect x="1170" y="260" width="94" height="9" rx="4.5" fill="#FFD8BD"/>
+    <rect x="1126" y="292" width="140" height="11" rx="5.5" fill="#FFFFFF"/>
+    <rect x="1126" y="312" width="78" height="8" rx="4" fill="#FFC49B"/>
+    <rect x="1148" y="338" width="126" height="9" rx="4.5" fill="#FFE3CF"/>
+    <rect x="1148" y="356" width="104" height="9" rx="4.5" fill="#FFE3CF"/>
+    <rect x="1170" y="382" width="116" height="9" rx="4.5" fill="#FFD8BD"/>
+    <rect x="1170" y="400" width="88" height="9" rx="4.5" fill="#FFD8BD"/>
+    <rect x="1148" y="430" width="120" height="9" rx="4.5" fill="#FFE3CF"/>
+  </g>
+</svg>

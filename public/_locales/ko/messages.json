@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "현재 문서에 대한 Hacker News 토론을 찾아서 엽니다.", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News 토론", "description": "Popup heading" },
   "checking_article": { "message": "문서를 확인하는 중…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "첫 클릭은 인접한 탭을 엽니다. Chrome Split View로 문서와 나란히 배치하면 이후 선택은 해당 탭을 재사용합니다.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "표시 설정", "description": "Options page link" },
   "options_heading": { "message": "표시 인디케이터", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split 설정", "description": "Options browser-tab title" },
-  "options_intro": { "message": "현재 문서에 Hacker News 토론이 있는지 HN Split이 언제 확인할 수 있는지 선택하세요.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News 설정", "description": "Options browser-tab title" },
+  "options_intro": { "message": "현재 문서에 Hacker News 토론이 있는지 Split for Hacker News이 언제 확인할 수 있는지 선택하세요.", "description": "Options page introduction" },
   "automatic_badge": { "message": "자동 툴바 배지", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "탭이 이동할 때 문서 URL을 확인합니다. 토론이 있으면 댓글 수가 표시된 주황색 배지를 보여줍니다.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "문서 URL 자동 확인", "description": "Automatic availability switch accessible label" },

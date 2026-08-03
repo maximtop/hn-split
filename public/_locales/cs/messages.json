@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Najděte a otevřete diskuze na Hacker News k aktuálnímu článku.", "description": "Extension description" },
   "popup_heading": { "message": "Diskuze na Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Kontrola článku…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "První kliknutí otevře sousední kartu. Spárujte ji s článkem pomocí Chrome Split View; pozdější výběry tuto kartu znovu použijí.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Nastavení dostupnosti", "description": "Options page link" },
   "options_heading": { "message": "Indikátor dostupnosti", "description": "Options page heading" },
-  "options_document_title": { "message": "Nastavení HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Zvolte, kdy smí HN Split kontrolovat, zda má aktuální článek diskuzi na Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Nastavení Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Zvolte, kdy smí Split for Hacker News kontrolovat, zda má aktuální článek diskuzi na Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatický odznak na panelu nástrojů", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Kontrolovat adresy URL článků při navigaci karet. Pokud diskuze existuje, zobrazit oranžový odznak s počtem komentářů.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Automaticky kontrolovat adresy URL článků", "description": "Automatic availability switch accessible label" },

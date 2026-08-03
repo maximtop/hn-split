@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Pronađite i otvorite rasprave s Hacker Newsa za trenutačni članak.", "description": "Extension description" },
   "popup_heading": { "message": "Rasprava na Hacker Newsu", "description": "Popup heading" },
   "checking_article": { "message": "Provjera članka…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Prvi klik otvara susjednu karticu. Uparite je s člankom pomoću Chrome Split Viewa; kasniji odabiri ponovno će koristiti tu karticu.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Postavke dostupnosti", "description": "Options page link" },
   "options_heading": { "message": "Pokazatelj dostupnosti", "description": "Options page heading" },
-  "options_document_title": { "message": "Postavke HN Splita", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Odaberite kada HN Split smije provjeravati ima li trenutačni članak raspravu na Hacker Newsu.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Postavke Split for Hacker Newsa", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Odaberite kada Split for Hacker News smije provjeravati ima li trenutačni članak raspravu na Hacker Newsu.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatska značka na alatnoj traci", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Provjeravaj URL-ove članaka dok kartice navigiraju. Kada rasprava postoji, prikaži narančastu značku s brojem komentara.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Automatski provjeravaj URL-ove članaka", "description": "Automatic availability switch accessible label" },

@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "尋找並開啟目前文章的 Hacker News 討論。", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News 討論", "description": "Popup heading" },
   "checking_article": { "message": "正在檢查這篇文章…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "第一次點擊會開啟相鄰分頁。使用 Chrome Split View 將其與文章並排；之後的選擇會重複使用該分頁。", "description": "Split View usage guidance" },
   "availability_settings": { "message": "可用性設定", "description": "Options page link" },
   "options_heading": { "message": "可用性指示器", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split 設定", "description": "Options browser-tab title" },
-  "options_intro": { "message": "選擇 HN Split 何時可以檢查目前文章是否有 Hacker News 討論。", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News 設定", "description": "Options browser-tab title" },
+  "options_intro": { "message": "選擇 Split for Hacker News 何時可以檢查目前文章是否有 Hacker News 討論。", "description": "Options page introduction" },
   "automatic_badge": { "message": "自動工具列徽章", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "在分頁瀏覽時檢查文章網址。有討論時，顯示帶留言數的橘色徽章。", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "自動檢查文章網址", "description": "Automatic availability switch accessible label" },

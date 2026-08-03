@@ -1,10 +1,10 @@
 # Privacy
 
-HN Split has no analytics, telemetry, account, or application backend.
+Split for Hacker News has no analytics, telemetry, account, or application backend.
 
-By default, HN Split reads the active page URL and optional canonical URL only when the user opens the extension popup. It sends eligible public URL candidates to the public Hacker News Algolia search endpoint to find exact matching Hacker News submissions. Lookup results are cached only in Chrome's session storage and are removed when the browser session ends.
+By default, Split for Hacker News reads the active page URL and optional canonical URL only when the user opens the extension popup. It sends eligible public URL candidates to the public Hacker News Algolia search endpoint to find exact matching Hacker News submissions. Lookup results are cached only in Chrome's session storage and are removed when the browser session ends.
 
-HN Split includes the `tabs` permission at installation. Automatic availability badges remain off by default. When enabled in the options page, the extension checks public URLs as tabs navigate without reading page contents. Disabling the option stops automatic checks, clears badges, and removes HN lookup cache entries while preserving unrelated session data.
+Split for Hacker News includes the `tabs` permission at installation. Automatic availability badges remain off by default. When enabled in the options page, the extension checks public URLs as tabs navigate without reading page contents. Disabling the option stops automatic checks, clears badges, and removes HN lookup cache entries while preserving unrelated session data.
 
 ## Permissions
 
@@ -18,11 +18,11 @@ Every installed permission exists for one documented purpose:
 
 ## Outbound URL boundary
 
-Only public `http:`/`https:` article URLs may reach the lookup endpoint. Before any request, HN Split removes fragments and recognized tracking parameters, and rejects entirely:
+Only public `http:`/`https:` article URLs may reach the lookup endpoint. Before any request, Split for Hacker News removes fragments and recognized tracking parameters, and rejects entirely:
 
 - private, local, and carrier-grade IP ranges, and other IANA special-purpose addresses;
 - single-label names and special-use namespaces such as `.local`, `.internal`, `.onion`, `.arpa`, `.test`, and `.example`;
 - hostnames without an ICANN-recognized public suffix;
 - URLs with embedded credentials, and URLs whose query string carries recognizable secrets (for example `token`, `access_token`, `code`, `sig`, or `X-Amz-*` signature parameters), which fail closed and are never sent or cached.
 
-HN Split does not persist browsing history, store article content, use analytics, or access Hacker News credentials. A discussion tab is opened only after the user selects it.
+Split for Hacker News does not persist browsing history, store article content, use analytics, or access Hacker News credentials. A discussion tab is opened only after the user selects it.

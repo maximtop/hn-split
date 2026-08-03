@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Βρείτε και ανοίξτε τις συζητήσεις του Hacker News για το τρέχον άρθρο.", "description": "Extension description" },
   "popup_heading": { "message": "Συζήτηση στο Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Έλεγχος του άρθρου…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Το πρώτο κλικ ανοίγει μια γειτονική καρτέλα. Συνδέστε την με το άρθρο μέσω του Chrome Split View· οι επόμενες επιλογές θα επαναχρησιμοποιούν αυτήν την καρτέλα.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Ρυθμίσεις διαθεσιμότητας", "description": "Options page link" },
   "options_heading": { "message": "Ένδειξη διαθεσιμότητας", "description": "Options page heading" },
-  "options_document_title": { "message": "Ρυθμίσεις HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Επιλέξτε πότε επιτρέπεται στο HN Split να ελέγχει αν το τρέχον άρθρο έχει συζήτηση στο Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Ρυθμίσεις Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Επιλέξτε πότε επιτρέπεται στο Split for Hacker News να ελέγχει αν το τρέχον άρθρο έχει συζήτηση στο Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Αυτόματο σήμα γραμμής εργαλείων", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Έλεγχος των URL των άρθρων καθώς οι καρτέλες πλοηγούνται. Όταν υπάρχει συζήτηση, εμφάνιση πορτοκαλί σήματος με τον αριθμό των σχολίων.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Αυτόματος έλεγχος των URL των άρθρων", "description": "Automatic availability switch accessible label" },

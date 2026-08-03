@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "ค้นหาและเปิดการสนทนาบน Hacker News สำหรับบทความปัจจุบัน", "description": "Extension description" },
   "popup_heading": { "message": "การสนทนาบน Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "กำลังตรวจสอบบทความ…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "คลิกแรกจะเปิดแท็บข้างเคียง จับคู่แท็บนั้นกับบทความด้วย Chrome Split View การเลือกครั้งถัดไปจะใช้แท็บเดิมซ้ำ", "description": "Split View usage guidance" },
   "availability_settings": { "message": "การตั้งค่าความพร้อมใช้งาน", "description": "Options page link" },
   "options_heading": { "message": "ตัวบ่งชี้ความพร้อมใช้งาน", "description": "Options page heading" },
-  "options_document_title": { "message": "การตั้งค่า HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "เลือกว่าเมื่อใดที่ HN Split สามารถตรวจสอบได้ว่าบทความปัจจุบันมีการสนทนาบน Hacker News หรือไม่", "description": "Options page introduction" },
+  "options_document_title": { "message": "การตั้งค่า Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "เลือกว่าเมื่อใดที่ Split for Hacker News สามารถตรวจสอบได้ว่าบทความปัจจุบันมีการสนทนาบน Hacker News หรือไม่", "description": "Options page introduction" },
   "automatic_badge": { "message": "ป้ายแถบเครื่องมืออัตโนมัติ", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "ตรวจสอบ URL ของบทความขณะที่แท็บนำทาง เมื่อมีการสนทนา ให้แสดงป้ายสีส้มพร้อมจำนวนความคิดเห็น", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "ตรวจสอบ URL ของบทความโดยอัตโนมัติ", "description": "Automatic availability switch accessible label" },

@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Trova e apri le discussioni di Hacker News per l’articolo corrente.", "description": "Extension description" },
   "popup_heading": { "message": "Discussione di Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Verifica dell’articolo…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Il primo clic apre una scheda adiacente. Abbinala all’articolo con Chrome Split View; le selezioni successive riutilizzeranno quella scheda.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Impostazioni di disponibilità", "description": "Options page link" },
   "options_heading": { "message": "Indicatore di disponibilità", "description": "Options page heading" },
-  "options_document_title": { "message": "Impostazioni di HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Scegli quando HN Split può verificare se l’articolo corrente ha una discussione su Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Impostazioni di Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Scegli quando Split for Hacker News può verificare se l’articolo corrente ha una discussione su Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Badge automatico nella barra degli strumenti", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Verifica gli URL degli articoli durante la navigazione tra le schede. Quando esiste una discussione, mostra un badge arancione con il numero di commenti.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Verifica automaticamente gli URL degli articoli", "description": "Automatic availability switch accessible label" },

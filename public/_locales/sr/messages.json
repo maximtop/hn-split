@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Пронађите и отворите дискусије са Hacker News-а за тренутни чланак.", "description": "Extension description" },
   "popup_heading": { "message": "Дискусија на Hacker News-у", "description": "Popup heading" },
   "checking_article": { "message": "Провера чланка…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Први клик отвара суседну картицу. Упарите је са чланком помоћу Chrome Split View-а; каснији избори ће поново користити ту картицу.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Подешавања доступности", "description": "Options page link" },
   "options_heading": { "message": "Индикатор доступности", "description": "Options page heading" },
-  "options_document_title": { "message": "Подешавања HN Split-а", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Изаберите када HN Split сме да проверава да ли тренутни чланак има дискусију на Hacker News-у.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Подешавања Split for Hacker News-а", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Изаберите када Split for Hacker News сме да проверава да ли тренутни чланак има дискусију на Hacker News-у.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Аутоматска значка на траци са алаткама", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Проверавај URL адресе чланака док се картице крећу. Када дискусија постоји, прикажи наранџасту значку са бројем коментара.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Аутоматски проверавај URL адресе чланака", "description": "Automatic availability switch accessible label" },

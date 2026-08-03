@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Vind en open Hacker News-discussies voor het huidige artikel.", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News-discussie", "description": "Popup heading" },
   "checking_article": { "message": "Artikel wordt gecontroleerd…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "De eerste klik opent een aangrenzend tabblad. Koppel het aan het artikel met Chrome Split View; latere selecties hergebruiken dat tabblad.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Beschikbaarheidsinstellingen", "description": "Options page link" },
   "options_heading": { "message": "Beschikbaarheidsindicator", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split-instellingen", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Kies wanneer HN Split mag controleren of het huidige artikel een Hacker News-discussie heeft.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News-instellingen", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Kies wanneer Split for Hacker News mag controleren of het huidige artikel een Hacker News-discussie heeft.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatische werkbalkbadge", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Artikel-URL’s controleren terwijl tabbladen navigeren. Toon een oranje badge met het aantal reacties wanneer er een discussie bestaat.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Artikel-URL’s automatisch controleren", "description": "Automatic availability switch accessible label" },

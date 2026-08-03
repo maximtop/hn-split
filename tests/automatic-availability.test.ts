@@ -22,7 +22,7 @@ describe('AutomaticAvailabilityUpdater', () => {
         expect(deps.lookup).toHaveBeenCalledWith('https://example.com/article', expect.any(AbortSignal));
         expect(deps.applyBadge).toHaveBeenLastCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: 'Split for Hacker News',
         });
     });
 
@@ -148,7 +148,7 @@ describe('AutomaticAvailabilityUpdater', () => {
 
         expect(deps.applyBadge).toHaveBeenCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: 'Split for Hacker News',
         });
     });
 
@@ -162,7 +162,7 @@ describe('AutomaticAvailabilityUpdater', () => {
         expect(deps.lookup).not.toHaveBeenCalled();
         expect(deps.applyBadge).toHaveBeenCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: 'Split for Hacker News',
         });
     });
 
@@ -214,7 +214,7 @@ describe('AutomaticAvailabilityUpdater', () => {
 
         expect(deps.applyBadge).toHaveBeenLastCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: 'Split for Hacker News',
         });
     });
 
@@ -288,7 +288,7 @@ describe('AutomaticAvailabilityUpdater', () => {
         });
         await Promise.all([update, disable]);
 
-        expect(deps.applyBadge).toHaveBeenLastCalledWith(7, { text: '', title: 'HN Split' });
+        expect(deps.applyBadge).toHaveBeenLastCalledWith(7, { text: '', title: 'Split for Hacker News' });
         expect(deps.applyBadge).not.toHaveBeenCalledWith(7, expect.objectContaining({ text: '8' }));
     });
 

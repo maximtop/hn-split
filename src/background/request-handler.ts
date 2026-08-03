@@ -53,7 +53,7 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
     } catch (error) {
         // Keep the raw diagnostic local; the protocol carries only stable codes
         // that each UI surface translates in its own locale.
-        console.warn('HN Split: background request failed.', error);
+        console.warn('Split for Hacker News: background request failed.', error);
         return { ok: false, error: REQUEST_ERROR_CODE[request.type] };
     }
 }

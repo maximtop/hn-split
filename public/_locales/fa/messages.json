@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "بحث‌های Hacker News مربوط به مقالهٔ فعلی را بیابید و باز کنید.", "description": "Extension description" },
   "popup_heading": { "message": "بحث Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "در حال بررسی مقاله…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "نخستین کلیک یک زبانهٔ مجاور باز می‌کند. آن را با Chrome Split View به مقاله متصل کنید؛ انتخاب‌های بعدی همان زبانه را دوباره استفاده می‌کنند.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "تنظیمات دسترس‌پذیری", "description": "Options page link" },
   "options_heading": { "message": "نشانگر دسترس‌پذیری", "description": "Options page heading" },
-  "options_document_title": { "message": "تنظیمات HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "انتخاب کنید HN Split چه زمانی مجاز است بررسی کند که آیا مقالهٔ فعلی بحثی در Hacker News دارد.", "description": "Options page introduction" },
+  "options_document_title": { "message": "تنظیمات Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "انتخاب کنید Split for Hacker News چه زمانی مجاز است بررسی کند که آیا مقالهٔ فعلی بحثی در Hacker News دارد.", "description": "Options page introduction" },
   "automatic_badge": { "message": "نشان خودکار نوار ابزار", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "بررسی نشانی‌های اینترنتی مقاله‌ها هنگام پیمایش زبانه‌ها. وقتی بحثی وجود دارد، نشانی نارنجی با تعداد دیدگاه‌ها نمایش داده می‌شود.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "بررسی خودکار نشانی‌های اینترنتی مقاله‌ها", "description": "Automatic availability switch accessible label" },

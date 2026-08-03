@@ -168,7 +168,7 @@ export function App(): React.JSX.Element {
                     });
                 }
             } catch (error) {
-                console.warn('HN Split: popup lookup failed.', error);
+                console.warn('Split for Hacker News: popup lookup failed.', error);
                 if (!cancelled) {
                     setState({
                         articleTabId: null,
@@ -206,7 +206,7 @@ export function App(): React.JSX.Element {
                 error: response.ok ? null : t(messageKeyForBackgroundError(response.error)),
             }));
         } catch (error) {
-            console.warn('HN Split: opening the discussion failed.', error);
+            console.warn('Split for Hacker News: opening the discussion failed.', error);
             const reason = userFacingMessage(error, 'extension_no_response');
             setState((current) => ({
                 ...current,

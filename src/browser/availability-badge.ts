@@ -5,7 +5,7 @@ import { t } from '../shared/i18n';
 const HN_ORANGE = '#ff6600';
 const MAX_BADGE_COUNT = 999;
 const GENERIC_BADGE_TEXT = 'HN';
-const EXTENSION_BRAND = 'HN Split';
+const EXTENSION_BRAND = 'Split for Hacker News';
 
 /**
  * Describes browser-action badge state derived from a lookup result.

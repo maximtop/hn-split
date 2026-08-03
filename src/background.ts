@@ -25,7 +25,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
     void updateAutomaticAvailability(tabId, url).catch((error: unknown) => {
         // Local diagnostic only; the navigated URL itself is never logged.
-        console.warn('HN Split: automatic availability update failed.', error);
+        console.warn('Split for Hacker News: automatic availability update failed.', error);
     });
 });
 

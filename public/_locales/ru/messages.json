@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Название расширения" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Название расширения" },
   "extension_description": { "message": "Находит и открывает обсуждения текущей статьи на Hacker News.", "description": "Описание расширения" },
   "popup_heading": { "message": "Обсуждение на Hacker News", "description": "Заголовок всплывающего окна" },
   "checking_article": { "message": "Проверяем статью…", "description": "Статус загрузки" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "При первом нажатии откроется соседняя вкладка. Объедините её со статьёй через Chrome Split View; следующие обсуждения откроются в той же вкладке.", "description": "Подсказка по Split View" },
   "availability_settings": { "message": "Настройки доступности", "description": "Ссылка на настройки" },
   "options_heading": { "message": "Индикатор доступности", "description": "Заголовок страницы настроек" },
-  "options_document_title": { "message": "Настройки HN Split", "description": "Заголовок вкладки с настройками" },
-  "options_intro": { "message": "Выберите, когда HN Split может проверять наличие обсуждения текущей статьи на Hacker News.", "description": "Введение в настройки" },
+  "options_document_title": { "message": "Настройки Split for Hacker News", "description": "Заголовок вкладки с настройками" },
+  "options_intro": { "message": "Выберите, когда Split for Hacker News может проверять наличие обсуждения текущей статьи на Hacker News.", "description": "Введение в настройки" },
   "automatic_badge": { "message": "Автоматический значок на панели", "description": "Название настройки" },
   "automatic_badge_description": { "message": "Проверять адреса статей при переходах по вкладкам. Если обсуждение найдено, показывать оранжевый значок с числом комментариев.", "description": "Описание настройки" },
   "automatic_badge_label": { "message": "Автоматически проверять адреса статей", "description": "Метка переключателя" },
