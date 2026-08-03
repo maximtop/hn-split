@@ -8,14 +8,12 @@ import {
     Switch,
     Text,
     Title,
-    createTheme,
 } from '@mantine/core';
 import { observer } from 'mobx-react-lite';
 
 import { t } from '../shared/i18n';
+import { cssVariablesResolver, theme } from '../shared/theme';
 import type { OptionsStore } from './options-store';
-
-const theme = createTheme({ primaryColor: 'orange' });
 
 /**
  * Supplies observable options state to the page view.
@@ -34,11 +32,11 @@ export interface OptionsAppProps {
 function OptionsView(props: OptionsAppProps): React.JSX.Element {
     const { store } = props;
     return (
-        <MantineProvider theme={theme} defaultColorScheme="auto">
+        <MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} defaultColorScheme="auto">
             <Container component="main" size="md" py={64}>
                 <Stack gap="xl">
                     <header>
-                        <Text c="orange.7" fw={800} size="sm" tt="uppercase">{t('extension_name')}</Text>
+                        <Text c="brand.7" fw={800} size="sm" tt="uppercase">{t('extension_name')}</Text>
                         <Title order={1}>{t('options_heading')}</Title>
                         <Text c="dimmed" mt="sm" size="lg">{t('options_intro')}</Text>
                     </header>

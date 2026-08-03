@@ -1,12 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { chromium } from '@playwright/test';
-import type { BrowserContext, Page, Worker } from '@playwright/test';
-import { mkdtemp, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
-import { resolve } from 'node:path';
 
-const ARTICLE_URL = 'https://article.hn-split.example.com/story';
-const AUTOMATIC_ARTICLE_URL = 'https://article.hn-split.example.com/automatic-story';
+import { ARTICLE_ORIGIN, launchExtensionContext, openExtensionPage } from './extension-context';
+import type { ExtensionContext } from './extension-context';
+
+const ARTICLE_URL = `${ARTICLE_ORIGIN}/story`;
+const AUTOMATIC_ARTICLE_URL = `${ARTICLE_ORIGIN}/automatic-story`;
 const FIRST_ITEM_ID = '424242';
 const SECOND_ITEM_ID = '424243';
 
@@ -28,34 +26,12 @@ interface OpenResponse {
     error?: string;
 }
 
-async function extensionWorker(context: BrowserContext): Promise<Worker> {
-    const existing = context.serviceWorkers().find((worker) => worker.url().startsWith('chrome-extension://'));
-    return existing ?? context.waitForEvent(
-        'serviceworker',
-        (worker) => worker.url().startsWith('chrome-extension://'),
-    );
-}
-
-async function extensionPage(context: BrowserContext, extensionId: string): Promise<Page> {
-    const page = await context.newPage();
-    await page.goto(`chrome-extension://${extensionId}/options.html`);
-    return page;
-}
-
 test('loads the unpacked extension and verifies lookup plus adjacent tab reuse', async () => {
-    const extensionPath = resolve(import.meta.dirname, '../../dist');
-    const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn_split_playwright_'));
-    let context: BrowserContext | undefined;
+    let extension: ExtensionContext | undefined;
 
     try {
-        context = await chromium.launchPersistentContext(userDataDir, {
-            channel: 'chromium',
-            headless: true,
-            args: [
-                `--disable-extensions-except=${extensionPath}`,
-                `--load-extension=${extensionPath}`,
-            ],
-        });
+        extension = await launchExtensionContext();
+        const { context, worker } = extension;
 
         let algoliaRequests = 0;
         let signalAutomaticLookup!: () => void;
@@ -108,8 +84,6 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
             });
         });
 
-        const worker = await extensionWorker(context);
-        const extensionId = new URL(worker.url()).host;
         const article = context.pages()[0] ?? await context.newPage();
         await article.goto(ARTICLE_URL);
         await article.bringToFront();
@@ -121,7 +95,7 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         });
         expect(typeof articleTabId).toBe('number');
 
-        const options = await extensionPage(context, extensionId);
+        const options = await openExtensionPage(extension, 'options.html');
         await expect(options).toHaveTitle('HN Split settings');
         await expect(options.getByRole('heading', { name: 'Availability indicator' })).toBeVisible();
         await expect(options.getByRole('switch', { name: 'Automatically check article URLs' })).not.toBeChecked();
@@ -232,7 +206,6 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         expect(context.pages().filter((page) => page.url().startsWith('https://news.ycombinator.com/item?')))
             .toHaveLength(1);
     } finally {
-        await context?.close();
-        await rm(userDataDir, { force: true, recursive: true });
+        await extension?.dispose();
     }
 });

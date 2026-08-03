@@ -15,4 +15,5 @@
 - Type-aware linting (`typescript-eslint` recommendedTypeChecked with the project service) runs on all TypeScript sources in CI. Tests relax only the mock-hostile rules (`unbound-method`, `require-await`, and the `no-unsafe-*` family) because Vitest doubles and malformed-input fixtures trip them by design; production code gets no such exemption.
 - Prefer unit and integration tests for application logic; reserve E2E tests for browser-extension boundaries that cannot be verified reliably at a lower level.
 - Keep E2E tests minimal and resilient: assert stable user-visible or accessibility contracts, and avoid CSS classes, generated markup, timing assumptions, and other implementation details.
+- Accessibility is gated by the axe E2E suite (`tests/e2e/a11y.e2e.ts`): serious and critical WCAG violations block, and every allowlisted rule requires a justification comment. UI text colors must keep WCAG AA contrast in both color schemes; use the shared scheme-aware theme in `src/shared/theme.ts`.
 - Run `pnpm verify` before committing.

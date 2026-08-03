@@ -83,6 +83,7 @@ describe('App discussion opens', () => {
         expect(buttons.every(({ disabled }) => !disabled)).toBe(true);
         expect(view.container.querySelector('.status--error')?.textContent)
             .toBe('Unable to open discussion: The extension did not respond.');
+        expect(view.container.querySelector('.status--error')?.getAttribute('role')).toBe('alert');
         await view.unmount();
     });
 
@@ -154,6 +155,7 @@ describe('App discussion opens', () => {
         expect(view.container.querySelectorAll('button.discussion')).toHaveLength(0);
         expect(view.container.querySelector('.status--error')?.textContent)
             .toBe('Invalid response from extension.');
+        expect(view.container.querySelector('.status--error')?.getAttribute('role')).toBe('alert');
         await view.unmount();
     });
 
