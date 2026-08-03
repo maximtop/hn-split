@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { ARTICLE_ORIGIN, launchExtensionContext, openExtensionPage } from './extension-context';
 import type { ExtensionContext } from './extension-context';
 
@@ -96,7 +97,7 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         expect(typeof articleTabId).toBe('number');
 
         const options = await openExtensionPage(extension, 'options.html');
-        await expect(options).toHaveTitle('Split for Hacker News settings');
+        await expect(options).toHaveTitle(enMessages.options_document_title.message);
         await expect(options.getByRole('heading', { name: 'Availability indicator' })).toBeVisible();
         await expect(options.getByRole('switch', { name: 'Automatically check article URLs' })).not.toBeChecked();
 

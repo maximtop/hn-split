@@ -1,11 +1,11 @@
 import { HN_LOOKUP_STATUS } from '../domain/hn';
 import type { HnLookupResult } from '../domain/hn';
+import { EXTENSION_BRAND } from '../shared/brand';
 import { t } from '../shared/i18n';
 
 const HN_ORANGE = '#ff6600';
 const MAX_BADGE_COUNT = 999;
 const GENERIC_BADGE_TEXT = 'HN';
-const EXTENSION_BRAND = 'Split for Hacker News';
 
 /**
  * Describes browser-action badge state derived from a lookup result.
