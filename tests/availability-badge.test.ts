@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { badgeForLookupResult } from '../src/browser/availability-badge';
 import type { HnLookupResult } from '../src/domain/hn';
+import { EXTENSION_BRAND } from '../src/shared/brand';
 
 function found(comments: number): HnLookupResult {
     return {
@@ -46,7 +47,7 @@ describe('badgeForLookupResult', () => {
     ])('clears the badge when no discussion is available', (result) => {
         expect(badgeForLookupResult(result)).toEqual({
             text: '',
-            title: 'HN Split',
+            title: EXTENSION_BRAND,
         });
     });
 });

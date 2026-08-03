@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Etsi ja avaa nykyisen artikkelin Hacker News -keskustelut.", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News -keskustelu", "description": "Popup heading" },
   "checking_article": { "message": "Tarkistetaan artikkelia…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Ensimmäinen napsautus avaa viereisen välilehden. Yhdistä se artikkeliin Chrome Split View’llä; myöhemmät valinnat käyttävät samaa välilehteä.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Saatavuusasetukset", "description": "Options page link" },
   "options_heading": { "message": "Saatavuusilmaisin", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Splitin asetukset", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Valitse, milloin HN Split saa tarkistaa, onko nykyisellä artikkelilla Hacker News -keskustelu.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker Newsin asetukset", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Valitse, milloin Split for Hacker News saa tarkistaa, onko nykyisellä artikkelilla Hacker News -keskustelu.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automaattinen työkalupalkin merkki", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Tarkista artikkelien URL-osoitteet välilehtien navigoidessa. Kun keskustelu on olemassa, näytä oranssi merkki kommenttien määrällä.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Tarkista artikkelien URL-osoitteet automaattisesti", "description": "Automatic availability switch accessible label" },

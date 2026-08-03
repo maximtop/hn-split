@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { AutomaticAvailabilityUpdater } from '../src/browser/automatic-availability';
 import type { AutomaticAvailabilityDependencies } from '../src/browser/automatic-availability';
 import type { HnLookupResult } from '../src/domain/hn';
+import { EXTENSION_BRAND } from '../src/shared/brand';
 
 function dependencies(): AutomaticAvailabilityDependencies {
     return {
@@ -22,7 +23,7 @@ describe('AutomaticAvailabilityUpdater', () => {
         expect(deps.lookup).toHaveBeenCalledWith('https://example.com/article', expect.any(AbortSignal));
         expect(deps.applyBadge).toHaveBeenLastCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: EXTENSION_BRAND,
         });
     });
 
@@ -148,7 +149,7 @@ describe('AutomaticAvailabilityUpdater', () => {
 
         expect(deps.applyBadge).toHaveBeenCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: EXTENSION_BRAND,
         });
     });
 
@@ -162,7 +163,7 @@ describe('AutomaticAvailabilityUpdater', () => {
         expect(deps.lookup).not.toHaveBeenCalled();
         expect(deps.applyBadge).toHaveBeenCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: EXTENSION_BRAND,
         });
     });
 
@@ -214,7 +215,7 @@ describe('AutomaticAvailabilityUpdater', () => {
 
         expect(deps.applyBadge).toHaveBeenLastCalledWith(7, {
             text: '',
-            title: 'HN Split',
+            title: EXTENSION_BRAND,
         });
     });
 
@@ -288,7 +289,7 @@ describe('AutomaticAvailabilityUpdater', () => {
         });
         await Promise.all([update, disable]);
 
-        expect(deps.applyBadge).toHaveBeenLastCalledWith(7, { text: '', title: 'HN Split' });
+        expect(deps.applyBadge).toHaveBeenLastCalledWith(7, { text: '', title: EXTENSION_BRAND });
         expect(deps.applyBadge).not.toHaveBeenCalledWith(7, expect.objectContaining({ text: '8' }));
     });
 

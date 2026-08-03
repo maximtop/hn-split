@@ -1,6 +1,6 @@
-# HN Split
+# Split for Hacker News
 
-HN Split is a private, work-in-progress browser extension that helps a reader move from the article currently open to its Hacker News discussion after an explicit click.
+Split for Hacker News (repository slug: `hn-split`) is a private, work-in-progress browser extension that helps a reader move from the article currently open to its Hacker News discussion after an explicit click. It is an unofficial, independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
 
 ## Current status
 
@@ -19,6 +19,7 @@ Hacker News is the only discussion source in the MVP. Chrome is the first implem
 - [URL matching and Hacker News lookup contract](docs/url-matching.md)
 - [Priority locales](docs/locales.md)
 - [Development and Chrome loading](docs/development.md)
+- [Store listing and visual assets](docs/store-listing.md)
 - [Privacy](PRIVACY.md)
 - [ADR-0001: HNewhere reference decisions](docs/adr/0001-hnewhere-reference-decisions.md)
 

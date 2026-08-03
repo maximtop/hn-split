@@ -1,4 +1,5 @@
 import { DiscussionTabManager } from '../browser/open-discussion';
+import { logWarning } from '../shared/logger';
 import { BACKGROUND_ERROR_CODE, BACKGROUND_REQUEST_TYPE } from '../shared/messages';
 import type { BackgroundErrorCode, BackgroundRequest, BackgroundResponse } from '../shared/messages';
 import { lookupArticle } from './article-lookup';
@@ -53,7 +54,7 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
     } catch (error) {
         // Keep the raw diagnostic local; the protocol carries only stable codes
         // that each UI surface translates in its own locale.
-        console.warn('HN Split: background request failed.', error);
+        logWarning('background request failed.', error);
         return { ok: false, error: REQUEST_ERROR_CODE[request.type] };
     }
 }

@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Keresse meg és nyissa meg az aktuális cikk Hacker News-vitáit.", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News-vita", "description": "Popup heading" },
   "checking_article": { "message": "A cikk ellenőrzése…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Az első kattintás egy szomszédos lapot nyit meg. Párosítsa a cikkel a Chrome Split View segítségével; a későbbi választások ezt a lapot használják újra.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Elérhetőségi beállítások", "description": "Options page link" },
   "options_heading": { "message": "Elérhetőségjelző", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split beállításai", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Válassza ki, mikor ellenőrizheti a HN Split, hogy az aktuális cikkhez tartozik-e Hacker News-vita.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News beállításai", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Válassza ki, mikor ellenőrizheti a Split for Hacker News, hogy az aktuális cikkhez tartozik-e Hacker News-vita.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatikus eszköztárjelvény", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "A cikkek URL-jeinek ellenőrzése a lapok navigálásakor. Ha létezik vita, narancssárga jelvény jelenik meg a hozzászólások számával.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "A cikkek URL-jeinek automatikus ellenőrzése", "description": "Automatic availability switch accessible label" },

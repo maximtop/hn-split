@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Find and open Hacker News discussions for the current article.", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News discussion", "description": "Popup heading" },
   "checking_article": { "message": "Checking this article…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "The first click opens an adjacent tab. Pair it with the article using Chrome Split View; later selections reuse that tab.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Availability settings", "description": "Options page link" },
   "options_heading": { "message": "Availability indicator", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split settings", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Choose when HN Split may check whether the current article has a Hacker News discussion.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News settings", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Choose when Split for Hacker News may check whether the current article has a Hacker News discussion.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatic toolbar badge", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Check article URLs as tabs navigate. When a discussion exists, show an orange badge with its comment count.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Automatically check article URLs", "description": "Automatic availability switch accessible label" },

@@ -4,6 +4,7 @@ import {
 } from './background/automatic-availability-controller';
 import { sessionStore } from './background/chrome-adapters';
 import { handleRequest } from './background/request-handler';
+import { logWarning } from './shared/logger';
 import { isBackgroundRequest } from './shared/messages';
 
 const TAB_UPDATE_STATUS = {
@@ -25,7 +26,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
     void updateAutomaticAvailability(tabId, url).catch((error: unknown) => {
         // Local diagnostic only; the navigated URL itself is never logged.
-        console.warn('HN Split: automatic availability update failed.', error);
+        logWarning('automatic availability update failed.', error);
     });
 });
 

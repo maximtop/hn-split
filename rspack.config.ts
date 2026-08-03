@@ -73,6 +73,7 @@ const config: Configuration = {
             patterns: [
                 { from: 'public/manifest.json', to: 'manifest.json' },
                 { from: 'public/_locales', to: '_locales' },
+                { from: 'public/icons', to: 'icons' },
             ],
         }),
     ],

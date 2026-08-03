@@ -16,6 +16,7 @@ import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import { readPageContext } from '../page/context';
 import { UserFacingError, messageKeyForBackgroundError, userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
+import { logWarning } from '../shared/logger';
 import { cssVariablesResolver, theme } from '../shared/theme';
 import {
     BACKGROUND_REQUEST_TYPE,
@@ -168,7 +169,7 @@ export function App(): React.JSX.Element {
                     });
                 }
             } catch (error) {
-                console.warn('HN Split: popup lookup failed.', error);
+                logWarning('popup lookup failed.', error);
                 if (!cancelled) {
                     setState({
                         articleTabId: null,
@@ -206,7 +207,7 @@ export function App(): React.JSX.Element {
                 error: response.ok ? null : t(messageKeyForBackgroundError(response.error)),
             }));
         } catch (error) {
-            console.warn('HN Split: opening the discussion failed.', error);
+            logWarning('opening the discussion failed.', error);
             const reason = userFacingMessage(error, 'extension_no_response');
             setState((current) => ({
                 ...current,

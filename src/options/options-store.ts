@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 
 import { userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
+import { logWarning } from '../shared/logger';
 import {
     readAutomaticAvailability,
     updateAutomaticAvailability,
@@ -36,7 +37,7 @@ export class OptionsStore {
                 this.enabled = enabled;
             });
         } catch (error) {
-            console.warn('HN Split: loading the availability setting failed.', error);
+            logWarning('loading the availability setting failed.', error);
             runInAction(() => {
                 this.message = userFacingMessage(error, 'unable_to_load_settings');
             });
@@ -61,7 +62,7 @@ export class OptionsStore {
                 this.message = enabled ? t('automatic_enabled') : t('automatic_disabled');
             });
         } catch (error) {
-            console.warn('HN Split: updating the availability setting failed.', error);
+            logWarning('updating the availability setting failed.', error);
             const updateMessage = userFacingMessage(error, 'unable_to_update_settings');
             try {
                 const enabled = await readAutomaticAvailability(this.dependencies);
@@ -70,7 +71,7 @@ export class OptionsStore {
                     this.message = updateMessage;
                 });
             } catch (resyncError) {
-                console.warn('HN Split: reloading the availability setting failed.', resyncError);
+                logWarning('reloading the availability setting failed.', resyncError);
                 const resyncMessage = userFacingMessage(resyncError, 'unable_to_reload_settings');
                 runInAction(() => {
                     this.message = `${updateMessage} ${resyncMessage}`;

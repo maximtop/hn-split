@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Trobeu i obriu les discussions de Hacker News de l’article actual.", "description": "Extension description" },
   "popup_heading": { "message": "Discussió de Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "S’està comprovant l’article…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "El primer clic obre una pestanya adjacent. Emparelleu-la amb l’article mitjançant Chrome Split View; les seleccions posteriors reutilitzaran aquesta pestanya.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Configuració de disponibilitat", "description": "Options page link" },
   "options_heading": { "message": "Indicador de disponibilitat", "description": "Options page heading" },
-  "options_document_title": { "message": "Configuració de HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Trieu quan pot HN Split comprovar si l’article actual té una discussió a Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Configuració de Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Trieu quan pot Split for Hacker News comprovar si l’article actual té una discussió a Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Insígnia automàtica a la barra d’eines", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Comprova els URL dels articles mentre les pestanyes naveguen. Quan hi hagi una discussió, mostra una insígnia taronja amb el nombre de comentaris.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Comprova automàticament els URL dels articles", "description": "Automatic availability switch accessible label" },

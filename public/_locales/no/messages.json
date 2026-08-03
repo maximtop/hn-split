@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Finn og åpne Hacker News-diskusjoner for den gjeldende artikkelen.", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News-diskusjon", "description": "Popup heading" },
   "checking_article": { "message": "Kontrollerer artikkelen…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Det første klikket åpner en tilstøtende fane. Koble den til artikkelen med Chrome Split View; senere valg gjenbruker den fanen.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Tilgjengelighetsinnstillinger", "description": "Options page link" },
   "options_heading": { "message": "Tilgjengelighetsindikator", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split-innstillinger", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Velg når HN Split kan sjekke om den gjeldende artikkelen har en Hacker News-diskusjon.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News-innstillinger", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Velg når Split for Hacker News kan sjekke om den gjeldende artikkelen har en Hacker News-diskusjon.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatisk verktøylinjemerke", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Sjekk artikkel-URL-er når faner navigerer. Vis et oransje merke med antall kommentarer når en diskusjon finnes.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Sjekk artikkel-URL-er automatisk", "description": "Automatic availability switch accessible label" },

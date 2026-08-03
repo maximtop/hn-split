@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Nájdite a otvorte diskusie na Hacker News k aktuálnemu článku.", "description": "Extension description" },
   "popup_heading": { "message": "Diskusia na Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Kontroluje sa článok…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Prvé kliknutie otvorí susednú kartu. Spárujte ju s článkom cez Chrome Split View; neskoršie výbery túto kartu znova použijú.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Nastavenia dostupnosti", "description": "Options page link" },
   "options_heading": { "message": "Indikátor dostupnosti", "description": "Options page heading" },
-  "options_document_title": { "message": "Nastavenia HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Vyberte, kedy smie HN Split kontrolovať, či má aktuálny článok diskusiu na Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Nastavenia Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Vyberte, kedy smie Split for Hacker News kontrolovať, či má aktuálny článok diskusiu na Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatický odznak na paneli nástrojov", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Kontrolovať adresy URL článkov pri navigácii kariet. Ak diskusia existuje, zobraziť oranžový odznak s počtom komentárov.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Automaticky kontrolovať adresy URL článkov", "description": "Automatic availability switch accessible label" },

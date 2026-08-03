@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "מצאו ופתחו דיוני Hacker News עבור המאמר הנוכחי.", "description": "Extension description" },
   "popup_heading": { "message": "דיון ב‑Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "בודק את המאמר…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "הלחיצה הראשונה פותחת כרטיסייה סמוכה. שייכו אותה למאמר באמצעות Chrome Split View; בחירות מאוחרות יותר ישתמשו שוב באותה כרטיסייה.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "הגדרות זמינות", "description": "Options page link" },
   "options_heading": { "message": "מחוון זמינות", "description": "Options page heading" },
-  "options_document_title": { "message": "הגדרות HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "בחרו מתי מותר ל‑HN Split לבדוק אם למאמר הנוכחי יש דיון ב‑Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "הגדרות Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "בחרו מתי מותר ל‑Split for Hacker News לבדוק אם למאמר הנוכחי יש דיון ב‑Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "תג אוטומטי בסרגל הכלים", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "בדיקת כתובות URL של מאמרים בעת ניווט הכרטיסיות. כשקיים דיון, יוצג תג כתום עם מספר התגובות.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "בדיקה אוטומטית של כתובות URL של מאמרים", "description": "Automatic availability switch accessible label" },

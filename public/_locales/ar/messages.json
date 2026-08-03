@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "اعثر على مناقشات Hacker News للمقالة الحالية وافتحها.", "description": "Extension description" },
   "popup_heading": { "message": "مناقشة Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "جارٍ فحص المقالة…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "النقرة الأولى تفتح علامة تبويب مجاورة. اربطها بالمقالة عبر Chrome Split View؛ وستُعيد الاختيارات اللاحقة استخدام علامة التبويب نفسها.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "إعدادات التوفر", "description": "Options page link" },
   "options_heading": { "message": "مؤشر التوفر", "description": "Options page heading" },
-  "options_document_title": { "message": "إعدادات HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "اختر متى يُسمح لـ HN Split بفحص ما إذا كانت للمقالة الحالية مناقشة في Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "إعدادات Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "اختر متى يُسمح لـ Split for Hacker News بفحص ما إذا كانت للمقالة الحالية مناقشة في Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "شارة تلقائية في شريط الأدوات", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "فحص عناوين URL للمقالات أثناء تنقّل علامات التبويب. عند وجود مناقشة، تُعرض شارة برتقالية بعدد التعليقات.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "فحص عناوين URL للمقالات تلقائيًا", "description": "Automatic availability switch accessible label" },

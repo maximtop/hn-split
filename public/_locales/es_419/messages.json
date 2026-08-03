@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Encuentra y abre las discusiones de Hacker News del artículo actual.", "description": "Extension description" },
   "popup_heading": { "message": "Discusión de Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Revisando este artículo…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "El primer clic abre una pestaña adyacente. Empareja esa pestaña con el artículo mediante Chrome Split View; las selecciones posteriores reutilizarán esa pestaña.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Configuración de disponibilidad", "description": "Options page link" },
   "options_heading": { "message": "Indicador de disponibilidad", "description": "Options page heading" },
-  "options_document_title": { "message": "Configuración de HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Elige cuándo puede HN Split revisar si el artículo actual tiene una discusión en Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Configuración de Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Elige cuándo puede Split for Hacker News revisar si el artículo actual tiene una discusión en Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Insignia automática en la barra de herramientas", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Revisar las URL de los artículos al navegar por las pestañas. Cuando exista una discusión, mostrar una insignia naranja con el número de comentarios.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Revisar automáticamente las URL de los artículos", "description": "Automatic availability switch accessible label" },

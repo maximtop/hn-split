@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Temukan dan buka diskusi Hacker News untuk artikel saat ini.", "description": "Extension description" },
   "popup_heading": { "message": "Diskusi Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Memeriksa artikel ini…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Klik pertama membuka tab yang bersebelahan. Pasangkan dengan artikel menggunakan Chrome Split View; pilihan berikutnya akan menggunakan kembali tab itu.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Pengaturan ketersediaan", "description": "Options page link" },
   "options_heading": { "message": "Indikator ketersediaan", "description": "Options page heading" },
-  "options_document_title": { "message": "Pengaturan HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Pilih kapan HN Split boleh memeriksa apakah artikel saat ini memiliki diskusi Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Pengaturan Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Pilih kapan Split for Hacker News boleh memeriksa apakah artikel saat ini memiliki diskusi Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Lencana bilah alat otomatis", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Periksa URL artikel saat tab bernavigasi. Jika ada diskusi, tampilkan lencana oranye dengan jumlah komentarnya.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Periksa URL artikel secara otomatis", "description": "Automatic availability switch accessible label" },

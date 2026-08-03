@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Găsiți și deschideți discuțiile de pe Hacker News pentru articolul curent.", "description": "Extension description" },
   "popup_heading": { "message": "Discuție pe Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Se verifică articolul…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Primul clic deschide o filă adiacentă. Asociați-o cu articolul folosind Chrome Split View; selecțiile ulterioare vor reutiliza acea filă.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Setări de disponibilitate", "description": "Options page link" },
   "options_heading": { "message": "Indicator de disponibilitate", "description": "Options page heading" },
-  "options_document_title": { "message": "Setările HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Alegeți când poate HN Split să verifice dacă articolul curent are o discuție pe Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Setările Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Alegeți când poate Split for Hacker News să verifice dacă articolul curent are o discuție pe Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Insignă automată în bara de instrumente", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Verifică URL-urile articolelor pe măsură ce filele navighează. Când există o discuție, afișează o insignă portocalie cu numărul de comentarii.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Verifică automat URL-urile articolelor", "description": "Automatic availability switch accessible label" },

@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Hanapin at buksan ang mga talakayan sa Hacker News para sa kasalukuyang artikulo.", "description": "Extension description" },
   "popup_heading": { "message": "Talakayan sa Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Sinusuri ang artikulo…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Ang unang pag-click ay nagbubukas ng katabing tab. Ipares ito sa artikulo gamit ang Chrome Split View; gagamitin muli ng mga susunod na pagpili ang tab na iyon.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Mga setting ng availability", "description": "Options page link" },
   "options_heading": { "message": "Indicator ng availability", "description": "Options page heading" },
-  "options_document_title": { "message": "Mga setting ng HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Piliin kung kailan maaaring suriin ng HN Split kung may talakayan sa Hacker News ang kasalukuyang artikulo.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Mga setting ng Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Piliin kung kailan maaaring suriin ng Split for Hacker News kung may talakayan sa Hacker News ang kasalukuyang artikulo.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Awtomatikong badge sa toolbar", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Suriin ang mga URL ng artikulo habang nagna-navigate ang mga tab. Kapag may talakayan, magpakita ng orange na badge na may bilang ng mga komento.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Awtomatikong suriin ang mga URL ng artikulo", "description": "Automatic availability switch accessible label" },

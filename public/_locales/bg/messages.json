@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Намерете и отворете дискусиите в Hacker News за текущата статия.", "description": "Extension description" },
   "popup_heading": { "message": "Дискусия в Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Проверка на статията…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Първото щракване отваря съседен раздел. Свържете го със статията чрез Chrome Split View; следващите избори ще използват същия раздел.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Настройки за наличност", "description": "Options page link" },
   "options_heading": { "message": "Индикатор за наличност", "description": "Options page heading" },
-  "options_document_title": { "message": "Настройки на HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Изберете кога HN Split може да проверява дали текущата статия има дискусия в Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Настройки на Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Изберете кога Split for Hacker News може да проверява дали текущата статия има дискусия в Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Автоматична значка в лентата с инструменти", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Проверявай URL адресите на статиите при навигация на разделите. Когато има дискусия, показвай оранжева значка с броя коментари.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Автоматична проверка на URL адресите на статиите", "description": "Automatic availability switch accessible label" },

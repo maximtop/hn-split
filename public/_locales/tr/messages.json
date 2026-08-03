@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Geçerli makale için Hacker News tartışmalarını bulun ve açın.", "description": "Extension description" },
   "popup_heading": { "message": "Hacker News tartışması", "description": "Popup heading" },
   "checking_article": { "message": "Makale kontrol ediliyor…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "İlk tıklama bitişik bir sekme açar. Chrome Split View ile makaleyle eşleştirin; sonraki seçimler o sekmeyi yeniden kullanır.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Kullanılabilirlik ayarları", "description": "Options page link" },
   "options_heading": { "message": "Kullanılabilirlik göstergesi", "description": "Options page heading" },
-  "options_document_title": { "message": "HN Split ayarları", "description": "Options browser-tab title" },
-  "options_intro": { "message": "HN Split’in geçerli makalenin Hacker News tartışması olup olmadığını ne zaman kontrol edebileceğini seçin.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Split for Hacker News ayarları", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Split for Hacker News’in geçerli makalenin Hacker News tartışması olup olmadığını ne zaman kontrol edebileceğini seçin.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Otomatik araç çubuğu rozeti", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Sekmeler gezinirken makale URL’lerini kontrol et. Tartışma varsa yorum sayısıyla birlikte turuncu bir rozet göster.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Makale URL’lerini otomatik kontrol et", "description": "Automatic availability switch accessible label" },

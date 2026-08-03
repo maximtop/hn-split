@@ -1,5 +1,5 @@
 {
-  "extension_name": { "message": "HN Split", "description": "Extension name" },
+  "extension_name": { "message": "Split for Hacker News", "description": "Extension name" },
   "extension_description": { "message": "Znajdź i otwórz dyskusje z Hacker News dotyczące bieżącego artykułu.", "description": "Extension description" },
   "popup_heading": { "message": "Dyskusja na Hacker News", "description": "Popup heading" },
   "checking_article": { "message": "Sprawdzanie artykułu…", "description": "Popup loading status" },
@@ -20,8 +20,8 @@
   "split_view_help": { "message": "Pierwsze kliknięcie otwiera sąsiednią kartę. Połącz ją z artykułem za pomocą Chrome Split View; kolejne wybory ponownie użyją tej karty.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Ustawienia dostępności", "description": "Options page link" },
   "options_heading": { "message": "Wskaźnik dostępności", "description": "Options page heading" },
-  "options_document_title": { "message": "Ustawienia HN Split", "description": "Options browser-tab title" },
-  "options_intro": { "message": "Wybierz, kiedy HN Split może sprawdzać, czy bieżący artykuł ma dyskusję na Hacker News.", "description": "Options page introduction" },
+  "options_document_title": { "message": "Ustawienia Split for Hacker News", "description": "Options browser-tab title" },
+  "options_intro": { "message": "Wybierz, kiedy Split for Hacker News może sprawdzać, czy bieżący artykuł ma dyskusję na Hacker News.", "description": "Options page introduction" },
   "automatic_badge": { "message": "Automatyczna plakietka na pasku narzędzi", "description": "Automatic availability setting title" },
   "automatic_badge_description": { "message": "Sprawdzaj adresy URL artykułów podczas nawigacji kart. Gdy istnieje dyskusja, pokazuj pomarańczową plakietkę z liczbą komentarzy.", "description": "Automatic availability setting description" },
   "automatic_badge_label": { "message": "Automatycznie sprawdzaj adresy URL artykułów", "description": "Automatic availability switch accessible label" },
