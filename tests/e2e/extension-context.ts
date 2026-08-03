@@ -49,7 +49,7 @@ export async function launchExtensionContext(
     options: { lang?: string } = {},
 ): Promise<ExtensionContext> {
     const extensionPath = resolve(import.meta.dirname, '../../dist');
-    const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn_split_playwright_'));
+    const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn-split-playwright-'));
     const args = [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,
