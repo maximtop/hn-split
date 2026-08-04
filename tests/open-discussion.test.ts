@@ -78,7 +78,7 @@ describe('DiscussionTabManager', () => {
             get: vi.fn(async (id) => (
                 id === 40
                     ? { id, index: 4, windowId: 2 }
-                    : { id, index: 5, windowId: 2 }
+                    : { id, index: 5, windowId: 2, url: 'https://news.ycombinator.com/item?id=123' }
             )),
             create: vi.fn(async () => created),
             update: vi.fn(async (id) => ({ id, index: 5, windowId: 2 })),
@@ -102,6 +102,78 @@ describe('DiscussionTabManager', () => {
             active: true,
             url: 'https://news.ycombinator.com/item?id=456',
         });
+    });
+
+    it('reuses the remembered tab while it stays on Hacker News', async () => {
+        const tabs: TabClient = {
+            get: vi.fn(async (id) => (
+                id === 40
+                    ? { id, index: 4, windowId: 2, splitViewId: -1 }
+                    : {
+                            id, index: 5, windowId: 2, splitViewId: -1, url: 'https://news.ycombinator.com/newest',
+                        }
+            )),
+            create: vi.fn(),
+            update: vi.fn(async (id) => ({ id, index: 5, windowId: 2, splitViewId: -1 })),
+        };
+        const store = createStore(91);
+        const manager = new DiscussionTabManager(tabs, store);
+
+        const result = await manager.open(40, '456');
+
+        expect(tabs.update).toHaveBeenCalledWith(91, {
+            active: true,
+            url: 'https://news.ycombinator.com/item?id=456',
+        });
+        expect(tabs.create).not.toHaveBeenCalled();
+        expect(result).toEqual({ mode: 'reused_tab', tabId: 91 });
+    });
+
+    it('opens a replacement instead of taking over a tab navigated away from Hacker News', async () => {
+        const tabs: TabClient = {
+            get: vi.fn(async (id) => (
+                id === 40
+                    ? { id, index: 4, windowId: 2, splitViewId: -1 }
+                    : {
+                            id, index: 5, windowId: 2, splitViewId: -1, url: 'https://example.com/somewhere-else',
+                        }
+            )),
+            create: vi.fn(async () => ({ id: 92, index: 5, windowId: 2, splitViewId: -1 })),
+            update: unexpectedUpdate(),
+        };
+        const store = createStore(91);
+        const manager = new DiscussionTabManager(tabs, store);
+
+        const result = await manager.open(40, '456');
+
+        expect(store.remove).toHaveBeenCalledWith(40);
+        expect(store.set).toHaveBeenCalledWith(40, 92);
+        expect(result).toEqual({ mode: 'adjacent_tab', tabId: 92 });
+    });
+
+    it('keeps reusing a native Split View pane even after it left Hacker News', async () => {
+        const tabs: TabClient = {
+            get: vi.fn(async (id) => (
+                id === 40
+                    ? { id, index: 4, windowId: 2, splitViewId: 7 }
+                    : {
+                            id, index: 5, windowId: 2, splitViewId: 7, url: 'https://example.com/article',
+                        }
+            )),
+            create: vi.fn(),
+            update: vi.fn(async (id) => ({ id, index: 5, windowId: 2, splitViewId: 7 })),
+        };
+        const store = createStore(91);
+        const manager = new DiscussionTabManager(tabs, store);
+
+        const result = await manager.open(40, '456');
+
+        expect(tabs.update).toHaveBeenCalledWith(91, {
+            active: true,
+            url: 'https://news.ycombinator.com/item?id=456',
+        });
+        expect(tabs.create).not.toHaveBeenCalled();
+        expect(result).toEqual({ mode: 'split_view', tabId: 91 });
     });
 
     it('creates a replacement when the remembered tab no longer exists', async () => {
@@ -161,7 +233,11 @@ describe('DiscussionTabManager', () => {
     it('propagates an update failure and preserves the remembered association', async () => {
         const updateError = new Error('Cannot update tab');
         const tabs: TabClient = {
-            get: vi.fn(async (id) => ({ id, index: id === 40 ? 4 : 5, windowId: 2 })),
+            get: vi.fn(async (id) => (
+                id === 40
+                    ? { id, index: 4, windowId: 2 }
+                    : { id, index: 5, windowId: 2, url: 'https://news.ycombinator.com/item?id=123' }
+            )),
             create: vi.fn(),
             update: vi.fn(async () => Promise.reject(updateError)),
         };

@@ -21,6 +21,7 @@ Hacker News is the only discussion source in the MVP. Chrome is the first implem
 - [MVP product brief](docs/product-brief.md)
 - [HNewhere reference analysis](docs/hnewhere-reference.md)
 - [URL matching and Hacker News lookup contract](docs/url-matching.md)
+- [Lifecycle after tab close or navigation](docs/lifecycle.md)
 - [Priority locales](docs/locales.md)
 - [Development and Chrome loading](docs/development.md)
 - [Store listing and visual assets](docs/store-listing.md)
