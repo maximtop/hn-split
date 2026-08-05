@@ -70,11 +70,14 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
         }
 
         if (request.type === BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION) {
-            return { ok: true, result: { content: await selectSidePanelDiscussion(request.itemId) } };
+            return {
+                ok: true,
+                result: { content: await selectSidePanelDiscussion(request.itemId, request.windowId) },
+            };
         }
 
         if (request.type === BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION) {
-            return { ok: true, result: { content: await getSidePanelContent() } };
+            return { ok: true, result: { content: await getSidePanelContent(request.windowId) } };
         }
 
         return {

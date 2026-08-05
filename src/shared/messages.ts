@@ -114,10 +114,12 @@ const articleClickSettingGetRequestSchema = v.object({
 const sidePanelSelectRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION),
     itemId: positiveItemIdSchema,
+    windowId: nonNegativeSafeIntegerSchema,
 });
 
 const sidePanelGetRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION),
+    windowId: nonNegativeSafeIntegerSchema,
 });
 
 const backgroundRequestSchema = v.variant('type', [
@@ -162,12 +164,13 @@ export type ArticleClickSettingSetRequest = v.InferOutput<typeof articleClickSet
 export type ArticleClickSettingGetRequest = v.InferOutput<typeof articleClickSettingGetRequestSchema>;
 
 /**
- * Requests that one validated discussion becomes the side panel selection.
+ * Requests that one validated discussion becomes one window's side panel
+ * selection.
  */
 export type SidePanelSelectRequest = v.InferOutput<typeof sidePanelSelectRequestSchema>;
 
 /**
- * Requests the discussion currently selected for the side panel.
+ * Requests the discussion currently selected for one window's side panel.
  */
 export type SidePanelGetRequest = v.InferOutput<typeof sidePanelGetRequestSchema>;
 

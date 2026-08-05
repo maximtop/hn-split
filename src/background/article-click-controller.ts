@@ -71,6 +71,7 @@ export function handleArticleClickMessage(
         message.itemId,
         {
             ...(sender.tab?.id === undefined ? {} : { tabId: sender.tab.id }),
+            ...(sender.tab?.windowId === undefined ? {} : { windowId: sender.tab.windowId }),
             ...(sender.origin === undefined ? {} : { origin: sender.origin }),
         },
         HN_ORIGIN,
@@ -79,9 +80,9 @@ export function handleArticleClickMessage(
             readEnabled: getArticleClickDiscussionEnabled,
             openSidePanel,
             // Routed through the shared owner so a clicked story supersedes any
-            // link lookup still in flight instead of racing it.
-            setSelection: async (itemId) => {
-                await selectSidePanelDiscussion(itemId);
+            // link lookup still in flight in the same window instead of racing it.
+            setSelection: async (itemId, windowId) => {
+                await selectSidePanelDiscussion(itemId, windowId);
             },
             warn: logWarning,
         },

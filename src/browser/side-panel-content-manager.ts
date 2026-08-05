@@ -45,7 +45,8 @@ export interface SidePanelContentDependencies {
 }
 
 /**
- * Owns the single side panel selection shared by every entry point.
+ * Owns one window's side panel selection, shared by every entry point that
+ * targets that window.
  *
  * The panel displays one thing at a time, so a newer request must always win:
  * each request takes the next generation, cancels the lookup of the previous
@@ -119,6 +120,15 @@ export class SidePanelContentManager {
             kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE,
             reason: HN_LOOKUP_STATUS.ERROR,
         });
+    }
+
+    /**
+     * Invalidates every request and queued write owned by this manager, so a
+     * lookup that resolves after the window closed cannot write its selection
+     * back into storage.
+     */
+    discard(): void {
+        this.beginRequest();
     }
 
     /**

@@ -7,6 +7,10 @@ export interface ArticleClickSender {
      */
     tabId?: number;
     /**
+     * Contains the browser window that tab belongs to, when known.
+     */
+    windowId?: number;
+    /**
      * Contains the origin of the sending document, when Chrome reports one.
      */
     origin?: string;
@@ -34,10 +38,11 @@ export interface ArticleClickOpenDependencies {
      */
     openSidePanel(tabId: number): Promise<void>;
     /**
-     * Records the discussion the side panel should display.
+     * Records the discussion the clicking window's side panel should display.
      * @param itemId - The validated Hacker News item identifier.
+     * @param windowId - The browser window the click came from.
      */
-    setSelection(itemId: string): Promise<void>;
+    setSelection(itemId: string, windowId: number): Promise<void>;
     /**
      * Reports a non-fatal failure without exposing it to the page.
      * @param message - The stable diagnostic text.
@@ -66,8 +71,8 @@ export function respondToArticleClick(
     expectedOrigin: string,
     dependencies: ArticleClickOpenDependencies,
 ): void {
-    const { tabId } = sender;
-    if (tabId === undefined || sender.origin !== expectedOrigin) {
+    const { tabId, windowId } = sender;
+    if (tabId === undefined || windowId === undefined || sender.origin !== expectedOrigin) {
         return;
     }
     const cached = dependencies.cachedEnabled();
@@ -80,7 +85,7 @@ export function respondToArticleClick(
     void (async () => {
         const enabled = cached ?? await dependencies.readEnabled();
         if (enabled) {
-            await dependencies.setSelection(itemId);
+            await dependencies.setSelection(itemId, windowId);
         }
     })().catch((error: unknown) => {
         dependencies.warn('recording the clicked discussion failed.', error);

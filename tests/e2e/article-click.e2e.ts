@@ -4,7 +4,7 @@ import type { BrowserContext } from '@playwright/test';
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { HN_ORIGIN } from '../../src/domain/hn';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../../src/shared/content-scripts';
-import { SESSION_STORAGE_KEY } from '../../src/shared/storage-keys';
+import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
 import {
     ARTICLE_ORIGIN,
     launchExtensionContext,
@@ -74,14 +74,18 @@ async function registeredScriptIds(extension: ExtensionContext): Promise<string[
 
 /**
  * Reads the item identifier of the discussion currently shown in the panel, or
- * undefined while the panel has nothing to show.
+ * undefined while the panel has nothing to show. The selection is stored per
+ * window and the test runs in a single window, so the one entry under the
+ * prefix is the selection of that window.
  * @param extension - The launched extension context.
  */
 async function sidePanelSelection(extension: ExtensionContext): Promise<unknown> {
-    return extension.worker.evaluate(async (key) => {
-        const content: unknown = (await chrome.storage.session.get(key))[key];
+    return extension.worker.evaluate(async (prefix) => {
+        const stored = await chrome.storage.session.get(null);
+        const key = Object.keys(stored).find((candidate) => candidate.startsWith(prefix));
+        const content: unknown = key === undefined ? undefined : stored[key];
         return (content as { itemId?: string } | undefined)?.itemId;
-    }, SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION);
+    }, SESSION_STORAGE_KEY_PREFIX.SIDE_PANEL_DISCUSSION);
 }
 
 /**

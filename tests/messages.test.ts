@@ -32,6 +32,11 @@ describe('isBackgroundRequest', () => {
         { type: 'set_availability_setting', enabled: 'yes' },
         { type: 'set_article_click_setting' },
         { type: 'set_article_click_setting', enabled: 'yes' },
+        { type: 'select_side_panel_discussion', itemId: '123' },
+        { type: 'select_side_panel_discussion', itemId: '123', windowId: -1 },
+        { type: 'select_side_panel_discussion', itemId: '123', windowId: 1.5 },
+        { type: 'get_side_panel_discussion' },
+        { type: 'get_side_panel_discussion', windowId: '4' },
         { type: 'open_discussion_for_click', itemId: '123' },
     ])('rejects malformed request %#', (request) => {
         expect(isBackgroundRequest(request)).toBe(false);
@@ -48,6 +53,9 @@ describe('isBackgroundRequest', () => {
         { type: 'set_article_click_setting', enabled: true },
         { type: 'set_article_click_setting', enabled: false },
         { type: 'get_article_click_setting' },
+        { type: 'select_side_panel_discussion', itemId: '123', windowId: 0 },
+        { type: 'select_side_panel_discussion', itemId: '123', windowId: 42 },
+        { type: 'get_side_panel_discussion', windowId: 4 },
     ])('accepts valid request %#', (request) => {
         expect(isBackgroundRequest(request)).toBe(true);
     });

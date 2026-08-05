@@ -1,5 +1,5 @@
 import { ensureOpenInSplitMenu } from '../browser/open-in-split-menu';
-import { SidePanelContentManager } from '../browser/side-panel-content-manager';
+import { SidePanelContentRouter } from '../browser/side-panel-content-router';
 import { OPEN_IN_SPLIT_MENU } from '../shared/context-menus';
 import { logWarning } from '../shared/logger';
 import type { SidePanelContent } from '../shared/side-panel-content';
@@ -7,17 +7,20 @@ import { lookupArticle } from './article-lookup';
 import {
     contextMenuRegistry,
     getSidePanelContent,
+    listSidePanelContent,
     openSidePanel,
+    removeSidePanelContent,
     setSidePanelContent,
     tabs,
 } from './chrome-adapters';
 
 /**
- * Owns the single side panel selection for every entry point, so the popup,
- * the article-click flow, and the link context menu can never leave the panel
- * showing the result of a request the user has already replaced.
+ * Owns the per-window side panel selections for every entry point, so the
+ * popup, the article-click flow, and the link context menu can never leave a
+ * panel showing the result of a request the user has already replaced — and a
+ * selection made in one window never touches what another window displays.
  */
-const panelContent = new SidePanelContentManager({
+const panelContent = new SidePanelContentRouter({
     openSidePanel,
     navigate: async (tabId, url) => {
         // The tab is the one the user right-clicked in, so it is already the
@@ -27,6 +30,8 @@ const panelContent = new SidePanelContentManager({
     },
     readContent: getSidePanelContent,
     writeContent: setSidePanelContent,
+    removeContent: removeSidePanelContent,
+    listContent: listSidePanelContent,
     lookup: async (url, signal) => lookupArticle(url, null, signal),
     warn: logWarning,
 });
@@ -42,18 +47,23 @@ export function handleOpenInSplitClick(
     tab: chrome.tabs.Tab | undefined,
 ): void {
     const tabId = tab?.id;
-    if (info.menuItemId !== OPEN_IN_SPLIT_MENU.ID || info.linkUrl === undefined || tabId === undefined) {
+    const windowId = tab?.windowId;
+    if (info.menuItemId !== OPEN_IN_SPLIT_MENU.ID
+        || info.linkUrl === undefined
+        || tabId === undefined
+        || windowId === undefined) {
         return;
     }
-    panelContent.openLink(info.linkUrl, tabId);
+    panelContent.openLink(info.linkUrl, tabId, windowId);
 }
 
 /**
- * Displays one already known discussion in the side panel.
+ * Displays one already known discussion in one window's side panel.
  * @param itemId - The validated Hacker News item identifier to display.
+ * @param windowId - The browser window whose panel shows the discussion.
  */
-export async function selectSidePanelDiscussion(itemId: string): Promise<SidePanelContent> {
-    return panelContent.showDiscussion(itemId);
+export async function selectSidePanelDiscussion(itemId: string, windowId: number): Promise<SidePanelContent> {
+    return panelContent.showDiscussion(itemId, windowId);
 }
 
 /**
@@ -65,8 +75,16 @@ export async function reconcileOpenInSplitMenu(): Promise<void> {
 }
 
 /**
- * Resolves a lookup state left behind by a worker that stopped mid-request.
+ * Resolves lookup states left behind by a worker that stopped mid-request.
  */
 export async function normalizeSidePanelContent(): Promise<void> {
     await panelContent.normalizeStartupContent();
+}
+
+/**
+ * Discards one closed window's selection and its in-flight work.
+ * @param windowId - The browser window that was closed.
+ */
+export async function forgetSidePanelWindow(windowId: number): Promise<void> {
+    await panelContent.forgetWindow(windowId);
 }
