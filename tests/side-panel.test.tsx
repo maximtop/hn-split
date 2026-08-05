@@ -5,39 +5,48 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { SidePanelApp } from '../src/side-panel/side-panel-app';
 import { discussionUrl } from '../src/domain/hn';
-import { SIDE_PANEL_READY } from '../src/shared/messages';
+import { BACKGROUND_REQUEST_TYPE, SIDE_PANEL_READY } from '../src/shared/messages';
 import type { SidePanelContent } from '../src/shared/side-panel-content';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const ITEM_ID = '424242';
+const WINDOW_ID = 3;
 
 /**
- * Stands in for the runtime port the panel holds open for its whole lifetime.
+ * Exposes the seams of the installed Chrome double.
  */
-interface FakePort {
+interface FakeChrome {
     /**
-     * Delivers one background message to the panel's listener.
+     * Delivers one background message to the panel's port listener.
      */
     emit: (message: { type: string }) => void;
+    /**
+     * Records every runtime request the panel sends.
+     */
+    sendMessage: ReturnType<typeof vi.fn>;
 }
 
 /**
  * Installs a Chrome double that answers with one panel content value.
  * @param content - The content the background worker reports.
  */
-function installChrome(content: SidePanelContent | null): FakePort {
+function installChrome(content: SidePanelContent | null): FakeChrome {
     const listeners: Array<(message: { type: string }) => void> = [];
+    const sendMessage = vi.fn(async () => ({ ok: true, result: { content } }));
     vi.stubGlobal('chrome', {
         runtime: {
             connect: vi.fn(() => ({
                 onMessage: { addListener: (listener: (message: { type: string }) => void) => listeners.push(listener) },
                 disconnect: vi.fn(),
             })),
-            sendMessage: vi.fn(async () => ({ ok: true, result: { content } })),
+            sendMessage,
         },
         storage: {
             session: { onChanged: { addListener: vi.fn(), removeListener: vi.fn() } },
+        },
+        windows: {
+            getCurrent: vi.fn(async () => ({ id: WINDOW_ID })),
         },
     });
     return {
@@ -46,6 +55,7 @@ function installChrome(content: SidePanelContent | null): FakePort {
                 listener(message);
             }
         },
+        sendMessage,
     };
 }
 
@@ -97,6 +107,18 @@ describe('SidePanelApp', () => {
 
         expect(panel.container.querySelector('[role="status"]')?.textContent).toContain(message);
         expect(panel.container.querySelector('iframe')).toBeNull();
+        await panel.unmount();
+    });
+
+    it('asks the background for its own window\'s selection', async () => {
+        const fake = installChrome({ kind: 'discussion', itemId: ITEM_ID });
+
+        const panel = await renderPanel();
+
+        expect(fake.sendMessage).toHaveBeenCalledExactlyOnceWith({
+            type: BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION,
+            windowId: WINDOW_ID,
+        });
         await panel.unmount();
     });
 

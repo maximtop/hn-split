@@ -14,6 +14,7 @@ import { logWarning } from '../shared/logger';
 import { cssVariablesResolver, theme } from '../shared/theme';
 import { SIDE_PANEL_CONTENT_KIND } from '../shared/side-panel-content';
 import type { SidePanelContent, SidePanelUnavailableReason } from '../shared/side-panel-content';
+import { sidePanelContentKey } from '../shared/storage-keys';
 import {
     BACKGROUND_REQUEST_TYPE,
     SIDE_PANEL_PORT,
@@ -48,11 +49,13 @@ interface SidePanelState {
 }
 
 /**
- * Reads what the background worker asks this panel to display.
+ * Reads what the background worker asks this window's panel to display.
+ * @param windowId - The browser window this panel belongs to.
  */
-async function readContent(): Promise<SidePanelContent | null> {
+async function readContent(windowId: number): Promise<SidePanelContent | null> {
     const response: unknown = await chrome.runtime.sendMessage({
         type: BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION,
+        windowId,
     });
     if (!isSidePanelContentResponse(response) || !response.ok) {
         return null;
@@ -103,9 +106,13 @@ export function SidePanelApp(): React.JSX.Element {
 
     useEffect(() => {
         let cancelled = false;
+        let windowId: number | null = null;
         const load = async (): Promise<void> => {
+            if (windowId === null) {
+                return;
+            }
             try {
-                const content = await readContent();
+                const content = await readContent(windowId);
                 if (!cancelled) {
                     setState((current) => ({ ...current, content }));
                 }
@@ -113,11 +120,27 @@ export function SidePanelApp(): React.JSX.Element {
                 logWarning('reading the side panel content failed.', error);
             }
         };
-        void load();
-        const onChanged = (): void => {
-            void load();
+        const onChanged = (changes: Record<string, chrome.storage.StorageChange>): void => {
+            if (windowId !== null && sidePanelContentKey(windowId) in changes) {
+                void load();
+            }
         };
+        // Registered before the window is known: the listener no-ops until
+        // then, and registering late could miss the selection this panel was
+        // opened for.
         chrome.storage.session.onChanged.addListener(onChanged);
+        void (async () => {
+            try {
+                const current = await chrome.windows.getCurrent();
+                if (cancelled || current.id === undefined) {
+                    return;
+                }
+                windowId = current.id;
+                await load();
+            } catch (error) {
+                logWarning('resolving the panel window failed.', error);
+            }
+        })();
         return () => {
             cancelled = true;
             chrome.storage.session.onChanged.removeListener(onChanged);
