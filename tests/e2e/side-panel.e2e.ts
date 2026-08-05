@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
+import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
 import { launchExtensionContext, openExtensionPage } from './extension-context';
 import type { ExtensionContext } from './extension-context';
 
@@ -30,11 +31,17 @@ test('installs the framing exception only while the side panel is open', async (
         const rulesBefore = await worker.evaluate(async () => chrome.declarativeNetRequest.getDynamicRules());
         expect(rulesBefore).toEqual([]);
 
-        await worker.evaluate(async (itemId) => {
+        // The selection is stored per window; the panel page opens in the only
+        // window of this test context.
+        await worker.evaluate(async ({ itemId, prefix }) => {
+            const [window] = await chrome.windows.getAll();
+            if (window?.id === undefined) {
+                throw new Error('No browser window to seed the panel selection for');
+            }
             await chrome.storage.session.set({
-                side_panel_discussion: { kind: 'discussion', itemId },
+                [`${prefix}${window.id}`]: { kind: 'discussion', itemId },
             });
-        }, ITEM_ID);
+        }, { itemId: ITEM_ID, prefix: SESSION_STORAGE_KEY_PREFIX.SIDE_PANEL_DISCUSSION });
 
         const panel = await openExtensionPage(extension, 'side-panel.html');
 

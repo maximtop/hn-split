@@ -227,10 +227,18 @@ export function App(): React.JSX.Element {
         // is opened first and the selection is recorded right after; the panel
         // reads it once its own page loads.
         void chrome.sidePanel.open({ tabId: state.articleTabId });
-        void sendMessage({
-            type: BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION,
-            itemId,
-        }).catch((error: unknown) => {
+        void (async () => {
+            // The popup lives in the same window as the article tab it inspected.
+            const { id: windowId } = await chrome.windows.getCurrent();
+            if (windowId === undefined) {
+                return;
+            }
+            await sendMessage({
+                type: BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION,
+                itemId,
+                windowId,
+            });
+        })().catch((error: unknown) => {
             logWarning('selecting the side panel discussion failed.', error);
         });
     };

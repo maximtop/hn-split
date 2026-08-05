@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { OPEN_IN_SPLIT_MENU } from '../../src/shared/context-menus';
-import { SESSION_STORAGE_KEY } from '../../src/shared/storage-keys';
+import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
 import { ARTICLE_ORIGIN, installLookupFixtures, launchExtensionContext, openExtensionPage } from './extension-context';
 import type { ExtensionContext } from './extension-context';
 
@@ -20,14 +20,17 @@ const HIT = {
 };
 
 /**
- * Reads what the side panel is currently asked to display.
+ * Reads what the side panel is currently asked to display. The selection is
+ * stored per window and the test runs in a single window, so the one entry
+ * under the prefix is the selection of that window.
  * @param extension - The launched extension context.
  */
 async function panelContent(extension: ExtensionContext): Promise<unknown> {
-    return extension.worker.evaluate(
-        async (key) => (await chrome.storage.session.get(key))[key],
-        SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION,
-    );
+    return extension.worker.evaluate(async (prefix) => {
+        const stored = await chrome.storage.session.get(null);
+        const key = Object.keys(stored).find((candidate) => candidate.startsWith(prefix));
+        return key === undefined ? undefined : stored[key];
+    }, SESSION_STORAGE_KEY_PREFIX.SIDE_PANEL_DISCUSSION);
 }
 
 /**

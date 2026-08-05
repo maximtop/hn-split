@@ -205,6 +205,27 @@ describe('SidePanelContentManager.showDiscussion', () => {
     });
 });
 
+describe('SidePanelContentManager.discard', () => {
+    it('keeps a discarded lookup from writing its result back', async () => {
+        const deps = dependencies();
+        let signal: AbortSignal | undefined;
+        vi.mocked(deps.lookup).mockImplementationOnce(async (_url, lookupSignal) => {
+            signal = lookupSignal;
+            await new Promise((resolve) => setTimeout(resolve, 10));
+            return foundResult;
+        });
+        const manager = new SidePanelContentManager(deps);
+
+        manager.openLink(LINK_URL, TAB_ID);
+        await settle();
+        manager.discard();
+        await new Promise((resolve) => setTimeout(resolve, 20));
+
+        expect(signal?.aborted).toBe(true);
+        expect(deps.writes).toEqual([PENDING]);
+    });
+});
+
 describe('SidePanelContentManager.normalizeStartupContent', () => {
     it('resolves a pending state left behind by a stopped worker', async () => {
         const deps = dependencies(PENDING);

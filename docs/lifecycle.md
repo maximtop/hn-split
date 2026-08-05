@@ -12,7 +12,7 @@ These rules bound every row of the matrices below:
 3. **Staleness is resolved lazily at the click.** Stored state is validated against the browser's live answer (`tabs.get`) at the moment it is consulted, not tracked with navigation listeners. No listener watches tab URLs.
 4. **A repurposed tab is the user's tab again.** Reuse must never navigate a tab that stopped serving as the discussion pane. A tab still on Hacker News keeps the role; a native Chrome Split View pairing with the article is the user's standing request to keep the pane regardless of where they navigated it.
 5. **Session-only state is a feature.** Associations and the panel selection live in `chrome.storage.session` and die with the browser session. Persisting them would require re-matching restored tabs by URL, which is retained browsing history and contradicts privacy by architecture.
-6. **Eager cleanup applies only to extension-owned resources** — the association keyed by a closed article tab, the side panel framing exception, and impossible states such as a lookup left `pending` by a stopped worker.
+6. **Eager cleanup applies only to extension-owned resources** — the association keyed by a closed article tab, a closed window's panel selection, the side panel framing exception, and impossible states such as a lookup left `pending` by a stopped worker.
 
 ## Flow A — discussion tab (popup click, adjacent tab or native Split View)
 
@@ -33,13 +33,16 @@ The pairing is **tab-scoped, not article-scoped**: the discussion tab is "this r
 
 The panel is an **independent reading surface the user summoned**; it is not bound to the tab that filled it. "Open the discussion, close the article, finish the comments" is a supported pattern, so tab lifecycle never clears the panel.
 
+The selection is **scoped per window** (`side_panel_discussion:<windowId>`), matching Chrome's one-panel-per-window model: what happens in one window never changes what another window's panel is showing, and "the newest explicit action wins" applies within a window.
+
 | Event | Stored selection | What the user sees |
 | --- | --- | --- |
 | Originating tab closed or navigated | Preserved | The panel keeps the discussion until the user replaces or closes it |
 | Panel switched to another extension or closed (indistinguishable: both are a port disconnect) | Preserved; only the framing exception is released | Reopening the panel shows the same discussion |
-| Worker stopped mid-lookup | `pending` normalized to `unavailable` on worker start | Never an infinite spinner |
+| Worker stopped mid-lookup | `pending` normalized to `unavailable` on worker start, in every window that has one | Never an infinite spinner |
+| Window closed | Discarded (`windows.onRemoved`), including any lookup still in flight for it | Nothing — the surface itself is gone |
 | Session close and restore | Gone with session storage | The panel opens in its default empty state |
-| New selection (story click, Open in Split, popup) | Replaced — the newest explicit action wins, even over an in-flight lookup | The panel always shows the most recent request |
+| New selection (story click, Open in Split, popup) | Replaced within its window — the newest explicit action there wins, even over an in-flight lookup | Each window's panel shows that window's most recent request |
 
 ## Rejected alternatives
 
@@ -48,14 +51,12 @@ The panel is an **independent reading surface the user summoned**; it is not bou
 - **Eager reverse cleanup when the discussion tab closes.** Tab IDs are unique within a browser session, so a stale entry can never resolve to the wrong tab; lazy validation at the click is equivalent and simpler. Rejected.
 - **Clearing or annotating the panel when its originating tab closes.** Destroys or clutters a surface the user may still be reading, and requires binding panel content to a tab ID that session restore invalidates. Rejected; revisit only if alpha feedback shows confusion.
 - **Persisting associations or the panel selection across restarts.** Requires re-matching by URL, that is retained history. Rejected.
-
-## Known follow-up
-
-The panel selection is global across windows, so a selection made in one window replaces what another window's panel is showing. The agreed target model keys the selection by `windowId`; this is tracked as its own task and does not change the rules above.
+- **A single global panel selection.** The original MVP shape: simple, but a click in one window silently replaced what another window's panel was showing — the one real least-surprise violation in the design. Retired in favor of per-window keys.
 
 ## Verification
 
 - Reuse, replacement, repurposed-tab detach, the Split View exception, and per-click serialization: [tests/open-discussion.test.ts](../tests/open-discussion.test.ts).
 - The Hacker News origin predicate: [tests/hn.test.ts](../tests/hn.test.ts).
 - Newest-selection-wins and the `pending` normalization: [tests/side-panel-content-manager.test.ts](../tests/side-panel-content-manager.test.ts).
-- Association cleanup on article-tab close and the framing exception's lifetime are wired in [src/background.ts](../src/background.ts); the framing lifetime is covered by [tests/side-panel-framing.test.ts](../tests/side-panel-framing.test.ts).
+- Per-window routing, cross-window isolation, startup normalization across windows, and closed-window cleanup: [tests/side-panel-content-router.test.ts](../tests/side-panel-content-router.test.ts).
+- Association cleanup on article-tab close and window-close cleanup are wired in [src/background.ts](../src/background.ts); the framing lifetime is covered by [tests/side-panel-framing.test.ts](../tests/side-panel-framing.test.ts).
