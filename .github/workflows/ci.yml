@@ -4,6 +4,9 @@ on:
   push:
     branches: [master]
   pull_request:
+  # Manual runs build the branch head itself (not a synthetic merge commit),
+  # which is what package-reproduction comparisons need.
+  workflow_dispatch:
 
 permissions:
   contents: read
