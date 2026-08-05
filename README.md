@@ -24,7 +24,7 @@ Hacker News is the only discussion source in the MVP. Chrome is the first implem
 - [Lifecycle after tab close or navigation](docs/lifecycle.md)
 - [Priority locales](docs/locales.md)
 - [Development and Chrome loading](docs/development.md)
-- [Store listing and visual assets](docs/store-listing.md)
+- [Store listing master copy and visual assets](docs/store-listing.md)
 - [Privacy](PRIVACY.md)
 
 ## Development
