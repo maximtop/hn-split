@@ -1,0 +1,141 @@
+name: Release
+
+# Two entry points, one pipeline:
+# - Pushing a signed tag vX.Y.Z builds, verifies, and publishes a GitHub
+#   release with the store packages, checksums, and provenance.
+# - Manual dispatch runs the identical pipeline as a dry run: it builds and
+#   verifies everything and uploads workflow artifacts, but publishes
+#   nothing and skips tag checks.
+# Secrets are referenced by name only; no store credentials live in this
+# repository or its workflows. Publishing to the browser stores stays a
+# manual step documented in docs/release.md.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      # Creating the GitHub release; dry runs never write.
+      contents: write
+      # Signed build provenance, available once the repository is public.
+      id-token: write
+      attestations: write
+    env:
+      # Every run that is not a signed-tag push is a dry run.
+      DRY_RUN: ${{ github.event_name != 'push' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify the tag signature against the owner's GitHub signing keys
+        if: env.DRY_RUN == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash scripts/verify-signed-tag.sh "$GITHUB_REF_NAME" "$GITHUB_REPOSITORY_OWNER"
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Read the package version
+        run: echo "PACKAGE_VERSION=$(node -p 'require("./package.json").version')" >> "$GITHUB_ENV"
+
+      - name: Require the tag to match package.json
+        if: env.DRY_RUN == 'false'
+        run: |
+          if [ "v${PACKAGE_VERSION}" != "${GITHUB_REF_NAME}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package.json version ${PACKAGE_VERSION}." >&2
+            exit 1
+          fi
+
+      - name: Extract the release notes from CHANGELOG.md
+        run: |
+          if [ "$DRY_RUN" = "true" ]; then
+            node scripts/release-notes.mjs "$PACKAGE_VERSION" --allow-missing > "$RUNNER_TEMP/release-notes.md"
+          else
+            node scripts/release-notes.mjs "$PACKAGE_VERSION" > "$RUNNER_TEMP/release-notes.md"
+          fi
+          cat "$RUNNER_TEMP/release-notes.md"
+
+      - name: Run the quality gates
+        run: pnpm check
+
+      - name: Build the packages
+        run: pnpm package --require-clean
+
+      # A second, completely fresh checkout in a different directory proves
+      # the "clean checkout produces identical packages" guarantee on every
+      # release and every dry run.
+      - name: Check out a second copy for the reproducibility comparison
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: repro-checkout
+          persist-credentials: false
+
+      - name: Build the packages again from the clean checkout
+        working-directory: repro-checkout
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm package --require-clean
+
+      - name: Require both package sets to be identical
+        run: |
+          diff build/artifacts/SHA256SUMS repro-checkout/build/artifacts/SHA256SUMS
+          for artifact in build/artifacts/*.zip; do
+            cmp "$artifact" "repro-checkout/build/artifacts/$(basename "$artifact")"
+          done
+          echo "Two clean checkouts produced identical packages." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: hn-split-packages
+          path: build/artifacts/
+          if-no-files-found: error
+
+      # Signed provenance requires a public repository on the free plan; the
+      # unsigned provenance.json artifact is produced unconditionally.
+      - name: Attest build provenance
+        if: env.DRY_RUN == 'false' && !github.event.repository.private
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        with:
+          subject-path: build/artifacts/*.zip
+
+      - name: Publish the GitHub release
+        if: env.DRY_RUN == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" build/artifacts/* \
+            --title "HN Split $GITHUB_REF_NAME" \
+            --notes-file "$RUNNER_TEMP/release-notes.md"
+
+      - name: Write the checksum summary
+        if: always()
+        run: |
+          if [ -f build/artifacts/SHA256SUMS ]; then
+            {
+              if [ "$DRY_RUN" = "true" ]; then
+                echo "## Dry run — nothing was published"
+              else
+                echo "## Release $GITHUB_REF_NAME"
+              fi
+              echo '```'
+              cat build/artifacts/SHA256SUMS
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi

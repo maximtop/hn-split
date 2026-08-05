@@ -10,6 +10,8 @@
   "scripts": {
     "dev": "rspack build --mode development",
     "build": "rspack build --mode production",
+    "package": "node scripts/package.mjs",
+    "release:notes": "node scripts/release-notes.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "locales:validate": "node scripts/validate-locales.mjs",
@@ -47,6 +49,7 @@
     "eslint": "10.8.0",
     "eslint-plugin-jsdoc": "63.3.3",
     "eslint-plugin-react-hooks": "7.1.1",
+    "fflate": "0.8.3",
     "globals": "17.4.0",
     "jsdom": "30.0.1",
     "typescript": "6.0.3",

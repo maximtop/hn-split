@@ -21,6 +21,18 @@ pnpm verify
 
 `pnpm locales:validate` verifies that every locale has the English message keys and that placeholders and tags are structurally valid according to `@adguard/translate`.
 
+## Packaging
+
+`pnpm package` builds the store packages for every target into `build/artifacts`: Chrome, Edge, and Firefox zips, a source archive, `SHA256SUMS`, and `provenance.json`. Packages are byte-reproducible for a given commit; see [release.md](release.md) for the guarantees and the release process.
+
+The manifest in every build is generated: `package.json` supplies the version (the base `public/manifest.json` has no `version` key on purpose), and the Firefox target gets structural rewrites (event-page background, `options_ui`, gecko id, no `sidePanel`). Two environment variables drive single-target builds when needed:
+
+```bash
+TARGET_BROWSER=firefox OUTPUT_PATH=build/firefox pnpm build
+```
+
+`TARGET_BROWSER` defaults to `chrome` and `OUTPUT_PATH` to `dist`, so plain `pnpm build` remains the Chrome development build that `chrome://extensions` and the e2e suite load.
+
 ## Load in Chrome
 
 1. Run `pnpm build`.

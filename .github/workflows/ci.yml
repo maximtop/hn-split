@@ -13,10 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24
+          node-version-file: .node-version
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
@@ -28,3 +30,31 @@ jobs:
           path: test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the store packages
+        run: pnpm package
+      # Cheap determinism guard on every change; the release workflow runs
+      # the stronger two-clean-checkouts comparison.
+      - name: Rebuild and require identical checksums
+        run: |
+          cp build/artifacts/SHA256SUMS "$RUNNER_TEMP/first-run-SHA256SUMS"
+          pnpm package
+          diff "$RUNNER_TEMP/first-run-SHA256SUMS" build/artifacts/SHA256SUMS
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: hn-split-packages
+          path: build/artifacts/
+          retention-days: 7
+          if-no-files-found: error

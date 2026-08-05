@@ -7,6 +7,7 @@
 - Do not use undocumented Chrome APIs, and do not re-render Hacker News inside a page the user is reading. The side panel may frame the real Hacker News site, but only on these terms: the framing exception lives exactly as long as the panel is open, covers only Hacker News sub-frames, and is disclosed on the options page and in `PRIVACY.md`.
 - Keep URL matching conservative and covered by tests.
 - Do not add telemetry, a backend, credentials, or authenticated HN actions.
+- Keep packaging deterministic (`docs/release.md`): the version lives only in `package.json`, manifests are generated per browser target, and workflows reference secrets by name only — never commit credentials or store keys.
 - Name project files with lowercase kebab-case except conventional tool files such as `README.md` and `AGENTS.md`.
 - Replace repeated or domain-significant literal values with named constants; do not introduce unexplained magic values.
 - Write descriptive JSDoc for every interface, each interface property or method, every function declaration, and every function argument.
