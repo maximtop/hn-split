@@ -296,6 +296,18 @@ export function isValidItemId(itemId: string): boolean {
 export const HN_ORIGIN = 'https://news.ycombinator.com';
 
 /**
+ * Determines whether a URL belongs to the Hacker News web origin.
+ * @param url - The untrusted URL value to inspect.
+ */
+export function isHnUrl(url: string): boolean {
+    try {
+        return new URL(url).origin === HN_ORIGIN;
+    } catch {
+        return false;
+    }
+}
+
+/**
  * Builds the canonical Hacker News discussion URL for a validated item.
  * @param itemId - The validated Hacker News item identifier.
  */

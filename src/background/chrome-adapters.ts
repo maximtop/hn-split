@@ -19,6 +19,7 @@ function toTabSummary(tab: chrome.tabs.Tab): TabSummary {
         index: tab.index,
         windowId: tab.windowId,
         ...(tab.splitViewId === undefined ? {} : { splitViewId: tab.splitViewId }),
+        ...(tab.url === undefined ? {} : { url: tab.url }),
     };
 }
 

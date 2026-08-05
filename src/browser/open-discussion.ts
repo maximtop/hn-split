@@ -1,4 +1,4 @@
-import { discussionUrl } from '../domain/hn';
+import { discussionUrl, isHnUrl } from '../domain/hn';
 import { DISCUSSION_OPEN_MODE } from '../shared/messages';
 import type { OpenDiscussionResult } from '../shared/messages';
 
@@ -22,6 +22,10 @@ export interface TabSummary {
      * Contains Chrome's Split View identifier when available.
      */
     splitViewId?: number;
+    /**
+     * Contains the tab's committed URL when Chrome reports one.
+     */
+    url?: string;
 }
 
 /**
@@ -122,6 +126,21 @@ export class DiscussionTabManager {
             && article.splitViewId === discussion.splitViewId;
     }
 
+    /**
+     * Determines whether the remembered tab still serves as the discussion
+     * pane. A tab that stayed on Hacker News keeps that role, and a native
+     * Split View pairing with the article is the user's standing request to
+     * keep the pane regardless of where they navigated it. Any other
+     * navigation means the user repurposed the tab, and navigating it back
+     * would take the tab over instead of serving it.
+     * @param article - The article tab the pane belongs to.
+     * @param discussion - The remembered discussion tab to evaluate.
+     */
+    private isStillDiscussionPane(article: TabSummary, discussion: TabSummary): boolean {
+        return this.isSameSplitView(article, discussion)
+            || (discussion.url !== undefined && isHnUrl(discussion.url));
+    }
+
     private async performOpen(articleTabId: number, itemId: string): Promise<OpenDiscussionResult> {
         const article = await this.tabs.get(articleTabId);
         const url = discussionUrl(itemId);
@@ -134,7 +153,9 @@ export class DiscussionTabManager {
             } catch {
                 // The user closed the remembered tab. Create a new adjacent tab below.
             }
-            if (rememberedTab !== undefined && rememberedTab.windowId === article.windowId) {
+            if (rememberedTab !== undefined
+                && rememberedTab.windowId === article.windowId
+                && this.isStillDiscussionPane(article, rememberedTab)) {
                 await this.tabs.update(rememberedTabId, { active: true, url });
                 return {
                     mode: this.isSameSplitView(article, rememberedTab)
