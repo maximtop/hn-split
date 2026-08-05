@@ -23,7 +23,7 @@ Hacker News is the only discussion source in the MVP. Chrome is the first implem
 - [URL matching and Hacker News lookup contract](docs/url-matching.md)
 - [Priority locales](docs/locales.md)
 - [Development and Chrome loading](docs/development.md)
-- [Store listing and visual assets](docs/store-listing.md)
+- [Store listing master copy and visual assets](docs/store-listing.md)
 - [Privacy](PRIVACY.md)
 
 ## Development
