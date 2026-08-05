@@ -19,6 +19,7 @@
     "types": ["chrome", "vitest/globals"]
   },
   "include": [
+    "scripts",
     "src",
     "tests",
     "eslint.config.js",
