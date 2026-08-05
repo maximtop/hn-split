@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { discussionUrl, lookupHnDiscussions } from '../src/domain/hn';
+import { discussionUrl, isHnUrl, lookupHnDiscussions } from '../src/domain/hn';
 import { buildArticleCandidates } from '../src/domain/url';
 import type { ArticleCandidate } from '../src/domain/url';
 
@@ -237,5 +237,26 @@ describe('discussionUrl', () => {
         '9007199254740992',
     ])('rejects invalid item ID %s', (itemId) => {
         expect(() => discussionUrl(itemId)).toThrow('Invalid Hacker News item ID');
+    });
+});
+
+describe('isHnUrl', () => {
+    it.each([
+        'https://news.ycombinator.com/item?id=123',
+        'https://news.ycombinator.com/newest',
+        'https://news.ycombinator.com/',
+    ])('accepts the Hacker News page %s', (url) => {
+        expect(isHnUrl(url)).toBe(true);
+    });
+
+    it.each([
+        'https://example.com/article',
+        'http://news.ycombinator.com/item?id=123',
+        'https://news.ycombinator.com.evil.example/item?id=123',
+        'https://hn.algolia.com/api/v1/search',
+        'not a url',
+        '',
+    ])('rejects the non-Hacker-News value %s', (url) => {
+        expect(isHnUrl(url)).toBe(false);
     });
 });
