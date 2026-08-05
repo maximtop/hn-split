@@ -9,6 +9,7 @@ import {
 import { sessionStore } from './background/chrome-adapters';
 import { handleRequest } from './background/request-handler';
 import {
+    forgetSidePanelWindow,
     handleOpenInSplitClick,
     normalizeSidePanelContent,
     reconcileOpenInSplitMenu,
@@ -114,4 +115,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.tabs.onRemoved.addListener((tabId) => {
     forgetAutomaticAvailabilityTab(tabId);
     void sessionStore.remove(tabId).catch(() => undefined);
+});
+
+chrome.windows.onRemoved.addListener((windowId) => {
+    // A closed window's panel selection has no surface left to show it.
+    void forgetSidePanelWindow(windowId).catch(() => undefined);
 });

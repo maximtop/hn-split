@@ -5,9 +5,15 @@ import type { SessionStore, TabClient, TabSummary } from '../browser/open-discus
 import type { OpenInSplitMenuRegistry } from '../browser/open-in-split-menu';
 import { HN_ORIGIN } from '../domain/hn';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../shared/content-scripts';
+import type { SidePanelWindowContent } from '../browser/side-panel-content-router';
 import { isSidePanelContent } from '../shared/side-panel-content';
 import type { SidePanelContent } from '../shared/side-panel-content';
-import { SESSION_STORAGE_KEY, SESSION_STORAGE_KEY_PREFIX, STORAGE_KEY } from '../shared/storage-keys';
+import {
+    SESSION_STORAGE_KEY_PREFIX,
+    STORAGE_KEY,
+    sidePanelContentKey,
+    sidePanelContentWindowId,
+} from '../shared/storage-keys';
 
 /**
  * Converts a Chrome tab into the fields used by discussion placement.
@@ -95,21 +101,49 @@ export const cacheCollectionStorage: CacheCollectionStorage = {
 };
 
 /**
- * Reads what the side panel should display in this browser session. Anything
- * the current model does not recognize reads as an empty panel.
+ * Reads what one window's side panel should display in this browser session.
+ * Anything the current model does not recognize reads as an empty panel.
+ * @param windowId - The browser window whose selection is read.
  */
-export async function getSidePanelContent(): Promise<SidePanelContent | null> {
-    const stored = await chrome.storage.session.get(SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION);
-    const content: unknown = stored[SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION];
+export async function getSidePanelContent(windowId: number): Promise<SidePanelContent | null> {
+    const key = sidePanelContentKey(windowId);
+    const stored = await chrome.storage.session.get(key);
+    const content: unknown = stored[key];
     return isSidePanelContent(content) ? content : null;
 }
 
 /**
- * Records what the side panel should display.
+ * Records what one window's side panel should display.
+ * @param windowId - The browser window whose selection is written.
  * @param content - The validated panel content to display.
  */
-export async function setSidePanelContent(content: SidePanelContent): Promise<void> {
-    await chrome.storage.session.set({ [SESSION_STORAGE_KEY.SIDE_PANEL_DISCUSSION]: content });
+export async function setSidePanelContent(windowId: number, content: SidePanelContent): Promise<void> {
+    await chrome.storage.session.set({ [sidePanelContentKey(windowId)]: content });
+}
+
+/**
+ * Removes one window's stored side panel selection.
+ * @param windowId - The browser window whose selection is removed.
+ */
+export async function removeSidePanelContent(windowId: number): Promise<void> {
+    await chrome.storage.session.remove(sidePanelContentKey(windowId));
+}
+
+/**
+ * Lists every window's stored side panel selection, skipping entries the
+ * current model does not recognize.
+ */
+export async function listSidePanelContent(): Promise<SidePanelWindowContent[]> {
+    const stored = await chrome.storage.session.get(null);
+    const entries: SidePanelWindowContent[] = [];
+    for (const [key, content] of Object.entries(stored)) {
+        const windowId = sidePanelContentWindowId(key);
+        if (windowId === null || !isSidePanelContent(content)) {
+            continue;
+        }
+        entries.push({ windowId, content });
+    }
+    return entries;
 }
 
 /**
