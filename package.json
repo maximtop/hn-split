@@ -15,12 +15,14 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "locales:validate": "node scripts/validate-locales.mjs",
+    "store:validate": "node scripts/validate-store-listings.mjs",
+    "store:render": "node scripts/render-store-listing.mjs",
     "assets:generate": "node scripts/generate-assets.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "pnpm build && playwright test --config=playwright.config.ts",
-    "check": "pnpm lint && pnpm typecheck && pnpm locales:validate && pnpm test && pnpm build",
+    "check": "pnpm lint && pnpm typecheck && pnpm locales:validate && pnpm store:validate && pnpm test && pnpm build",
     "verify": "pnpm check && pnpm test:e2e"
   },
   "dependencies": {

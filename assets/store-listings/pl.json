@@ -1,0 +1,45 @@
+{
+    "locale": "pl",
+    "reviewed": false,
+    "description": {
+        "intro": "Czytasz artykuł i zastanawiasz się, co sądzi Hacker News? Split for Hacker News znajduje dokładną dyskusję dla strony, na której jesteś, i otwiera ją po jednym wyraźnym kliknięciu.",
+        "bullets": [
+            "Jedno kliknięcie od artykułu do jego komentarzy na Hacker News.",
+            "Dokładne dopasowanie URL — bez przybliżonych domysłów; duplikaty są pokazywane jako alternatywy.",
+            "Pierwsze kliknięcie otwiera sąsiednią kartę; połącz ją z artykułem za pomocą Chrome Split View, a kolejne wybory ponownie użyją tej karty.",
+            "Albo otwórz dyskusję w panelu bocznym przeglądarki, tuż obok strony, którą czytasz.",
+            "„Otwórz w Split” w menu prawego przycisku na linku: link otwiera się w bieżącej karcie, a jego dyskusja z Hacker News — w panelu bocznym.",
+            "Opcjonalnie: kliknięcie historii na Hacker News otwiera artykuł jak zwykle, a jego dyskusję w panelu bocznym obok. Domyślnie wyłączone.",
+            "Opcjonalna plakietka na pasku narzędzi z liczbą komentarzy, domyślnie wyłączona.",
+            "Za darmo. Bez telemetrii, bez kont, bez czytania stron. Wąskie, udokumentowane uprawnienia."
+        ],
+        "disclaimer": "Nieoficjalne. To rozszerzenie jest niezależnym projektem i nie jest powiązane z Y Combinator ani Hacker News, ani przez nie wspierane."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Pierwsze publiczne wydanie. Znajdź dokładną dyskusję na Hacker News dla artykułu, który czytasz, i otwórz ją jednym kliknięciem — w sąsiedniej karcie, którą możesz połączyć z artykułem za pomocą Chrome Split View, albo w panelu bocznym przeglądarki. Zawiera pozycję „Otwórz w Split” w menu kontekstowym linków, opcjonalny przepływ otwierający dyskusje obok klikniętych historii na Hacker News oraz opcjonalną plakietkę z liczbą komentarzy na pasku narzędzi. Za darmo, bez telemetrii, bez kont."
+    },
+    "captions": [
+        {
+            "heading": "Od artykułu do dyskusji jednym kliknięciem",
+            "sub": "Zobacz dokładny wątek Hacker News dla strony, którą czytasz, z liczbą komentarzy i punktów."
+        },
+        {
+            "heading": "Domyślnie prywatne",
+            "sub": "Automatyczne plakietki dostępności pozostają wyłączone, dopóki ich nie włączysz. Bez telemetrii, bez kont, bez czytania stron."
+        },
+        {
+            "heading": "U siebie w jasnym i ciemnym motywie",
+            "sub": "Wyskakujące okno podąża za schematem kolorów przeglądarki."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "dyskusja",
+        "komentarze",
+        "panel boczny",
+        "split view",
+        "artykuł"
+    ],
+    "appStoreKeywords": "hacker news,hn,dyskusja,komentarze,split view,panel boczny,artykuł"
+}

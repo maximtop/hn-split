@@ -1,0 +1,45 @@
+{
+    "locale": "hu",
+    "reviewed": false,
+    "description": {
+        "intro": "Egy cikket olvas, és kíváncsi, mit gondol a Hacker News? A Split for Hacker News megtalálja az éppen megnyitott oldal pontos vitáját, és egyetlen kifejezett kattintás után megnyitja.",
+        "bullets": [
+            "Egy kattintás a cikktől a Hacker News-hozzászólásaiig.",
+            "Pontos URL-egyezés — semmi hozzávetőleges találgatás; a duplikátumok alternatívaként jelennek meg.",
+            "Az első kattintás egy szomszédos lapot nyit meg; párosítsa a cikkel a Chrome Split View segítségével, és a későbbi választások ezt a lapot használják újra.",
+            "Vagy nyissa meg a vitát a böngésző oldalsávjában, közvetlenül az olvasott oldal mellett.",
+            "„Megnyitás a Splitben” a hivatkozások jobb gombos menüjében: a hivatkozás az aktuális lapon nyílik meg, Hacker News-vitája pedig az oldalsávban.",
+            "Nem kötelező: a Hacker Newson egy sztorira kattintva a cikk a szokásos módon nyílik meg, vitája pedig mellette az oldalsávban. Alapértelmezés szerint kikapcsolva.",
+            "Nem kötelező eszköztárjelvény a hozzászólások számával, alapértelmezés szerint kikapcsolva.",
+            "Ingyenes. Semmi telemetria, semmi fiók, semmi oldalolvasás. Szűk, dokumentált engedélyek."
+        ],
+        "disclaimer": "Nem hivatalos. Ez a bővítmény független projekt, nem áll kapcsolatban a Y Combinatorral vagy a Hacker Newszal, és nem élvezi támogatásukat."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Első nyilvános kiadás. Találja meg az olvasott cikk pontos Hacker News-vitáját, és nyissa meg egy kattintással — egy szomszédos lapon, amelyet a Chrome Split View segítségével párosíthat a cikkel, vagy a böngésző oldalsávjában. Tartalmazza a „Megnyitás a Splitben” elemet a hivatkozások helyi menüjében, egy nem kötelező folyamatot, amely a Hacker Newson a megkattintott sztorik mellett nyitja meg a vitákat, valamint egy nem kötelező jelvényt a hozzászólások számával. Ingyenes, telemetria és fiókok nélkül."
+    },
+    "captions": [
+        {
+            "heading": "A cikktől a vitáig egy kattintással",
+            "sub": "Nézze meg az olvasott oldal pontos Hacker News-szálát a hozzászólások és pontok számával."
+        },
+        {
+            "heading": "Alapértelmezés szerint privát",
+            "sub": "Az automatikus elérhetőségi jelvények kikapcsolva maradnak, amíg be nem kapcsolja őket. Semmi telemetria, semmi fiók, semmi oldalolvasás."
+        },
+        {
+            "heading": "Otthon világosban és sötétben",
+            "sub": "A felugró ablak követi a böngésző színsémáját."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "vita",
+        "hozzászólások",
+        "oldalsáv",
+        "split view",
+        "cikk"
+    ],
+    "appStoreKeywords": "hacker news,hn,vita,hozzászólások,split view,oldalsáv,cikk"
+}

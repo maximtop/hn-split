@@ -1,0 +1,45 @@
+{
+    "locale": "zh_TW",
+    "reviewed": false,
+    "description": {
+        "intro": "正在閱讀一篇文章，想知道 Hacker News 上怎麼說？Split for Hacker News 會找到目前頁面對應的確切討論，並在您明確點擊後開啟。",
+        "bullets": [
+            "從文章到它的 Hacker News 留言，只需一次點擊。",
+            "精確的網址比對 — 不做模糊猜測，重複提交會列為替代選項。",
+            "第一次點擊會開啟相鄰分頁；使用 Chrome Split View 將其與文章並排，之後的選擇會重複使用該分頁。",
+            "也可以在瀏覽器側邊欄開啟討論，就在您正在閱讀的頁面旁邊。",
+            "連結右鍵選單中的「在 Split 中開啟」：連結在目前分頁開啟，其 Hacker News 討論在側邊欄開啟。",
+            "選用：在 Hacker News 上點擊文章連結時，文章照常開啟，其討論在旁邊的側邊欄開啟。預設關閉。",
+            "選用的工具列徽章，顯示留言數，預設關閉。",
+            "免費。無遙測、無帳號、不讀取頁面內容。權限範圍窄且有文件說明。"
+        ],
+        "disclaimer": "非官方。本擴充功能是獨立專案，與 Y Combinator 或 Hacker News 無關，也未獲其認可。"
+    },
+    "releaseNotes": {
+        "v0.1.0": "首個公開版本。找到您正在閱讀的文章對應的確切 Hacker News 討論，一鍵開啟 — 在可透過 Chrome Split View 與文章並排的相鄰分頁中，或在瀏覽器側邊欄中。包含連結右鍵選單中的「在 Split 中開啟」、在 Hacker News 上點擊文章時在旁邊開啟討論的選用功能，以及顯示留言數的選用工具列徽章。免費、無遙測、無帳號。"
+    },
+    "captions": [
+        {
+            "heading": "從文章到討論，一鍵直達",
+            "sub": "查看目前頁面對應的確切 Hacker News 討論串，附留言數與積分。"
+        },
+        {
+            "heading": "預設保護隱私",
+            "sub": "自動可用性徽章在您啟用前保持關閉。無遙測、無帳號、不讀取頁面內容。"
+        },
+        {
+            "heading": "淺色深色都自在",
+            "sub": "彈出視窗跟隨瀏覽器的配色。"
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "討論",
+        "留言",
+        "側邊欄",
+        "split view",
+        "文章"
+    ],
+    "appStoreKeywords": "hacker news,hn,討論,留言,split view,側邊欄,文章"
+}

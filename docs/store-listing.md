@@ -109,9 +109,11 @@ uses it.
 ### Screenshot captions
 
 The captions are embedded in the captured screenshots by
-`pnpm assets:generate`, so a caption change regenerates imagery, and
-localized screenshots (listing-localization task) regenerate with translated
-captions.
+`pnpm assets:generate`, which reads them from
+`assets/store-listings/<code>.json` (English below, mirrored in `en.json`),
+so screenshots and listing captions share one source; a caption change
+regenerates imagery, and `pnpm assets:generate --locale <code>` renders the
+translated captions.
 
 1. From article to discussion in one click
 2. Private by default: no telemetry, no accounts, no page reading
@@ -355,7 +357,7 @@ references. Chrome has no reviewer-notes field.
 | Remote code | declare | No (This doc, Remote code) |
 | Data usage + certifications | checkboxes | This doc, Data usage |
 | Release notes | per version | This doc, Release notes |
-| Localized listings | per locale | Listing-localization task; [`docs/locales.md`](locales.md) |
+| Localized listings | per locale | `assets/store-listings/`, validated by `pnpm store:validate`; [`docs/locales.md`](locales.md) |
 
 ### Microsoft Edge Add-ons
 
@@ -418,19 +420,34 @@ wrapper actually ships, and re-reviewed here before submission.
 
 ## Localization handoff
 
-Input for the 40-locale listing localization
-([`docs/locales.md`](locales.md)):
+The 40-locale listing localization is implemented; review status and the
+per-store locale mappings live in [`docs/locales.md`](locales.md).
 
-- **Translated:** short summary, full description, screenshot captions,
-  release notes, and search terms/keywords.
-- **Never translated:** the name — the brand string stays English in every
-  locale.
-- **Length budgets travel with the translation:** the manifest description
-  limit (132) and the per-store limits in the matrices apply to every
-  locale, not only English. Candidate automation: extend
-  `scripts/validate-locales.mjs` with a character-budget check for
-  `extension_description`.
-- **Captions regenerate imagery:** localized captions require regenerating
-  the captured screenshots through `pnpm assets:generate`.
+- **Translations** live in `assets/store-listings/<code>.json`, one file per
+  registry locale: the structured description (intro, the eight bullets,
+  disclaimer), release notes per version, the screenshot caption pairs, Edge
+  search terms, and App Store keywords. The short summary stays in the
+  message catalogs (`extension_description`), which the stores read from the
+  manifest.
+- **Never translated:** the name — `pnpm locales:validate` fails any catalog
+  that changes `extension_name`, and the listing validator requires the
+  brand string and the Y Combinator / Hacker News proper nouns verbatim in
+  every translation.
+- **Length budgets pass automatically:** `pnpm store:validate` (part of
+  `pnpm check`) enforces the manifest summary limit (132) per catalog, the
+  Edge 250–10,000 description bounds and search-term budgets, the App Store
+  keyword/description/What's-New limits, and the caption layout budgets, for
+  every locale. Store locale coverage is explicit in
+  `scripts/lib/store-listings.ts`: all 40 codes resolve per store, with the
+  four App-Store-unsupported locales (bg, fa, fil, sr) served by the en-US
+  listing.
+- **Paste-ready copy:** `pnpm store:render <store> <locale>` prints every
+  translated field for one store submission.
+- **Captions regenerate imagery:** the generator reads captions from the
+  listing files, and `pnpm assets:generate --locale <code>` renders that
+  locale's screenshots to `build/store-assets/<code>/`; a caption change
+  regenerates imagery.
 - Translations must preserve the reviewed claims of this document exactly —
   especially the no-telemetry, off-by-default, and unofficial statements.
+  The validator enforces the structural parts (bullet count, disclaimer,
+  brand); native-speaker review is tracked per file in the `reviewed` flag.

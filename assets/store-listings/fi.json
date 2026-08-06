@@ -1,0 +1,45 @@
+{
+    "locale": "fi",
+    "reviewed": false,
+    "description": {
+        "intro": "Luetko artikkelia ja mietit, mitä Hacker News ajattelee? Split for Hacker News löytää avoinna olevan sivun täsmällisen keskustelun ja avaa sen yhden nimenomaisen napsautuksen jälkeen.",
+        "bullets": [
+            "Yksi napsautus artikkelista sen Hacker News -kommentteihin.",
+            "Täsmällinen URL-vastaavuus — ei likimääräisiä arvauksia; kaksoiskappaleet näytetään vaihtoehtoina.",
+            "Ensimmäinen napsautus avaa viereisen välilehden; yhdistä se artikkeliin Chrome Split View’llä, ja myöhemmät valinnat käyttävät samaa välilehteä.",
+            "Tai avaa keskustelu selaimen sivupaneelissa, aivan lukemasi sivun vieressä.",
+            "”Avaa Splitissä” linkin hiiren oikean painikkeen valikossa: linkki avautuu nykyiseen välilehteen ja sen Hacker News -keskustelu sivupaneeliin.",
+            "Valinnainen: jutun napsautus Hacker Newsissa avaa artikkelin tavalliseen tapaan ja sen keskustelun viereiseen sivupaneeliin. Oletuksena pois päältä.",
+            "Valinnainen työkalupalkin merkki kommenttien määrällä, oletuksena pois päältä.",
+            "Ilmainen. Ei telemetriaa, ei tilejä, ei sivujen lukemista. Suppeat, dokumentoidut käyttöoikeudet."
+        ],
+        "disclaimer": "Epävirallinen. Tämä laajennus on riippumaton projekti, eikä se ole sidoksissa Y Combinatoriin tai Hacker Newsiin eikä niiden hyväksymä."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Ensimmäinen julkinen julkaisu. Löydä lukemasi artikkelin täsmällinen Hacker News -keskustelu ja avaa se yhdellä napsautuksella — viereiseen välilehteen, jonka voit yhdistää artikkeliin Chrome Split View’llä, tai selaimen sivupaneeliin. Sisältää ”Avaa Splitissä” -kohdan linkkien pikavalikossa, valinnaisen toiminnon, joka avaa keskustelut napsautettujen juttujen viereen Hacker Newsissa, sekä valinnaisen työkalupalkin merkin kommenttien määrällä. Ilmainen, ei telemetriaa, ei tilejä."
+    },
+    "captions": [
+        {
+            "heading": "Artikkelista keskusteluun yhdellä napsautuksella",
+            "sub": "Näe lukemasi sivun täsmällinen Hacker News -ketju kommenttien ja pisteiden määrineen."
+        },
+        {
+            "heading": "Oletuksena yksityinen",
+            "sub": "Automaattiset saatavuusmerkit pysyvät pois päältä, kunnes otat ne käyttöön. Ei telemetriaa, ei tilejä, ei sivujen lukemista."
+        },
+        {
+            "heading": "Kotonaan vaaleassa ja tummassa",
+            "sub": "Ponnahdusikkuna noudattaa selaimesi väriteemaa."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "keskustelu",
+        "kommentit",
+        "sivupaneeli",
+        "split view",
+        "artikkeli"
+    ],
+    "appStoreKeywords": "hacker news,hn,keskustelu,kommentit,split view,sivupaneeli,artikkeli"
+}

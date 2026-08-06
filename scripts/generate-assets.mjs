@@ -8,6 +8,7 @@ import { chromium } from '@playwright/test';
 
 // Node 24 strips types natively, so the generator reuses the e2e fixture
 // helpers instead of duplicating the Algolia and popup shims.
+import { BASE_LOCALE, LOCALE_REGISTRY, SHIPPED_LOCALES } from '../src/shared/locales.ts';
 import { installLookupFixtures, shimPopupBrowserCalls } from '../tests/e2e/extension-context.ts';
 
 const ROOT = resolve(import.meta.dirname, '..');
@@ -18,6 +19,45 @@ const ICONS_DIR = resolve(ROOT, 'public/icons');
 const ARTICLE_URL = 'https://article.hn-split.example.com/story';
 
 const BRAND_FONT = 'system-ui, -apple-system, \'Segoe UI\', Roboto, sans-serif';
+
+// `--locale <code>` renders the screenshots with that locale's captions (from
+// assets/store-listings) and asks Chromium for that UI language. The base
+// locale writes the committed assets; other locales write to build/ so the
+// repository holds only the English imagery (docs/store-listing.md).
+const localeFlagIndex = process.argv.indexOf('--locale');
+const locale = localeFlagIndex === -1 ? BASE_LOCALE : process.argv[localeFlagIndex + 1];
+if (!SHIPPED_LOCALES.includes(locale)) {
+    throw new Error(`Unknown locale ${locale}; expected one of ${SHIPPED_LOCALES.join(', ')}.`);
+}
+const isBaseLocale = locale === BASE_LOCALE;
+const localeEntry = LOCALE_REGISTRY.find(({ code }) => code === locale);
+const screenshotDir = isBaseLocale ? STORE_DIR : resolve(ROOT, 'build/store-assets', locale);
+
+/**
+ * Reads one locale's message catalog.
+ * @param code - Registry code whose catalog is read.
+ */
+async function readMessages(code) {
+    return JSON.parse(await readFile(resolve(ROOT, `public/_locales/${code}/messages.json`), 'utf8'));
+}
+
+const listing = JSON.parse(await readFile(resolve(ROOT, `assets/store-listings/${locale}.json`), 'utf8'));
+const messages = await readMessages(locale);
+const baseMessages = isBaseLocale ? messages : await readMessages(BASE_LOCALE);
+
+/**
+ * Builds a substring accessible-name pattern accepting the localized label or
+ * its English fallback, because platforms that ignore Chromium's `--lang`
+ * switch render the extension UI in English. Substring semantics match
+ * Playwright's string-name behavior: the popup button's accessible name also
+ * carries the fixture story title and metrics.
+ * @param localized - Label in the requested locale.
+ * @param base - Label in the base locale.
+ */
+function labelPattern(localized, base) {
+    const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    return new RegExp(`(?:${escape(localized)}|${escape(base)})`);
+}
 
 /**
  * Renders one SVG file inside a plain Chromium page and screenshots it at
@@ -73,7 +113,7 @@ async function renderStage(page, { heading, sub, capture, displayWidth, layout, 
             font-size: 0;
         }
         .shot img { width: ${displayWidth}px; height: auto; display: block; }
-    </style><body>
+    </style><body dir="${localeEntry.rtl ? 'rtl' : 'ltr'}">
         <div class="caption"><h1>${heading}</h1><p>${sub}</p></div>
         <div class="shot"><img src="data:image/png;base64,${capture.toString('base64')}"></div>
     </body>`);
@@ -85,14 +125,20 @@ async function renderStage(page, { heading, sub, capture, displayWidth, layout, 
 async function launchExtension() {
     const extensionPath = resolve(ROOT, 'dist');
     const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn-split-assets-'));
+    // `--lang` (with the LANGUAGE fallback for Linux) asks Chromium to run the
+    // extension UI in the requested locale; platforms that ignore the switch
+    // fall back to English UI captures under localized captions.
+    const chromeLanguage = locale.replace('_', '-');
     const context = await chromium.launchPersistentContext(userDataDir, {
         channel: 'chromium',
         headless: true,
         deviceScaleFactor: 2,
         viewport: { width: 380, height: 720 },
+        env: { ...process.env, LANGUAGE: chromeLanguage },
         args: [
             `--disable-extensions-except=${extensionPath}`,
             `--load-extension=${extensionPath}`,
+            `--lang=${chromeLanguage}`,
         ],
     });
     const worker = context.serviceWorkers().find((candidate) => candidate.url().startsWith('chrome-extension://'))
@@ -114,7 +160,12 @@ async function capturePopup(extension, { colorScheme }) {
     await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
     await shimPopupBrowserCalls(page, { articleTabId: 7, pageUrl: ARTICLE_URL });
     await page.goto(`chrome-extension://${extension.extensionId}/popup.html`);
-    await page.getByRole('button', { name: 'Open discussion' }).waitFor();
+    await page.getByRole('button', {
+        name: labelPattern(messages.open_primary_discussion.message, baseMessages.open_primary_discussion.message),
+    }).first().waitFor();
+    if (!isBaseLocale && await page.getByRole('button', { name: messages.open_primary_discussion.message }).count() === 0) {
+        console.warn(`the platform ignored --lang=${locale}; the UI capture stays English under ${locale} captions`);
+    }
     const capture = await page.locator('body').screenshot();
     await page.close();
     return capture;
@@ -126,46 +177,54 @@ async function captureOptions(extension) {
     await page.setViewportSize({ width: 1160, height: 640 });
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     await page.goto(`chrome-extension://${extension.extensionId}/options.html`);
-    await page.getByRole('heading', { name: 'Availability indicator' }).waitFor();
+    await page.getByRole('heading', {
+        name: labelPattern(messages.options_heading.message, baseMessages.options_heading.message),
+    }).first().waitFor();
     const capture = await page.screenshot();
     await page.close();
     return capture;
 }
 
-await mkdir(STORE_DIR, { recursive: true });
+await mkdir(screenshotDir, { recursive: true });
 await mkdir(ICONS_DIR, { recursive: true });
 
 const browser = await chromium.launch({ channel: 'chromium', headless: true });
 const svgPage = await browser.newPage();
 
-const logo = resolve(IDENTITY_DIR, 'logo-mark.svg');
-for (const size of [16, 32, 48]) {
+// Icons and promo tiles carry no text, so only the base-locale run renders
+// them; the stores reuse one set across every listing language.
+if (isBaseLocale) {
+    const logo = resolve(IDENTITY_DIR, 'logo-mark.svg');
+    for (const size of [16, 32, 48]) {
+        await renderSvg(svgPage, logo, {
+            width: size,
+            height: size,
+            out: resolve(ICONS_DIR, `icon-${size}.png`),
+            transparent: true,
+        });
+    }
+    // Store icon: 96x96 artwork centered inside 16px transparent padding.
     await renderSvg(svgPage, logo, {
-        width: size,
-        height: size,
-        out: resolve(ICONS_DIR, `icon-${size}.png`),
+        width: 128,
+        height: 128,
+        artWidth: 96,
+        artHeight: 96,
+        out: resolve(ICONS_DIR, 'icon-128.png'),
         transparent: true,
     });
+    await renderSvg(svgPage, resolve(IDENTITY_DIR, 'promo-small.svg'), {
+        width: 440,
+        height: 280,
+        out: resolve(STORE_DIR, 'small-promo-440x280.png'),
+    });
+    await renderSvg(svgPage, resolve(IDENTITY_DIR, 'promo-marquee.svg'), {
+        width: 1400,
+        height: 560,
+        out: resolve(STORE_DIR, 'marquee-1400x560.png'),
+    });
+} else {
+    console.log(`locale ${locale}: icons and promo tiles are locale-independent, rendering screenshots only`);
 }
-// Store icon: 96x96 artwork centered inside 16px transparent padding.
-await renderSvg(svgPage, logo, {
-    width: 128,
-    height: 128,
-    artWidth: 96,
-    artHeight: 96,
-    out: resolve(ICONS_DIR, 'icon-128.png'),
-    transparent: true,
-});
-await renderSvg(svgPage, resolve(IDENTITY_DIR, 'promo-small.svg'), {
-    width: 440,
-    height: 280,
-    out: resolve(STORE_DIR, 'small-promo-440x280.png'),
-});
-await renderSvg(svgPage, resolve(IDENTITY_DIR, 'promo-marquee.svg'), {
-    width: 1400,
-    height: 560,
-    out: resolve(STORE_DIR, 'marquee-1400x560.png'),
-});
 
 // Screenshots capture the real built extension, so build first.
 console.log('building the extension for screenshot capture…');
@@ -196,30 +255,33 @@ try {
     const popupDark = await capturePopup(extension, { colorScheme: 'dark' });
     const options = await captureOptions(extension);
 
+    // Captions come from the locale's listing file, the same source the store
+    // dashboards use, so screenshots and listing captions cannot diverge.
+    const [discussionCaption, privateCaption, darkCaption] = listing.captions;
     await renderStage(svgPage, {
-        heading: 'From article to discussion in one click',
-        sub: 'See the exact Hacker News thread for the page you are reading, with comment and point counts.',
+        heading: discussionCaption.heading,
+        sub: discussionCaption.sub,
         capture: popupLight,
         displayWidth: 380,
         layout: 'row',
-        out: resolve(STORE_DIR, 'screenshot-1-discussion-1280x800.png'),
+        out: resolve(screenshotDir, 'screenshot-1-discussion-1280x800.png'),
     });
     await renderStage(svgPage, {
-        heading: 'Private by default',
-        sub: 'Automatic availability badges stay off until you enable them. No telemetry, no accounts, no page reading.',
+        heading: privateCaption.heading,
+        sub: privateCaption.sub,
         capture: options,
         displayWidth: 928,
         layout: 'column',
-        out: resolve(STORE_DIR, 'screenshot-2-private-defaults-1280x800.png'),
+        out: resolve(screenshotDir, 'screenshot-2-private-defaults-1280x800.png'),
     });
     await renderStage(svgPage, {
-        heading: 'At home in light and dark',
-        sub: 'The popup follows your browser color scheme.',
+        heading: darkCaption.heading,
+        sub: darkCaption.sub,
         capture: popupDark,
         displayWidth: 380,
         layout: 'row',
         dark: true,
-        out: resolve(STORE_DIR, 'screenshot-3-dark-1280x800.png'),
+        out: resolve(screenshotDir, 'screenshot-3-dark-1280x800.png'),
     });
 } finally {
     await extension.dispose();

@@ -1,0 +1,45 @@
+{
+    "locale": "tr",
+    "reviewed": false,
+    "description": {
+        "intro": "Bir makale okurken Hacker News ne diyor diye merak mı ediyorsunuz? Split for Hacker News, bulunduğunuz sayfanın tam tartışmasını bulur ve tek bir açık tıklamadan sonra açar.",
+        "bullets": [
+            "Makaleden Hacker News yorumlarına tek tıklama.",
+            "Tam URL eşleşmesi — yaklaşık tahmin yok; kopyalar alternatif olarak listelenir.",
+            "İlk tıklama bitişik bir sekme açar; Chrome Split View ile makaleyle eşleştirin, sonraki seçimler o sekmeyi yeniden kullanır.",
+            "Ya da tartışmayı, okuduğunuz sayfanın hemen yanında, tarayıcının yan panelinde açın.",
+            "Bağlantıların sağ tıklama menüsünde “Split'te aç”: bağlantı geçerli sekmede, Hacker News tartışması ise yan panelde açılır.",
+            "İsteğe bağlı: Hacker News'te bir habere tıklamak makaleyi her zamanki gibi, tartışmasını ise yanındaki yan panelde açar. Varsayılan olarak kapalı.",
+            "Yorum sayısını gösteren isteğe bağlı araç çubuğu rozeti, varsayılan olarak kapalı.",
+            "Ücretsiz. Telemetri yok, hesap yok, sayfa okuma yok. Dar ve belgelenmiş izinler."
+        ],
+        "disclaimer": "Resmî değildir. Bu uzantı bağımsız bir projedir; Y Combinator veya Hacker News ile bağlantılı değildir ve onlar tarafından onaylanmamıştır."
+    },
+    "releaseNotes": {
+        "v0.1.0": "İlk genel sürüm. Okuduğunuz makalenin tam Hacker News tartışmasını bulun ve tek tıklamayla açın — Chrome Split View ile makaleyle eşleştirebileceğiniz bitişik bir sekmede ya da tarayıcının yan panelinde. Bağlantıların bağlam menüsündeki “Split'te aç” öğesini, Hacker News'te tıklanan haberlerin yanında tartışmaları açan isteğe bağlı bir akışı ve yorum sayısını gösteren isteğe bağlı bir araç çubuğu rozetini içerir. Ücretsiz, telemetri yok, hesap yok."
+    },
+    "captions": [
+        {
+            "heading": "Makaleden tartışmaya tek tıklamayla",
+            "sub": "Okuduğunuz sayfanın tam Hacker News konusunu, yorum ve puan sayılarıyla görün."
+        },
+        {
+            "heading": "Varsayılan olarak gizli",
+            "sub": "Otomatik kullanılabilirlik rozetleri siz açana kadar kapalı kalır. Telemetri yok, hesap yok, sayfa okuma yok."
+        },
+        {
+            "heading": "Açık ve koyu temada evinizde",
+            "sub": "Açılır pencere tarayıcınızın renk düzenini izler."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "tartışma",
+        "yorumlar",
+        "yan panel",
+        "split view",
+        "makale"
+    ],
+    "appStoreKeywords": "hacker news,hn,tartışma,yorumlar,split view,yan panel,makale"
+}

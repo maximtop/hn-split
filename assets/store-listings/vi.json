@@ -1,0 +1,45 @@
+{
+    "locale": "vi",
+    "reviewed": false,
+    "description": {
+        "intro": "Đang đọc một bài viết và tự hỏi Hacker News nghĩ gì? Split for Hacker News tìm đúng cuộc thảo luận cho trang bạn đang mở và mở nó sau một cú nhấp rõ ràng.",
+        "bullets": [
+            "Một cú nhấp từ bài viết đến các bình luận của nó trên Hacker News.",
+            "Khớp URL chính xác — không đoán mò; các bản trùng lặp được liệt kê làm lựa chọn thay thế.",
+            "Lần nhấp đầu tiên mở một thẻ liền kề; ghép thẻ đó với bài viết bằng Chrome Split View và các lựa chọn sau sẽ dùng lại thẻ đó.",
+            "Hoặc mở cuộc thảo luận trong bảng bên của trình duyệt, ngay cạnh trang bạn đang đọc.",
+            "“Mở trong Split” trong menu chuột phải của liên kết: liên kết mở trong thẻ hiện tại và cuộc thảo luận Hacker News của nó mở trong bảng bên.",
+            "Tùy chọn: nhấp vào một tin trên Hacker News sẽ mở bài viết như bình thường và cuộc thảo luận của nó trong bảng bên cạnh. Tắt theo mặc định.",
+            "Huy hiệu tùy chọn trên thanh công cụ kèm số bình luận, tắt theo mặc định.",
+            "Miễn phí. Không đo từ xa, không tài khoản, không đọc trang. Quyền hạn hẹp, có tài liệu."
+        ],
+        "disclaimer": "Không chính thức. Tiện ích mở rộng này là một dự án độc lập, không liên kết với và không được Y Combinator hay Hacker News chứng thực."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Bản phát hành công khai đầu tiên. Tìm đúng cuộc thảo luận Hacker News cho bài viết bạn đang đọc và mở nó bằng một cú nhấp — trong thẻ liền kề mà bạn có thể ghép với bài viết bằng Chrome Split View, hoặc trong bảng bên của trình duyệt. Bao gồm mục “Mở trong Split” trong menu ngữ cảnh của liên kết, một luồng tùy chọn mở cuộc thảo luận bên cạnh tin được nhấp trên Hacker News, và huy hiệu tùy chọn trên thanh công cụ kèm số bình luận. Miễn phí, không đo từ xa, không tài khoản."
+    },
+    "captions": [
+        {
+            "heading": "Từ bài viết đến thảo luận trong một cú nhấp",
+            "sub": "Xem đúng chủ đề Hacker News cho trang bạn đang đọc, kèm số bình luận và điểm."
+        },
+        {
+            "heading": "Riêng tư theo mặc định",
+            "sub": "Huy hiệu khả dụng tự động luôn tắt cho đến khi bạn bật. Không đo từ xa, không tài khoản, không đọc trang."
+        },
+        {
+            "heading": "Thoải mái ở giao diện sáng và tối",
+            "sub": "Cửa sổ bật lên tuân theo bảng phối màu của trình duyệt."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "thảo luận",
+        "bình luận",
+        "bảng bên",
+        "split view",
+        "bài viết"
+    ],
+    "appStoreKeywords": "hacker news,hn,thảo luận,bình luận,split view,bảng bên,bài viết"
+}

@@ -1,0 +1,45 @@
+{
+    "locale": "id",
+    "reviewed": false,
+    "description": {
+        "intro": "Sedang membaca artikel dan penasaran apa kata Hacker News? Split for Hacker News menemukan diskusi yang tepat untuk halaman yang sedang Anda buka dan membukanya setelah satu klik eksplisit.",
+        "bullets": [
+            "Satu klik dari artikel ke komentarnya di Hacker News.",
+            "Pencocokan URL yang tepat — tanpa tebakan kira-kira; duplikat ditampilkan sebagai alternatif.",
+            "Klik pertama membuka tab yang bersebelahan; pasangkan dengan artikel menggunakan Chrome Split View dan pilihan berikutnya akan menggunakan kembali tab itu.",
+            "Atau buka diskusi di panel samping browser, tepat di sebelah halaman yang Anda baca.",
+            "“Buka di Split” di menu klik kanan tautan: tautan terbuka di tab saat ini dan diskusi Hacker News-nya terbuka di panel samping.",
+            "Opsional: mengklik cerita di Hacker News membuka artikel seperti biasa dan diskusinya di panel samping di sebelahnya. Nonaktif secara default.",
+            "Lencana bilah alat opsional dengan jumlah komentar, nonaktif secara default.",
+            "Gratis. Tanpa telemetri, tanpa akun, tanpa membaca halaman. Izin yang sempit dan terdokumentasi."
+        ],
+        "disclaimer": "Tidak resmi. Ekstensi ini adalah proyek independen dan tidak berafiliasi dengan atau didukung oleh Y Combinator maupun Hacker News."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Rilis publik pertama. Temukan diskusi Hacker News yang tepat untuk artikel yang Anda baca dan buka dengan satu klik — di tab bersebelahan yang dapat Anda pasangkan dengan artikel menggunakan Chrome Split View, atau di panel samping browser. Menyertakan item “Buka di Split” di menu konteks tautan, alur opsional yang membuka diskusi di samping cerita yang diklik di Hacker News, dan lencana bilah alat opsional dengan jumlah komentar. Gratis, tanpa telemetri, tanpa akun."
+    },
+    "captions": [
+        {
+            "heading": "Dari artikel ke diskusi dalam satu klik",
+            "sub": "Lihat utas Hacker News yang tepat untuk halaman yang Anda baca, dengan jumlah komentar dan poin."
+        },
+        {
+            "heading": "Privat secara default",
+            "sub": "Lencana ketersediaan otomatis tetap nonaktif sampai Anda mengaktifkannya. Tanpa telemetri, tanpa akun, tanpa membaca halaman."
+        },
+        {
+            "heading": "Nyaman di tema terang dan gelap",
+            "sub": "Popup mengikuti skema warna browser Anda."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "diskusi",
+        "komentar",
+        "panel samping",
+        "split view",
+        "artikel"
+    ],
+    "appStoreKeywords": "hacker news,hn,diskusi,komentar,split view,panel samping,artikel"
+}
