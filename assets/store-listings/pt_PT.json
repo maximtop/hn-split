@@ -1,0 +1,45 @@
+{
+    "locale": "pt_PT",
+    "reviewed": false,
+    "description": {
+        "intro": "Está a ler um artigo e pergunta-se o que pensa o Hacker News? O Split for Hacker News encontra a discussão exata da página onde está e abre-a após um clique explícito.",
+        "bullets": [
+            "Um clique do artigo até aos seus comentários no Hacker News.",
+            "Correspondência exata de URL — sem palpites aproximados; os duplicados aparecem como alternativas.",
+            "O primeiro clique abre um separador adjacente; emparelhe-o com o artigo através do Chrome Split View e as seleções seguintes reutilizarão esse separador.",
+            "Ou abra a discussão no painel lateral do navegador, mesmo ao lado da página que está a ler.",
+            "“Abrir no Split” no menu do botão direito das ligações: a ligação abre no separador atual e a sua discussão no Hacker News abre no painel lateral.",
+            "Opcional: clicar numa história no Hacker News abre o artigo como habitualmente e a sua discussão no painel lateral ao lado. Desativado por predefinição.",
+            "Distintivo opcional na barra de ferramentas com o número de comentários, desativado por predefinição.",
+            "Gratuito. Sem telemetria, sem contas, sem leitura de páginas. Permissões restritas e documentadas."
+        ],
+        "disclaimer": "Não oficial. Esta extensão é um projeto independente e não é afiliada nem apoiada pela Y Combinator ou pelo Hacker News."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Primeira versão pública. Encontre a discussão exata do Hacker News para o artigo que está a ler e abra-a com um clique — num separador adjacente que pode emparelhar com o artigo através do Chrome Split View, ou no painel lateral do navegador. Inclui o item “Abrir no Split” no menu de contexto das ligações, um fluxo opcional que abre discussões ao lado das histórias clicadas no Hacker News e um distintivo opcional com o número de comentários. Gratuito, sem telemetria, sem contas."
+    },
+    "captions": [
+        {
+            "heading": "Do artigo à discussão num clique",
+            "sub": "Veja a discussão exata do Hacker News para a página que está a ler, com número de comentários e pontos."
+        },
+        {
+            "heading": "Privado por predefinição",
+            "sub": "Os distintivos automáticos de disponibilidade ficam desativados até os ativar. Sem telemetria, sem contas, sem leitura de páginas."
+        },
+        {
+            "heading": "Em casa no claro e no escuro",
+            "sub": "O pop-up segue o esquema de cores do navegador."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "discussão",
+        "comentários",
+        "painel lateral",
+        "split view",
+        "artigo"
+    ],
+    "appStoreKeywords": "hacker news,hn,discussão,comentários,split view,painel lateral,artigo"
+}

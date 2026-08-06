@@ -1,0 +1,45 @@
+{
+    "locale": "sv",
+    "reviewed": false,
+    "description": {
+        "intro": "Läser du en artikel och undrar vad Hacker News tycker? Split for Hacker News hittar den exakta diskussionen för sidan du är på och öppnar den efter ett uttryckligt klick.",
+        "bullets": [
+            "Ett klick från artikeln till dess kommentarer på Hacker News.",
+            "Exakt URL-matchning — inga ungefärliga gissningar; dubbletter visas som alternativ.",
+            "Det första klicket öppnar en intilliggande flik; para ihop den med artikeln via Chrome Split View, och senare val återanvänder den fliken.",
+            "Eller öppna diskussionen i webbläsarens sidopanel, precis bredvid sidan du läser.",
+            "”Öppna i Split” i länkarnas högerklicksmeny: länken öppnas i den aktuella fliken och dess Hacker News-diskussion öppnas i sidopanelen.",
+            "Valfritt: ett klick på en artikel på Hacker News öppnar artikeln som vanligt och dess diskussion i sidopanelen bredvid. Av som standard.",
+            "Valfri bricka i verktygsfältet med antalet kommentarer, av som standard.",
+            "Gratis. Ingen telemetri, inga konton, ingen läsning av sidor. Snäva, dokumenterade behörigheter."
+        ],
+        "disclaimer": "Inofficiell. Det här tillägget är ett oberoende projekt och är inte anslutet till eller godkänt av Y Combinator eller Hacker News."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Första offentliga utgåvan. Hitta den exakta Hacker News-diskussionen för artikeln du läser och öppna den med ett klick — i en intilliggande flik som du kan para ihop med artikeln via Chrome Split View, eller i webbläsarens sidopanel. Innehåller menyalternativet ”Öppna i Split” i länkarnas snabbmeny, ett valfritt flöde som öppnar diskussioner bredvid klickade artiklar på Hacker News, och en valfri bricka med antalet kommentarer. Gratis, ingen telemetri, inga konton."
+    },
+    "captions": [
+        {
+            "heading": "Från artikel till diskussion med ett klick",
+            "sub": "Se den exakta Hacker News-tråden för sidan du läser, med antal kommentarer och poäng."
+        },
+        {
+            "heading": "Privat som standard",
+            "sub": "Automatiska tillgänglighetsbrickor är av tills du slår på dem. Ingen telemetri, inga konton, ingen läsning av sidor."
+        },
+        {
+            "heading": "Hemma i både ljust och mörkt",
+            "sub": "Popup-fönstret följer webbläsarens färgschema."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "diskussion",
+        "kommentarer",
+        "sidopanel",
+        "split view",
+        "artikel"
+    ],
+    "appStoreKeywords": "hacker news,hn,diskussion,kommentarer,split view,sidopanel,artikel"
+}

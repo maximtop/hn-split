@@ -1,0 +1,45 @@
+{
+    "locale": "fr",
+    "reviewed": false,
+    "description": {
+        "intro": "Vous lisez un article et vous vous demandez ce qu'en pense Hacker News ? Split for Hacker News trouve la discussion exacte de la page où vous êtes et l'ouvre après un clic explicite.",
+        "bullets": [
+            "Un clic de l'article à ses commentaires Hacker News.",
+            "Correspondance d'URL exacte — pas de devinettes approximatives ; les doublons sont proposés comme alternatives.",
+            "Le premier clic ouvre un onglet adjacent ; associez-le à l'article avec Chrome Split View, et les sélections suivantes réutiliseront cet onglet.",
+            "Ou ouvrez la discussion dans le panneau latéral du navigateur, juste à côté de la page que vous lisez.",
+            "« Ouvrir dans Split » dans le menu contextuel des liens : le lien s'ouvre dans l'onglet actuel et sa discussion Hacker News s'ouvre dans le panneau latéral.",
+            "En option : cliquer sur une histoire sur Hacker News ouvre l'article comme d'habitude et sa discussion dans le panneau latéral à côté. Désactivé par défaut.",
+            "Badge facultatif dans la barre d'outils avec le nombre de commentaires, désactivé par défaut.",
+            "Gratuit. Pas de télémétrie, pas de comptes, pas de lecture des pages. Des autorisations restreintes et documentées."
+        ],
+        "disclaimer": "Non officiel. Cette extension est un projet indépendant, sans affiliation avec Y Combinator ou Hacker News et sans leur approbation."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Première version publique. Trouvez la discussion Hacker News exacte de l'article que vous lisez et ouvrez-la en un clic — dans un onglet adjacent que vous pouvez associer à l'article avec Chrome Split View, ou dans le panneau latéral du navigateur. Comprend l'élément « Ouvrir dans Split » du menu contextuel des liens, un flux facultatif qui ouvre les discussions à côté des histoires cliquées sur Hacker News, et un badge facultatif avec le nombre de commentaires. Gratuit, sans télémétrie, sans comptes."
+    },
+    "captions": [
+        {
+            "heading": "De l'article à la discussion en un clic",
+            "sub": "Voyez le fil Hacker News exact de la page que vous lisez, avec le nombre de commentaires et de points."
+        },
+        {
+            "heading": "Privé par défaut",
+            "sub": "Les badges automatiques de disponibilité restent désactivés tant que vous ne les activez pas. Pas de télémétrie, pas de comptes, pas de lecture des pages."
+        },
+        {
+            "heading": "À l'aise en clair comme en sombre",
+            "sub": "La fenêtre contextuelle suit le thème de couleurs de votre navigateur."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "discussion",
+        "commentaires",
+        "panneau latéral",
+        "split view",
+        "article"
+    ],
+    "appStoreKeywords": "hacker news,hn,discussion,commentaires,split view,panneau latéral,article"
+}

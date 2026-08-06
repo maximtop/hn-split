@@ -1,0 +1,45 @@
+{
+    "locale": "sk",
+    "reviewed": false,
+    "description": {
+        "intro": "Čítate článok a zaujíma vás, čo si myslí Hacker News? Split for Hacker News nájde presnú diskusiu k stránke, na ktorej ste, a otvorí ju po jednom výslovnom kliknutí.",
+        "bullets": [
+            "Jedno kliknutie od článku k jeho komentárom na Hacker News.",
+            "Presná zhoda URL — žiadne približné odhady; duplicity sa zobrazujú ako alternatívy.",
+            "Prvé kliknutie otvorí susednú kartu; spárujte ju s článkom cez Chrome Split View a neskoršie výbery túto kartu znova použijú.",
+            "Alebo otvorte diskusiu v bočnom paneli prehliadača, hneď vedľa stránky, ktorú čítate.",
+            "„Otvoriť v Splite“ v ponuke pravého tlačidla na odkaze: odkaz sa otvorí na aktuálnej karte a jeho diskusia na Hacker News v bočnom paneli.",
+            "Voliteľné: kliknutie na príbeh na Hacker News otvorí článok ako zvyčajne a jeho diskusiu v bočnom paneli vedľa neho. Predvolene vypnuté.",
+            "Voliteľný odznak na paneli nástrojov s počtom komentárov, predvolene vypnutý.",
+            "Zadarmo. Žiadna telemetria, žiadne účty, žiadne čítanie stránok. Úzke, zdokumentované povolenia."
+        ],
+        "disclaimer": "Neoficiálne. Toto rozšírenie je nezávislý projekt a nie je spojené s Y Combinator ani Hacker News, ani nimi nie je schválené."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Prvé verejné vydanie. Nájdite presnú diskusiu na Hacker News k článku, ktorý čítate, a otvorte ju jedným kliknutím — na susednej karte, ktorú môžete spárovať s článkom cez Chrome Split View, alebo v bočnom paneli prehliadača. Obsahuje položku „Otvoriť v Splite“ v kontextovej ponuke odkazov, voliteľný tok otvárajúci diskusie vedľa rozkliknutých príbehov na Hacker News a voliteľný odznak s počtom komentárov na paneli nástrojov. Zadarmo, bez telemetrie, bez účtov."
+    },
+    "captions": [
+        {
+            "heading": "Od článku k diskusii jedným kliknutím",
+            "sub": "Presná diskusia na Hacker News k stránke, ktorú čítate, s počtom komentárov a bodov."
+        },
+        {
+            "heading": "Predvolene súkromné",
+            "sub": "Automatické odznaky dostupnosti zostávajú vypnuté, kým ich nezapnete. Žiadna telemetria, žiadne účty, žiadne čítanie stránok."
+        },
+        {
+            "heading": "Doma vo svetlom aj tmavom režime",
+            "sub": "Vyskakovacie okno sa riadi farebnou schémou prehliadača."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "diskusia",
+        "komentáre",
+        "bočný panel",
+        "split view",
+        "článok"
+    ],
+    "appStoreKeywords": "hacker news,hn,diskusia,komentáre,split view,bočný panel,článok"
+}
