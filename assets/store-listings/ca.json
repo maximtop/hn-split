@@ -1,0 +1,45 @@
+{
+    "locale": "ca",
+    "reviewed": false,
+    "description": {
+        "intro": "Esteu llegint un article i us pregunteu què en pensa Hacker News? Split for Hacker News troba la discussió exacta de la pàgina on sou i l'obre després d'un clic explícit.",
+        "bullets": [
+            "Un clic de l'article als seus comentaris de Hacker News.",
+            "Coincidència exacta d'URL — sense conjectures aproximades; els duplicats es mostren com a alternatives.",
+            "El primer clic obre una pestanya adjacent; emparelleu-la amb l'article mitjançant Chrome Split View i les seleccions posteriors reutilitzaran aquesta pestanya.",
+            "O obriu la discussió al plafó lateral del navegador, just al costat de la pàgina que llegiu.",
+            "«Obre a Split» al menú del botó dret dels enllaços: l'enllaç s'obre a la pestanya actual i la seva discussió de Hacker News s'obre al plafó lateral.",
+            "Opcional: en fer clic a una història a Hacker News, l'article s'obre com sempre i la seva discussió al plafó lateral del costat. Desactivat per defecte.",
+            "Insígnia opcional a la barra d'eines amb el nombre de comentaris, desactivada per defecte.",
+            "Gratuït. Sense telemetria, sense comptes, sense lectura de pàgines. Permisos limitats i documentats."
+        ],
+        "disclaimer": "No oficial. Aquesta extensió és un projecte independent i no està afiliada a Y Combinator ni a Hacker News, ni compta amb el seu suport."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Primera versió pública. Trobeu la discussió exacta de Hacker News de l'article que llegiu i obriu-la amb un clic — en una pestanya adjacent que podeu emparellar amb l'article mitjançant Chrome Split View, o al plafó lateral del navegador. Inclou l'element «Obre a Split» al menú contextual dels enllaços, un flux opcional que obre les discussions al costat de les històries clicades a Hacker News, i una insígnia opcional amb el nombre de comentaris. Gratuït, sense telemetria, sense comptes."
+    },
+    "captions": [
+        {
+            "heading": "De l'article a la discussió amb un clic",
+            "sub": "Vegeu el fil exacte de Hacker News de la pàgina que llegiu, amb el nombre de comentaris i punts."
+        },
+        {
+            "heading": "Privat per defecte",
+            "sub": "Les insígnies automàtiques de disponibilitat resten desactivades fins que les activeu. Sense telemetria, sense comptes, sense lectura de pàgines."
+        },
+        {
+            "heading": "Còmode en clar i en fosc",
+            "sub": "La finestra emergent segueix l'esquema de colors del navegador."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "discussió",
+        "comentaris",
+        "plafó lateral",
+        "split view",
+        "article"
+    ],
+    "appStoreKeywords": "hacker news,hn,discussió,comentaris,split view,plafó lateral,article"
+}

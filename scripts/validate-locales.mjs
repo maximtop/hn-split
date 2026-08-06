@@ -6,6 +6,7 @@ import { validator } from '@adguard/translate';
 // Node 24 strips types natively, so the plain-node script can consume the
 // same registry as the application code — one source of truth.
 import { BASE_LOCALE, LOCALE_REGISTRY, SHIPPED_LOCALES } from '../src/shared/locales.ts';
+import { MANIFEST_DESCRIPTION_LIMIT } from './lib/store-listings.ts';
 
 const EXPECTED_LOCALE_COUNT = 40;
 
@@ -54,6 +55,20 @@ for (const locale of localeNames) {
         if (!validator.isTranslationValid(baseMessage, translatedMessage, entry.adguardCode)) {
             throw new Error(`Locale ${locale} has an invalid ${key} translation structure.`);
         }
+    }
+    // Chrome and Edge read the store summary from the manifest description,
+    // so the manifest budget applies to every locale, not only English.
+    const description = messages.extension_description.message;
+    if (description.length > MANIFEST_DESCRIPTION_LIMIT) {
+        throw new Error(
+            `Locale ${locale} extension_description is ${description.length} characters; `
+            + `the manifest limit is ${MANIFEST_DESCRIPTION_LIMIT}.`,
+        );
+    }
+    // The product name is a brand string and is never translated
+    // (docs/store-listing.md, Identity).
+    if (messages.extension_name.message !== baseMessages.extension_name.message) {
+        throw new Error(`Locale ${locale} must not translate extension_name.`);
     }
 }
 

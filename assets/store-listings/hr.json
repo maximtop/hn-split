@@ -1,0 +1,45 @@
+{
+    "locale": "hr",
+    "reviewed": false,
+    "description": {
+        "intro": "Čitate članak i pitate se što misli Hacker News? Split for Hacker News pronalazi točnu raspravu za stranicu na kojoj ste i otvara je nakon jednog izričitog klika.",
+        "bullets": [
+            "Jedan klik od članka do njegovih komentara na Hacker Newsu.",
+            "Točno podudaranje URL-a — bez približnih nagađanja; duplikati se prikazuju kao alternative.",
+            "Prvi klik otvara susjednu karticu; uparite je s člankom pomoću Chrome Split Viewa i kasniji odabiri ponovno će koristiti tu karticu.",
+            "Ili otvorite raspravu u bočnoj ploči preglednika, odmah uz stranicu koju čitate.",
+            "„Otvori u Splitu“ u izborniku desnog klika na poveznicu: poveznica se otvara u trenutačnoj kartici, a njezina rasprava s Hacker Newsa u bočnoj ploči.",
+            "Neobavezno: klik na priču na Hacker Newsu otvara članak kao i obično, a njegovu raspravu u bočnoj ploči pokraj njega. Isključeno prema zadanim postavkama.",
+            "Neobavezna značka na alatnoj traci s brojem komentara, isključena prema zadanim postavkama.",
+            "Besplatno. Bez telemetrije, bez računa, bez čitanja stranica. Uska, dokumentirana dopuštenja."
+        ],
+        "disclaimer": "Neslužbeno. Ovo je proširenje neovisan projekt i nije povezano s Y Combinatorom ili Hacker Newsom niti ga oni podržavaju."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Prvo javno izdanje. Pronađite točnu raspravu na Hacker Newsu za članak koji čitate i otvorite je jednim klikom — u susjednoj kartici koju možete upariti s člankom pomoću Chrome Split Viewa, ili u bočnoj ploči preglednika. Uključuje stavku „Otvori u Splitu“ u kontekstnom izborniku poveznica, neobavezan tijek koji otvara rasprave uz kliknute priče na Hacker Newsu i neobaveznu značku s brojem komentara na alatnoj traci. Besplatno, bez telemetrije, bez računa."
+    },
+    "captions": [
+        {
+            "heading": "Od članka do rasprave jednim klikom",
+            "sub": "Pogledajte točnu Hacker News raspravu za stranicu koju čitate, s brojem komentara i bodova."
+        },
+        {
+            "heading": "Privatno prema zadanim postavkama",
+            "sub": "Automatske značke dostupnosti ostaju isključene dok ih ne uključite. Bez telemetrije, bez računa, bez čitanja stranica."
+        },
+        {
+            "heading": "Kod kuće u svijetloj i tamnoj temi",
+            "sub": "Skočni prozor prati shemu boja vašeg preglednika."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "rasprava",
+        "komentari",
+        "bočna ploča",
+        "split view",
+        "članak"
+    ],
+    "appStoreKeywords": "hacker news,hn,rasprava,komentari,split view,bočna ploča,članak"
+}

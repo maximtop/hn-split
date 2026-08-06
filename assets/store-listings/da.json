@@ -1,0 +1,45 @@
+{
+    "locale": "da",
+    "reviewed": false,
+    "description": {
+        "intro": "Læser du en artikel og undrer dig over, hvad Hacker News mener? Split for Hacker News finder den præcise diskussion for den side, du er på, og åbner den efter ét udtrykkeligt klik.",
+        "bullets": [
+            "Ét klik fra artiklen til dens kommentarer på Hacker News.",
+            "Præcis URL-matchning — ingen omtrentlige gæt; dubletter vises som alternativer.",
+            "Det første klik åbner en tilstødende fane; par den med artiklen via Chrome Split View, og senere valg genbruger den fane.",
+            "Eller åbn diskussionen i browserens sidepanel, lige ved siden af den side, du læser.",
+            "“Åbn i Split” i linkets højrekliksmenu: linket åbnes i den aktuelle fane, og dets Hacker News-diskussion åbnes i sidepanelet.",
+            "Valgfrit: et klik på en historie på Hacker News åbner artiklen som normalt og dens diskussion i sidepanelet ved siden af. Slået fra som standard.",
+            "Valgfrit badge på værktøjslinjen med antallet af kommentarer, slået fra som standard.",
+            "Gratis. Ingen telemetri, ingen konti, ingen læsning af sider. Snævre, dokumenterede tilladelser."
+        ],
+        "disclaimer": "Uofficiel. Denne udvidelse er et uafhængigt projekt og er ikke tilknyttet eller godkendt af Y Combinator eller Hacker News."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Første offentlige udgivelse. Find den præcise Hacker News-diskussion for den artikel, du læser, og åbn den med ét klik — i en tilstødende fane, du kan parre med artiklen via Chrome Split View, eller i browserens sidepanel. Indeholder menupunktet “Åbn i Split” i links højrekliksmenu, et valgfrit flow, der åbner diskussioner ved siden af klikkede historier på Hacker News, og et valgfrit badge med antal kommentarer. Gratis, ingen telemetri, ingen konti."
+    },
+    "captions": [
+        {
+            "heading": "Fra artikel til diskussion med ét klik",
+            "sub": "Se den præcise Hacker News-tråd for den side, du læser, med antal kommentarer og point."
+        },
+        {
+            "heading": "Privat som standard",
+            "sub": "Automatiske tilgængeligheds-badges er slået fra, indtil du aktiverer dem. Ingen telemetri, ingen konti, ingen læsning af sider."
+        },
+        {
+            "heading": "Hjemme i både lyst og mørkt",
+            "sub": "Pop op-vinduet følger browserens farveskema."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "diskussion",
+        "kommentarer",
+        "sidepanel",
+        "split view",
+        "artikel"
+    ],
+    "appStoreKeywords": "hacker news,hn,diskussion,kommentarer,split view,sidepanel,artikel"
+}

@@ -1,0 +1,45 @@
+{
+    "locale": "fil",
+    "reviewed": false,
+    "description": {
+        "intro": "Nagbabasa ng artikulo at iniisip kung ano ang sinasabi ng Hacker News? Hinahanap ng Split for Hacker News ang eksaktong talakayan para sa pahinang binubuksan mo at binubuksan ito pagkatapos ng isang tahasang pag-click.",
+        "bullets": [
+            "Isang click mula sa artikulo papunta sa mga komento nito sa Hacker News.",
+            "Eksaktong pagtutugma ng URL — walang pahapyaw na hula; ang mga duplicate ay ipinapakita bilang mga alternatibo.",
+            "Ang unang pag-click ay nagbubukas ng katabing tab; ipares ito sa artikulo gamit ang Chrome Split View at gagamitin muli ng mga susunod na pagpili ang tab na iyon.",
+            "O buksan ang talakayan sa side panel ng browser, katabi mismo ng pahinang binabasa mo.",
+            "“Buksan sa Split” sa right-click menu ng mga link: bubukas ang link sa kasalukuyang tab at bubukas ang talakayan nito sa Hacker News sa side panel.",
+            "Opsyonal: ang pag-click sa isang kuwento sa Hacker News ay nagbubukas ng artikulo gaya ng dati at ng talakayan nito sa side panel sa tabi. Naka-off bilang default.",
+            "Opsyonal na badge sa toolbar na may bilang ng mga komento, naka-off bilang default.",
+            "Libre. Walang telemetry, walang account, walang pagbabasa ng pahina. Makikitid at dokumentadong pahintulot."
+        ],
+        "disclaimer": "Hindi opisyal. Ang extension na ito ay isang malayang proyekto at hindi kaanib o inendorso ng Y Combinator o Hacker News."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Unang pampublikong release. Hanapin ang eksaktong talakayan sa Hacker News para sa artikulong binabasa mo at buksan ito sa isang click — sa katabing tab na maipapares mo sa artikulo gamit ang Chrome Split View, o sa side panel ng browser. Kasama ang “Buksan sa Split” sa context menu ng mga link, isang opsyonal na flow na nagbubukas ng mga talakayan sa tabi ng mga na-click na kuwento sa Hacker News, at isang opsyonal na badge sa toolbar na may bilang ng mga komento. Libre, walang telemetry, walang account."
+    },
+    "captions": [
+        {
+            "heading": "Mula artikulo hanggang talakayan sa isang click",
+            "sub": "Tingnan ang eksaktong thread sa Hacker News para sa pahinang binabasa mo, kasama ang bilang ng komento at puntos."
+        },
+        {
+            "heading": "Pribado bilang default",
+            "sub": "Nananatiling naka-off ang mga awtomatikong badge ng availability hanggang i-on mo. Walang telemetry, walang account, walang pagbabasa ng pahina."
+        },
+        {
+            "heading": "Komportable sa maliwanag at madilim",
+            "sub": "Sinusunod ng popup ang color scheme ng iyong browser."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "talakayan",
+        "mga komento",
+        "side panel",
+        "split view",
+        "artikulo"
+    ],
+    "appStoreKeywords": "hacker news,hn,talakayan,komento,split view,side panel,artikulo"
+}

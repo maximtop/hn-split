@@ -1,0 +1,45 @@
+{
+    "locale": "ms",
+    "reviewed": false,
+    "description": {
+        "intro": "Sedang membaca artikel dan tertanya-tanya apa pendapat Hacker News? Split for Hacker News mencari perbincangan yang tepat untuk halaman yang anda buka dan membukanya selepas satu klik yang jelas.",
+        "bullets": [
+            "Satu klik dari artikel ke komennya di Hacker News.",
+            "Padanan URL yang tepat — tiada tekaan kasar; pendua dipaparkan sebagai alternatif.",
+            "Klik pertama membuka tab bersebelahan; padankan dengan artikel menggunakan Chrome Split View dan pilihan seterusnya akan menggunakan semula tab itu.",
+            "Atau buka perbincangan dalam panel sisi pelayar, betul-betul di sebelah halaman yang anda baca.",
+            "“Buka dalam Split” dalam menu klik kanan pautan: pautan dibuka dalam tab semasa dan perbincangan Hacker News-nya dibuka dalam panel sisi.",
+            "Pilihan: mengklik cerita di Hacker News membuka artikel seperti biasa dan perbincangannya dalam panel sisi di sebelahnya. Dimatikan secara lalai.",
+            "Lencana bar alat pilihan dengan bilangan komen, dimatikan secara lalai.",
+            "Percuma. Tiada telemetri, tiada akaun, tiada pembacaan halaman. Kebenaran yang sempit dan didokumenkan."
+        ],
+        "disclaimer": "Tidak rasmi. Sambungan ini ialah projek bebas dan tidak bergabung dengan atau disokong oleh Y Combinator mahupun Hacker News."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Keluaran awam pertama. Cari perbincangan Hacker News yang tepat untuk artikel yang anda baca dan buka dengan satu klik — dalam tab bersebelahan yang boleh anda padankan dengan artikel menggunakan Chrome Split View, atau dalam panel sisi pelayar. Termasuk item “Buka dalam Split” dalam menu konteks pautan, aliran pilihan yang membuka perbincangan di sebelah cerita yang diklik di Hacker News, dan lencana bar alat pilihan dengan bilangan komen. Percuma, tiada telemetri, tiada akaun."
+    },
+    "captions": [
+        {
+            "heading": "Dari artikel ke perbincangan dalam satu klik",
+            "sub": "Lihat bebenang Hacker News yang tepat untuk halaman yang anda baca, dengan bilangan komen dan mata."
+        },
+        {
+            "heading": "Peribadi secara lalai",
+            "sub": "Lencana ketersediaan automatik kekal dimatikan sehingga anda menghidupkannya. Tiada telemetri, tiada akaun, tiada pembacaan halaman."
+        },
+        {
+            "heading": "Selesa dalam tema cerah dan gelap",
+            "sub": "Tetingkap timbul mengikut skema warna pelayar anda."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "perbincangan",
+        "komen",
+        "panel sisi",
+        "split view",
+        "artikel"
+    ],
+    "appStoreKeywords": "hacker news,hn,perbincangan,komen,split view,panel sisi,artikel"
+}

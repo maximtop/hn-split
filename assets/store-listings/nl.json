@@ -1,0 +1,45 @@
+{
+    "locale": "nl",
+    "reviewed": false,
+    "description": {
+        "intro": "Leest u een artikel en vraagt u zich af wat Hacker News ervan vindt? Split for Hacker News vindt de exacte discussie voor de pagina waarop u bent en opent die na één expliciete klik.",
+        "bullets": [
+            "Eén klik van het artikel naar de bijbehorende Hacker News-reacties.",
+            "Exacte URL-overeenkomst — geen vage gissingen; duplicaten worden als alternatieven getoond.",
+            "De eerste klik opent een aangrenzend tabblad; koppel het aan het artikel met Chrome Split View, en latere selecties hergebruiken dat tabblad.",
+            "Of open de discussie in het zijpaneel van de browser, direct naast de pagina die u leest.",
+            "“Openen in Split” in het rechtsklikmenu van links: de link opent in het huidige tabblad en de bijbehorende Hacker News-discussie opent in het zijpaneel.",
+            "Optioneel: een klik op een verhaal op Hacker News opent het artikel zoals gewoonlijk en de discussie ernaast in het zijpaneel. Standaard uit.",
+            "Optionele werkbalkbadge met het aantal reacties, standaard uit.",
+            "Gratis. Geen telemetrie, geen accounts, geen pagina's lezen. Beperkte, gedocumenteerde machtigingen."
+        ],
+        "disclaimer": "Onofficieel. Deze extensie is een onafhankelijk project en is niet verbonden aan of goedgekeurd door Y Combinator of Hacker News."
+    },
+    "releaseNotes": {
+        "v0.1.0": "Eerste openbare release. Vind de exacte Hacker News-discussie voor het artikel dat u leest en open die met één klik — in een aangrenzend tabblad dat u met Chrome Split View aan het artikel kunt koppelen, of in het zijpaneel van de browser. Bevat het menu-item “Openen in Split” in het contextmenu van links, een optionele functie die discussies opent naast aangeklikte verhalen op Hacker News, en een optionele werkbalkbadge met het aantal reacties. Gratis, geen telemetrie, geen accounts."
+    },
+    "captions": [
+        {
+            "heading": "Van artikel naar discussie in één klik",
+            "sub": "Bekijk de exacte Hacker News-thread voor de pagina die u leest, met het aantal reacties en punten."
+        },
+        {
+            "heading": "Standaard privé",
+            "sub": "Automatische beschikbaarheidsbadges blijven uit totdat u ze inschakelt. Geen telemetrie, geen accounts, geen pagina's lezen."
+        },
+        {
+            "heading": "Thuis in licht en donker",
+            "sub": "De pop-up volgt het kleurenschema van uw browser."
+        }
+    ],
+    "searchTerms": [
+        "hacker news",
+        "hn",
+        "discussie",
+        "reacties",
+        "zijpaneel",
+        "split view",
+        "artikel"
+    ],
+    "appStoreKeywords": "hacker news,hn,discussie,reacties,split view,zijpaneel,artikel"
+}
