@@ -21,7 +21,7 @@ const restrictedControlTemplate = {
 
 export default tseslint.config(
     {
-        ignores: ['coverage/**', 'dist/**', 'node_modules/**'],
+        ignores: ['build/**', 'coverage/**', 'dist/**', 'node_modules/**'],
     },
     eslint.configs.recommended,
     // Type-aware linting backed by the TypeScript project service.
