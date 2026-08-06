@@ -17,10 +17,11 @@ export type BuildTarget = (typeof BUILD_TARGETS)[number];
 export const DEFAULT_BUILD_TARGET: BuildTarget = 'chrome';
 
 /**
- * Gecko add-on id for Firefox packages. AMO treats this id as the permanent
- * identity of the extension, so it must never change once published.
+ * Gecko add-on id for Firefox packages, rooted in the maintainer's domain
+ * (maximtop.dev). AMO treats this id as the permanent identity of the
+ * extension, so it must never change once published.
  */
-export const FIREFOX_GECKO_ID = 'hn-split@maximtop.github.io';
+export const FIREFOX_GECKO_ID = 'hn-split@maximtop.dev';
 
 /**
  * Oldest supported Firefox version. 128 is an ESR line that ships every API
