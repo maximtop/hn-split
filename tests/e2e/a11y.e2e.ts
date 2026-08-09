@@ -4,6 +4,7 @@ import type { Page } from '@playwright/test';
 
 import arMessages from '../../public/_locales/ar/messages.json' with { type: 'json' };
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
+import nbMessages from '../../public/_locales/nb/messages.json' with { type: 'json' };
 import ruMessages from '../../public/_locales/ru/messages.json' with { type: 'json' };
 import zhCnMessages from '../../public/_locales/zh_CN/messages.json' with { type: 'json' };
 import {
@@ -51,6 +52,20 @@ const RU_BUTTON_NAMES = {
 } as const;
 
 const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
+    {
+        bidiDirection: 'ltr',
+        catalogLocale: 'nb',
+        chromeUiLocale: 'nb',
+        direction: 'ltr',
+        documentLanguage: 'nb',
+        label: 'nb (Norwegian Bokmål)',
+        optionsSwitchName: nbMessages.automatic_badge_label.message,
+        popupButtonNames: {
+            primary: new RegExp(nbMessages.open_primary_discussion.message),
+            alternative: new RegExp(nbMessages.open_alternative.message),
+        },
+        uiLanguage: 'nb',
+    },
     {
         bidiDirection: 'ltr',
         catalogLocale: 'ru',

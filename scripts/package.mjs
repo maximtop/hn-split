@@ -13,7 +13,11 @@ import { createHash } from 'node:crypto';
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
-import { SHIPPED_LOCALES } from '../src/shared/locales.ts';
+import {
+    CHROME_PACKAGED_LOCALE_ALIASES,
+    CHROME_PACKAGED_LOCALES,
+    SHIPPED_LOCALES,
+} from '../src/shared/locales.ts';
 import { BUILD_TARGETS } from './lib/browser-manifest.ts';
 import {
     isWorktreeDirty,
@@ -75,7 +79,8 @@ function buildBrowserTarget(target) {
 
 /**
  * Requires one unpacked target to contain exactly the reviewed release
- * locales before any bytes enter a store archive.
+ * locales and generated compatibility aliases before any bytes enter a store
+ * archive.
  *
  * @param target Browser target whose build is being verified.
  * @param outputDirectory Absolute path of the unpacked build directory.
@@ -87,12 +92,24 @@ async function validatePackagedLocales(target, outputDirectory) {
         .filter((entry) => entry.isDirectory())
         .map(({ name }) => name)
         .sort();
-    const expectedLocales = [...SHIPPED_LOCALES].sort();
+    const aliases = target === 'chrome' ? CHROME_PACKAGED_LOCALE_ALIASES : {};
+    const expectedLocales = target === 'chrome'
+        ? [...CHROME_PACKAGED_LOCALES].sort()
+        : [...SHIPPED_LOCALES].sort();
     if (JSON.stringify(packagedLocales) !== JSON.stringify(expectedLocales)) {
         throw new Error(
             `${target} package locales [${packagedLocales.join(', ')}] must match `
-            + `SHIPPED_LOCALES [${expectedLocales.join(', ')}].`,
+            + `the expected ${target} inventory [${expectedLocales.join(', ')}].`,
         );
+    }
+    for (const [alias, source] of Object.entries(aliases)) {
+        const [aliasMessages, sourceMessages] = await Promise.all([
+            readFile(resolve(localesDirectory, alias, 'messages.json')),
+            readFile(resolve(localesDirectory, source, 'messages.json')),
+        ]);
+        if (!aliasMessages.equals(sourceMessages)) {
+            throw new Error(`${target} package locale ${alias} must be byte-identical to ${source}.`);
+        }
     }
 }
 

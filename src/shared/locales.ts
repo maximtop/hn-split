@@ -31,9 +31,17 @@ export interface LocaleEntry {
 export const BASE_LOCALE: Locale = 'en';
 
 /**
- * Names the 40 priority locales selected for HN Split. Every code is directly
- * supported by Chrome's `_locales` mechanism; see docs/locales.md for the
- * validation record, fallback notes, and selection rationale.
+ * Maps Chrome Web Store compatibility directories to their reviewed source
+ * catalog. Chrome runtime uses `nb`, while the Web Store documents `no`.
+ */
+export const CHROME_PACKAGED_LOCALE_ALIASES: Readonly<Record<string, string>> = {
+    no: 'nb',
+};
+
+/**
+ * Names the 40 priority locales selected for HN Split. Every language is
+ * supported by Chrome's `_locales` mechanism, with the Norwegian runtime/store
+ * code split documented in docs/locales.md.
  */
 export const LOCALE_REGISTRY: readonly LocaleEntry[] = [
     { code: 'ar', adguardCode: 'ar', englishName: 'Arabic', rtl: true },
@@ -60,8 +68,8 @@ export const LOCALE_REGISTRY: readonly LocaleEntry[] = [
     { code: 'ja', adguardCode: 'ja', englishName: 'Japanese', rtl: false },
     { code: 'ko', adguardCode: 'ko', englishName: 'Korean', rtl: false },
     { code: 'ms', adguardCode: 'ms', englishName: 'Malay', rtl: false },
+    { code: 'nb', adguardCode: 'nb', englishName: 'Norwegian Bokmål', rtl: false },
     { code: 'nl', adguardCode: 'nl', englishName: 'Dutch', rtl: false },
-    { code: 'no', adguardCode: 'no', englishName: 'Norwegian', rtl: false },
     { code: 'pl', adguardCode: 'pl', englishName: 'Polish', rtl: false },
     { code: 'pt_BR', adguardCode: 'pt_br', englishName: 'Brazilian Portuguese', rtl: false },
     { code: 'pt_PT', adguardCode: 'pt_pt', englishName: 'European Portuguese', rtl: false },
@@ -87,12 +95,23 @@ export const LOCALE_REGISTRY: readonly LocaleEntry[] = [
 export const SHIPPED_LOCALES: readonly string[] = LOCALE_REGISTRY.map(({ code }) => code);
 
 /**
+ * Names every locale directory copied into the Chrome Web Store package.
+ * Norwegian needs both Chromium's runtime `nb` code and the Web Store `no`
+ * alias; other browser targets ship only the reviewed source inventory.
+ */
+export const CHROME_PACKAGED_LOCALES: readonly string[] = [
+    ...SHIPPED_LOCALES,
+    ...Object.keys(CHROME_PACKAGED_LOCALE_ALIASES),
+];
+
+/**
  * Resolves a normalized browser UI language to a shipped registry entry.
  * @param uiLanguage - The lowercase, underscore-normalized UI language.
  */
 export function resolveShippedLocale(uiLanguage: string): LocaleEntry | undefined {
     const shipped = LOCALE_REGISTRY.filter((entry) => SHIPPED_LOCALES.includes(entry.code));
     const language = uiLanguage.split('_')[0] ?? uiLanguage;
+    const canonicalLanguage = CHROME_PACKAGED_LOCALE_ALIASES[language] ?? language;
     return shipped.find((entry) => entry.code.toLowerCase() === uiLanguage)
-        ?? shipped.find((entry) => entry.code.toLowerCase().split('_')[0] === language);
+        ?? shipped.find((entry) => entry.code.toLowerCase().split('_')[0] === canonicalLanguage);
 }

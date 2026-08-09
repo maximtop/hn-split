@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
     BASE_LOCALE,
+    CHROME_PACKAGED_LOCALE_ALIASES,
+    CHROME_PACKAGED_LOCALES,
     LOCALE_REGISTRY,
     SHIPPED_LOCALES,
     resolveShippedLocale,
@@ -10,7 +12,7 @@ import {
 const PRIORITY_LOCALES = [
     'ar', 'bg', 'bn', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es',
     'es_419', 'fa', 'fi', 'fil', 'fr', 'he', 'hi', 'hr', 'hu', 'id',
-    'it', 'ja', 'ko', 'ms', 'nl', 'no', 'pl', 'pt_BR', 'pt_PT', 'ro',
+    'it', 'ja', 'ko', 'ms', 'nb', 'nl', 'pl', 'pt_BR', 'pt_PT', 'ro',
     'ru', 'sk', 'sr', 'sv', 'th', 'tr', 'uk', 'vi', 'zh_CN', 'zh_TW',
 ];
 
@@ -38,6 +40,12 @@ describe('locale registry', () => {
         expect(SHIPPED_LOCALES).toContain(BASE_LOCALE);
     });
 
+    it('configures one generated Norwegian alias for Chrome', () => {
+        expect(CHROME_PACKAGED_LOCALE_ALIASES).toEqual({ no: 'nb' });
+        expect(CHROME_PACKAGED_LOCALES).toEqual([...PRIORITY_LOCALES, 'no']);
+        expect(new Set(CHROME_PACKAGED_LOCALES).size).toBe(41);
+    });
+
     it('maps regional variants to lowercase library codes', () => {
         const byCode = new Map(LOCALE_REGISTRY.map((entry) => [entry.code, entry.adguardCode]));
         expect(byCode.get('pt_BR')).toBe('pt_br');
@@ -45,6 +53,7 @@ describe('locale registry', () => {
         expect(byCode.get('zh_CN')).toBe('zh_cn');
         expect(byCode.get('zh_TW')).toBe('zh_tw');
         expect(byCode.get('es_419')).toBe('es');
+        expect(byCode.get('nb')).toBe('nb');
     });
 });
 
@@ -63,6 +72,10 @@ describe('resolveShippedLocale', () => {
         ['en_us', 'en'],
         ['en_gb', 'en'],
         ['de', 'de'],
+        ['nb', 'nb'],
+        ['nb_no', 'nb'],
+        ['no', 'nb'],
+        ['no_no', 'nb'],
         ['zh_cn', 'zh_cn'],
         ['zh_tw', 'zh_tw'],
         ['zh', 'zh_cn'],
@@ -72,6 +85,10 @@ describe('resolveShippedLocale', () => {
         ['es_mx', 'es'],
     ])('resolves %s to shipped locale %s', (uiLanguage, expected) => {
         expect(resolveShippedLocale(uiLanguage)?.adguardCode).toBe(expected);
+    });
+
+    it('maps the Norwegian Web Store alias to the runtime Bokmål entry', () => {
+        expect(resolveShippedLocale('no')?.code).toBe('nb');
     });
 
     it.each([

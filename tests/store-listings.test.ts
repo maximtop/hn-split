@@ -33,11 +33,10 @@ describe('store locale catalog', () => {
         }
     });
 
-    it('supports every locale directly on Chrome and Edge', () => {
-        for (const storeId of ['chrome', 'edge'] as const) {
-            for (const { code } of LOCALE_REGISTRY) {
-                expect(STORE_CATALOG[storeId].locales[code]).toBe(code);
-            }
+    it('maps every Chrome and Edge package locale without fallbacks', () => {
+        for (const { code } of LOCALE_REGISTRY) {
+            expect(STORE_CATALOG.edge.locales[code]).toBe(code);
+            expect(STORE_CATALOG.chrome.locales[code]).toBe(code === 'nb' ? 'no' : code);
         }
     });
 
@@ -47,7 +46,7 @@ describe('store locale catalog', () => {
         expect(amo.es).toBe('es-ES');
         expect(amo.es_419).toBe('es-MX');
         expect(amo.fil).toBe('tl');
-        expect(amo.no).toBe('nb-NO');
+        expect(amo.nb).toBe('nb-NO');
         expect(amo.sv).toBe('sv-SE');
         expect(amo.pt_BR).toBe('pt-BR');
         expect(amo.zh_CN).toBe('zh-CN');
@@ -65,6 +64,7 @@ describe('store locale catalog', () => {
         expect(STORE_CATALOG.appStore.unsupportedFallback).toBe('en-US');
         expect(appStore.zh_CN).toBe('zh-Hans');
         expect(appStore.zh_TW).toBe('zh-Hant');
+        expect(appStore.nb).toBe('no');
     });
 
     it('records a check date and source for every store', () => {
