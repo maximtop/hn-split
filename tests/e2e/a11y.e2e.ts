@@ -52,16 +52,20 @@ const RU_BUTTON_NAMES = {
 
 const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
     {
-        browserLanguage: 'ru',
+        bidiDirection: 'ltr',
+        catalogLocale: 'ru',
+        chromeUiLocale: 'ru',
         direction: 'ltr',
         documentLanguage: 'ru',
         label: 'ru',
         optionsSwitchName: ruMessages.automatic_badge_label.message,
         popupButtonNames: RU_BUTTON_NAMES,
-        uiLanguagePrefix: 'ru',
+        uiLanguage: 'ru',
     },
     {
-        browserLanguage: 'ar',
+        bidiDirection: 'rtl',
+        catalogLocale: 'ar',
+        chromeUiLocale: 'ar',
         direction: 'rtl',
         documentLanguage: 'ar',
         label: 'ar RTL',
@@ -70,10 +74,12 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
             primary: new RegExp(arMessages.open_primary_discussion.message),
             alternative: new RegExp(arMessages.open_alternative.message),
         },
-        uiLanguagePrefix: 'ar',
+        uiLanguage: 'ar',
     },
     {
-        browserLanguage: 'zh-CN',
+        bidiDirection: 'ltr',
+        catalogLocale: 'zh_CN',
+        chromeUiLocale: 'zh_CN',
         direction: 'ltr',
         documentLanguage: 'zh-CN',
         label: 'zh-CN CJK',
@@ -82,7 +88,7 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
             primary: new RegExp(zhCnMessages.open_primary_discussion.message),
             alternative: new RegExp(zhCnMessages.open_alternative.message),
         },
-        uiLanguagePrefix: 'zh-cn',
+        uiLanguage: 'zh-CN',
     },
 ] as const;
 
@@ -159,7 +165,10 @@ test.describe('extension accessibility (en)', () => {
     let extension: ExtensionContext;
 
     test.beforeAll(async () => {
-        extension = await launchExtensionContext();
+        extension = await launchExtensionContext({ catalogLocale: 'en' });
+        expect(await extension.worker.evaluate(
+            () => chrome.i18n.getMessage('automatic_badge_label'),
+        )).toBe(enMessages.automatic_badge_label.message);
         await installLookupFixtures(extension.context, { hits: FIXTURE_HITS });
     });
 
@@ -232,13 +241,23 @@ test.describe('extension accessibility (en)', () => {
 for (const locale of REPRESENTATIVE_LOCALIZED_LAYOUTS) {
     test.describe(`extension accessibility (${locale.label})`, () => {
         test('locale metadata is correct and options and popup fit the viewport', async () => {
-            const extension = await launchExtensionContext({ lang: locale.browserLanguage });
+            const extension = await launchExtensionContext({ catalogLocale: locale.catalogLocale });
             try {
-                const uiLanguage: string = await extension.worker.evaluate(() => chrome.i18n.getUILanguage());
-                test.skip(
-                    !uiLanguage.toLowerCase().startsWith(locale.uiLanguagePrefix),
-                    `Chromium ignored --lang=${locale.browserLanguage} (UI language "${uiLanguage}", typical on macOS); enforced on Linux CI`,
-                );
+                const workerLocale = await extension.worker.evaluate(() => ({
+                    bidiDirection: chrome.i18n.getMessage('@@bidi_dir'),
+                    catalogMessage: chrome.i18n.getMessage('automatic_badge_label'),
+                    uiLocale: chrome.i18n.getMessage('@@ui_locale'),
+                    uiLanguage: chrome.i18n.getUILanguage(),
+                }));
+                expect(workerLocale.catalogMessage).toBe(locale.optionsSwitchName);
+                if (process.platform === 'linux') {
+                    expect(workerLocale).toEqual({
+                        bidiDirection: locale.bidiDirection,
+                        catalogMessage: locale.optionsSwitchName,
+                        uiLanguage: locale.uiLanguage,
+                        uiLocale: locale.chromeUiLocale,
+                    });
+                }
                 await installLookupFixtures(extension.context, { hits: FIXTURE_HITS });
 
                 const options = await openExtensionPage(extension, 'options.html', { colorScheme: 'light' });
@@ -246,9 +265,11 @@ for (const locale of REPRESENTATIVE_LOCALIZED_LAYOUTS) {
                 expect(await options.evaluate(() => ({
                     direction: document.documentElement.dir,
                     language: document.documentElement.lang,
+                    uiLanguage: chrome.i18n.getUILanguage(),
                 }))).toEqual({
                     direction: locale.direction,
                     language: locale.documentLanguage,
+                    uiLanguage: locale.uiLanguage,
                 });
                 await expectNoHorizontalOverflow(options, `options ${locale.label}`);
                 await scanForBlockingViolations(options, `options ${locale.label} light`);
