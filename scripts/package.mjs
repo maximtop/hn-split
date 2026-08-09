@@ -10,9 +10,10 @@ process.env.TZ = 'UTC';
 
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
+import { SHIPPED_LOCALES } from '../src/shared/locales.ts';
 import { BUILD_TARGETS } from './lib/browser-manifest.ts';
 import {
     isWorktreeDirty,
@@ -72,6 +73,29 @@ function buildBrowserTarget(target) {
     return resolve(ROOT, outputPath);
 }
 
+/**
+ * Requires one unpacked target to contain exactly the reviewed release
+ * locales before any bytes enter a store archive.
+ *
+ * @param target Browser target whose build is being verified.
+ * @param outputDirectory Absolute path of the unpacked build directory.
+ * @returns A promise that resolves after the locale inventory is verified.
+ */
+async function validatePackagedLocales(target, outputDirectory) {
+    const localesDirectory = resolve(outputDirectory, '_locales');
+    const packagedLocales = (await readdir(localesDirectory, { withFileTypes: true }))
+        .filter((entry) => entry.isDirectory())
+        .map(({ name }) => name)
+        .sort();
+    const expectedLocales = [...SHIPPED_LOCALES].sort();
+    if (JSON.stringify(packagedLocales) !== JSON.stringify(expectedLocales)) {
+        throw new Error(
+            `${target} package locales [${packagedLocales.join(', ')}] must match `
+            + `SHIPPED_LOCALES [${expectedLocales.join(', ')}].`,
+        );
+    }
+}
+
 await rm(ARTIFACTS_DIR, { force: true, recursive: true });
 await mkdir(ARTIFACTS_DIR, { recursive: true });
 
@@ -79,6 +103,7 @@ const artifacts = [];
 for (const target of BUILD_TARGETS) {
     console.log(`\nBuilding the ${target} package…`);
     const outputDirectory = buildBrowserTarget(target);
+    await validatePackagedLocales(target, outputDirectory);
     const entries = await collectDirectoryEntries(outputDirectory);
     artifacts.push({
         name: `hn-split-${target}-${version}.zip`,

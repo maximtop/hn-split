@@ -226,18 +226,19 @@ function buildLocaleMap(
 }
 
 /**
- * The four store locale inventories. Every map covers all 40 registry codes,
- * so the fallback story of any locale/store combination is explicit and
- * machine-checked (tests/store-listings.test.ts pins the totality).
+ * The four store locale inventories. Every map covers all 40 prepared
+ * registry codes, including locales not yet promoted into release packages,
+ * so future fallback behavior stays explicit and machine-checked.
  */
 export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     chrome: {
         name: 'Chrome Web Store',
         checked: '2026-08-06',
         source: 'developer.chrome.com/docs/extensions/reference/api/i18n (56 locale codes) and docs/webstore/cws-dashboard-listing',
-        // The dashboard offers one listing per packaged `_locales` directory,
-        // and every registry code is a Chrome directory code, so the map is
-        // the identity.
+        // The dashboard offers one listing per packaged `_locales` directory.
+        // Every prepared registry code is eligible for future promotion, so
+        // the capability map is the identity even though only reviewed codes
+        // currently ship.
         locales: buildLocaleMap({}),
         unsupportedFallback: null,
     },

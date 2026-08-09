@@ -4,8 +4,9 @@ The single reviewed English source for every store-facing claim: listing
 copy, support and privacy answers, data-use questionnaire answers, reviewer
 notes, release notes, and imagery for the four target stores — Chrome Web
 Store, Microsoft Edge Add-ons, Firefox Add-ons (AMO), and the App Store
-(Safari) — and the input for the 40-locale listing localization
-([`docs/locales.md`](locales.md)).
+(Safari) — and the input for 40 prepared listing localizations
+([`docs/locales.md`](locales.md)). The initial Chrome release publishes only
+the native-speaker-reviewed English and Russian listings.
 
 Rules of this document:
 
@@ -54,10 +55,10 @@ string unchanged.
 
 ### App Store promotional text
 
-> One click from the article you are reading to its exact Hacker News
-> discussion — free, telemetry-free, and unofficial.
+> Choose the exact Hacker News discussion for the article you are reading —
+> free, telemetry-free, and unofficial.
 
-118 characters; the limit is 170.
+111 characters; the limit is 170.
 
 ### Full description
 
@@ -65,23 +66,26 @@ The master description. Chrome uses it verbatim; Edge requires 250–10,000
 characters (it fits); AMO and the App Store use it with browser-specific
 bullets re-cut to the shipped feature set of that port.
 
-> Reading an article and wondering what Hacker News thinks? Split for Hacker
-> News finds the exact discussion for the page you are on and opens it after
-> one explicit click.
+> Reading an article and wondering what Hacker News thinks? In the popup,
+> Split for Hacker News finds exact discussions for the page you are on;
+> nothing opens until you choose a result.
 >
-> - One click from the article to its Hacker News comments.
+> - Select a result in the popup to open its Hacker News comments.
 > - Exact URL matching — no fuzzy guesses, duplicates are listed as
 >   alternatives.
-> - The first click opens an adjacent tab; pair it with the article using
->   Chrome Split View and later selections reuse that pane.
-> - Or open the discussion in the browser side panel, right beside the page
->   you are reading.
+> - The first result selection opens an adjacent tab; pair it with the article
+>   using Chrome Split View and later selections reuse that pane.
+> - Or open the discussion in the browser side panel. To embed the real Hacker
+>   News page, Split temporarily removes framing headers from Hacker News
+>   sub-frame responses only while a panel is open.
 > - Open in Split in the link right-click menu: the link opens in the
 >   current tab and its Hacker News discussion opens in the side panel.
 > - Optional: clicking a story on Hacker News opens the article as usual and
 >   its discussion in the side panel beside it. Off by default.
 > - Optional toolbar badge with the comment count, off by default.
-> - Free. No telemetry, no accounts, no page reading. Narrow, documented
+> - Free. No telemetry or accounts. Lookups send only eligible public page or
+>   selected-link URLs and an optional canonical URL to Algolia's public Hacker
+>   News Search API — never article text or other content. Narrow, documented
 >   permissions.
 >
 > Unofficial. This extension is an independent project and is not affiliated
@@ -99,9 +103,9 @@ uses it.
 
 **v0.1.0 — initial release**
 
-> First public release. Find the exact Hacker News discussion for the
-> article you are reading and open it in one click — in an adjacent tab you
-> can pair with Chrome Split View, or in the browser side panel. Includes
+> First public release. Find exact Hacker News discussions for the article
+> you are reading, then select a result in the popup to open it in an adjacent
+> tab you can pair with Chrome Split View or in the browser side panel. Includes
 > the Open in Split link context menu, an opt-in flow that opens discussions
 > beside story clicks on Hacker News, and an opt-in comment-count toolbar
 > badge. Free, no telemetry, no accounts.
@@ -115,8 +119,8 @@ so screenshots and listing captions share one source; a caption change
 regenerates imagery, and `pnpm assets:generate --locale <code>` renders the
 translated captions.
 
-1. From article to discussion in one click
-2. Private by default: no telemetry, no accounts, no page reading
+1. Select a result, open the discussion
+2. Private by default: popup reads URLs, never article text or content
 3. At home in light and dark
 
 ## Support and contact
@@ -146,8 +150,8 @@ answers below are derived from it and must never contradict it.
 
 ### Single purpose
 
-> Find the Hacker News discussion for the page the user is viewing and open
-> it after an explicit click.
+> Find and open exact Hacker News discussions for pages or links the user
+> explicitly chooses.
 
 ### Permission justifications
 
@@ -156,13 +160,13 @@ The long-form rationale lives in `PRIVACY.md`.
 
 | Permission | Justification |
 | --- | --- |
-| `tabs` | Places and reuses the discussion tab next to the article after an explicit click; observes navigations and enumerates tabs only for the opt-in availability badge, and clears badges when that setting is turned off. |
+| `tabs` | Places and reuses the discussion tab next to the article after an explicit result selection; observes navigations and enumerates tabs only for the opt-in availability badge, and clears badges when that setting is turned off. |
 | `activeTab` | Scopes popup-triggered page inspection to the tab the user is viewing when they open the extension action. |
 | `scripting` | Runs one short-lived function in the active page after the popup opens, reading only `location.href` and the canonical `<link>` element; also registers the `news.ycombinator.com` content script while the opt-in article-click setting is on. |
 | `storage` | Persists the two on/off settings in `chrome.storage.local`; keeps time-bounded lookup results and tab associations in `chrome.storage.session`, which the browser discards when the session ends. |
 | `contextMenus` | Adds the single Open in Split item to link context menus; the extension learns nothing until the user selects the item. |
 | `sidePanel` | Opens the discussion side panel only after an explicit user action: the popup button, the Open in Split menu item, or an opt-in article click. |
-| `declarativeNetRequestWithHostAccess` | Installs one dynamic rule that removes `X-Frame-Options` and `Content-Security-Policy` from Hacker News sub-frame responses so the discussion can render in the side panel; the rule exists only while a panel is open and affects no other site. |
+| `declarativeNetRequestWithHostAccess` | Installs one dynamic rule that removes `X-Frame-Options`, `Content-Security-Policy`, and report-only CSP from Hacker News sub-frame responses so the real discussion can render in the side panel. The rule exists only while a panel is open, never affects top-level navigation or another host, and cannot be scoped more narrowly than all Hacker News sub-frames in the browser profile. The extension does not read, redirect, or block those requests. |
 | Host `https://hn.algolia.com/*` | The discussion lookup endpoint; receives sanitized public article URLs as search queries, with no account, API key, or identifying header. |
 | Host `https://news.ycombinator.com/*` | Lets the side panel embed the real discussion page, supports the header rule above, and hosts the opt-in article-click content script. |
 
@@ -174,21 +178,29 @@ extension code.
 
 ### Data usage — Chrome Web Store and Edge questionnaire
 
-Checked 2026-08-05 against the Chrome privacy tab and Edge Privacy page
+Checked 2026-08-09 against the Chrome privacy tab and Edge Privacy page
 documentation.
 
-- Declare exactly one collected data type: **Web history.** The extension
-  transmits the current page URL (and its canonical URL) off the device — to
-  the public Hacker News Algolia search API — when the user requests a
-  lookup or has enabled the opt-in automatic badge. Lookup results are
-  cached in session storage only. No other listed category applies: no
-  personally identifiable, health, financial, authentication,
-  communications, or location data, no user-activity monitoring, and no
-  website content collection.
-- Certify all three limited-use disclosures: data is not sold to third
-  parties outside the approved use cases; is not used or transferred for
-  purposes unrelated to the single purpose; is not used or transferred to
-  determine creditworthiness or for lending.
+- Declare exactly three handled data types. Chrome's disclosure covers local
+  handling as well as transmission:
+  - **Web history.** The extension handles the current page or selected link
+    URL. When a lookup is requested, or while the opt-in automatic badge is
+    enabled, eligible sanitized public URLs are sent to the public Hacker News
+    Algolia search API. Lookup results are cached in session storage only.
+  - **Website content.** When the popup is opened, the extension reads only the
+    page URL and the URL from its canonical `<link>` element, never article
+    text or other content. The canonical URL can be sent to Algolia as a lookup
+    candidate. The opt-in Hacker News story-click flow also handles the clicked
+    story link and item id locally; that flow makes no lookup request.
+  - **User activity.** Only the opt-in Hacker News story-click flow observes a
+    click on a story link. The click event is handled locally to open the side
+    panel and is not transmitted off the device.
+- No other listed category applies: no personally identifiable, health,
+  financial, authentication, communications, or location data is handled.
+- Certify all three Limited Use disclosures: data is not sold to third parties
+  outside the approved use cases; is not used or transferred for purposes
+  unrelated to the single purpose; and is not used or transferred to determine
+  creditworthiness or for lending.
 
 ### Firefox data collection declaration
 
@@ -200,15 +212,18 @@ adds to its manifest:
 "browser_specific_settings": {
     "gecko": {
         "data_collection_permissions": {
-            "required": ["browsingActivity"]
+            "required": ["browsingActivity", "websiteContent"]
         }
     }
 }
 ```
 
-`browsingActivity` covers URLs of visited pages sent to the lookup API.
-Nothing goes in `optional`, and `technicalAndInteraction` is not declared —
-there is no telemetry.
+`browsingActivity` covers current or navigated tab URLs sent to the lookup API;
+`websiteContent` covers canonical and user-selected link URLs read from page
+content and sent as lookup candidates. Nothing goes in `optional`, and
+`technicalAndInteraction` is not declared — there is no telemetry. The Firefox
+package requires Firefox 140 or newer so its required-data declaration is
+enforced by Firefox's built-in consent experience.
 
 ### App Store privacy label
 
@@ -248,8 +263,9 @@ answers above carry the explanation.
 > 3. Click "Open discussion": the discussion opens in an adjacent tab, and a
 >    later selection reuses that tab.
 > 4. Click "Open in side panel" in the popup: the discussion renders in the
->    browser side panel. The panel itself explains that framing headers are
->    removed for Hacker News sub-frames only while the panel is open.
+>    browser side panel. The framing-header exception is disclosed on the
+>    options page and in PRIVACY.md; it applies to Hacker News sub-frames only
+>    while the panel is open.
 > 5. Right-click any http(s) link and choose "Open in Split": the link opens
 >    in the tab where it was clicked and its discussion loads in the side
 >    panel.
@@ -263,8 +279,9 @@ answers above carry the explanation.
 >    request.
 >
 > About `declarativeNetRequestWithHostAccess`: one dynamic rule removes
-> `X-Frame-Options` and `Content-Security-Policy` from news.ycombinator.com
-> sub-frame responses so the panel can embed the real site. The rule is
+> `X-Frame-Options`, `Content-Security-Policy`, and
+> `Content-Security-Policy-Report-Only` from news.ycombinator.com sub-frame
+> responses so the panel can embed the real site. The rule is
 > installed when the panel connects and removed when the panel closes; no
 > other site is affected, and top-level Hacker News navigation keeps its
 > headers. Details: PRIVACY.md and docs/development.md in the repository.
@@ -319,11 +336,11 @@ text for every surface that supports it (README, website, release posts).
   the Hacker News discussion for the article you are reading."
 - **Screenshot 1:** "Extension popup titled Hacker News discussion showing an
   Open discussion button with 128 comments and 342 points, plus an
-  alternative thread, next to the caption 'From article to discussion in one
-  click'."
+  alternative thread, next to the caption 'Select a result, open the
+  discussion'."
 - **Screenshot 2:** "Options page with the automatic toolbar badge switch off
-  by default, under the caption 'Private by default: no telemetry, no
-  accounts, no page reading'."
+  by default, under the caption 'Private by default: popup reads URLs, never
+  article text or content'."
 - **Screenshot 3:** "The same popup in dark mode under the caption 'At home in
   light and dark'."
 
@@ -357,7 +374,7 @@ references. Chrome has no reviewer-notes field.
 | Remote code | declare | No (This doc, Remote code) |
 | Data usage + certifications | checkboxes | This doc, Data usage |
 | Release notes | per version | This doc, Release notes |
-| Localized listings | per locale | `assets/store-listings/`, validated by `pnpm store:validate`; [`docs/locales.md`](locales.md) |
+| Localized listings | one per packaged locale | English and Russian for the initial release; 38 prepared translations remain unpublished pending native-speaker review |
 
 ### Microsoft Edge Add-ons
 
@@ -409,7 +426,7 @@ wrapper actually ships, and re-reviewed here before submission.
 | --- | --- | --- |
 | App name | ≤30 chars | Split for Hacker News (21 ✓) |
 | Subtitle | ≤30 chars | This doc, App Store subtitle (26 ✓) |
-| Promotional text | ≤170 chars | This doc, App Store promotional text (118 ✓) |
+| Promotional text | ≤170 chars | This doc, App Store promotional text (111 ✓) |
 | Description | engaging, first sentence carries | This doc, Full description, Safari re-cut |
 | Keywords | ≤100 chars total, comma-separated | `hacker news,hn,discussion,comments,split view,side panel,article,reader` (71 ✓) |
 | Screenshots | ≤10 per device, per-device specs | Safari submission task, from the same identity sources |
@@ -420,8 +437,9 @@ wrapper actually ships, and re-reviewed here before submission.
 
 ## Localization handoff
 
-The 40-locale listing localization is implemented; review status and the
-per-store locale mappings live in [`docs/locales.md`](locales.md).
+The 40-locale listing source set is implemented; review status, the initial
+English-and-Russian release allowlist, and per-store locale mappings live in
+[`docs/locales.md`](locales.md).
 
 - **Translations** live in `assets/store-listings/<code>.json`, one file per
   registry locale: the structured description (intro, the eight bullets,
@@ -429,6 +447,11 @@ per-store locale mappings live in [`docs/locales.md`](locales.md).
   search terms, and App Store keywords. The short summary stays in the
   message catalogs (`extension_description`), which the stores read from the
   manifest.
+- **Publication gate:** Chrome derives its listing languages from the
+  `_locales/<code>` directories in the uploaded package; the dashboard has no
+  separate documented control for suppressing a packaged locale. The build
+  therefore copies only `SHIPPED_LOCALES` (`en`, `ru` initially), while all 40
+  source catalogs and listing files remain available for later review.
 - **Never translated:** the name — `pnpm locales:validate` fails any catalog
   that changes `extension_name`, and the listing validator requires the
   brand string and the Y Combinator / Hacker News proper nouns verbatim in
@@ -442,7 +465,7 @@ per-store locale mappings live in [`docs/locales.md`](locales.md).
   four App-Store-unsupported locales (bg, fa, fil, sr) served by the en-US
   listing.
 - **Paste-ready copy:** `pnpm store:render <store> <locale>` prints every
-  translated field for one store submission.
+  translated field for one shipped locale submission.
 - **Captions regenerate imagery:** the generator reads captions from the
   listing files, and `pnpm assets:generate --locale <code>` renders that
   locale's screenshots to `build/store-assets/<code>/`; a caption change
@@ -450,4 +473,6 @@ per-store locale mappings live in [`docs/locales.md`](locales.md).
 - Translations must preserve the reviewed claims of this document exactly —
   especially the no-telemetry, off-by-default, and unofficial statements.
   The validator enforces the structural parts (bullet count, disclaimer,
-  brand); native-speaker review is tracked per file in the `reviewed` flag.
+  brand); native-speaker review is tracked per file in the `reviewed` flag,
+  and an unreviewed listing cannot enter `SHIPPED_LOCALES` without failing
+  validation.

@@ -26,10 +26,10 @@ function readListing(locale: string): ListingContent {
 const base = readListing('en');
 
 describe('store locale catalog', () => {
-    it('covers every shipped locale in every store map', () => {
-        const shipped = [...SHIPPED_LOCALES].sort();
+    it('keeps every prepared locale mapped for future store promotion', () => {
+        const prepared = LOCALE_REGISTRY.map(({ code }) => code).sort();
         for (const storeId of STORE_IDS) {
-            expect(Object.keys(STORE_CATALOG[storeId].locales).sort()).toEqual(shipped);
+            expect(Object.keys(STORE_CATALOG[storeId].locales).sort()).toEqual(prepared);
         }
     });
 
@@ -76,23 +76,27 @@ describe('store locale catalog', () => {
 });
 
 describe('listing files', () => {
-    it('exist for exactly the shipped locales', () => {
+    it('exist for exactly the prepared registry locales', () => {
         const files = readdirSync(listingsDirectory)
             .filter((name) => name.endsWith('.json'))
             .map((name) => name.replace(/\.json$/u, ''))
             .sort();
-        expect(files).toEqual([...SHIPPED_LOCALES].sort());
+        expect(files).toEqual(LOCALE_REGISTRY.map(({ code }) => code).sort());
     });
 
-    it.each([...SHIPPED_LOCALES])('validate %s against the English base', (locale) => {
+    it.each(LOCALE_REGISTRY.map(({ code }) => code))('validate %s against the English base', (locale) => {
         const content = readListing(locale);
         expect(content.locale).toBe(locale);
         expect(collectListingIssues(content, base)).toEqual([]);
     });
 
-    it('marks the authored and hand-translated listings as reviewed', () => {
-        expect(readListing('en').reviewed).toBe(true);
-        expect(readListing('ru').reviewed).toBe(true);
+    it('ships only listings marked as native-speaker reviewed', () => {
+        const reviewed = LOCALE_REGISTRY
+            .map(({ code }) => code)
+            .filter((locale) => readListing(locale).reviewed);
+
+        expect(reviewed).toEqual(['en', 'ru']);
+        expect(SHIPPED_LOCALES).toEqual(reviewed);
     });
 });
 

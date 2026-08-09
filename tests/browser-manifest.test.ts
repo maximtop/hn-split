@@ -7,7 +7,6 @@ import {
     DEFAULT_BUILD_TARGET,
     EXTENSION_VERSION_PATTERN,
     FIREFOX_GECKO_ID,
-    FIREFOX_STRICT_MIN_VERSION,
     buildManifest,
     parseBuildTarget,
     serializeManifest,
@@ -92,8 +91,10 @@ describe('buildManifest', () => {
         expect(manifest['browser_specific_settings']).toEqual({
             gecko: {
                 id: FIREFOX_GECKO_ID,
-                strict_min_version: FIREFOX_STRICT_MIN_VERSION,
-                data_collection_permissions: { required: ['none'] },
+                strict_min_version: '140.0',
+                data_collection_permissions: {
+                    required: ['browsingActivity', 'websiteContent'],
+                },
             },
         });
     });

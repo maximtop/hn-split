@@ -4,6 +4,7 @@ import {
 } from './background/article-click-controller';
 import {
     forgetAutomaticAvailabilityTab,
+    reportsAutomaticAvailabilityNavigation,
     updateAutomaticAvailability,
 } from './background/automatic-availability-controller';
 import { sessionStore } from './background/chrome-adapters';
@@ -17,15 +18,12 @@ import {
 import { SidePanelFraming } from './background/side-panel-framing';
 import { logWarning } from './shared/logger';
 import {
+    SIDE_PANEL_KEEPALIVE,
     SIDE_PANEL_PORT,
     SIDE_PANEL_READY,
     isArticleClickMessage,
     isBackgroundRequest,
 } from './shared/messages';
-
-const TAB_UPDATE_STATUS = {
-    COMPLETE: 'complete',
-} as const;
 
 const sidePanelFraming = new SidePanelFraming(chrome.declarativeNetRequest);
 
@@ -67,6 +65,13 @@ chrome.runtime.onConnect.addListener((port) => {
     // waits for the ready signal before framing, and Chrome disconnects the
     // port as soon as the panel closes.
     let connected = true;
+    port.onMessage.addListener((message: { type?: string }) => {
+        if (message.type !== SIDE_PANEL_KEEPALIVE) {
+            return;
+        }
+        // Delivery is the keepalive operation: Chrome resets the worker idle
+        // deadline for each long-lived-port message, so no reply is needed.
+    });
     port.onDisconnect.addListener(() => {
         connected = false;
         void sidePanelFraming.release().catch((error: unknown) => {
@@ -101,12 +106,11 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) =>
     return true;
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    const url = changeInfo.url ?? (changeInfo.status === TAB_UPDATE_STATUS.COMPLETE ? tab.url : undefined);
-    if (url === undefined) {
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+    if (!reportsAutomaticAvailabilityNavigation(changeInfo)) {
         return;
     }
-    void updateAutomaticAvailability(tabId, url).catch((error: unknown) => {
+    void updateAutomaticAvailability(tabId).catch((error: unknown) => {
         // Local diagnostic only; the navigated URL itself is never logged.
         logWarning('automatic availability update failed.', error);
     });

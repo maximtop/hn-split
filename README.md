@@ -1,6 +1,6 @@
 # Split for Hacker News
 
-Split for Hacker News (repository slug: `hn-split`) is a private, work-in-progress browser extension that helps a reader move from the article currently open to its Hacker News discussion after an explicit click. It is an unofficial, independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
+Split for Hacker News (repository slug: `hn-split`) is a browser extension that helps a reader move from the article currently open to its Hacker News discussion after an explicit result selection. It is an unofficial, independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
 
 ## Current status
 
@@ -50,4 +50,4 @@ Rspack writes the unpacked extension to `dist`. Load that directory in Chrome 14
 
 ## Repository
 
-The source is maintained in a private GitHub repository. Feature work is reviewed through pull requests targeting `master`.
+The source is maintained on GitHub. Feature work is reviewed through pull requests targeting `master`.

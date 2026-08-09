@@ -2,30 +2,30 @@
     "locale": "en",
     "reviewed": true,
     "description": {
-        "intro": "Reading an article and wondering what Hacker News thinks? Split for Hacker News finds the exact discussion for the page you are on and opens it after one explicit click.",
+        "intro": "Reading an article and wondering what Hacker News thinks? In the popup, Split for Hacker News finds exact discussions for the page you are on; nothing opens until you choose a result.",
         "bullets": [
-            "One click from the article to its Hacker News comments.",
+            "Select a result in the popup to open its Hacker News comments.",
             "Exact URL matching — no fuzzy guesses, duplicates are listed as alternatives.",
-            "The first click opens an adjacent tab; pair it with the article using Chrome Split View and later selections reuse that pane.",
-            "Or open the discussion in the browser side panel, right beside the page you are reading.",
+            "The first result selection opens an adjacent tab; pair it with the article using Chrome Split View and later selections reuse that pane.",
+            "Or open the discussion in the browser side panel. To embed the real Hacker News page, Split temporarily removes framing headers from Hacker News sub-frame responses only while a panel is open.",
             "Open in Split in the link right-click menu: the link opens in the current tab and its Hacker News discussion opens in the side panel.",
             "Optional: clicking a story on Hacker News opens the article as usual and its discussion in the side panel beside it. Off by default.",
             "Optional toolbar badge with the comment count, off by default.",
-            "Free. No telemetry, no accounts, no page reading. Narrow, documented permissions."
+            "Free. No telemetry or accounts. Lookups send only eligible public page or selected-link URLs and an optional canonical URL to Algolia's public Hacker News Search API — never article text or other content. Narrow, documented permissions."
         ],
         "disclaimer": "Unofficial. This extension is an independent project and is not affiliated with or endorsed by Y Combinator or Hacker News."
     },
     "releaseNotes": {
-        "v0.1.0": "First public release. Find the exact Hacker News discussion for the article you are reading and open it in one click — in an adjacent tab you can pair with Chrome Split View, or in the browser side panel. Includes the Open in Split link context menu, an opt-in flow that opens discussions beside story clicks on Hacker News, and an opt-in comment-count toolbar badge. Free, no telemetry, no accounts."
+        "v0.1.0": "First public release. Find exact Hacker News discussions for the article you are reading, then select a result in the popup to open it in an adjacent tab you can pair with Chrome Split View or in the browser side panel. Includes the Open in Split link context menu, an opt-in flow that opens discussions beside story clicks on Hacker News, and an opt-in comment-count toolbar badge. Free, no telemetry, no accounts."
     },
     "captions": [
         {
-            "heading": "From article to discussion in one click",
+            "heading": "Select a result, open the discussion",
             "sub": "See the exact Hacker News thread for the page you are reading, with comment and point counts."
         },
         {
             "heading": "Private by default",
-            "sub": "Automatic availability badges stay off until you enable them. No telemetry, no accounts, no page reading."
+            "sub": "Automatic availability badges stay off until you enable them. Popup lookup reads the page URL and canonical link — never article text or content."
         },
         {
             "heading": "At home in light and dark",

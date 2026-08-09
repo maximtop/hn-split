@@ -6,6 +6,7 @@ import type { Configuration } from '@rspack/core';
 import { buildManifest, parseBuildTarget, serializeManifest } from './scripts/lib/browser-manifest';
 import { readPackageVersion } from './scripts/lib/build-info';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from './src/shared/content-scripts';
+import { SHIPPED_LOCALES } from './src/shared/locales';
 
 // The manifest references background.js by name, and the dynamic
 // content-script registration references its bundle file the same way, so
@@ -107,7 +108,10 @@ const config: Configuration = {
                         packageVersion,
                     )),
                 },
-                { from: 'public/_locales', to: '_locales' },
+                ...SHIPPED_LOCALES.map((locale) => ({
+                    from: `public/_locales/${locale}`,
+                    to: `_locales/${locale}`,
+                })),
                 { from: 'public/icons', to: 'icons' },
             ],
         }),
