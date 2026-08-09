@@ -16,13 +16,27 @@ if (registryCodes.length !== EXPECTED_LOCALE_COUNT
     throw new Error(`The locale registry must contain exactly ${EXPECTED_LOCALE_COUNT} unique locales.`);
 }
 
+const shipped = [...SHIPPED_LOCALES].sort();
+if (new Set(shipped).size !== shipped.length) {
+    throw new Error('SHIPPED_LOCALES must contain unique locale codes.');
+}
+if (!SHIPPED_LOCALES.includes(BASE_LOCALE)) {
+    throw new Error(`SHIPPED_LOCALES must include the base locale ${BASE_LOCALE}.`);
+}
+const unknownShippedLocales = shipped.filter((code) => !registryCodes.includes(code));
+if (unknownShippedLocales.length > 0) {
+    throw new Error(
+        `SHIPPED_LOCALES contains codes outside the locale registry: ${unknownShippedLocales.join(', ')}.`,
+    );
+}
+
 const localesDirectory = resolve(import.meta.dirname, '../public/_locales');
 const localeNames = (await readdir(localesDirectory)).sort();
-const shipped = [...SHIPPED_LOCALES].sort();
-if (JSON.stringify(localeNames) !== JSON.stringify(shipped)) {
+const prepared = [...registryCodes].sort();
+if (JSON.stringify(localeNames) !== JSON.stringify(prepared)) {
     throw new Error(
         `public/_locales directories [${localeNames.join(', ')}] must match `
-        + `SHIPPED_LOCALES [${shipped.join(', ')}] in src/shared/locales.ts.`,
+        + `LOCALE_REGISTRY [${prepared.join(', ')}] in src/shared/locales.ts.`,
     );
 }
 
@@ -72,4 +86,7 @@ for (const locale of localeNames) {
     }
 }
 
-console.log(`Validated ${localeNames.length} locales against ${BASE_LOCALE}.`);
+console.log(
+    `Validated ${localeNames.length} prepared locales against ${BASE_LOCALE}; `
+    + `shipping ${shipped.join(', ')}.`,
+);

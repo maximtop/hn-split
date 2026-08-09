@@ -17,8 +17,11 @@ import type { SidePanelContent, SidePanelUnavailableReason } from '../shared/sid
 import { sidePanelContentKey } from '../shared/storage-keys';
 import {
     BACKGROUND_REQUEST_TYPE,
+    SIDE_PANEL_KEEPALIVE,
+    SIDE_PANEL_KEEPALIVE_INTERVAL_MS,
     SIDE_PANEL_PORT,
     SIDE_PANEL_READY,
+    SIDE_PANEL_RECONNECT_DELAY_MS,
     isSidePanelContentResponse,
 } from '../shared/messages';
 
@@ -93,14 +96,113 @@ export function SidePanelApp(): React.JSX.Element {
     const [state, setState] = useState<SidePanelState>({ content: null, ready: false });
 
     useEffect(() => {
-        const port = chrome.runtime.connect({ name: SIDE_PANEL_PORT });
-        port.onMessage.addListener((message: { type?: string }) => {
-            if (message.type === SIDE_PANEL_READY) {
-                setState((current) => ({ ...current, ready: true }));
+        let mounted = true;
+        let activePort: chrome.runtime.Port | null = null;
+        let keepAliveTimer: number | null = null;
+        let reconnectTimer: number | null = null;
+
+        /**
+         * Stops heartbeats belonging to the current port, when present.
+         */
+        function clearKeepAliveTimer(): void {
+            if (keepAliveTimer !== null) {
+                window.clearInterval(keepAliveTimer);
+                keepAliveTimer = null;
             }
-        });
+        }
+
+        /**
+         * Stops a pending reconnect attempt, when present.
+         */
+        function clearReconnectTimer(): void {
+            if (reconnectTimer !== null) {
+                window.clearTimeout(reconnectTimer);
+                reconnectTimer = null;
+            }
+        }
+
+        /**
+         * Connects a fresh port and starts its heartbeat lifecycle.
+         */
+        function connectPort(): void {
+            if (!mounted) {
+                return;
+            }
+            let port: chrome.runtime.Port;
+            try {
+                port = chrome.runtime.connect({ name: SIDE_PANEL_PORT });
+            } catch (error) {
+                logWarning('connecting the side panel to the background worker failed.', error);
+                scheduleReconnect();
+                return;
+            }
+            activePort = port;
+            port.onMessage.addListener((message: { type?: string }) => {
+                if (activePort === port && message.type === SIDE_PANEL_READY) {
+                    setState((current) => ({ ...current, ready: true }));
+                }
+            });
+            port.onDisconnect.addListener(() => {
+                handleDisconnect(port);
+            });
+            const keepAlive = (): void => {
+                if (!mounted || activePort !== port) {
+                    return;
+                }
+                try {
+                    port.postMessage({ type: SIDE_PANEL_KEEPALIVE });
+                } catch (error) {
+                    logWarning('sending the side panel keepalive failed.', error);
+                    handleDisconnect(port);
+                }
+            };
+            // Chrome 114+ no longer keeps an extension worker active merely
+            // because a Port is open. Messages on that Port do reset the idle
+            // deadline, keeping the framing owner alive until this panel closes.
+            keepAlive();
+            if (activePort === port) {
+                keepAliveTimer = window.setInterval(keepAlive, SIDE_PANEL_KEEPALIVE_INTERVAL_MS);
+            }
+        }
+
+        /**
+         * Hides framed content and schedules a replacement for a lost port.
+         * @param port - The disconnected port to retire.
+         */
+        function handleDisconnect(port: chrome.runtime.Port): void {
+            if (activePort !== port) {
+                return;
+            }
+            activePort = null;
+            clearKeepAliveTimer();
+            if (!mounted) {
+                return;
+            }
+            setState((current) => ({ ...current, ready: false }));
+            scheduleReconnect();
+        }
+
+        /**
+         * Schedules one bounded reconnect attempt while the panel is mounted.
+         */
+        function scheduleReconnect(): void {
+            if (!mounted || reconnectTimer !== null) {
+                return;
+            }
+            reconnectTimer = window.setTimeout(() => {
+                reconnectTimer = null;
+                connectPort();
+            }, SIDE_PANEL_RECONNECT_DELAY_MS);
+        }
+
+        connectPort();
         return () => {
-            port.disconnect();
+            mounted = false;
+            clearKeepAliveTimer();
+            clearReconnectTimer();
+            const port = activePort;
+            activePort = null;
+            port?.disconnect();
         };
     }, []);
 

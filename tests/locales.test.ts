@@ -31,8 +31,9 @@ describe('locale registry', () => {
         expect(rtl).toEqual(['ar', 'fa', 'he']);
     });
 
-    it('ships only registry locales and includes the base locale', () => {
+    it('ships exactly the reviewed English and Russian catalogs', () => {
         const codes = new Set(LOCALE_REGISTRY.map(({ code }) => code));
+        expect(SHIPPED_LOCALES).toEqual(['en', 'ru']);
         expect(SHIPPED_LOCALES.every((code) => codes.has(code))).toBe(true);
         expect(SHIPPED_LOCALES).toContain(BASE_LOCALE);
     });
@@ -54,19 +55,14 @@ describe('resolveShippedLocale', () => {
         ['en', 'en'],
         ['en_us', 'en'],
         ['en_gb', 'en'],
-        ['de', 'de'],
-        ['zh_cn', 'zh_cn'],
-        ['zh_tw', 'zh_tw'],
-        ['zh', 'zh_cn'],
-        ['pt', 'pt_br'],
-        ['pt_pt', 'pt_pt'],
-        ['es_419', 'es'],
-        ['es_mx', 'es'],
     ])('resolves %s to shipped locale %s', (uiLanguage, expected) => {
         expect(resolveShippedLocale(uiLanguage)?.adguardCode).toBe(expected);
     });
 
-    it.each(['lv', 'xx', ''])('returns undefined for unsupported language %s', (uiLanguage) => {
+    it.each([
+        'de', 'zh_cn', 'zh_tw', 'zh', 'pt', 'pt_pt', 'es_419', 'es_mx',
+        'lv', 'xx', '',
+    ])('returns undefined for an unshipped language %s', (uiLanguage) => {
         expect(resolveShippedLocale(uiLanguage)).toBeUndefined();
     });
 });

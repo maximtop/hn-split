@@ -26,6 +26,25 @@ export const BACKGROUND_REQUEST_TYPE = {
 export const SIDE_PANEL_PORT = 'side_panel';
 
 /**
+ * Names the periodic message a visible side panel sends over its long-lived
+ * port so Chrome keeps the extension service worker active for the panel's
+ * lifetime.
+ */
+export const SIDE_PANEL_KEEPALIVE = 'side_panel_keepalive';
+
+/**
+ * Keeps panel heartbeats below Chrome's 30-second extension-worker idle
+ * deadline while avoiding unnecessary message traffic.
+ */
+export const SIDE_PANEL_KEEPALIVE_INTERVAL_MS = 20_000;
+
+/**
+ * Delays reconnect attempts after an unexpected panel-port disconnect so a
+ * temporarily restarting worker cannot cause a tight connection loop.
+ */
+export const SIDE_PANEL_RECONNECT_DELAY_MS = 250;
+
+/**
  * Signals that the framing exception is installed and the panel may load the
  * discussion frame.
  */

@@ -24,11 +24,21 @@ export const DEFAULT_BUILD_TARGET: BuildTarget = 'chrome';
 export const FIREFOX_GECKO_ID = 'hn-split@maximtop.dev';
 
 /**
- * Oldest supported Firefox version. 128 is an ESR line that ships every API
- * the manifest declares for Firefox: MV3 event pages, declarativeNetRequest,
- * scripting, and contextMenus.
+ * Oldest supported Firefox version. Firefox 140 adds the built-in consent
+ * experience required by the declared data-collection permissions; it also
+ * ships every WebExtension API used by the Firefox package.
  */
-export const FIREFOX_STRICT_MIN_VERSION = '128.0';
+export const FIREFOX_STRICT_MIN_VERSION = '140.0';
+
+/**
+ * Data sent outside Firefox for the extension's required discussion lookup.
+ * The active page URL is browsing activity, while canonical and user-selected
+ * links read from page content are website content under Mozilla's taxonomy.
+ */
+export const FIREFOX_REQUIRED_DATA_COLLECTION_PERMISSIONS = [
+    'browsingActivity',
+    'websiteContent',
+] as const;
 
 /**
  * Store-facing version string shape shared by package.json and every
@@ -121,9 +131,8 @@ export function parseBuildTarget(value: string | undefined): BuildTarget {
 /**
  * Rewrites the Chrome-shaped base manifest for Firefox. Firefox runs the
  * background bundle as an MV3 event page, has no side panel API, requires
- * `options_ui`, and needs `browser_specific_settings.gecko` (including the
- * AMO data-collection disclosure, which is truthful here: the extension
- * collects nothing).
+ * `options_ui`, and needs `browser_specific_settings.gecko`, including the
+ * AMO disclosure for the URL candidates sent to the lookup API.
  *
  * @param manifest Cloned manifest mutated in place.
  */
@@ -151,7 +160,7 @@ function applyFirefoxTransform(manifest: ExtensionManifest): void {
             id: FIREFOX_GECKO_ID,
             strict_min_version: FIREFOX_STRICT_MIN_VERSION,
             data_collection_permissions: {
-                required: ['none'],
+                required: [...FIREFOX_REQUIRED_DATA_COLLECTION_PERMISSIONS],
             },
         },
     };

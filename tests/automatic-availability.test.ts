@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { reportsAutomaticAvailabilityNavigation } from '../src/background/automatic-availability-controller';
 import { AutomaticAvailabilityUpdater } from '../src/browser/automatic-availability';
 import type { AutomaticAvailabilityDependencies } from '../src/browser/automatic-availability';
 import type { HnLookupResult } from '../src/domain/hn';
@@ -13,7 +14,197 @@ function dependencies(): AutomaticAvailabilityDependencies {
     };
 }
 
+describe('reportsAutomaticAvailabilityNavigation', () => {
+    it('recognizes a URL-bearing update without reading its URL value', () => {
+        const readUrl = vi.fn(() => {
+            throw new Error('The URL value must stay unread before opt-in');
+        });
+        const changeInfo = Object.defineProperty({}, 'url', { get: readUrl }) as chrome.tabs.OnUpdatedInfo;
+
+        expect(reportsAutomaticAvailabilityNavigation(changeInfo)).toBe(true);
+        expect(readUrl).not.toHaveBeenCalled();
+    });
+});
+
 describe('AutomaticAvailabilityUpdater', () => {
+    it('does not read a navigation URL until automatic mode is enabled', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.isEnabled).mockResolvedValue(false);
+        const readUrl = vi.fn(async () => 'https://example.com/article');
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        await updater.updateCurrentTab(7, readUrl);
+
+        expect(readUrl).not.toHaveBeenCalled();
+        expect(deps.lookup).not.toHaveBeenCalled();
+        expect(deps.applyBadge).not.toHaveBeenCalled();
+
+        vi.mocked(deps.isEnabled).mockResolvedValue(true);
+        await updater.updateCurrentTab(7, readUrl);
+
+        expect(readUrl).toHaveBeenCalledOnce();
+        expect(deps.lookup).toHaveBeenCalledWith('https://example.com/article', expect.any(AbortSignal));
+    });
+
+    it('ignores an older current-tab URL read that resolves after a newer navigation', async () => {
+        const deps = dependencies();
+        let resolveOlderRead!: (url: string | undefined) => void;
+        const readOlderUrl = vi.fn(() => new Promise<string | undefined>((resolve) => {
+            resolveOlderRead = resolve;
+        }));
+        const readCurrentUrl = vi.fn(async () => 'https://example.com/current');
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const olderUpdate = updater.updateCurrentTab(7, readOlderUrl);
+        await vi.waitFor(() => expect(readOlderUrl).toHaveBeenCalledOnce());
+        const currentUpdate = updater.updateCurrentTab(7, readCurrentUrl);
+        await currentUpdate;
+        resolveOlderRead('https://example.com/older');
+        await olderUpdate;
+
+        expect(deps.lookup).toHaveBeenCalledExactlyOnceWith(
+            'https://example.com/current',
+            expect.any(AbortSignal),
+        );
+    });
+
+    it('holds an older lookup result while awaiting the newer current-tab URL', async () => {
+        const deps = dependencies();
+        let resolveOlderLookup!: (value: HnLookupResult) => void;
+        let resolveCurrentRead!: (url: string | undefined) => void;
+        const olderLookup = new Promise<HnLookupResult>((resolve) => {
+            resolveOlderLookup = resolve;
+        });
+        vi.mocked(deps.lookup).mockReturnValueOnce(olderLookup);
+        const readCurrentUrl = vi.fn(() => new Promise<string | undefined>((resolve) => {
+            resolveCurrentRead = resolve;
+        }));
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const olderUpdate = updater.update(7, 'https://example.com/older');
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledOnce());
+        const currentUpdate = updater.updateCurrentTab(7, readCurrentUrl);
+        await vi.waitFor(() => expect(readCurrentUrl).toHaveBeenCalledOnce());
+        resolveOlderLookup({
+            status: 'found',
+            primary: {
+                id: '1', title: 'Older', articleUrl: 'https://example.com/older',
+                comments: 99, points: 1, createdAt: 1,
+            },
+            alternatives: [],
+        });
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        expect(deps.applyBadge).not.toHaveBeenCalledWith(7, expect.objectContaining({ text: '99' }));
+
+        resolveCurrentRead('https://example.com/current');
+        await Promise.all([olderUpdate, currentUpdate]);
+        expect(deps.lookup).toHaveBeenCalledTimes(2);
+    });
+
+    it('deduplicates overlapping current-tab events that resolve to the same URL', async () => {
+        const deps = dependencies();
+        let resolveLookup!: (value: HnLookupResult) => void;
+        vi.mocked(deps.lookup).mockReturnValueOnce(new Promise<HnLookupResult>((resolve) => {
+            resolveLookup = resolve;
+        }));
+        const readUrl = vi.fn(async () => 'https://example.com/article');
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const firstUpdate = updater.updateCurrentTab(7, readUrl);
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledOnce());
+        const duplicateUpdate = updater.updateCurrentTab(7, readUrl);
+        await duplicateUpdate;
+
+        expect(deps.lookup).toHaveBeenCalledOnce();
+
+        resolveLookup({
+            status: 'found',
+            primary: {
+                id: '1', title: 'Current', articleUrl: 'https://example.com/article',
+                comments: 17, points: 1, createdAt: 1,
+            },
+            alternatives: [],
+        });
+        await firstUpdate;
+
+        expect(deps.applyBadge).toHaveBeenCalledWith(7, expect.objectContaining({ text: '17' }));
+    });
+
+    it('keeps a restarted same-URL lookup scheduled when the superseded lookup rejects', async () => {
+        const deps = dependencies();
+        let rejectOlderLookup!: (reason: unknown) => void;
+        let resolveCurrentLookup!: (value: HnLookupResult) => void;
+        vi.mocked(deps.lookup)
+            .mockReturnValueOnce(new Promise<HnLookupResult>((_resolve, reject) => {
+                rejectOlderLookup = reject;
+            }))
+            .mockReturnValueOnce(new Promise<HnLookupResult>((resolve) => {
+                resolveCurrentLookup = resolve;
+            }));
+        const updater = new AutomaticAvailabilityUpdater(deps);
+        const url = 'https://example.com/article';
+
+        const olderUpdate = updater.update(7, url);
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledOnce());
+        const currentUpdate = updater.refresh(7, url);
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledTimes(2));
+        rejectOlderLookup(new Error('superseded'));
+        await olderUpdate;
+
+        await updater.updateCurrentTab(7, async () => url);
+        expect(deps.lookup).toHaveBeenCalledTimes(2);
+
+        resolveCurrentLookup({
+            status: 'found',
+            primary: {
+                id: '1', title: 'Current', articleUrl: url,
+                comments: 23, points: 1, createdAt: 1,
+            },
+            alternatives: [],
+        });
+        await currentUpdate;
+
+        expect(deps.applyBadge).toHaveBeenCalledWith(7, expect.objectContaining({ text: '23' }));
+    });
+
+    it('releases a pending URL read when automatic mode is disabled', async () => {
+        const deps = dependencies();
+        let resolveOlderLookup!: (value: HnLookupResult) => void;
+        let resolvePendingRead!: (url: string | undefined) => void;
+        vi.mocked(deps.lookup).mockReturnValueOnce(new Promise<HnLookupResult>((resolve) => {
+            resolveOlderLookup = resolve;
+        }));
+        const updater = new AutomaticAvailabilityUpdater(deps);
+
+        const olderUpdate = updater.update(7, 'https://example.com/older');
+        await vi.waitFor(() => expect(deps.lookup).toHaveBeenCalledOnce());
+        const pendingUpdate = updater.updateCurrentTab(7, () => new Promise((resolve) => {
+            resolvePendingRead = resolve;
+        }));
+        await vi.waitFor(() => expect(resolvePendingRead).toBeTypeOf('function'));
+        resolveOlderLookup({
+            status: 'found',
+            primary: {
+                id: '1', title: 'Older', articleUrl: 'https://example.com/older',
+                comments: 99, points: 1, createdAt: 1,
+            },
+            alternatives: [],
+        });
+
+        await Promise.all([olderUpdate, updater.disable([7])]);
+
+        expect(deps.applyBadge).not.toHaveBeenCalledWith(7, expect.objectContaining({ text: '99' }));
+        expect(deps.applyBadge).toHaveBeenCalledWith(7, {
+            text: '',
+            title: EXTENSION_BRAND,
+        });
+
+        resolvePendingRead('https://example.com/current');
+        await pendingUpdate;
+        expect(deps.lookup).toHaveBeenCalledOnce();
+    });
+
     it('looks up the tab URL and applies the resulting badge in automatic mode', async () => {
         const deps = dependencies();
         const updater = new AutomaticAvailabilityUpdater(deps);
@@ -144,16 +335,15 @@ describe('AutomaticAvailabilityUpdater', () => {
         const updater = new AutomaticAvailabilityUpdater(deps);
 
         void updater.update(7, 'https://example.com/next');
-        await Promise.resolve();
-        await Promise.resolve();
-
-        expect(deps.applyBadge).toHaveBeenCalledWith(7, {
-            text: '',
-            title: EXTENSION_BRAND,
+        await vi.waitFor(() => {
+            expect(deps.applyBadge).toHaveBeenCalledWith(7, {
+                text: '',
+                title: EXTENSION_BRAND,
+            });
         });
     });
 
-    it('clears the badge without looking up when automatic mode is disabled', async () => {
+    it('does not retain a URL observed while automatic mode is disabled', async () => {
         const deps = dependencies();
         vi.mocked(deps.isEnabled).mockResolvedValue(false);
         const updater = new AutomaticAvailabilityUpdater(deps);
@@ -165,6 +355,11 @@ describe('AutomaticAvailabilityUpdater', () => {
             text: '',
             title: EXTENSION_BRAND,
         });
+
+        vi.mocked(deps.isEnabled).mockResolvedValue(true);
+        await updater.update(7, 'https://example.com/article');
+
+        expect(deps.lookup).toHaveBeenCalledOnce();
     });
 
     it('does not let an older navigation overwrite the current tab badge', async () => {

@@ -36,7 +36,7 @@
   <text x="280" y="185" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="700" fill="#F4F6F9">Split <tspan fill="#FF7A26">for Hacker News</tspan></text>
   <text x="280" y="232" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="23" fill="#A8B0BF">Find and open the Hacker News discussion</text>
   <text x="280" y="264" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="23" fill="#A8B0BF">for the article you are reading.</text>
-  <text x="110" y="330" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="19" fill="#6E7787">Free · No telemetry · One explicit click · Unofficial, not affiliated with Y Combinator</text>
+  <text x="110" y="330" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="19" fill="#6E7787">Free · No telemetry · Select a result to open · Unofficial, not affiliated with Y Combinator</text>
 
   <!-- browser window illustration -->
   <rect x="876" y="76" width="448" height="408" rx="21" fill="#0E1118" opacity="0.55"/>

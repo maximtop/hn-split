@@ -15,6 +15,7 @@ import {
 } from './chrome-adapters';
 
 const ENABLE_REFRESH_CONCURRENCY = 4;
+const TAB_UPDATE_STATUS_COMPLETE = 'complete';
 
 const automaticAvailability = new AutomaticAvailabilityUpdater({
     isEnabled: getAutomaticAvailabilityEnabled,
@@ -77,12 +78,21 @@ export async function setAutomaticAvailability(enabled: boolean): Promise<boolea
 }
 
 /**
- * Updates automatic availability for one navigated tab.
+ * Updates automatic availability for one navigated tab, acquiring its current
+ * URL only after the persisted opt-in setting is confirmed enabled.
  * @param tabId - The navigated browser tab identifier.
- * @param url - The current tab URL.
  */
-export function updateAutomaticAvailability(tabId: number, url: string): Promise<void> {
-    return automaticAvailability.update(tabId, url);
+export function updateAutomaticAvailability(tabId: number): Promise<void> {
+    return automaticAvailability.updateCurrentTab(tabId, async () => (await chrome.tabs.get(tabId)).url);
+}
+
+/**
+ * Determines whether tab-update metadata reports navigation without reading
+ * the possibly sensitive URL value included in the event.
+ * @param changeInfo - The tab-update metadata to classify.
+ */
+export function reportsAutomaticAvailabilityNavigation(changeInfo: chrome.tabs.OnUpdatedInfo): boolean {
+    return Object.hasOwn(changeInfo, 'url') || changeInfo.status === TAB_UPDATE_STATUS_COMPLETE;
 }
 
 /**
