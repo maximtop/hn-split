@@ -123,6 +123,7 @@ export async function launchExtensionContext(
         throw error;
     }
     const extensionPath = localizedExtensionPath ?? builtExtensionPath;
+    const chromeUiLanguage = options.catalogLocale?.replaceAll('_', '-');
     const args = [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,
@@ -137,6 +138,12 @@ export async function launchExtensionContext(
                 LC_ALL: 'C.UTF-8',
             }
         : undefined;
+    if (browserEnvironment !== undefined && chromeUiLanguage !== undefined) {
+        // Chrome's Linux browser process selects extension catalogs from the
+        // Unix locale environment, while extension-page renderers consume the
+        // matching --lang switch. Both must name the same locale.
+        args.push(`--lang=${chromeUiLanguage}`);
+    }
     let context: BrowserContext;
     try {
         context = await chromium.launchPersistentContext(userDataDir, {
@@ -166,7 +173,7 @@ export async function launchExtensionContext(
         extensionId,
         uiLanguageOverride: localizedExtensionPath === null
             ? null
-            : options.catalogLocale?.replaceAll('_', '-') ?? null,
+            : chromeUiLanguage ?? null,
         dispose: async () => {
             try {
                 await context.close();
