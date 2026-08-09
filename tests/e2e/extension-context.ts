@@ -30,11 +30,6 @@ export interface ExtensionContext {
      */
     extensionId: string;
     /**
-     * The UI language override installed only for the non-Linux catalog fallback,
-     * or null when Chrome's browser-process locale is used directly.
-     */
-    uiLanguageOverride: string | null;
-    /**
      * Closes the context and removes its temporary user-data directory.
      */
     dispose(): Promise<void>;
@@ -129,7 +124,8 @@ export async function launchExtensionContext(
         `--load-extension=${extensionPath}`,
     ];
     // Linux Chromium reads its browser-process UI locale from the Unix locale
-    // environment; `--lang` affects renderers but not extension i18n catalogs.
+    // environment. Playwright separately defaults page renderers to en-US, so
+    // the explicit context locale below keeps both processes on the same catalog.
     const browserEnvironment = options.catalogLocale !== undefined && process.platform === 'linux'
         ? {
                 ...process.env,
@@ -138,18 +134,13 @@ export async function launchExtensionContext(
                 LC_ALL: 'C.UTF-8',
             }
         : undefined;
-    if (browserEnvironment !== undefined && chromeUiLanguage !== undefined) {
-        // Chrome's Linux browser process selects extension catalogs from the
-        // Unix locale environment, while extension-page renderers consume the
-        // matching --lang switch. Both must name the same locale.
-        args.push(`--lang=${chromeUiLanguage}`);
-    }
     let context: BrowserContext;
     try {
         context = await chromium.launchPersistentContext(userDataDir, {
             channel: 'chromium',
             headless: true,
             args,
+            ...(chromeUiLanguage === undefined ? {} : { locale: chromeUiLanguage }),
             ...(browserEnvironment === undefined ? {} : { env: browserEnvironment }),
         });
     } catch (error) {
@@ -171,9 +162,6 @@ export async function launchExtensionContext(
         context,
         worker,
         extensionId,
-        uiLanguageOverride: localizedExtensionPath === null
-            ? null
-            : chromeUiLanguage ?? null,
         dispose: async () => {
             try {
                 await context.close();
@@ -257,14 +245,6 @@ export async function openExtensionPage(
         colorScheme: options.colorScheme ?? 'light',
         reducedMotion: 'reduce',
     });
-    if (extension.uiLanguageOverride !== null) {
-        // The catalog itself is still selected by Chrome in the disposable
-        // non-Linux extension. Only the browser UI language is stabilized here so
-        // the application exercises its production locale-to-lang/dir resolver.
-        await page.addInitScript((uiLanguage) => {
-            chrome.i18n.getUILanguage = () => uiLanguage;
-        }, extension.uiLanguageOverride);
-    }
     if (options.beforeNavigate !== undefined) {
         await options.beforeNavigate(page);
     }
