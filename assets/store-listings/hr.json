@@ -1,34 +1,34 @@
 {
     "locale": "hr",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Čitate članak i pitate se što misli Hacker News? Split for Hacker News pronalazi točnu raspravu za stranicu na kojoj ste i otvara je nakon jednog izričitog klika.",
+        "intro": "Čitate članak i pitate se što misli Hacker News? Split for Hacker News u skočnom prozoru pronalazi točne rasprave za otvorenu stranicu; ništa se ne otvara dok ne odaberete rezultat.",
         "bullets": [
-            "Jedan klik od članka do njegovih komentara na Hacker Newsu.",
+            "Odaberite rezultat u skočnom prozoru kako biste otvorili njegove komentare na Hacker Newsu.",
             "Točno podudaranje URL-a — bez približnih nagađanja; duplikati se prikazuju kao alternative.",
-            "Prvi klik otvara susjednu karticu; uparite je s člankom pomoću Chrome Split Viewa i kasniji odabiri ponovno će koristiti tu karticu.",
-            "Ili otvorite raspravu u bočnoj ploči preglednika, odmah uz stranicu koju čitate.",
+            "Prvi odabir rezultata otvara susjednu karticu; uparite je s člankom pomoću Chrome Split Viewa i kasniji odabiri ponovno će koristiti to okno.",
+            "Ili otvorite raspravu u bočnoj ploči preglednika. Da bi ugradio stvarnu stranicu Hacker Newsa, Split privremeno uklanja zaglavlja koja onemogućuju uokvirivanje samo iz odgovora podokvira Hacker Newsa i samo dok je ploča otvorena.",
             "„Otvori u Splitu“ u izborniku desnog klika na poveznicu: poveznica se otvara u trenutačnoj kartici, a njezina rasprava s Hacker Newsa u bočnoj ploči.",
             "Neobavezno: klik na priču na Hacker Newsu otvara članak kao i obično, a njegovu raspravu u bočnoj ploči pokraj njega. Isključeno prema zadanim postavkama.",
             "Neobavezna značka na alatnoj traci s brojem komentara, isključena prema zadanim postavkama.",
-            "Besplatno. Bez telemetrije, bez računa, bez čitanja stranica. Uska, dokumentirana dopuštenja."
+            "Besplatno. Bez telemetrije ili računa. Pretraživanja šalju Algolijinom javnom API-ju za pretraživanje Hacker Newsa samo URL-ove prihvatljivih javnih stranica ili odabranih poveznica i neobavezan kanonski URL — nikada tekst članka ili drugi sadržaj. Ograničena, dokumentirana dopuštenja."
         ],
         "disclaimer": "Neslužbeno. Ovo je proširenje neovisan projekt i nije povezano s Y Combinatorom ili Hacker Newsom niti ga oni podržavaju."
     },
     "releaseNotes": {
-        "v0.1.0": "Prvo javno izdanje. Pronađite točnu raspravu na Hacker Newsu za članak koji čitate i otvorite je jednim klikom — u susjednoj kartici koju možete upariti s člankom pomoću Chrome Split Viewa, ili u bočnoj ploči preglednika. Uključuje stavku „Otvori u Splitu“ u kontekstnom izborniku poveznica, neobavezan tijek koji otvara rasprave uz kliknute priče na Hacker Newsu i neobaveznu značku s brojem komentara na alatnoj traci. Besplatno, bez telemetrije, bez računa."
+        "v0.1.0": "Prvo javno izdanje. Pronađite točne rasprave na Hacker Newsu za članak koji čitate, a zatim odaberite rezultat u skočnom prozoru kako biste ga otvorili u susjednoj kartici koju možete upariti s člankom pomoću Chrome Split Viewa ili u bočnoj ploči preglednika. Uključuje kontekstni izbornik poveznica „Otvori u Splitu“, neobaveznu mogućnost koja otvara rasprave uz odabrane priče na Hacker Newsu i neobaveznu značku s brojem komentara. Besplatno, bez telemetrije ili računa."
     },
     "captions": [
         {
-            "heading": "Od članka do rasprave jednim klikom",
+            "heading": "Odaberite rezultat i otvorite raspravu",
             "sub": "Pogledajte točnu Hacker News raspravu za stranicu koju čitate, s brojem komentara i bodova."
         },
         {
             "heading": "Privatno prema zadanim postavkama",
-            "sub": "Automatske značke dostupnosti ostaju isključene dok ih ne uključite. Bez telemetrije, bez računa, bez čitanja stranica."
+            "sub": "Automatske značke dostupnosti ostaju isključene dok ih ne uključite. Pretraživanje iz skočnog prozora čita URL i kanonsku poveznicu stranice — nikada tekst ili sadržaj članka."
         },
         {
-            "heading": "Kod kuće u svijetloj i tamnoj temi",
+            "heading": "Ugodno u svijetloj i tamnoj temi",
             "sub": "Skočni prozor prati shemu boja vašeg preglednika."
         }
     ],

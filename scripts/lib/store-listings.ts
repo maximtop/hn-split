@@ -110,7 +110,7 @@ export interface ListingCaption {
  */
 export interface ListingDescription {
     /**
-     * Opening paragraph naming the product and the single-click behavior.
+     * Opening paragraph naming the product and the explicit result-selection flow.
      */
     intro: string;
 
@@ -139,9 +139,9 @@ export interface ListingContent {
     locale: string;
 
     /**
-     * Indicates a native-speaker-reviewed translation; machine-translated
-     * catalogs stay `false` until reviewed (docs/locales.md records the
-     * review policy).
+     * Indicates that the translation passed the release review gate recorded
+     * in docs/locales.md, including structural validation and an independent
+     * semantic QA pass.
      */
     reviewed: boolean;
 
@@ -226,19 +226,17 @@ function buildLocaleMap(
 }
 
 /**
- * The four store locale inventories. Every map covers all 40 prepared
- * registry codes, including locales not yet promoted into release packages,
- * so future fallback behavior stays explicit and machine-checked.
+ * The four store locale inventories. Every map covers all 40 shipped registry
+ * codes so fallback behavior stays explicit and machine-checked.
  */
 export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     chrome: {
         name: 'Chrome Web Store',
         checked: '2026-08-06',
-        source: 'developer.chrome.com/docs/extensions/reference/api/i18n (56 locale codes) and docs/webstore/cws-dashboard-listing',
+        source: 'developer.chrome.com/docs/extensions/reference/api/i18n (55 locale codes) and docs/webstore/cws-dashboard-listing',
         // The dashboard offers one listing per packaged `_locales` directory.
-        // Every prepared registry code is eligible for future promotion, so
-        // the capability map is the identity even though only reviewed codes
-        // currently ship.
+        // Every shipped registry code is supported, so the capability map is
+        // the identity.
         locales: buildLocaleMap({}),
         unsupportedFallback: null,
     },

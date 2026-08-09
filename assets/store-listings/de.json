@@ -1,34 +1,34 @@
 {
     "locale": "de",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Sie lesen einen Artikel und fragen sich, was Hacker News dazu meint? Split for Hacker News findet die exakte Diskussion zur aktuellen Seite und öffnet sie nach einem ausdrücklichen Klick.",
+        "intro": "Sie lesen einen Artikel und fragen sich, was Hacker News dazu meint? Im Pop-up findet Split for Hacker News die exakten Diskussionen zur aktuellen Seite; nichts wird geöffnet, bevor Sie ein Ergebnis auswählen.",
         "bullets": [
-            "Ein Klick vom Artikel zu seinen Hacker-News-Kommentaren.",
+            "Wählen Sie im Pop-up ein Ergebnis aus, um dessen Hacker-News-Kommentare zu öffnen.",
             "Exakter URL-Abgleich — kein ungefähres Raten; Duplikate erscheinen als Alternativen.",
-            "Der erste Klick öffnet einen benachbarten Tab; verbinden Sie ihn über Chrome Split View mit dem Artikel, und spätere Auswahlen verwenden diesen Tab erneut.",
-            "Oder öffnen Sie die Diskussion in der Seitenleiste des Browsers, direkt neben der Seite, die Sie lesen.",
+            "Die erste Auswahl eines Ergebnisses öffnet einen benachbarten Tab; verbinden Sie ihn über Chrome Split View mit dem Artikel, und spätere Auswahlen verwenden diesen Tab erneut.",
+            "Oder öffnen Sie die Diskussion in der Seitenleiste des Browsers. Um die echte Hacker-News-Seite einzubetten, entfernt Split vorübergehend die Framing-Schutz-Header ausschließlich aus Antworten von Hacker-News-Unterframes und nur, solange eine Seitenleiste geöffnet ist.",
             "„In Split öffnen“ im Rechtsklickmenü von Links: Der Link öffnet sich im aktuellen Tab und seine Hacker-News-Diskussion in der Seitenleiste.",
             "Optional: Ein Klick auf eine Story auf Hacker News öffnet den Artikel wie gewohnt und seine Diskussion daneben in der Seitenleiste. Standardmäßig aus.",
             "Optionales Badge in der Symbolleiste mit der Kommentarzahl, standardmäßig aus.",
-            "Kostenlos. Keine Telemetrie, keine Konten, kein Auslesen von Seiten. Enge, dokumentierte Berechtigungen."
+            "Kostenlos. Keine Telemetrie oder Konten. Bei Suchanfragen werden nur die URLs geeigneter öffentlicher Seiten oder ausgewählter Links sowie optional eine kanonische URL an die öffentliche Hacker News Search API von Algolia gesendet — niemals Artikeltext oder andere Inhalte. Eng begrenzte, dokumentierte Berechtigungen."
         ],
         "disclaimer": "Inoffiziell. Diese Erweiterung ist ein unabhängiges Projekt und steht in keiner Verbindung zu Y Combinator oder Hacker News und wird von ihnen nicht unterstützt."
     },
     "releaseNotes": {
-        "v0.1.0": "Erste öffentliche Version. Finden Sie die exakte Hacker-News-Diskussion zum Artikel, den Sie lesen, und öffnen Sie sie mit einem Klick — in einem benachbarten Tab, den Sie über Chrome Split View mit dem Artikel verbinden können, oder in der Seitenleiste des Browsers. Enthält den Menüpunkt „In Split öffnen“ im Kontextmenü von Links, einen optionalen Ablauf, der Diskussionen neben angeklickten Storys auf Hacker News öffnet, und ein optionales Badge mit der Kommentarzahl. Kostenlos, ohne Telemetrie, ohne Konten."
+        "v0.1.0": "Erste öffentliche Version. Finden Sie die exakten Hacker-News-Diskussionen zum Artikel, den Sie lesen, und wählen Sie dann im Pop-up ein Ergebnis aus, um es in einem benachbarten Tab, den Sie über Chrome Split View mit dem Artikel verbinden können, oder in der Seitenleiste des Browsers zu öffnen. Enthält den Menüpunkt „In Split öffnen“ im Kontextmenü von Links, einen optionalen Ablauf, der Diskussionen neben angeklickten Storys auf Hacker News öffnet, und ein optionales Badge mit der Kommentarzahl. Kostenlos, ohne Telemetrie, ohne Konten."
     },
     "captions": [
         {
-            "heading": "Vom Artikel zur Diskussion mit einem Klick",
+            "heading": "Ergebnis auswählen, Diskussion öffnen",
             "sub": "Sehen Sie den exakten Hacker-News-Thread zur Seite, die Sie lesen, mit Kommentar- und Punktzahlen."
         },
         {
             "heading": "Standardmäßig privat",
-            "sub": "Automatische Verfügbarkeits-Badges bleiben aus, bis Sie sie aktivieren. Keine Telemetrie, keine Konten, kein Auslesen von Seiten."
+            "sub": "Automatische Verfügbarkeits-Badges bleiben aus, bis Sie sie aktivieren. Die Suche im Pop-up liest die Seiten-URL und den kanonischen Link — niemals Artikeltext oder -inhalt."
         },
         {
-            "heading": "Zu Hause in Hell und Dunkel",
+            "heading": "Passt zu hellen und dunklen Designs",
             "sub": "Das Pop-up folgt dem Farbschema Ihres Browsers."
         }
     ],

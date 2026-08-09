@@ -1,34 +1,34 @@
 {
     "locale": "ro",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Citiți un articol și vă întrebați ce părere are Hacker News? Split for Hacker News găsește discuția exactă pentru pagina pe care vă aflați și o deschide după un clic explicit.",
+        "intro": "Citiți un articol și vă întrebați ce părere are Hacker News? În fereastra pop-up, Split for Hacker News găsește discuțiile exacte pentru pagina pe care vă aflați; nu se deschide nimic până când nu selectați un rezultat.",
         "bullets": [
-            "Un clic de la articol la comentariile lui de pe Hacker News.",
+            "Selectați un rezultat în fereastra pop-up pentru a deschide comentariile sale de pe Hacker News.",
             "Potrivire exactă a URL-ului — fără presupuneri aproximative; duplicatele sunt afișate ca alternative.",
-            "Primul clic deschide o filă adiacentă; asociați-o cu articolul folosind Chrome Split View, iar selecțiile ulterioare vor reutiliza acea filă.",
-            "Sau deschideți discuția în panoul lateral al browserului, chiar lângă pagina pe care o citiți.",
+            "Prima selectare a unui rezultat deschide o filă adiacentă; asociați-o cu articolul folosind Chrome Split View, iar selecțiile ulterioare vor reutiliza acea filă.",
+            "Sau deschideți discuția în panoul lateral al browserului. Pentru a încorpora pagina Hacker News reală, Split elimină temporar antetele care blochează încadrarea numai din răspunsurile subcadrelor Hacker News și numai cât timp este deschis un panou.",
             "„Deschide în Split” în meniul de clic dreapta al linkurilor: linkul se deschide în fila curentă, iar discuția lui de pe Hacker News se deschide în panoul lateral.",
-            "Opțional: un clic pe o poveste pe Hacker News deschide articolul ca de obicei, iar discuția lui în panoul lateral de alături. Dezactivat implicit.",
+            "Opțional: când faceți clic pe o poveste pe Hacker News, articolul se deschide ca de obicei, iar discuția sa în panoul lateral de alături. Dezactivat implicit.",
             "Insignă opțională în bara de instrumente cu numărul de comentarii, dezactivată implicit.",
-            "Gratuit. Fără telemetrie, fără conturi, fără citirea paginilor. Permisiuni restrânse și documentate."
+            "Gratuit. Fără telemetrie sau conturi. Căutările trimit numai URL-urile paginilor publice eligibile sau ale linkurilor selectate și, opțional, un URL canonic către API-ul public Hacker News Search de la Algolia — niciodată textul articolului sau alt conținut. Permisiuni restrânse și documentate."
         ],
         "disclaimer": "Neoficial. Această extensie este un proiect independent și nu este afiliată cu Y Combinator sau Hacker News, nici susținută de acestea."
     },
     "releaseNotes": {
-        "v0.1.0": "Prima versiune publică. Găsiți discuția exactă de pe Hacker News pentru articolul pe care îl citiți și deschideți-o cu un clic — într-o filă adiacentă pe care o puteți asocia cu articolul folosind Chrome Split View, sau în panoul lateral al browserului. Include elementul „Deschide în Split” din meniul contextual al linkurilor, un flux opțional care deschide discuțiile lângă poveștile accesate pe Hacker News și o insignă opțională cu numărul de comentarii. Gratuit, fără telemetrie, fără conturi."
+        "v0.1.0": "Prima versiune publică. Găsiți discuțiile exacte de pe Hacker News pentru articolul pe care îl citiți și selectați un rezultat în fereastra pop-up pentru a-l deschide într-o filă adiacentă pe care o puteți asocia cu Chrome Split View sau în panoul lateral al browserului. Include elementul „Deschide în Split” din meniul contextual al linkurilor, un flux opțional care deschide discuțiile lângă poveștile selectate pe Hacker News și o insignă opțională cu numărul de comentarii. Gratuit, fără telemetrie, fără conturi."
     },
     "captions": [
         {
-            "heading": "De la articol la discuție cu un clic",
+            "heading": "Selectați un rezultat și deschideți discuția",
             "sub": "Vedeți firul exact de pe Hacker News pentru pagina pe care o citiți, cu numărul de comentarii și puncte."
         },
         {
             "heading": "Privat în mod implicit",
-            "sub": "Insignele automate de disponibilitate rămân dezactivate până le activați. Fără telemetrie, fără conturi, fără citirea paginilor."
+            "sub": "Insignele automate de disponibilitate rămân dezactivate până le activați. Căutarea din fereastra pop-up citește URL-ul paginii și linkul canonic — niciodată textul sau conținutul articolului."
         },
         {
-            "heading": "Acasă în teme deschise și închise",
+            "heading": "Potrivit pentru teme luminoase și întunecate",
             "sub": "Fereastra pop-up urmează schema de culori a browserului."
         }
     ],

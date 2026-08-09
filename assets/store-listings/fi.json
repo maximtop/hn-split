@@ -1,34 +1,34 @@
 {
     "locale": "fi",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Luetko artikkelia ja mietit, mitä Hacker News ajattelee? Split for Hacker News löytää avoinna olevan sivun täsmällisen keskustelun ja avaa sen yhden nimenomaisen napsautuksen jälkeen.",
+        "intro": "Luetko artikkelia ja mietit, mitä Hacker News ajattelee? Split for Hacker News löytää ponnahdusikkunassa avoinna olevan sivun täsmälliset keskustelut; mitään ei avata ennen kuin valitset tuloksen.",
         "bullets": [
-            "Yksi napsautus artikkelista sen Hacker News -kommentteihin.",
+            "Avaa Hacker News -kommentit valitsemalla tulos ponnahdusikkunasta.",
             "Täsmällinen URL-vastaavuus — ei likimääräisiä arvauksia; kaksoiskappaleet näytetään vaihtoehtoina.",
-            "Ensimmäinen napsautus avaa viereisen välilehden; yhdistä se artikkeliin Chrome Split View’llä, ja myöhemmät valinnat käyttävät samaa välilehteä.",
-            "Tai avaa keskustelu selaimen sivupaneelissa, aivan lukemasi sivun vieressä.",
+            "Ensimmäinen tulosvalintasi avaa viereisen välilehden; yhdistä se artikkeliin Chrome Split View -toiminnolla, ja myöhemmät valinnat käyttävät samaa ruutua.",
+            "Voit myös avata keskustelun selaimen sivupaneelissa. Oikean Hacker News -sivun upottamiseksi Split poistaa kehystämisen estävät otsakkeet väliaikaisesti vain Hacker News -alikehysten vastauksista ja vain paneelin ollessa auki.",
             "”Avaa Splitissä” linkin hiiren oikean painikkeen valikossa: linkki avautuu nykyiseen välilehteen ja sen Hacker News -keskustelu sivupaneeliin.",
             "Valinnainen: jutun napsautus Hacker Newsissa avaa artikkelin tavalliseen tapaan ja sen keskustelun viereiseen sivupaneeliin. Oletuksena pois päältä.",
             "Valinnainen työkalupalkin merkki kommenttien määrällä, oletuksena pois päältä.",
-            "Ilmainen. Ei telemetriaa, ei tilejä, ei sivujen lukemista. Suppeat, dokumentoidut käyttöoikeudet."
+            "Ilmainen. Ei telemetriaa tai tilejä. Haut lähettävät Algolian julkiseen Hacker News Search APIin vain soveltuvien julkisten sivujen tai valittujen linkkien URL-osoitteet ja valinnaisen kanonisen URL-osoitteen — eivät koskaan artikkelin tekstiä tai muuta sisältöä. Suppeat, dokumentoidut käyttöoikeudet."
         ],
         "disclaimer": "Epävirallinen. Tämä laajennus on riippumaton projekti, eikä se ole sidoksissa Y Combinatoriin tai Hacker Newsiin eikä niiden hyväksymä."
     },
     "releaseNotes": {
-        "v0.1.0": "Ensimmäinen julkinen julkaisu. Löydä lukemasi artikkelin täsmällinen Hacker News -keskustelu ja avaa se yhdellä napsautuksella — viereiseen välilehteen, jonka voit yhdistää artikkeliin Chrome Split View’llä, tai selaimen sivupaneeliin. Sisältää ”Avaa Splitissä” -kohdan linkkien pikavalikossa, valinnaisen toiminnon, joka avaa keskustelut napsautettujen juttujen viereen Hacker Newsissa, sekä valinnaisen työkalupalkin merkin kommenttien määrällä. Ilmainen, ei telemetriaa, ei tilejä."
+        "v0.1.0": "Ensimmäinen julkinen julkaisu. Löydä lukemasi artikkelin täsmälliset Hacker News -keskustelut ja valitse sitten ponnahdusikkunasta tulos, joka avataan viereiseen, Chrome Split View -toiminnolla artikkeliin yhdistettävään välilehteen tai selaimen sivupaneeliin. Sisältää linkkien ”Avaa Splitissä” -pikavalikon, valinnaisen toiminnon, joka avaa keskustelut valittujen Hacker News -juttujen viereen, sekä valinnaisen kommenttimäärän näyttävän työkalupalkin merkin. Ilmainen, ei telemetriaa tai tilejä."
     },
     "captions": [
         {
-            "heading": "Artikkelista keskusteluun yhdellä napsautuksella",
+            "heading": "Valitse tulos ja avaa keskustelu",
             "sub": "Näe lukemasi sivun täsmällinen Hacker News -ketju kommenttien ja pisteiden määrineen."
         },
         {
             "heading": "Oletuksena yksityinen",
-            "sub": "Automaattiset saatavuusmerkit pysyvät pois päältä, kunnes otat ne käyttöön. Ei telemetriaa, ei tilejä, ei sivujen lukemista."
+            "sub": "Automaattiset saatavuusmerkit pysyvät pois päältä, kunnes otat ne käyttöön. Ponnahdusikkunan haku lukee sivun URL-osoitteen ja kanonisen linkin — ei koskaan artikkelin tekstiä tai sisältöä."
         },
         {
-            "heading": "Kotonaan vaaleassa ja tummassa",
+            "heading": "Toimii vaaleassa ja tummassa tilassa",
             "sub": "Ponnahdusikkuna noudattaa selaimesi väriteemaa."
         }
     ],

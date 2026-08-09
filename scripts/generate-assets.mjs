@@ -191,8 +191,9 @@ await mkdir(ICONS_DIR, { recursive: true });
 const browser = await chromium.launch({ channel: 'chromium', headless: true });
 const svgPage = await browser.newPage();
 
-// Icons and promo tiles carry no text, so only the base-locale run renders
-// them; the stores reuse one set across every listing language.
+// Icons and promo tiles are global rather than locale-specific, so only the
+// base-locale run renders them; the stores reuse one set across every listing
+// language.
 if (isBaseLocale) {
     const logo = resolve(IDENTITY_DIR, 'logo-mark.svg');
     for (const size of [16, 32, 48]) {

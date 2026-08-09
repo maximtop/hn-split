@@ -1,34 +1,34 @@
 {
     "locale": "pt_BR",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Lendo um artigo e se perguntando o que o Hacker News acha? O Split for Hacker News encontra a discussão exata da página em que você está e a abre após um clique explícito.",
+        "intro": "Lendo um artigo e se perguntando o que o Hacker News acha? No pop-up, o Split for Hacker News encontra as discussões exatas da página em que você está; nada abre até você escolher um resultado.",
         "bullets": [
-            "Um clique do artigo até os comentários dele no Hacker News.",
+            "Selecione um resultado no pop-up para abrir os comentários dele no Hacker News.",
             "Correspondência exata de URL — sem palpites aproximados; duplicatas aparecem como alternativas.",
-            "O primeiro clique abre uma aba adjacente; emparelhe essa aba com o artigo usando o Chrome Split View e as próximas seleções reutilizarão essa aba.",
-            "Ou abra a discussão no painel lateral do navegador, bem ao lado da página que você está lendo.",
+            "A primeira seleção de um resultado abre uma aba adjacente; emparelhe essa aba com o artigo usando o Chrome Split View e as próximas seleções reutilizarão essa aba.",
+            "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que impedem a exibição em frames apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto.",
             "“Abrir no Split” no menu do botão direito dos links: o link abre na aba atual e a discussão dele no Hacker News abre no painel lateral.",
             "Opcional: clicar em uma história no Hacker News abre o artigo normalmente e a discussão dele no painel lateral ao lado. Desativado por padrão.",
             "Selo opcional na barra de ferramentas com o número de comentários, desativado por padrão.",
-            "Grátis. Sem telemetria, sem contas, sem leitura de páginas. Permissões restritas e documentadas."
+            "Grátis. Sem telemetria nem contas. As consultas enviam apenas URLs de páginas públicas qualificadas ou de links selecionados e uma URL canônica opcional para a API pública Hacker News Search da Algolia — nunca o texto do artigo nem outro conteúdo. Permissões restritas e documentadas."
         ],
         "disclaimer": "Não oficial. Esta extensão é um projeto independente e não é afiliada nem endossada pela Y Combinator ou pelo Hacker News."
     },
     "releaseNotes": {
-        "v0.1.0": "Primeira versão pública. Encontre a discussão exata do Hacker News para o artigo que você está lendo e abra com um clique — em uma aba adjacente que você pode emparelhar com o artigo usando o Chrome Split View, ou no painel lateral do navegador. Inclui o item “Abrir no Split” no menu de contexto dos links, um fluxo opcional que abre discussões ao lado das histórias clicadas no Hacker News e um selo opcional com o número de comentários. Grátis, sem telemetria, sem contas."
+        "v0.1.0": "Primeira versão pública. Encontre as discussões exatas do Hacker News para o artigo que você está lendo e selecione um resultado no pop-up para abri-lo em uma aba adjacente que você pode emparelhar com o Chrome Split View ou no painel lateral do navegador. Inclui o item “Abrir no Split” no menu de contexto dos links, um fluxo opcional que abre discussões ao lado das histórias em que você clica no Hacker News e um selo opcional com o número de comentários. Grátis, sem telemetria, sem contas."
     },
     "captions": [
         {
-            "heading": "Do artigo à discussão em um clique",
+            "heading": "Selecione um resultado e abra a discussão",
             "sub": "Veja a discussão exata do Hacker News para a página que você está lendo, com número de comentários e pontos."
         },
         {
             "heading": "Privado por padrão",
-            "sub": "Os selos automáticos de disponibilidade ficam desativados até você ativá-los. Sem telemetria, sem contas, sem leitura de páginas."
+            "sub": "Os selos automáticos de disponibilidade ficam desativados até você ativá-los. A consulta pelo pop-up lê a URL da página e o link canônico — nunca o texto nem o conteúdo do artigo."
         },
         {
-            "heading": "Em casa no claro e no escuro",
+            "heading": "Ótimo nos modos claro e escuro",
             "sub": "O pop-up segue o esquema de cores do seu navegador."
         }
     ],

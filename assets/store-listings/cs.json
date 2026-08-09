@@ -1,34 +1,34 @@
 {
     "locale": "cs",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Čtete článek a zajímá vás, co si myslí Hacker News? Split for Hacker News najde přesnou diskuzi ke stránce, na které jste, a otevře ji po jednom výslovném kliknutí.",
+        "intro": "Čtete článek a zajímá vás, co si myslí Hacker News? Split for Hacker News najde ve vyskakovacím okně přesné diskuze k otevřené stránce; nic se neotevře, dokud nevyberete výsledek.",
         "bullets": [
-            "Jedno kliknutí od článku k jeho komentářům na Hacker News.",
+            "Vyberte výsledek ve vyskakovacím okně a otevřete jeho komentáře na Hacker News.",
             "Přesná shoda URL — žádné přibližné odhady; duplicity se zobrazují jako alternativy.",
-            "První kliknutí otevře sousední kartu; spárujte ji s článkem pomocí Chrome Split View a pozdější výběry tuto kartu znovu použijí.",
-            "Nebo otevřete diskuzi v postranním panelu prohlížeče, hned vedle stránky, kterou čtete.",
+            "První výběr výsledku otevře sousední kartu; spárujte ji s článkem pomocí Chrome Split View a pozdější výběry toto podokno znovu použijí.",
+            "Nebo otevřete diskuzi v postranním panelu prohlížeče. Aby mohl vložit skutečnou stránku Hacker News, Split dočasně odstraňuje hlavičky zakazující vkládání pouze z odpovědí podrámců Hacker News a jen po dobu, kdy je panel otevřený.",
             "„Otevřít ve Splitu“ v nabídce pravého tlačítka na odkazu: odkaz se otevře v aktuální kartě a jeho diskuze na Hacker News v postranním panelu.",
             "Volitelné: kliknutí na příběh na Hacker News otevře článek jako obvykle a jeho diskuzi v postranním panelu vedle něj. Ve výchozím stavu vypnuto.",
             "Volitelný odznak na panelu nástrojů s počtem komentářů, ve výchozím stavu vypnutý.",
-            "Zdarma. Žádná telemetrie, žádné účty, žádné čtení stránek. Úzká, zdokumentovaná oprávnění."
+            "Zdarma. Bez telemetrie a účtů. Vyhledávání odesílá do veřejného vyhledávacího API Hacker News od Algolie pouze adresy URL vhodných veřejných stránek nebo vybraných odkazů a volitelnou kanonickou adresu URL — nikdy text článku ani jiný obsah. Omezená, zdokumentovaná oprávnění."
         ],
         "disclaimer": "Neoficiální. Toto rozšíření je nezávislý projekt a není spojeno s Y Combinator ani Hacker News, ani jimi není schváleno."
     },
     "releaseNotes": {
-        "v0.1.0": "První veřejné vydání. Najděte přesnou diskuzi na Hacker News k článku, který čtete, a otevřete ji jedním kliknutím — v sousední kartě, kterou můžete spárovat s článkem pomocí Chrome Split View, nebo v postranním panelu prohlížeče. Obsahuje položku „Otevřít ve Splitu“ v kontextové nabídce odkazů, volitelný režim otevírající diskuze vedle rozkliknutých příběhů na Hacker News a volitelný odznak s počtem komentářů na panelu nástrojů. Zdarma, bez telemetrie, bez účtů."
+        "v0.1.0": "První veřejné vydání. Najděte přesné diskuze na Hacker News k článku, který čtete, a pak ve vyskakovacím okně vyberte výsledek, který se má otevřít v sousední kartě spárovatelné s článkem pomocí Chrome Split View nebo v postranním panelu prohlížeče. Obsahuje kontextovou nabídku odkazů „Otevřít ve Splitu“, volitelný režim otevírající diskuze vedle vybraných příběhů na Hacker News a volitelný odznak s počtem komentářů. Zdarma, bez telemetrie a účtů."
     },
     "captions": [
         {
-            "heading": "Od článku k diskuzi jedním kliknutím",
+            "heading": "Vyberte výsledek a otevřete diskuzi",
             "sub": "Přesná diskuze na Hacker News ke stránce, kterou čtete, s počtem komentářů a bodů."
         },
         {
             "heading": "Ve výchozím stavu soukromé",
-            "sub": "Automatické odznaky dostupnosti zůstávají vypnuté, dokud je nezapnete. Žádná telemetrie, žádné účty, žádné čtení stránek."
+            "sub": "Automatické odznaky dostupnosti zůstávají vypnuté, dokud je nezapnete. Vyhledávání z vyskakovacího okna čte adresu URL a kanonický odkaz stránky — nikdy text ani obsah článku."
         },
         {
-            "heading": "Doma ve světlém i tmavém režimu",
+            "heading": "Pohodlně ve světlém i tmavém režimu",
             "sub": "Vyskakovací okno se řídí barevným schématem prohlížeče."
         }
     ],

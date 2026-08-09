@@ -26,10 +26,10 @@ function readListing(locale: string): ListingContent {
 const base = readListing('en');
 
 describe('store locale catalog', () => {
-    it('keeps every prepared locale mapped for future store promotion', () => {
-        const prepared = LOCALE_REGISTRY.map(({ code }) => code).sort();
+    it('keeps every registered locale mapped for each store', () => {
+        const registered = LOCALE_REGISTRY.map(({ code }) => code).sort();
         for (const storeId of STORE_IDS) {
-            expect(Object.keys(STORE_CATALOG[storeId].locales).sort()).toEqual(prepared);
+            expect(Object.keys(STORE_CATALOG[storeId].locales).sort()).toEqual(registered);
         }
     });
 
@@ -76,7 +76,7 @@ describe('store locale catalog', () => {
 });
 
 describe('listing files', () => {
-    it('exist for exactly the prepared registry locales', () => {
+    it('exist for exactly the registered locales', () => {
         const files = readdirSync(listingsDirectory)
             .filter((name) => name.endsWith('.json'))
             .map((name) => name.replace(/\.json$/u, ''))
@@ -90,12 +90,11 @@ describe('listing files', () => {
         expect(collectListingIssues(content, base)).toEqual([]);
     });
 
-    it('ships only listings marked as native-speaker reviewed', () => {
+    it('ships exactly the listings that passed the release review gate', () => {
         const reviewed = LOCALE_REGISTRY
             .map(({ code }) => code)
             .filter((locale) => readListing(locale).reviewed);
 
-        expect(reviewed).toEqual(['en', 'ru']);
         expect(SHIPPED_LOCALES).toEqual(reviewed);
     });
 });

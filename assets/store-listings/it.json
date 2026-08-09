@@ -1,34 +1,34 @@
 {
     "locale": "it",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Stai leggendo un articolo e ti chiedi cosa ne pensa Hacker News? Split for Hacker News trova la discussione esatta della pagina in cui ti trovi e la apre dopo un clic esplicito.",
+        "intro": "Stai leggendo un articolo e ti chiedi cosa ne pensa Hacker News? Nel popup, Split for Hacker News trova le discussioni esatte per la pagina che stai visitando; non si apre nulla finché non selezioni un risultato.",
         "bullets": [
-            "Un clic dall'articolo ai suoi commenti su Hacker News.",
+            "Seleziona un risultato nel popup per aprire i relativi commenti su Hacker News.",
             "Corrispondenza esatta dell'URL — niente supposizioni approssimative; i duplicati sono elencati come alternative.",
-            "Il primo clic apre una scheda adiacente; abbinala all'articolo con Chrome Split View e le selezioni successive riutilizzeranno quella scheda.",
-            "Oppure apri la discussione nel pannello laterale del browser, proprio accanto alla pagina che stai leggendo.",
+            "La prima selezione di un risultato apre una scheda adiacente; abbinala all'articolo con Chrome Split View e le selezioni successive riutilizzeranno quella scheda.",
+            "Oppure apri la discussione nel pannello laterale del browser. Per incorporare la pagina reale di Hacker News, Split rimuove temporaneamente le intestazioni che bloccano l'inclusione in frame soltanto dalle risposte dei sottoframe di Hacker News e solo mentre un pannello è aperto.",
             "«Apri in Split» nel menu del tasto destro sui link: il link si apre nella scheda corrente e la sua discussione di Hacker News si apre nel pannello laterale.",
             "Facoltativo: il clic su una storia su Hacker News apre l'articolo come al solito e la sua discussione nel pannello laterale accanto. Disattivato per impostazione predefinita.",
             "Badge facoltativo nella barra degli strumenti con il numero di commenti, disattivato per impostazione predefinita.",
-            "Gratuito. Niente telemetria, niente account, nessuna lettura delle pagine. Permessi ristretti e documentati."
+            "Gratuito. Niente telemetria o account. Le ricerche inviano solo gli URL di pagine pubbliche idonee o di link selezionati e un URL canonico facoltativo all'API pubblica Hacker News Search di Algolia — mai il testo dell'articolo o altri contenuti. Permessi ristretti e documentati."
         ],
         "disclaimer": "Non ufficiale. Questa estensione è un progetto indipendente e non è affiliata a Y Combinator o Hacker News, né da loro approvata."
     },
     "releaseNotes": {
-        "v0.1.0": "Prima versione pubblica. Trova la discussione esatta di Hacker News per l'articolo che stai leggendo e aprila con un clic — in una scheda adiacente che puoi abbinare all'articolo con Chrome Split View, oppure nel pannello laterale del browser. Include la voce «Apri in Split» nel menu contestuale dei link, un flusso facoltativo che apre le discussioni accanto alle storie cliccate su Hacker News e un badge facoltativo con il numero di commenti. Gratuito, senza telemetria, senza account."
+        "v0.1.0": "Prima versione pubblica. Trova le discussioni esatte di Hacker News per l'articolo che stai leggendo, quindi seleziona un risultato nel popup per aprirlo in una scheda adiacente che puoi abbinare con Chrome Split View oppure nel pannello laterale del browser. Include la voce «Apri in Split» nel menu contestuale dei link, un flusso facoltativo che apre le discussioni accanto alle storie di Hacker News su cui fai clic e un badge facoltativo con il numero di commenti. Gratuito, senza telemetria, senza account."
     },
     "captions": [
         {
-            "heading": "Dall'articolo alla discussione in un clic",
+            "heading": "Seleziona un risultato, apri la discussione",
             "sub": "Vedi il thread esatto di Hacker News per la pagina che stai leggendo, con numero di commenti e punti."
         },
         {
             "heading": "Privato per impostazione predefinita",
-            "sub": "I badge automatici di disponibilità restano disattivati finché non li attivi. Niente telemetria, niente account, nessuna lettura delle pagine."
+            "sub": "I badge automatici di disponibilità restano disattivati finché non li attivi. La ricerca dal popup legge l'URL della pagina e il link canonico — mai il testo o il contenuto dell'articolo."
         },
         {
-            "heading": "A casa in chiaro e in scuro",
+            "heading": "Perfetto in modalità chiara e scura",
             "sub": "Il popup segue la combinazione di colori del tuo browser."
         }
     ],

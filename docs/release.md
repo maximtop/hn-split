@@ -17,12 +17,11 @@ Store submissions are built by one deterministic pipeline: the same commit alway
 
 The unpacked per-browser builds live in `build/<target>` (`chrome`, `edge`, `firefox`).
 
-Release packages contain only the native-speaker-reviewed locales named by
-`SHIPPED_LOCALES` in `src/shared/locales.ts` (`en` and `ru` for the initial
-release). The other 38 prepared catalogs and store listings remain tracked and
-therefore appear in `hn-split-source-<version>.zip`, but never in an installable
-package until review promotes them. Packaging verifies the unpacked `_locales`
-inventory before creating each store archive.
+Release packages contain exactly the 40 release-reviewed locales named by
+`SHIPPED_LOCALES` in `src/shared/locales.ts`. English is authored, Russian is
+hand-reviewed, and the other 38 translations pass the independent multilingual
+semantic QA documented in `docs/locales.md`. Packaging verifies the unpacked
+`_locales` inventory before creating each store archive.
 
 The MVP runtime stays Chrome (see `AGENTS.md`): the Edge and Firefox packages exist so store submissions never depend on local untracked steps, while cross-browser runtime QA is tracked separately. The Firefox manifest requires Firefox 140 or newer and declares `data_collection_permissions.required: ["browsingActivity", "websiteContent"]`: current or navigated tab URLs, canonical link URLs, and user-selected link URLs can be sent to Algolia as required lookup candidates. No optional data collection or telemetry is declared.
 
@@ -49,7 +48,8 @@ unzip -Z1 build/artifacts/hn-split-chrome-*.zip \
   | sort
 ```
 
-The final command prints exactly `en` and `ru` for the initial release.
+The final command prints exactly the 40 codes in `LOCALE_REGISTRY` for the
+initial release.
 
 ## Versioning and changelog
 
@@ -91,7 +91,7 @@ Local packaging (`pnpm package`) is the same build; it warns when tracked files 
 
 Submission stays a manual, free step; upload the artifacts produced by the release:
 
-- **Chrome Web Store:** upload `hn-split-chrome-<version>.zip`; listing copy lives in `docs/store-listing.md`. After upload, confirm that the listing-language selector contains only English and Russian before entering localized copy.
+- **Chrome Web Store:** upload `hn-split-chrome-<version>.zip`; listing copy lives in `docs/store-listing.md`. After upload, confirm that the listing-language selector contains all 40 `SHIPPED_LOCALES` before entering localized copy.
 - **Edge Add-ons:** upload `hn-split-edge-<version>.zip` in Partner Center.
 - **addons.mozilla.org:** upload `hn-split-firefox-<version>.zip`, attach `hn-split-source-<version>.zip` as the source archive, and point reviewers at `docs/development.md` (install and build need only `pnpm install --frozen-lockfile` and `pnpm package`).
 

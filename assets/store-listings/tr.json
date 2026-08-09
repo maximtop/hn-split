@@ -1,34 +1,34 @@
 {
     "locale": "tr",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Bir makale okurken Hacker News ne diyor diye merak mı ediyorsunuz? Split for Hacker News, bulunduğunuz sayfanın tam tartışmasını bulur ve tek bir açık tıklamadan sonra açar.",
+        "intro": "Bir makale okurken Hacker News ne diyor diye merak mı ediyorsunuz? Split for Hacker News, açılır pencerede bulunduğunuz sayfanın tam tartışmalarını bulur; siz bir sonuç seçene kadar hiçbir şey açılmaz.",
         "bullets": [
-            "Makaleden Hacker News yorumlarına tek tıklama.",
+            "Hacker News yorumlarını açmak için açılır pencerede bir sonuç seçin.",
             "Tam URL eşleşmesi — yaklaşık tahmin yok; kopyalar alternatif olarak listelenir.",
-            "İlk tıklama bitişik bir sekme açar; Chrome Split View ile makaleyle eşleştirin, sonraki seçimler o sekmeyi yeniden kullanır.",
-            "Ya da tartışmayı, okuduğunuz sayfanın hemen yanında, tarayıcının yan panelinde açın.",
+            "İlk sonuç seçiminiz bitişik bir sekme açar; Chrome Split View ile makaleyle eşleştirin, sonraki seçimler o bölmeyi yeniden kullanır.",
+            "Ya da tartışmayı tarayıcının yan panelinde açın. Split, gerçek Hacker News sayfasını gömmek için çerçevelemeyi engelleyen üstbilgileri geçici olarak yalnızca Hacker News alt çerçeve yanıtlarından ve yalnızca panel açıkken kaldırır.",
             "Bağlantıların sağ tıklama menüsünde “Split'te aç”: bağlantı geçerli sekmede, Hacker News tartışması ise yan panelde açılır.",
             "İsteğe bağlı: Hacker News'te bir habere tıklamak makaleyi her zamanki gibi, tartışmasını ise yanındaki yan panelde açar. Varsayılan olarak kapalı.",
             "Yorum sayısını gösteren isteğe bağlı araç çubuğu rozeti, varsayılan olarak kapalı.",
-            "Ücretsiz. Telemetri yok, hesap yok, sayfa okuma yok. Dar ve belgelenmiş izinler."
+            "Ücretsiz. Telemetri veya hesap yok. Aramalar, Algolia’nın herkese açık Hacker News Search API’sine yalnızca uygun herkese açık sayfaların ya da seçilen bağlantıların URL’lerini ve isteğe bağlı bir standart URL’yi gönderir — makale metnini veya başka içerikleri asla göndermez. Sınırlı ve belgelenmiş izinler."
         ],
         "disclaimer": "Resmî değildir. Bu uzantı bağımsız bir projedir; Y Combinator veya Hacker News ile bağlantılı değildir ve onlar tarafından onaylanmamıştır."
     },
     "releaseNotes": {
-        "v0.1.0": "İlk genel sürüm. Okuduğunuz makalenin tam Hacker News tartışmasını bulun ve tek tıklamayla açın — Chrome Split View ile makaleyle eşleştirebileceğiniz bitişik bir sekmede ya da tarayıcının yan panelinde. Bağlantıların bağlam menüsündeki “Split'te aç” öğesini, Hacker News'te tıklanan haberlerin yanında tartışmaları açan isteğe bağlı bir akışı ve yorum sayısını gösteren isteğe bağlı bir araç çubuğu rozetini içerir. Ücretsiz, telemetri yok, hesap yok."
+        "v0.1.0": "İlk genel sürüm. Okuduğunuz makalenin tam Hacker News tartışmalarını bulun, ardından açılır pencerede bir sonuç seçerek Chrome Split View ile makaleyle eşleştirebileceğiniz bitişik bir sekmede veya tarayıcının yan panelinde açın. Bağlantıların “Split'te aç” bağlam menüsünü, Hacker News'te seçilen haberlerin yanında tartışmaları açan isteğe bağlı bir akışı ve yorum sayısını gösteren isteğe bağlı bir araç çubuğu rozetini içerir. Ücretsiz, telemetri veya hesap yok."
     },
     "captions": [
         {
-            "heading": "Makaleden tartışmaya tek tıklamayla",
+            "heading": "Bir sonuç seçin, tartışmayı açın",
             "sub": "Okuduğunuz sayfanın tam Hacker News konusunu, yorum ve puan sayılarıyla görün."
         },
         {
             "heading": "Varsayılan olarak gizli",
-            "sub": "Otomatik kullanılabilirlik rozetleri siz açana kadar kapalı kalır. Telemetri yok, hesap yok, sayfa okuma yok."
+            "sub": "Otomatik kullanılabilirlik rozetleri siz açana kadar kapalı kalır. Açılır pencere araması sayfanın URL’sini ve standart bağlantısını okur; makale metnini veya içeriğini asla okumaz."
         },
         {
-            "heading": "Açık ve koyu temada evinizde",
+            "heading": "Açık ve koyu temalarla uyumlu",
             "sub": "Açılır pencere tarayıcınızın renk düzenini izler."
         }
     ],

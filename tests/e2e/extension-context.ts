@@ -1,6 +1,13 @@
 import { chromium } from '@playwright/test';
 import type { BrowserContext, Page, Worker } from '@playwright/test';
-import { mkdtemp, rm } from 'node:fs/promises';
+import {
+    cp,
+    mkdtemp,
+    readFile,
+    readdir,
+    rm,
+    writeFile,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 
@@ -29,6 +36,19 @@ export interface ExtensionContext {
 }
 
 /**
+ * Configures a persistent extension test context.
+ */
+export interface ExtensionLaunchOptions {
+    /**
+     * Selects one packaged Chrome catalog. Linux exercises Chrome's real
+     * browser-process locale against the untouched build; other platforms use
+     * a disposable localized extension because Chromium does not consistently
+     * honor Unix process locale overrides there.
+     */
+    catalogLocale?: string;
+}
+
+/**
  * One Algolia hit fixture; `url` is filled with the searched query so every
  * hit exactly matches the candidate identity.
  */
@@ -41,27 +61,97 @@ export interface AlgoliaHitFixture {
 }
 
 /**
+ * Creates a disposable extension copy in which Chrome must resolve messages
+ * from one requested packaged catalog.
+ *
+ * Non-Linux Chromium derives its browser-process locale from platform settings
+ * rather than Playwright's `locale`, `--lang`, or Unix locale environment variables.
+ * Making the requested catalog the sole default keeps
+ * `chrome.i18n.getMessage` real for local cross-platform coverage.
+ * @param sourceDirectory - The ordinary unpacked extension build to copy.
+ * @param catalogLocale - The Chrome `_locales` code to select.
+ */
+async function createLocalizedExtensionCopy(
+    sourceDirectory: string,
+    catalogLocale: string,
+): Promise<string> {
+    const temporaryDirectory = await mkdtemp(resolve(tmpdir(), 'hn-split-localized-extension-'));
+    const extensionDirectory = resolve(temporaryDirectory, 'extension');
+    try {
+        await cp(sourceDirectory, extensionDirectory, { recursive: true });
+        const localesDirectory = resolve(extensionDirectory, '_locales');
+        const localeEntries = await readdir(localesDirectory, { withFileTypes: true });
+        if (!localeEntries.some((entry) => entry.isDirectory() && entry.name === catalogLocale)) {
+            throw new Error(`Packaged extension is missing the ${catalogLocale} catalog`);
+        }
+        await Promise.all(localeEntries
+            .filter(({ name }) => name !== catalogLocale)
+            .map(({ name }) => rm(resolve(localesDirectory, name), { force: true, recursive: true })));
+
+        const manifestPath = resolve(extensionDirectory, 'manifest.json');
+        const manifest = JSON.parse(await readFile(manifestPath, 'utf8')) as Record<string, unknown>;
+        manifest.default_locale = catalogLocale;
+        await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+        return extensionDirectory;
+    } catch (error) {
+        await rm(temporaryDirectory, { force: true, recursive: true });
+        throw error;
+    }
+}
+
+/**
  * Launches a fresh persistent Chromium context with the extension from dist.
- * @param options - Optional browser UI language (Chromium honors --lang on
- * Linux CI; macOS ignores it and follows the system locale).
+ * @param options - Optional packaged catalog fixture configuration.
  */
 export async function launchExtensionContext(
-    options: { lang?: string } = {},
+    options: ExtensionLaunchOptions = {},
 ): Promise<ExtensionContext> {
-    const extensionPath = resolve(import.meta.dirname, '../../dist');
+    const builtExtensionPath = resolve(import.meta.dirname, '../../dist');
     const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn-split-playwright-'));
+    let localizedExtensionPath: string | null = null;
+    try {
+        localizedExtensionPath = options.catalogLocale === undefined || process.platform === 'linux'
+            ? null
+            : await createLocalizedExtensionCopy(builtExtensionPath, options.catalogLocale);
+    } catch (error) {
+        await rm(userDataDir, { force: true, recursive: true });
+        throw error;
+    }
+    const extensionPath = localizedExtensionPath ?? builtExtensionPath;
+    const chromeUiLanguage = options.catalogLocale?.replaceAll('_', '-');
     const args = [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,
     ];
-    if (options.lang !== undefined) {
-        args.push(`--lang=${options.lang}`);
+    // Linux Chromium reads its browser-process UI locale from the Unix locale
+    // environment. Playwright separately defaults page renderers to en-US, so
+    // the explicit context locale below keeps both processes on the same catalog.
+    const browserEnvironment = options.catalogLocale !== undefined && process.platform === 'linux'
+        ? {
+                ...process.env,
+                LANG: 'C.UTF-8',
+                LANGUAGE: options.catalogLocale.replaceAll('-', '_'),
+                LC_ALL: 'C.UTF-8',
+            }
+        : undefined;
+    let context: BrowserContext;
+    try {
+        context = await chromium.launchPersistentContext(userDataDir, {
+            channel: 'chromium',
+            headless: true,
+            args,
+            ...(chromeUiLanguage === undefined ? {} : { locale: chromeUiLanguage }),
+            ...(browserEnvironment === undefined ? {} : { env: browserEnvironment }),
+        });
+    } catch (error) {
+        await Promise.all([
+            rm(userDataDir, { force: true, recursive: true }),
+            ...(localizedExtensionPath === null
+                ? []
+                : [rm(resolve(localizedExtensionPath, '..'), { force: true, recursive: true })]),
+        ]);
+        throw error;
     }
-    const context = await chromium.launchPersistentContext(userDataDir, {
-        channel: 'chromium',
-        headless: true,
-        args,
-    });
     const worker = context.serviceWorkers().find((candidate) => candidate.url().startsWith('chrome-extension://'))
         ?? await context.waitForEvent(
             'serviceworker',
@@ -73,8 +163,16 @@ export async function launchExtensionContext(
         worker,
         extensionId,
         dispose: async () => {
-            await context.close();
-            await rm(userDataDir, { force: true, recursive: true });
+            try {
+                await context.close();
+            } finally {
+                await Promise.all([
+                    rm(userDataDir, { force: true, recursive: true }),
+                    ...(localizedExtensionPath === null
+                        ? []
+                        : [rm(resolve(localizedExtensionPath, '..'), { force: true, recursive: true })]),
+                ]);
+            }
         },
     };
 }

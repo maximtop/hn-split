@@ -1,31 +1,31 @@
 {
     "locale": "sv",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Läser du en artikel och undrar vad Hacker News tycker? Split for Hacker News hittar den exakta diskussionen för sidan du är på och öppnar den efter ett uttryckligt klick.",
+        "intro": "Läser du en artikel och undrar vad Hacker News tycker? I popup-fönstret hittar Split for Hacker News de exakta diskussionerna för sidan du är på; inget öppnas förrän du väljer ett resultat.",
         "bullets": [
-            "Ett klick från artikeln till dess kommentarer på Hacker News.",
+            "Välj ett resultat i popup-fönstret för att öppna dess kommentarer på Hacker News.",
             "Exakt URL-matchning — inga ungefärliga gissningar; dubbletter visas som alternativ.",
-            "Det första klicket öppnar en intilliggande flik; para ihop den med artikeln via Chrome Split View, och senare val återanvänder den fliken.",
-            "Eller öppna diskussionen i webbläsarens sidopanel, precis bredvid sidan du läser.",
+            "Det första valet av ett resultat öppnar en intilliggande flik; para ihop den med artikeln via Chrome Split View, och senare val återanvänder den fliken.",
+            "Eller öppna diskussionen i webbläsarens sidopanel. För att bädda in den riktiga Hacker News-sidan tar Split tillfälligt bort HTTP-huvudena som blockerar inramning, enbart från svar från Hacker News-underramar och bara medan en panel är öppen.",
             "”Öppna i Split” i länkarnas högerklicksmeny: länken öppnas i den aktuella fliken och dess Hacker News-diskussion öppnas i sidopanelen.",
             "Valfritt: ett klick på en artikel på Hacker News öppnar artikeln som vanligt och dess diskussion i sidopanelen bredvid. Av som standard.",
             "Valfri bricka i verktygsfältet med antalet kommentarer, av som standard.",
-            "Gratis. Ingen telemetri, inga konton, ingen läsning av sidor. Snäva, dokumenterade behörigheter."
+            "Gratis. Ingen telemetri eller några konton. Sökningar skickar bara URL:er för lämpliga offentliga sidor eller valda länkar och en valfri kanonisk URL till Algolias offentliga Hacker News Search API — aldrig artikeltext eller annat innehåll. Snäva, dokumenterade behörigheter."
         ],
         "disclaimer": "Inofficiell. Det här tillägget är ett oberoende projekt och är inte anslutet till eller godkänt av Y Combinator eller Hacker News."
     },
     "releaseNotes": {
-        "v0.1.0": "Första offentliga utgåvan. Hitta den exakta Hacker News-diskussionen för artikeln du läser och öppna den med ett klick — i en intilliggande flik som du kan para ihop med artikeln via Chrome Split View, eller i webbläsarens sidopanel. Innehåller menyalternativet ”Öppna i Split” i länkarnas snabbmeny, ett valfritt flöde som öppnar diskussioner bredvid klickade artiklar på Hacker News, och en valfri bricka med antalet kommentarer. Gratis, ingen telemetri, inga konton."
+        "v0.1.0": "Första offentliga utgåvan. Hitta de exakta Hacker News-diskussionerna för artikeln du läser och välj sedan ett resultat i popup-fönstret för att öppna det i en intilliggande flik som du kan para ihop med Chrome Split View eller i webbläsarens sidopanel. Innehåller menyalternativet ”Öppna i Split” i länkarnas snabbmeny, ett valfritt flöde som öppnar diskussioner bredvid artiklar på Hacker News som du klickar på, och en valfri bricka med antalet kommentarer. Gratis, ingen telemetri, inga konton."
     },
     "captions": [
         {
-            "heading": "Från artikel till diskussion med ett klick",
+            "heading": "Välj ett resultat och öppna diskussionen",
             "sub": "Se den exakta Hacker News-tråden för sidan du läser, med antal kommentarer och poäng."
         },
         {
             "heading": "Privat som standard",
-            "sub": "Automatiska tillgänglighetsbrickor är av tills du slår på dem. Ingen telemetri, inga konton, ingen läsning av sidor."
+            "sub": "Automatiska tillgänglighetsbrickor är av tills du slår på dem. Sökningen från popup-fönstret läser sidans URL och kanoniska länk — aldrig artikeltext eller innehåll."
         },
         {
             "heading": "Hemma i både ljust och mörkt",

@@ -14,5 +14,5 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Optional automatic availability badge with comment counts, off by default.
 - Chrome side panel that shows the real Hacker News discussion beside the page, including the opt-in article-click flow on news.ycombinator.com and the **Open in Split** link context menu.
 - Adjacent discussion tab flow that cooperates with Chrome's native Split View.
-- Options page with privacy-first defaults and reviewed English and Russian localizations; 38 additional locale sources remain prepared for later native-speaker review.
+- Options page with privacy-first defaults and 40 release-reviewed localizations; English is the authored source, Russian is hand-reviewed, and the other translations receive independent multilingual semantic QA.
 - Reproducible multi-browser packaging and release automation: Chrome, Edge, and Firefox store packages, a source archive for add-on review, SHA-256 checksums, provenance, and a signed-tag release workflow with a dry-run mode.

@@ -1,31 +1,31 @@
 {
     "locale": "fil",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Nagbabasa ng artikulo at iniisip kung ano ang sinasabi ng Hacker News? Hinahanap ng Split for Hacker News ang eksaktong talakayan para sa pahinang binubuksan mo at binubuksan ito pagkatapos ng isang tahasang pag-click.",
+        "intro": "Nagbabasa ng artikulo at iniisip kung ano ang sinasabi ng Hacker News? Sa popup, hinahanap ng Split for Hacker News ang eksaktong mga talakayan para sa pahinang binubuksan mo; walang bubukas hangga't hindi ka pumipili ng resulta.",
         "bullets": [
-            "Isang click mula sa artikulo papunta sa mga komento nito sa Hacker News.",
+            "Pumili ng resulta sa popup para buksan ang mga komento nito sa Hacker News.",
             "Eksaktong pagtutugma ng URL — walang pahapyaw na hula; ang mga duplicate ay ipinapakita bilang mga alternatibo.",
-            "Ang unang pag-click ay nagbubukas ng katabing tab; ipares ito sa artikulo gamit ang Chrome Split View at gagamitin muli ng mga susunod na pagpili ang tab na iyon.",
-            "O buksan ang talakayan sa side panel ng browser, katabi mismo ng pahinang binabasa mo.",
+            "Ang una mong pagpili ng resulta ay nagbubukas ng katabing tab; ipares ito sa artikulo gamit ang Chrome Split View at gagamitin muli ng mga susunod na pagpili ang pane na iyon.",
+            "O buksan ang talakayan sa side panel ng browser. Para i-embed ang tunay na pahina ng Hacker News, pansamantalang inaalis ng Split ang mga framing header mula lang sa mga tugon ng Hacker News sub-frame habang bukas ang panel.",
             "“Buksan sa Split” sa right-click menu ng mga link: bubukas ang link sa kasalukuyang tab at bubukas ang talakayan nito sa Hacker News sa side panel.",
             "Opsyonal: ang pag-click sa isang kuwento sa Hacker News ay nagbubukas ng artikulo gaya ng dati at ng talakayan nito sa side panel sa tabi. Naka-off bilang default.",
             "Opsyonal na badge sa toolbar na may bilang ng mga komento, naka-off bilang default.",
-            "Libre. Walang telemetry, walang account, walang pagbabasa ng pahina. Makikitid at dokumentadong pahintulot."
+            "Libre. Walang telemetry o account. Ang mga paghahanap ay nagpapadala lang ng URL ng kwalipikadong pampublikong pahina o piniling link at opsyonal na canonical URL sa pampublikong Hacker News Search API ng Algolia — hindi kailanman teksto ng artikulo o ibang nilalaman. Limitado at dokumentado ang mga pahintulot."
         ],
         "disclaimer": "Hindi opisyal. Ang extension na ito ay isang malayang proyekto at hindi kaanib o inendorso ng Y Combinator o Hacker News."
     },
     "releaseNotes": {
-        "v0.1.0": "Unang pampublikong release. Hanapin ang eksaktong talakayan sa Hacker News para sa artikulong binabasa mo at buksan ito sa isang click — sa katabing tab na maipapares mo sa artikulo gamit ang Chrome Split View, o sa side panel ng browser. Kasama ang “Buksan sa Split” sa context menu ng mga link, isang opsyonal na flow na nagbubukas ng mga talakayan sa tabi ng mga na-click na kuwento sa Hacker News, at isang opsyonal na badge sa toolbar na may bilang ng mga komento. Libre, walang telemetry, walang account."
+        "v0.1.0": "Unang pampublikong release. Hanapin ang eksaktong mga talakayan sa Hacker News para sa artikulong binabasa mo, saka pumili ng resulta sa popup para buksan ito sa katabing tab na maipapares mo sa artikulo gamit ang Chrome Split View, o sa side panel ng browser. Kasama ang “Buksan sa Split” sa context menu ng mga link, isang opt-in na flow na nagbubukas ng mga talakayan sa tabi ng mga na-click na kuwento sa Hacker News, at isang opt-in na badge sa toolbar na may bilang ng mga komento. Libre, walang telemetry, walang account."
     },
     "captions": [
         {
-            "heading": "Mula artikulo hanggang talakayan sa isang click",
+            "heading": "Pumili ng resulta, buksan ang talakayan",
             "sub": "Tingnan ang eksaktong thread sa Hacker News para sa pahinang binabasa mo, kasama ang bilang ng komento at puntos."
         },
         {
             "heading": "Pribado bilang default",
-            "sub": "Nananatiling naka-off ang mga awtomatikong badge ng availability hanggang i-on mo. Walang telemetry, walang account, walang pagbabasa ng pahina."
+            "sub": "Naka-off ang mga awtomatikong badge ng availability hanggang i-on mo. Binabasa ng popup lookup ang URL at canonical link ng pahina — hindi kailanman ang teksto o nilalaman ng artikulo."
         },
         {
             "heading": "Komportable sa maliwanag at madilim",
