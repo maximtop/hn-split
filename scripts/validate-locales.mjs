@@ -5,7 +5,13 @@ import { validator } from '@adguard/translate';
 
 // Node 24 strips types natively, so the plain-node script can consume the
 // same registry as the application code — one source of truth.
-import { BASE_LOCALE, LOCALE_REGISTRY, SHIPPED_LOCALES } from '../src/shared/locales.ts';
+import {
+    BASE_LOCALE,
+    CHROME_PACKAGED_LOCALE_ALIASES,
+    CHROME_PACKAGED_LOCALES,
+    LOCALE_REGISTRY,
+    SHIPPED_LOCALES,
+} from '../src/shared/locales.ts';
 import { MANIFEST_DESCRIPTION_LIMIT } from './lib/store-listings.ts';
 
 const EXPECTED_LOCALE_COUNT = 40;
@@ -28,6 +34,23 @@ if (unknownShippedLocales.length > 0) {
     throw new Error(
         `SHIPPED_LOCALES contains codes outside the locale registry: ${unknownShippedLocales.join(', ')}.`,
     );
+}
+
+const packaged = [...CHROME_PACKAGED_LOCALES].sort();
+if (new Set(packaged).size !== packaged.length) {
+    throw new Error('CHROME_PACKAGED_LOCALES must contain unique physical directory codes.');
+}
+for (const [alias, source] of Object.entries(CHROME_PACKAGED_LOCALE_ALIASES)) {
+    if (SHIPPED_LOCALES.includes(alias)) {
+        throw new Error(`Packaged locale alias ${alias} collides with a reviewed source locale.`);
+    }
+    if (!SHIPPED_LOCALES.includes(source)) {
+        throw new Error(`Packaged locale alias ${alias} has unknown source locale ${source}.`);
+    }
+}
+const expectedPackaged = [...SHIPPED_LOCALES, ...Object.keys(CHROME_PACKAGED_LOCALE_ALIASES)].sort();
+if (JSON.stringify(packaged) !== JSON.stringify(expectedPackaged)) {
+    throw new Error('CHROME_PACKAGED_LOCALES must contain every shipped locale and Chrome alias.');
 }
 
 const localesDirectory = resolve(import.meta.dirname, '../public/_locales');
@@ -88,5 +111,6 @@ for (const locale of localeNames) {
 
 console.log(
     `Validated ${localeNames.length} registered locales against ${BASE_LOCALE}; `
-    + `shipping ${shipped.join(', ')}.`,
+    + `shipping ${shipped.join(', ')} with Chrome package aliases `
+    + `${Object.keys(CHROME_PACKAGED_LOCALE_ALIASES).sort().join(', ') || 'none'}.`,
 );

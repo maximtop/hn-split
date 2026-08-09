@@ -232,18 +232,16 @@ function buildLocaleMap(
 export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     chrome: {
         name: 'Chrome Web Store',
-        checked: '2026-08-06',
-        source: 'developer.chrome.com/docs/extensions/reference/api/i18n (55 locale codes) and docs/webstore/cws-dashboard-listing',
-        // The dashboard offers one listing per packaged `_locales` directory.
-        // Every shipped registry code is supported, so the capability map is
-        // the identity.
-        locales: buildLocaleMap({}),
+        checked: '2026-08-09',
+        source: 'developer.chrome.com/docs/extensions/reference/api/i18n (55 listing codes), Chromium locale normalization, and docs/webstore/cws-dashboard-listing',
+        // The package includes both runtime `nb` and the Web Store `no` alias.
+        locales: buildLocaleMap({ nb: 'no' }),
         unsupportedFallback: null,
     },
     edge: {
         name: 'Microsoft Edge Add-ons',
-        checked: '2026-08-06',
-        source: 'learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension (languages detected from package `_locales`; description required per language)',
+        checked: '2026-08-09',
+        source: 'learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension (listing languages added in Partner Center; description required per language)',
         locales: buildLocaleMap({}),
         unsupportedFallback: null,
     },
@@ -259,7 +257,7 @@ export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
             es: 'es-ES',
             es_419: 'es-MX',
             fil: 'tl',
-            no: 'nb-NO',
+            nb: 'nb-NO',
             pt_BR: 'pt-BR',
             pt_PT: 'pt-PT',
             sv: 'sv-SE',
@@ -270,14 +268,15 @@ export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     },
     appStore: {
         name: 'App Store (Safari)',
-        checked: '2026-08-06',
-        source: 'developer.apple.com/help/app-store-connect/reference/app-store-localizations (50 localizations)',
+        checked: '2026-08-09',
+        source: 'developer.apple.com/help/app-store-connect/reference/app-store-localizations (50 localizations) and App Store Connect API locale shortcodes',
         // Bulgarian, Persian, Filipino, and Serbian have no App Store
         // localization; those audiences see the primary en-US product page.
         locales: buildLocaleMap({
             en: 'en-US',
             es: 'es-ES',
             es_419: 'es-MX',
+            nb: 'no',
             pt_BR: 'pt-BR',
             pt_PT: 'pt-PT',
             zh_CN: 'zh-Hans',

@@ -9,7 +9,7 @@ Store submissions are built by one deterministic pipeline: the same commit alway
 | File | Purpose |
 | --- | --- |
 | `hn-split-chrome-<version>.zip` | Chrome Web Store package |
-| `hn-split-edge-<version>.zip` | Microsoft Edge Add-ons package; byte-identical to the Chrome package today, produced separately so the two store pipelines can diverge without renaming anything |
+| `hn-split-edge-<version>.zip` | Microsoft Edge Add-ons package; produced separately so its locale inventory and future store-specific changes do not depend on the Chrome archive |
 | `hn-split-firefox-<version>.zip` | Firefox package for addons.mozilla.org with the transformed manifest (event-page background, `options_ui`, gecko id, no `sidePanel`) |
 | `hn-split-source-<version>.zip` | Source archive for add-on review: every tracked file at the packaged commit |
 | `SHA256SUMS` | Checksums in `shasum -a 256 --check` format |
@@ -17,11 +17,14 @@ Store submissions are built by one deterministic pipeline: the same commit alway
 
 The unpacked per-browser builds live in `build/<target>` (`chrome`, `edge`, `firefox`).
 
-Release packages contain exactly the 40 release-reviewed locales named by
-`SHIPPED_LOCALES` in `src/shared/locales.ts`. English is authored, Russian is
-hand-reviewed, and the other 38 translations pass the independent multilingual
-semantic QA documented in `docs/locales.md`. Packaging verifies the unpacked
-`_locales` inventory before creating each store archive.
+Release packages contain the 40 release-reviewed languages named by
+`SHIPPED_LOCALES` in `src/shared/locales.ts`. The Chrome archive uses 41 physical
+`_locales` directories because Norwegian Bokmål ships as runtime `nb` plus a
+byte-identical Web Store `no` alias; Edge and Firefox use the 40 reviewed source
+directories directly. English is authored, Russian is hand-reviewed, and the
+other 38 translations pass the independent multilingual semantic QA documented
+in `docs/locales.md`. Packaging verifies the exact per-target inventory and the
+Chrome alias bytes before creating each store archive.
 
 The MVP runtime stays Chrome (see `AGENTS.md`): the Edge and Firefox packages exist so store submissions never depend on local untracked steps, while cross-browser runtime QA is tracked separately. The Firefox manifest requires Firefox 140 or newer and declares `data_collection_permissions.required: ["browsingActivity", "websiteContent"]`: current or navigated tab URLs, canonical link URLs, and user-selected link URLs can be sent to Algolia as required lookup candidates. No optional data collection or telemetry is declared.
 
@@ -48,8 +51,8 @@ unzip -Z1 build/artifacts/hn-split-chrome-*.zip \
   | sort
 ```
 
-The final command prints exactly the 40 codes in `LOCALE_REGISTRY` for the
-initial release.
+The final command prints the 40 codes in `LOCALE_REGISTRY` plus the generated
+Norwegian `no` alias (41 directories representing 40 languages).
 
 ## Versioning and changelog
 
@@ -91,7 +94,7 @@ Local packaging (`pnpm package`) is the same build; it warns when tracked files 
 
 Submission stays a manual, free step; upload the artifacts produced by the release:
 
-- **Chrome Web Store:** upload `hn-split-chrome-<version>.zip`; listing copy lives in `docs/store-listing.md`. After upload, confirm that the listing-language selector contains all 40 `SHIPPED_LOCALES` before entering localized copy.
+- **Chrome Web Store:** upload `hn-split-chrome-<version>.zip`; listing copy lives in `docs/store-listing.md`. After upload, confirm that the listing-language selector contains exactly 40 languages, including one Norwegian entry, before entering localized copy.
 - **Edge Add-ons:** upload `hn-split-edge-<version>.zip` in Partner Center.
 - **addons.mozilla.org:** upload `hn-split-firefox-<version>.zip`, attach `hn-split-source-<version>.zip` as the source archive, and point reviewers at `docs/development.md` (install and build need only `pnpm install --frozen-lockfile` and `pnpm package`).
 

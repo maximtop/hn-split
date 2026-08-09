@@ -374,7 +374,7 @@ references. Chrome has no reviewer-notes field.
 | Permission justifications | one per manifest entry | This doc, Permission justifications |
 | Remote code | declare | No (This doc, Remote code) |
 | Data usage + certifications | checkboxes | This doc, Data usage |
-| Localized listings | one per packaged locale | 40 translated listings, matching the package inventory and release gate in `docs/locales.md` |
+| Localized listings | one per logical registry language | 40 translated listings, matching the release gate in `docs/locales.md` |
 
 The Chrome Web Store Store Listing page has no separate release-notes or
 screenshot-caption text field. `pnpm store:render chrome <locale>` therefore
@@ -457,7 +457,9 @@ inventory, and per-store locale mappings live in
 - **Publication gate:** Chrome derives its listing languages from the
   `_locales/<code>` directories in the uploaded package; the dashboard has no
   separate documented control for suppressing a packaged locale. The build
-  therefore copies exactly the 40 release-reviewed `SHIPPED_LOCALES`.
+  copies the 40 release-reviewed `SHIPPED_LOCALES` plus a byte-identical `no`
+  alias for the `nb` Norwegian runtime catalog. Published dual-code packages
+  produce one Norwegian listing, so the ZIP has 41 directories for 40 languages.
 - **Never translated:** the name — `pnpm locales:validate` fails any catalog
   that changes `extension_name`, and the listing validator requires the
   brand string and the Y Combinator / Hacker News proper nouns verbatim in
