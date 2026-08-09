@@ -1,34 +1,34 @@
 {
     "locale": "sk",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Čítate článok a zaujíma vás, čo si myslí Hacker News? Split for Hacker News nájde presnú diskusiu k stránke, na ktorej ste, a otvorí ju po jednom výslovnom kliknutí.",
+        "intro": "Čítate článok a zaujíma vás, čo si myslí Hacker News? Split for Hacker News nájde vo vyskakovacom okne presné diskusie k otvorenej stránke; nič sa neotvorí, kým nevyberiete výsledok.",
         "bullets": [
-            "Jedno kliknutie od článku k jeho komentárom na Hacker News.",
+            "Vyberte výsledok vo vyskakovacom okne a otvorte jeho komentáre na Hacker News.",
             "Presná zhoda URL — žiadne približné odhady; duplicity sa zobrazujú ako alternatívy.",
-            "Prvé kliknutie otvorí susednú kartu; spárujte ju s článkom cez Chrome Split View a neskoršie výbery túto kartu znova použijú.",
-            "Alebo otvorte diskusiu v bočnom paneli prehliadača, hneď vedľa stránky, ktorú čítate.",
+            "Prvý výber výsledku otvorí susednú kartu; spárujte ju s článkom cez Chrome Split View a neskoršie výbery toto podokno znova použijú.",
+            "Alebo otvorte diskusiu v bočnom paneli prehliadača. Aby mohol vložiť skutočnú stránku Hacker News, Split dočasne odstraňuje hlavičky zakazujúce vkladanie iba z odpovedí podrámcov Hacker News a len kým je panel otvorený.",
             "„Otvoriť v Splite“ v ponuke pravého tlačidla na odkaze: odkaz sa otvorí na aktuálnej karte a jeho diskusia na Hacker News v bočnom paneli.",
             "Voliteľné: kliknutie na príbeh na Hacker News otvorí článok ako zvyčajne a jeho diskusiu v bočnom paneli vedľa neho. Predvolene vypnuté.",
             "Voliteľný odznak na paneli nástrojov s počtom komentárov, predvolene vypnutý.",
-            "Zadarmo. Žiadna telemetria, žiadne účty, žiadne čítanie stránok. Úzke, zdokumentované povolenia."
+            "Zadarmo. Bez telemetrie a účtov. Vyhľadávania odosielajú do verejného vyhľadávacieho API Hacker News od Algolie iba adresy URL vhodných verejných stránok alebo vybraných odkazov a voliteľnú kanonickú adresu URL — nikdy text článku ani iný obsah. Obmedzené, zdokumentované povolenia."
         ],
         "disclaimer": "Neoficiálne. Toto rozšírenie je nezávislý projekt a nie je spojené s Y Combinator ani Hacker News, ani nimi nie je schválené."
     },
     "releaseNotes": {
-        "v0.1.0": "Prvé verejné vydanie. Nájdite presnú diskusiu na Hacker News k článku, ktorý čítate, a otvorte ju jedným kliknutím — na susednej karte, ktorú môžete spárovať s článkom cez Chrome Split View, alebo v bočnom paneli prehliadača. Obsahuje položku „Otvoriť v Splite“ v kontextovej ponuke odkazov, voliteľný tok otvárajúci diskusie vedľa rozkliknutých príbehov na Hacker News a voliteľný odznak s počtom komentárov na paneli nástrojov. Zadarmo, bez telemetrie, bez účtov."
+        "v0.1.0": "Prvé verejné vydanie. Nájdite presné diskusie na Hacker News k článku, ktorý čítate, a potom vo vyskakovacom okne vyberte výsledok, ktorý sa má otvoriť na susednej karte spárovateľnej s článkom cez Chrome Split View alebo v bočnom paneli prehliadača. Obsahuje kontextovú ponuku odkazov „Otvoriť v Splite“, voliteľný režim otvárajúci diskusie vedľa vybraných príbehov na Hacker News a voliteľný odznak s počtom komentárov. Zadarmo, bez telemetrie a účtov."
     },
     "captions": [
         {
-            "heading": "Od článku k diskusii jedným kliknutím",
+            "heading": "Vyberte výsledok a otvorte diskusiu",
             "sub": "Presná diskusia na Hacker News k stránke, ktorú čítate, s počtom komentárov a bodov."
         },
         {
             "heading": "Predvolene súkromné",
-            "sub": "Automatické odznaky dostupnosti zostávajú vypnuté, kým ich nezapnete. Žiadna telemetria, žiadne účty, žiadne čítanie stránok."
+            "sub": "Automatické odznaky dostupnosti zostávajú vypnuté, kým ich nezapnete. Vyhľadávanie z vyskakovacieho okna číta adresu URL a kanonický odkaz stránky — nikdy text ani obsah článku."
         },
         {
-            "heading": "Doma vo svetlom aj tmavom režime",
+            "heading": "Pohodlne vo svetlom aj tmavom režime",
             "sub": "Vyskakovacie okno sa riadi farebnou schémou prehliadača."
         }
     ],

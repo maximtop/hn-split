@@ -32,12 +32,14 @@ function printField(label, value) {
     console.log(`## ${label}\n\n${value}\n`);
 }
 
-console.log(`# ${store.name} — ${storeLocale} (from ${locale}${listing.reviewed ? '' : ', machine translation pending review'})\n`);
-printField('Name (never translated)', EXTENSION_BRAND);
-printField('Summary / short description', messages.extension_description.message);
-printField('Description', assembleDescription(listing.description));
-for (const [version, notes] of Object.entries(listing.releaseNotes)) {
-    printField(`Release notes ${version}`, notes);
+console.log(`# ${store.name} — ${storeLocale} (from ${locale}${listing.reviewed ? '' : ', release review pending'})\n`);
+printField('Name (from manifest; read-only)', EXTENSION_BRAND);
+printField('Summary / short description (from manifest; read-only)', messages.extension_description.message);
+printField(storeId === 'chrome' ? 'Detailed description (paste into dashboard)' : 'Description', assembleDescription(listing.description));
+if (storeId !== 'chrome') {
+    for (const [version, notes] of Object.entries(listing.releaseNotes)) {
+        printField(`Release notes ${version}`, notes);
+    }
 }
 if (storeId === 'edge') {
     printField('Search terms', listing.searchTerms.join('; '));
@@ -45,6 +47,3 @@ if (storeId === 'edge') {
 if (storeId === 'appStore') {
     printField('Keywords', listing.appStoreKeywords);
 }
-printField('Screenshot captions', listing.captions
-    .map(({ heading, sub }, index) => `${index + 1}. ${heading} — ${sub}`)
-    .join('\n'));

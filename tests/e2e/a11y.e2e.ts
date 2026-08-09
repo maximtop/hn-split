@@ -2,7 +2,10 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 
+import arMessages from '../../public/_locales/ar/messages.json' with { type: 'json' };
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
+import ruMessages from '../../public/_locales/ru/messages.json' with { type: 'json' };
+import zhCnMessages from '../../public/_locales/zh_CN/messages.json' with { type: 'json' };
 import {
     ARTICLE_ORIGIN,
     installLookupFixtures,
@@ -43,9 +46,45 @@ const EN_BUTTON_NAMES = {
 } as const;
 
 const RU_BUTTON_NAMES = {
-    primary: /Открыть обсуждение/,
-    alternative: /Открыть другое/,
+    primary: new RegExp(ruMessages.open_primary_discussion.message),
+    alternative: new RegExp(ruMessages.open_alternative.message),
 } as const;
+
+const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
+    {
+        browserLanguage: 'ru',
+        direction: 'ltr',
+        documentLanguage: 'ru',
+        label: 'ru',
+        optionsSwitchName: ruMessages.automatic_badge_label.message,
+        popupButtonNames: RU_BUTTON_NAMES,
+        uiLanguagePrefix: 'ru',
+    },
+    {
+        browserLanguage: 'ar',
+        direction: 'rtl',
+        documentLanguage: 'ar',
+        label: 'ar RTL',
+        optionsSwitchName: arMessages.automatic_badge_label.message,
+        popupButtonNames: {
+            primary: new RegExp(arMessages.open_primary_discussion.message),
+            alternative: new RegExp(arMessages.open_alternative.message),
+        },
+        uiLanguagePrefix: 'ar',
+    },
+    {
+        browserLanguage: 'zh-CN',
+        direction: 'ltr',
+        documentLanguage: 'zh-CN',
+        label: 'zh-CN CJK',
+        optionsSwitchName: zhCnMessages.automatic_badge_label.message,
+        popupButtonNames: {
+            primary: new RegExp(zhCnMessages.open_primary_discussion.message),
+            alternative: new RegExp(zhCnMessages.open_alternative.message),
+        },
+        uiLanguagePrefix: 'zh-cn',
+    },
+] as const;
 
 async function scanForBlockingViolations(page: Page, label: string): Promise<void> {
     const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
@@ -190,31 +229,44 @@ test.describe('extension accessibility (en)', () => {
     });
 });
 
-test.describe('extension accessibility (ru)', () => {
-    test('russian locale stamps the document language and fits both layouts', async () => {
-        const extension = await launchExtensionContext({ lang: 'ru' });
-        try {
-            const uiLanguage: string = await extension.worker.evaluate(() => chrome.i18n.getUILanguage());
-            test.skip(
-                !uiLanguage.toLowerCase().startsWith('ru'),
-                `Chromium ignored --lang=ru (UI language "${uiLanguage}", typical on macOS); enforced on Linux CI`,
-            );
-            await installLookupFixtures(extension.context, { hits: FIXTURE_HITS });
+for (const locale of REPRESENTATIVE_LOCALIZED_LAYOUTS) {
+    test.describe(`extension accessibility (${locale.label})`, () => {
+        test('locale metadata is correct and options and popup fit the viewport', async () => {
+            const extension = await launchExtensionContext({ lang: locale.browserLanguage });
+            try {
+                const uiLanguage: string = await extension.worker.evaluate(() => chrome.i18n.getUILanguage());
+                test.skip(
+                    !uiLanguage.toLowerCase().startsWith(locale.uiLanguagePrefix),
+                    `Chromium ignored --lang=${locale.browserLanguage} (UI language "${uiLanguage}", typical on macOS); enforced on Linux CI`,
+                );
+                await installLookupFixtures(extension.context, { hits: FIXTURE_HITS });
 
-            const options = await openExtensionPage(extension, 'options.html', { colorScheme: 'light' });
-            await expect(options.getByRole('switch', { name: 'Автоматически проверять адреса статей' }))
-                .toBeVisible();
-            expect(await options.evaluate(() => document.documentElement.lang)).toBe('ru');
-            await expectNoHorizontalOverflow(options, 'options ru');
-            await scanForBlockingViolations(options, 'options ru light');
-            await options.close();
+                const options = await openExtensionPage(extension, 'options.html', { colorScheme: 'light' });
+                await expect(options.getByRole('switch', { name: locale.optionsSwitchName })).toBeVisible();
+                expect(await options.evaluate(() => ({
+                    direction: document.documentElement.dir,
+                    language: document.documentElement.lang,
+                }))).toEqual({
+                    direction: locale.direction,
+                    language: locale.documentLanguage,
+                });
+                await expectNoHorizontalOverflow(options, `options ${locale.label}`);
+                await scanForBlockingViolations(options, `options ${locale.label} light`);
+                await options.close();
 
-            const popup = await openFoundPopup(extension, 'light', RU_BUTTON_NAMES);
-            expect(await popup.evaluate(() => document.documentElement.lang)).toBe('ru');
-            await expectNoHorizontalOverflow(popup, 'popup ru');
-            await popup.close();
-        } finally {
-            await extension.dispose();
-        }
+                const popup = await openFoundPopup(extension, 'light', locale.popupButtonNames);
+                expect(await popup.evaluate(() => ({
+                    direction: document.documentElement.dir,
+                    language: document.documentElement.lang,
+                }))).toEqual({
+                    direction: locale.direction,
+                    language: locale.documentLanguage,
+                });
+                await expectNoHorizontalOverflow(popup, `popup ${locale.label}`);
+                await popup.close();
+            } finally {
+                await extension.dispose();
+            }
+        });
     });
-});
+}

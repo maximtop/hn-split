@@ -51,7 +51,7 @@ No personally identifiable, health, financial, authentication, communications, o
 
 The use of information received from Chrome APIs by Split for Hacker News adheres to the [Chrome Web Store User Data Policy](https://developer.chrome.com/docs/webstore/program-policies/limited-use), including the Limited Use requirements.
 
-Split for Hacker News uses and transfers that information only as necessary to provide its single purpose. The only off-device transfer initiated by the extension is an eligible public article URL, including an optional canonical URL, sent over HTTPS to Algolia's public Hacker News Search API solely to locate matching Hacker News discussions. The extension does not sell user data; use or transfer it for advertising or unrelated purposes; use it to determine creditworthiness or for lending; or permit human access except where the Chrome Web Store User Data Policy allows it for security or legal compliance.
+Split for Hacker News uses and transfers that information only as necessary to provide its single purpose. The only off-device transfer initiated by the extension is an eligible public page or selected-link URL candidate, including an optional canonical URL where available, sent over HTTPS to Algolia's public Hacker News Search API solely to locate matching Hacker News discussions. The extension does not sell user data; use or transfer it for advertising or unrelated purposes; use it to determine creditworthiness or for lending; or permit human access except where the Chrome Web Store User Data Policy allows it for security or legal compliance.
 
 ## Side panel
 

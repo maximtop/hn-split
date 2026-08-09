@@ -1,31 +1,31 @@
 {
     "locale": "no",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Leser du en artikkel og lurer på hva Hacker News mener? Split for Hacker News finner den nøyaktige diskusjonen for siden du er på, og åpner den etter ett uttrykkelig klikk.",
+        "intro": "Leser du en artikkel og lurer på hva Hacker News mener? I popupvinduet finner Split for Hacker News de nøyaktige diskusjonene for siden du er på; ingenting åpnes før du velger et resultat.",
         "bullets": [
-            "Ett klikk fra artikkelen til dens kommentarer på Hacker News.",
+            "Velg et resultat i popupvinduet for å åpne kommentarene på Hacker News.",
             "Nøyaktig URL-samsvar — ingen omtrentlige gjetninger; duplikater vises som alternativer.",
-            "Det første klikket åpner en tilstøtende fane; koble den til artikkelen med Chrome Split View, og senere valg gjenbruker den fanen.",
-            "Eller åpne diskusjonen i nettleserens sidepanel, rett ved siden av siden du leser.",
+            "Det første resultatvalget åpner en tilstøtende fane; koble den til artikkelen med Chrome Split View, og senere valg gjenbruker den fanen.",
+            "Eller åpne diskusjonen i nettleserens sidepanel. For å bygge inn den ekte Hacker News-siden fjerner Split midlertidig HTTP-hodene som blokkerer innramming, kun fra svar fra Hacker News-underrammer og kun mens et panel er åpent.",
             "«Åpne i Split» i høyreklikkmenyen for lenker: lenken åpnes i gjeldende fane, og dens Hacker News-diskusjon åpnes i sidepanelet.",
             "Valgfritt: et klikk på en historie på Hacker News åpner artikkelen som vanlig og diskusjonen i sidepanelet ved siden av. Av som standard.",
             "Valgfritt merke på verktøylinjen med antall kommentarer, av som standard.",
-            "Gratis. Ingen telemetri, ingen kontoer, ingen lesing av sider. Snevre, dokumenterte tillatelser."
+            "Gratis. Ingen telemetri eller kontoer. Oppslag sender bare URL-er til egnede offentlige sider eller valgte lenker og en valgfri kanonisk URL til Algolias offentlige Hacker News Search API — aldri artikkeltekst eller annet innhold. Snevre, dokumenterte tillatelser."
         ],
         "disclaimer": "Uoffisiell. Denne utvidelsen er et uavhengig prosjekt og er ikke tilknyttet eller godkjent av Y Combinator eller Hacker News."
     },
     "releaseNotes": {
-        "v0.1.0": "Første offentlige utgivelse. Finn den nøyaktige Hacker News-diskusjonen for artikkelen du leser, og åpne den med ett klikk — i en tilstøtende fane du kan koble til artikkelen med Chrome Split View, eller i nettleserens sidepanel. Inneholder menypunktet «Åpne i Split» i lenkenes høyreklikkmeny, en valgfri flyt som åpner diskusjoner ved siden av klikkede historier på Hacker News, og et valgfritt merke med antall kommentarer. Gratis, ingen telemetri, ingen kontoer."
+        "v0.1.0": "Første offentlige utgivelse. Finn de nøyaktige Hacker News-diskusjonene for artikkelen du leser, og velg deretter et resultat i popupvinduet for å åpne det i en tilstøtende fane som du kan koble med Chrome Split View, eller i nettleserens sidepanel. Inneholder menypunktet «Åpne i Split» i lenkenes høyreklikkmeny, en valgfri flyt som åpner diskusjoner ved siden av historier på Hacker News som du klikker på, og et valgfritt merke med antall kommentarer. Gratis, ingen telemetri, ingen kontoer."
     },
     "captions": [
         {
-            "heading": "Fra artikkel til diskusjon med ett klikk",
+            "heading": "Velg et resultat, og åpne diskusjonen",
             "sub": "Se den nøyaktige Hacker News-tråden for siden du leser, med antall kommentarer og poeng."
         },
         {
             "heading": "Privat som standard",
-            "sub": "Automatiske tilgjengelighetsmerker er av til du slår dem på. Ingen telemetri, ingen kontoer, ingen lesing av sider."
+            "sub": "Automatiske tilgjengelighetsmerker er av til du slår dem på. Oppslag fra popupvinduet leser sidens URL og kanoniske lenke — aldri artikkeltekst eller innhold."
         },
         {
             "heading": "Hjemme i både lyst og mørkt",

@@ -32,11 +32,11 @@ if (unknownShippedLocales.length > 0) {
 
 const localesDirectory = resolve(import.meta.dirname, '../public/_locales');
 const localeNames = (await readdir(localesDirectory)).sort();
-const prepared = [...registryCodes].sort();
-if (JSON.stringify(localeNames) !== JSON.stringify(prepared)) {
+const registered = [...registryCodes].sort();
+if (JSON.stringify(localeNames) !== JSON.stringify(registered)) {
     throw new Error(
         `public/_locales directories [${localeNames.join(', ')}] must match `
-        + `LOCALE_REGISTRY [${prepared.join(', ')}] in src/shared/locales.ts.`,
+        + `LOCALE_REGISTRY [${registered.join(', ')}] in src/shared/locales.ts.`,
     );
 }
 
@@ -87,6 +87,6 @@ for (const locale of localeNames) {
 }
 
 console.log(
-    `Validated ${localeNames.length} prepared locales against ${BASE_LOCALE}; `
+    `Validated ${localeNames.length} registered locales against ${BASE_LOCALE}; `
     + `shipping ${shipped.join(', ')}.`,
 );

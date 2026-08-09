@@ -1,31 +1,31 @@
 {
     "locale": "nl",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Leest u een artikel en vraagt u zich af wat Hacker News ervan vindt? Split for Hacker News vindt de exacte discussie voor de pagina waarop u bent en opent die na één expliciete klik.",
+        "intro": "Leest u een artikel en vraagt u zich af wat Hacker News ervan vindt? In de pop-up vindt Split for Hacker News de exacte discussies voor de huidige pagina; er wordt niets geopend totdat u een resultaat kiest.",
         "bullets": [
-            "Eén klik van het artikel naar de bijbehorende Hacker News-reacties.",
+            "Kies een resultaat in de pop-up om de bijbehorende Hacker News-reacties te openen.",
             "Exacte URL-overeenkomst — geen vage gissingen; duplicaten worden als alternatieven getoond.",
-            "De eerste klik opent een aangrenzend tabblad; koppel het aan het artikel met Chrome Split View, en latere selecties hergebruiken dat tabblad.",
-            "Of open de discussie in het zijpaneel van de browser, direct naast de pagina die u leest.",
+            "De eerste selectie van een resultaat opent een aangrenzend tabblad; koppel het aan het artikel met Chrome Split View, en latere selecties hergebruiken dat tabblad.",
+            "Of open de discussie in het zijpaneel van de browser. Om de echte Hacker News-pagina in te sluiten, verwijdert Split tijdelijk de headers die framing blokkeren, alleen uit reacties van Hacker News-subframes en alleen zolang een paneel open is.",
             "“Openen in Split” in het rechtsklikmenu van links: de link opent in het huidige tabblad en de bijbehorende Hacker News-discussie opent in het zijpaneel.",
             "Optioneel: een klik op een verhaal op Hacker News opent het artikel zoals gewoonlijk en de discussie ernaast in het zijpaneel. Standaard uit.",
             "Optionele werkbalkbadge met het aantal reacties, standaard uit.",
-            "Gratis. Geen telemetrie, geen accounts, geen pagina's lezen. Beperkte, gedocumenteerde machtigingen."
+            "Gratis. Geen telemetrie of accounts. Zoekopdrachten sturen alleen URL's van geschikte openbare pagina's of geselecteerde links en optioneel een canonieke URL naar Algolia's openbare Hacker News Search API — nooit artikeltekst of andere inhoud. Beperkte, gedocumenteerde machtigingen."
         ],
         "disclaimer": "Onofficieel. Deze extensie is een onafhankelijk project en is niet verbonden aan of goedgekeurd door Y Combinator of Hacker News."
     },
     "releaseNotes": {
-        "v0.1.0": "Eerste openbare release. Vind de exacte Hacker News-discussie voor het artikel dat u leest en open die met één klik — in een aangrenzend tabblad dat u met Chrome Split View aan het artikel kunt koppelen, of in het zijpaneel van de browser. Bevat het menu-item “Openen in Split” in het contextmenu van links, een optionele functie die discussies opent naast aangeklikte verhalen op Hacker News, en een optionele werkbalkbadge met het aantal reacties. Gratis, geen telemetrie, geen accounts."
+        "v0.1.0": "Eerste openbare release. Vind de exacte Hacker News-discussies voor het artikel dat u leest en kies vervolgens een resultaat in de pop-up om het te openen in een aangrenzend tabblad dat u met Chrome Split View kunt koppelen, of in het zijpaneel van de browser. Bevat het menu-item “Openen in Split” in het contextmenu van links, een optionele functie die discussies opent naast verhalen op Hacker News waarop u klikt, en een optionele werkbalkbadge met het aantal reacties. Gratis, geen telemetrie, geen accounts."
     },
     "captions": [
         {
-            "heading": "Van artikel naar discussie in één klik",
+            "heading": "Kies een resultaat en open de discussie",
             "sub": "Bekijk de exacte Hacker News-thread voor de pagina die u leest, met het aantal reacties en punten."
         },
         {
             "heading": "Standaard privé",
-            "sub": "Automatische beschikbaarheidsbadges blijven uit totdat u ze inschakelt. Geen telemetrie, geen accounts, geen pagina's lezen."
+            "sub": "Automatische beschikbaarheidsbadges blijven uit totdat u ze inschakelt. De zoekopdracht vanuit de pop-up leest de pagina-URL en canonieke link — nooit artikeltekst of -inhoud."
         },
         {
             "heading": "Thuis in licht en donker",

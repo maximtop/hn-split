@@ -1,31 +1,31 @@
 {
     "locale": "id",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Sedang membaca artikel dan penasaran apa kata Hacker News? Split for Hacker News menemukan diskusi yang tepat untuk halaman yang sedang Anda buka dan membukanya setelah satu klik eksplisit.",
+        "intro": "Sedang membaca artikel dan penasaran apa kata Hacker News? Di popup, Split for Hacker News menemukan diskusi yang tepat untuk halaman yang sedang Anda buka; tidak ada yang terbuka hingga Anda memilih hasil.",
         "bullets": [
-            "Satu klik dari artikel ke komentarnya di Hacker News.",
-            "Pencocokan URL yang tepat — tanpa tebakan kira-kira; duplikat ditampilkan sebagai alternatif.",
-            "Klik pertama membuka tab yang bersebelahan; pasangkan dengan artikel menggunakan Chrome Split View dan pilihan berikutnya akan menggunakan kembali tab itu.",
-            "Atau buka diskusi di panel samping browser, tepat di sebelah halaman yang Anda baca.",
+            "Pilih hasil di popup untuk membuka komentar Hacker News-nya.",
+            "Pencocokan URL yang tepat — tanpa tebakan samar; duplikat ditampilkan sebagai alternatif.",
+            "Pilihan hasil pertama Anda membuka tab yang bersebelahan; pasangkan dengan artikel menggunakan Chrome Split View dan pilihan berikutnya akan menggunakan kembali panel itu.",
+            "Atau buka diskusi di panel samping browser. Untuk menyematkan halaman Hacker News yang sebenarnya, Split untuk sementara menghapus header yang memblokir penayangan dalam frame hanya dari respons subframe Hacker News selama panel terbuka.",
             "“Buka di Split” di menu klik kanan tautan: tautan terbuka di tab saat ini dan diskusi Hacker News-nya terbuka di panel samping.",
             "Opsional: mengklik cerita di Hacker News membuka artikel seperti biasa dan diskusinya di panel samping di sebelahnya. Nonaktif secara default.",
             "Lencana bilah alat opsional dengan jumlah komentar, nonaktif secara default.",
-            "Gratis. Tanpa telemetri, tanpa akun, tanpa membaca halaman. Izin yang sempit dan terdokumentasi."
+            "Gratis. Tanpa telemetri atau akun. Pencarian hanya mengirim URL halaman publik yang memenuhi syarat atau tautan yang dipilih serta URL kanonis opsional ke API Hacker News Search publik Algolia — tidak pernah teks artikel atau konten lain. Izin terbatas dan terdokumentasi."
         ],
         "disclaimer": "Tidak resmi. Ekstensi ini adalah proyek independen dan tidak berafiliasi dengan atau didukung oleh Y Combinator maupun Hacker News."
     },
     "releaseNotes": {
-        "v0.1.0": "Rilis publik pertama. Temukan diskusi Hacker News yang tepat untuk artikel yang Anda baca dan buka dengan satu klik — di tab bersebelahan yang dapat Anda pasangkan dengan artikel menggunakan Chrome Split View, atau di panel samping browser. Menyertakan item “Buka di Split” di menu konteks tautan, alur opsional yang membuka diskusi di samping cerita yang diklik di Hacker News, dan lencana bilah alat opsional dengan jumlah komentar. Gratis, tanpa telemetri, tanpa akun."
+        "v0.1.0": "Rilis publik pertama. Temukan diskusi Hacker News yang tepat untuk artikel yang Anda baca, lalu pilih hasil di popup untuk membukanya di tab bersebelahan yang dapat dipasangkan dengan artikel menggunakan Chrome Split View, atau di panel samping browser. Menyertakan item “Buka di Split” di menu konteks tautan, alur opt-in yang membuka diskusi di samping cerita yang diklik di Hacker News, dan lencana bilah alat opt-in dengan jumlah komentar. Gratis, tanpa telemetri, tanpa akun."
     },
     "captions": [
         {
-            "heading": "Dari artikel ke diskusi dalam satu klik",
+            "heading": "Pilih hasil, buka diskusi",
             "sub": "Lihat utas Hacker News yang tepat untuk halaman yang Anda baca, dengan jumlah komentar dan poin."
         },
         {
             "heading": "Privat secara default",
-            "sub": "Lencana ketersediaan otomatis tetap nonaktif sampai Anda mengaktifkannya. Tanpa telemetri, tanpa akun, tanpa membaca halaman."
+            "sub": "Lencana ketersediaan otomatis tetap nonaktif sampai Anda mengaktifkannya. Pencarian popup membaca URL halaman dan tautan kanonis — tidak pernah teks atau konten artikel."
         },
         {
             "heading": "Nyaman di tema terang dan gelap",

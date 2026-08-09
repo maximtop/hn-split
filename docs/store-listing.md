@@ -4,9 +4,10 @@ The single reviewed English source for every store-facing claim: listing
 copy, support and privacy answers, data-use questionnaire answers, reviewer
 notes, release notes, and imagery for the four target stores — Chrome Web
 Store, Microsoft Edge Add-ons, Firefox Add-ons (AMO), and the App Store
-(Safari) — and the input for 40 prepared listing localizations
-([`docs/locales.md`](locales.md)). The initial Chrome release publishes only
-the native-speaker-reviewed English and Russian listings.
+(Safari) — and the input for 40 listing localizations
+([`docs/locales.md`](locales.md)). The initial Chrome release publishes all 40
+release-reviewed listings; the review method and its limitations are recorded
+explicitly in the locale document.
 
 Rules of this document:
 
@@ -134,11 +135,10 @@ translated captions.
 
 Preconditions, owner maximtop:
 
-- The repository is private today and must be public before the first
-  submission, or the support and privacy URLs above will not resolve for
-  reviewers. If a store rejects a repository URL as a privacy policy,
-  publish `PRIVACY.md` through GitHub Pages from the same repository with
-  the content unchanged.
+- The repository and `PRIVACY.md` are public; verify that the support,
+  homepage, and privacy URLs above still resolve before submission. If a
+  store rejects a repository URL as a privacy policy, publish `PRIVACY.md`
+  through GitHub Pages from the same repository with the content unchanged.
 - Store dashboards publish contact details (Chrome shows the publisher
   email; Edge shows the registered support contact). The values above are
   the ones to publish.
@@ -267,8 +267,9 @@ answers above carry the explanation.
 >    options page and in PRIVACY.md; it applies to Hacker News sub-frames only
 >    while the panel is open.
 > 5. Right-click any http(s) link and choose "Open in Split": the link opens
->    in the tab where it was clicked and its discussion loads in the side
->    panel.
+>    in the tab where it was clicked. If an exact Hacker News discussion
+>    exists, it loads in the side panel; otherwise the panel reports that no
+>    discussion was found.
 > 6. Options → "Automatic toolbar badge" (off by default): enable it and an
 >    orange comment-count badge appears as tabs navigate to articles with
 >    discussions; disabling it clears badges and the session lookup cache.
@@ -363,7 +364,7 @@ references. Chrome has no reviewer-notes field.
 | Summary | ≤132 chars, from manifest description | `extension_description` message (62 ✓) |
 | Detailed description | complies with keyword-spam policy | This doc, Full description |
 | Store icon | 128×128 | `public/icons/icon-128.png` |
-| Screenshots | 1–5 at 1280×800 | `assets/store/screenshot-*.png` (3) |
+| Screenshots | 1–5 at 1280×800; localized sets optional | Upload `assets/store/screenshot-*.png` (3) once as Global screenshots; leave localized screenshots and videos empty for the initial release |
 | Small promo tile | 440×280 | `assets/store/small-promo-440x280.png` |
 | Marquee tile (optional) | 1400×560 | `assets/store/marquee-1400x560.png` |
 | Category | one primary | This doc, Identity (Tools) |
@@ -373,8 +374,14 @@ references. Chrome has no reviewer-notes field.
 | Permission justifications | one per manifest entry | This doc, Permission justifications |
 | Remote code | declare | No (This doc, Remote code) |
 | Data usage + certifications | checkboxes | This doc, Data usage |
-| Release notes | per version | This doc, Release notes |
-| Localized listings | one per packaged locale | English and Russian for the initial release; 38 prepared translations remain unpublished pending native-speaker review |
+| Localized listings | one per packaged locale | 40 translated listings, matching the package inventory and release gate in `docs/locales.md` |
+
+The Chrome Web Store Store Listing page has no separate release-notes or
+screenshot-caption text field. `pnpm store:render chrome <locale>` therefore
+prints the manifest-derived name and summary for verification plus only the
+localized detailed description that must be pasted. Screenshot captions are
+already embedded in the three committed PNGs; upload those files once under
+**Global screenshots** so all 40 locale listings inherit them.
 
 ### Microsoft Edge Add-ons
 
@@ -437,8 +444,8 @@ wrapper actually ships, and re-reviewed here before submission.
 
 ## Localization handoff
 
-The 40-locale listing source set is implemented; review status, the initial
-English-and-Russian release allowlist, and per-store locale mappings live in
+The 40-locale listing source set is implemented; review status, the release
+inventory, and per-store locale mappings live in
 [`docs/locales.md`](locales.md).
 
 - **Translations** live in `assets/store-listings/<code>.json`, one file per
@@ -450,8 +457,7 @@ English-and-Russian release allowlist, and per-store locale mappings live in
 - **Publication gate:** Chrome derives its listing languages from the
   `_locales/<code>` directories in the uploaded package; the dashboard has no
   separate documented control for suppressing a packaged locale. The build
-  therefore copies only `SHIPPED_LOCALES` (`en`, `ru` initially), while all 40
-  source catalogs and listing files remain available for later review.
+  therefore copies exactly the 40 release-reviewed `SHIPPED_LOCALES`.
 - **Never translated:** the name — `pnpm locales:validate` fails any catalog
   that changes `extension_name`, and the listing validator requires the
   brand string and the Y Combinator / Hacker News proper nouns verbatim in
@@ -464,15 +470,17 @@ English-and-Russian release allowlist, and per-store locale mappings live in
   `scripts/lib/store-listings.ts`: all 40 codes resolve per store, with the
   four App-Store-unsupported locales (bg, fa, fil, sr) served by the en-US
   listing.
-- **Paste-ready copy:** `pnpm store:render <store> <locale>` prints every
-  translated field for one shipped locale submission.
+- **Paste-ready copy:** `pnpm store:render <store> <locale>` prints the fields
+  relevant to that store for one shipped locale submission. For Chrome it
+  omits release notes and screenshot captions because those are not dashboard
+  text fields.
 - **Captions regenerate imagery:** the generator reads captions from the
   listing files, and `pnpm assets:generate --locale <code>` renders that
   locale's screenshots to `build/store-assets/<code>/`; a caption change
   regenerates imagery.
 - Translations must preserve the reviewed claims of this document exactly —
-  especially the no-telemetry, off-by-default, and unofficial statements.
-  The validator enforces the structural parts (bullet count, disclaimer,
-  brand); native-speaker review is tracked per file in the `reviewed` flag,
-  and an unreviewed listing cannot enter `SHIPPED_LOCALES` without failing
-  validation.
+  especially the Algolia data flow, no-telemetry, off-by-default, and
+  unofficial statements. The validator enforces the structural parts (bullet
+  count, disclaimer, brand); `reviewed` records the independent release QA
+  described in `docs/locales.md`, and an unreviewed listing cannot enter
+  `SHIPPED_LOCALES` without failing validation.

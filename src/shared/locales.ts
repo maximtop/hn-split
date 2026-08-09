@@ -79,11 +79,12 @@ export const LOCALE_REGISTRY: readonly LocaleEntry[] = [
 ];
 
 /**
- * Names the native-speaker-reviewed catalogs copied into release packages.
- * The remaining registry catalogs stay prepared in `public/_locales` until
- * review promotes them into this explicit release allowlist.
+ * Names the release-reviewed catalogs copied into installable packages.
+ * Every priority locale ships in the initial release after its translated UI
+ * and store copy pass structural validation and an independent semantic QA
+ * pass; docs/locales.md records the review method and remaining limitations.
  */
-export const SHIPPED_LOCALES: readonly string[] = ['en', 'ru'];
+export const SHIPPED_LOCALES: readonly string[] = LOCALE_REGISTRY.map(({ code }) => code);
 
 /**
  * Resolves a normalized browser UI language to a shipped registry entry.

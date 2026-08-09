@@ -1,31 +1,31 @@
 {
     "locale": "vi",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "Đang đọc một bài viết và tự hỏi Hacker News nghĩ gì? Split for Hacker News tìm đúng cuộc thảo luận cho trang bạn đang mở và mở nó sau một cú nhấp rõ ràng.",
+        "intro": "Đang đọc một bài viết và tự hỏi Hacker News nghĩ gì? Trong cửa sổ bật lên, Split for Hacker News tìm đúng các cuộc thảo luận cho trang bạn đang mở; không có gì được mở cho đến khi bạn chọn một kết quả.",
         "bullets": [
-            "Một cú nhấp từ bài viết đến các bình luận của nó trên Hacker News.",
+            "Chọn một kết quả trong cửa sổ bật lên để mở các bình luận Hacker News tương ứng.",
             "Khớp URL chính xác — không đoán mò; các bản trùng lặp được liệt kê làm lựa chọn thay thế.",
-            "Lần nhấp đầu tiên mở một thẻ liền kề; ghép thẻ đó với bài viết bằng Chrome Split View và các lựa chọn sau sẽ dùng lại thẻ đó.",
-            "Hoặc mở cuộc thảo luận trong bảng bên của trình duyệt, ngay cạnh trang bạn đang đọc.",
+            "Lần đầu bạn chọn kết quả sẽ mở một thẻ liền kề; ghép thẻ đó với bài viết bằng Chrome Split View và các lựa chọn sau sẽ dùng lại ngăn đó.",
+            "Hoặc mở cuộc thảo luận trong bảng bên của trình duyệt. Để nhúng trang Hacker News thật, Split tạm thời xóa các header chặn hiển thị trong khung chỉ khỏi phản hồi của khung con Hacker News trong khi bảng đang mở.",
             "“Mở trong Split” trong menu chuột phải của liên kết: liên kết mở trong thẻ hiện tại và cuộc thảo luận Hacker News của nó mở trong bảng bên.",
             "Tùy chọn: nhấp vào một tin trên Hacker News sẽ mở bài viết như bình thường và cuộc thảo luận của nó trong bảng bên cạnh. Tắt theo mặc định.",
             "Huy hiệu tùy chọn trên thanh công cụ kèm số bình luận, tắt theo mặc định.",
-            "Miễn phí. Không đo từ xa, không tài khoản, không đọc trang. Quyền hạn hẹp, có tài liệu."
+            "Miễn phí. Không đo từ xa, không tài khoản. Mỗi lần tra cứu chỉ gửi URL của trang công khai đủ điều kiện hoặc liên kết đã chọn cùng URL canonical tùy chọn đến API Hacker News Search công khai của Algolia — không bao giờ gửi văn bản bài viết hay nội dung khác. Quyền hạn giới hạn và được ghi rõ."
         ],
         "disclaimer": "Không chính thức. Tiện ích mở rộng này là một dự án độc lập, không liên kết với và không được Y Combinator hay Hacker News chứng thực."
     },
     "releaseNotes": {
-        "v0.1.0": "Bản phát hành công khai đầu tiên. Tìm đúng cuộc thảo luận Hacker News cho bài viết bạn đang đọc và mở nó bằng một cú nhấp — trong thẻ liền kề mà bạn có thể ghép với bài viết bằng Chrome Split View, hoặc trong bảng bên của trình duyệt. Bao gồm mục “Mở trong Split” trong menu ngữ cảnh của liên kết, một luồng tùy chọn mở cuộc thảo luận bên cạnh tin được nhấp trên Hacker News, và huy hiệu tùy chọn trên thanh công cụ kèm số bình luận. Miễn phí, không đo từ xa, không tài khoản."
+        "v0.1.0": "Bản phát hành công khai đầu tiên. Tìm đúng các cuộc thảo luận Hacker News cho bài viết bạn đang đọc, rồi chọn một kết quả trong cửa sổ bật lên để mở trong thẻ liền kề mà bạn có thể ghép với bài viết bằng Chrome Split View, hoặc trong bảng bên của trình duyệt. Bao gồm mục “Mở trong Split” trong menu ngữ cảnh của liên kết, tính năng chọn tham gia mở cuộc thảo luận bên cạnh tin được nhấp trên Hacker News và huy hiệu chọn tham gia trên thanh công cụ kèm số bình luận. Miễn phí, không đo từ xa, không tài khoản."
     },
     "captions": [
         {
-            "heading": "Từ bài viết đến thảo luận trong một cú nhấp",
+            "heading": "Chọn kết quả, mở cuộc thảo luận",
             "sub": "Xem đúng chủ đề Hacker News cho trang bạn đang đọc, kèm số bình luận và điểm."
         },
         {
             "heading": "Riêng tư theo mặc định",
-            "sub": "Huy hiệu khả dụng tự động luôn tắt cho đến khi bạn bật. Không đo từ xa, không tài khoản, không đọc trang."
+            "sub": "Huy hiệu khả dụng tự động luôn tắt cho đến khi bạn bật. Tra cứu từ cửa sổ bật lên chỉ đọc URL trang và liên kết canonical — không bao giờ đọc văn bản hay nội dung bài viết."
         },
         {
             "heading": "Thoải mái ở giao diện sáng và tối",

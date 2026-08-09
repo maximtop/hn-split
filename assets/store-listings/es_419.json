@@ -1,31 +1,31 @@
 {
     "locale": "es_419",
-    "reviewed": false,
+    "reviewed": true,
     "description": {
-        "intro": "¿Estás leyendo un artículo y te preguntas qué opina Hacker News? Split for Hacker News encuentra la discusión exacta de la página en la que estás y la abre tras un clic explícito.",
+        "intro": "¿Estás leyendo un artículo y te preguntas qué opina Hacker News? En la ventana emergente, Split for Hacker News encuentra las discusiones exactas de la página en la que estás; no se abre nada hasta que eliges un resultado.",
         "bullets": [
-            "Un clic del artículo a sus comentarios de Hacker News.",
+            "Selecciona un resultado en la ventana emergente para abrir sus comentarios de Hacker News.",
             "Coincidencia exacta de URL — sin conjeturas aproximadas; los duplicados se muestran como alternativas.",
-            "El primer clic abre una pestaña adyacente; emparéjala con el artículo mediante Chrome Split View y las selecciones posteriores reutilizarán esa pestaña.",
-            "O abre la discusión en el panel lateral del navegador, justo al lado de la página que lees.",
+            "La primera selección de un resultado abre una pestaña adyacente; emparéjala con el artículo mediante Chrome Split View y las selecciones posteriores reutilizarán esa pestaña.",
+            "O abre la discusión en el panel lateral del navegador. Para insertar la página real de Hacker News, Split elimina temporalmente los encabezados que impiden mostrarla en un marco únicamente de las respuestas de los submarcos de Hacker News mientras haya un panel abierto.",
             "«Abrir en Split» en el menú del botón derecho de los enlaces: el enlace se abre en la pestaña actual y su discusión de Hacker News se abre en el panel lateral.",
             "Opcional: al hacer clic en una historia en Hacker News, el artículo se abre como siempre y su discusión en el panel lateral de al lado. Desactivado de forma predeterminada.",
             "Insignia opcional en la barra de herramientas con el número de comentarios, desactivada de forma predeterminada.",
-            "Gratis. Sin telemetría, sin cuentas, sin lectura de páginas. Permisos limitados y documentados."
+            "Gratis. Sin telemetría ni cuentas. Las búsquedas solo envían las URL de páginas públicas aptas o de enlaces seleccionados y, opcionalmente, una URL canónica a la API pública Hacker News Search de Algolia — nunca el texto del artículo ni otro contenido. Permisos limitados y documentados."
         ],
         "disclaimer": "No oficial. Esta extensión es un proyecto independiente y no está afiliada a Y Combinator ni a Hacker News, ni cuenta con su respaldo."
     },
     "releaseNotes": {
-        "v0.1.0": "Primera versión pública. Encuentra la discusión exacta de Hacker News del artículo que lees y ábrela con un clic — en una pestaña adyacente que puedes emparejar con el artículo mediante Chrome Split View, o en el panel lateral del navegador. Incluye la opción «Abrir en Split» en el menú contextual de los enlaces, un flujo opcional que abre las discusiones junto a las historias en las que haces clic en Hacker News, y una insignia opcional con el número de comentarios. Gratis, sin telemetría, sin cuentas."
+        "v0.1.0": "Primera versión pública. Encuentra las discusiones exactas de Hacker News del artículo que estás leyendo y selecciona un resultado en la ventana emergente para abrirlo en una pestaña adyacente que puedes emparejar con Chrome Split View o en el panel lateral del navegador. Incluye la opción «Abrir en Split» en el menú contextual de los enlaces, un flujo opcional que abre las discusiones junto a las historias en las que haces clic en Hacker News, y una insignia opcional con el número de comentarios. Gratis, sin telemetría, sin cuentas."
     },
     "captions": [
         {
-            "heading": "Del artículo a la discusión con un clic",
+            "heading": "Selecciona un resultado y abre la discusión",
             "sub": "Mira el hilo exacto de Hacker News de la página que lees, con el número de comentarios y puntos."
         },
         {
             "heading": "Privado de forma predeterminada",
-            "sub": "Las insignias automáticas de disponibilidad permanecen desactivadas hasta que las actives. Sin telemetría, sin cuentas, sin lectura de páginas."
+            "sub": "Las insignias automáticas siguen desactivadas hasta que las actives. La búsqueda emergente lee la URL de la página y el enlace canónico — nunca el texto ni el contenido del artículo."
         },
         {
             "heading": "A gusto en claro y en oscuro",

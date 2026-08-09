@@ -31,9 +31,9 @@ describe('locale registry', () => {
         expect(rtl).toEqual(['ar', 'fa', 'he']);
     });
 
-    it('ships exactly the reviewed English and Russian catalogs', () => {
+    it('ships every release-reviewed priority catalog', () => {
         const codes = new Set(LOCALE_REGISTRY.map(({ code }) => code));
-        expect(SHIPPED_LOCALES).toEqual(['en', 'ru']);
+        expect(SHIPPED_LOCALES).toEqual(PRIORITY_LOCALES);
         expect(SHIPPED_LOCALES.every((code) => codes.has(code))).toBe(true);
         expect(SHIPPED_LOCALES).toContain(BASE_LOCALE);
     });
@@ -49,18 +49,32 @@ describe('locale registry', () => {
 });
 
 describe('resolveShippedLocale', () => {
+    it.each(LOCALE_REGISTRY.map(({ code }) => [code, code.toLowerCase()] as const))(
+        'resolves the exact shipped catalog %s',
+        (code, normalizedCode) => {
+            expect(resolveShippedLocale(normalizedCode)?.code).toBe(code);
+        },
+    );
+
     it.each([
         ['ru', 'ru'],
         ['ru_ru', 'ru'],
         ['en', 'en'],
         ['en_us', 'en'],
         ['en_gb', 'en'],
+        ['de', 'de'],
+        ['zh_cn', 'zh_cn'],
+        ['zh_tw', 'zh_tw'],
+        ['zh', 'zh_cn'],
+        ['pt', 'pt_br'],
+        ['pt_pt', 'pt_pt'],
+        ['es_419', 'es'],
+        ['es_mx', 'es'],
     ])('resolves %s to shipped locale %s', (uiLanguage, expected) => {
         expect(resolveShippedLocale(uiLanguage)?.adguardCode).toBe(expected);
     });
 
     it.each([
-        'de', 'zh_cn', 'zh_tw', 'zh', 'pt', 'pt_pt', 'es_419', 'es_mx',
         'lv', 'xx', '',
     ])('returns undefined for an unshipped language %s', (uiLanguage) => {
         expect(resolveShippedLocale(uiLanguage)).toBeUndefined();

@@ -12,11 +12,11 @@ const fileLocales = (await readdir(listingsDirectory))
     .map((name) => name.replace(/\.json$/u, ''))
     .sort();
 const shipped = [...SHIPPED_LOCALES].sort();
-const prepared = LOCALE_REGISTRY.map(({ code }) => code).sort();
-if (JSON.stringify(fileLocales) !== JSON.stringify(prepared)) {
+const registered = LOCALE_REGISTRY.map(({ code }) => code).sort();
+if (JSON.stringify(fileLocales) !== JSON.stringify(registered)) {
     throw new Error(
         `assets/store-listings files [${fileLocales.join(', ')}] must match `
-        + `LOCALE_REGISTRY [${prepared.join(', ')}] in src/shared/locales.ts.`,
+        + `LOCALE_REGISTRY [${registered.join(', ')}] in src/shared/locales.ts.`,
     );
 }
 
@@ -36,29 +36,29 @@ for (const locale of fileLocales) {
         problems.push(`${locale}: locale field "${content.locale}" must match the file name`);
     }
     if (SHIPPED_LOCALES.includes(locale) && content.reviewed !== true) {
-        problems.push(`${locale}: a shipped store listing must be native-speaker reviewed`);
+        problems.push(`${locale}: a shipped store listing must pass the release review gate`);
     }
     problems.push(...collectListingIssues(content, base).map((issue) => `${locale}: ${issue}`));
 }
 
-// Every store map remains ready for every prepared locale: either mapped to a
+// Every store map covers every registered locale: either mapped to a
 // store locale code or to null backed by a declared fallback listing.
 const storeSummaries = [];
 for (const storeId of STORE_IDS) {
     const store = STORE_CATALOG[storeId];
     const mappedCodes = Object.keys(store.locales).sort();
-    if (JSON.stringify(mappedCodes) !== JSON.stringify(prepared)) {
-        problems.push(`${storeId}: locale map must cover exactly the prepared locales`);
+    if (JSON.stringify(mappedCodes) !== JSON.stringify(registered)) {
+        problems.push(`${storeId}: locale map must cover exactly the registered locales`);
         continue;
     }
-    const unsupported = prepared.filter((code) => store.locales[code] === null);
+    const unsupported = registered.filter((code) => store.locales[code] === null);
     if (unsupported.length > 0 && store.unsupportedFallback === null) {
         problems.push(`${storeId}: unsupported locales [${unsupported.join(', ')}] need an explicit fallback listing`);
     }
-    const supportedCount = prepared.length - unsupported.length;
+    const supportedCount = registered.length - unsupported.length;
     storeSummaries.push(unsupported.length === 0
-        ? `${storeId} ${supportedCount}/${prepared.length}`
-        : `${storeId} ${supportedCount}/${prepared.length} (${unsupported.join(', ')} → ${store.unsupportedFallback})`);
+        ? `${storeId} ${supportedCount}/${registered.length}`
+        : `${storeId} ${supportedCount}/${registered.length} (${unsupported.join(', ')} → ${store.unsupportedFallback})`);
 }
 
 if (problems.length > 0) {
@@ -69,6 +69,6 @@ if (problems.length > 0) {
 const reviewedCount = (await Promise.all(fileLocales.map(readListing)))
     .filter(({ reviewed }) => reviewed === true).length;
 console.log(
-    `Validated ${fileLocales.length} prepared store listings against ${BASE_LOCALE}; `
+    `Validated ${fileLocales.length} registered store listings against ${BASE_LOCALE}; `
     + `${storeSummaries.join(', ')}; ${reviewedCount} reviewed; shipping ${shipped.join(', ')}.`,
 );
