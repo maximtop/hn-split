@@ -1,6 +1,6 @@
 # HN Split MVP Product Brief
 
-- **Status:** Approved working brief
+- **Status:** Implemented; retained as the historical MVP brief and decision record
 - **Public name:** Split for Hacker News (approved 2026-08-03)
 - **Working name:** HN Split (remains the internal slug for the repository, package, and identifiers)
 - **Primary browser:** Chrome
@@ -62,16 +62,20 @@ The product deals with one current article at a time. Comments and links inside 
 - A clear fallback when Split View cannot be created programmatically.
 - Minimal permissions, no telemetry, and no account requirement.
 - Unit, integration, and packaged-extension end-to-end tests.
-- A private alpha before public store submission.
+- MVP validation followed by a public Chrome Web Store release.
 
-### Release work after the Chrome MVP stabilizes
+### Completed Chrome release work
+
+- Public Chrome Web Store release of version 0.1.0.
+- Extension UI and store listings for 40 priority locales.
+
+### Follow-up browser releases
 
 - Firefox Add-ons adaptation and submission.
 - Microsoft Edge Add-ons adaptation and submission.
 - Safari Web Extension wrapper and App Store submission.
-- Extension UI and store listings for 40 priority locales.
 
-These are part of the project roadmap but are not allowed to delay proving the Chrome MVP interaction.
+These browser ports remain part of the project roadmap but did not delay the Chrome release.
 
 ## 6. Explicit non-goals for the MVP
 
@@ -103,15 +107,15 @@ For one article, show one primary discussion. If duplicate submissions exist, ra
 
 ### Browser truth over product wish
 
-The Split View experience must follow documented, tested browser capabilities. If Chrome does not expose a supported creation API, ship the honest fallback instead of relying on an undocumented call or an iframe workaround.
+The Split View experience must follow documented, tested browser capabilities. Because Chrome does not expose a supported creation API, the adjacent-tab flow is the honest fallback; the separate browser side-panel flow never embeds anything in the article page.
 
 ### Public services are dependencies, not guarantees
 
 HN lookup must have bounded timeouts, explicit errors, conservative caching, and no paid or secret API dependency.
 
-## 8. Success criteria
+## 8. Historical MVP success criteria
 
-The MVP is ready for private alpha when all of the following are true:
+The MVP was evaluated against the following pre-release criteria:
 
 1. **Matching quality:** the curated fixture set of known Hacker News articles resolves the expected primary discussion in at least 95% of cases, with no known false positive in the release fixture set.
 2. **User control:** no test path opens or rearranges a tab before an explicit comments click.
@@ -137,11 +141,12 @@ Success is measured through deterministic fixtures, CI, local performance runs, 
 The MVP implementation resolved most of the questions originally delegated to spikes:
 
 - **Split View creation — resolved.** Chrome 140 documents Split View state (`Tab.splitViewId`, Split View queries and update events) but no extension API that creates Split View. The MVP uses only documented behavior.
-- **Fallback — resolved.** The first explicit click opens a normal adjacent tab and the extension remembers it. If the user pairs that tab with the article through native Chrome Split View, later selections reuse the same tab, preserving the browser-managed pane. No iframe or undocumented API is involved.
+- **Fallback — resolved.** The first explicit click opens a normal adjacent tab and the extension remembers it. If the user pairs that tab with the article through native Chrome Split View, later selections reuse the same tab, preserving the browser-managed pane. No iframe or undocumented API is involved in this adjacent-tab flow.
+- **Side panel — added after the original brief.** Explicit user actions can open the real Hacker News discussion in Chrome's side panel. The implementation uses a disclosed, panel-lifetime framing exception for Hacker News sub-frames; the adjacent-tab flow remains the fallback.
 - **HN lookup endpoint — resolved.** The public Algolia Hacker News Search API (`https://hn.algolia.com/api/v1/search`) with `tags=story`, `restrictSearchableAttributes=url`, and local exact-identity verification of every hit, under one five-second lookup timeout. No API key, backend, or fallback endpoint is required; the full contract lives in [docs/url-matching.md](url-matching.md).
-- **Permission set — resolved.** `tabs`, `activeTab`, `scripting`, and `storage`, plus host access to `https://hn.algolia.com/*` only. Each permission is justified per purpose in [PRIVACY.md](../PRIVACY.md).
+- **Permission set — resolved.** `tabs`, `activeTab`, `scripting`, `storage`, `contextMenus`, `sidePanel`, and `declarativeNetRequestWithHostAccess`, plus host access to `https://hn.algolia.com/*` and `https://news.ycombinator.com/*`. Each permission is justified per purpose in [PRIVACY.md](../PRIVACY.md).
 - **The final public product name and branding — resolved.** The public name is "Split for Hacker News"; "HN Split" stays as the internal working slug. The store listing copy and visual identity are documented in [docs/store-listing.md](store-listing.md).
 
 ## 11. Acceptance of this brief
 
-This brief is the scope boundary for the MVP. A feature enters the MVP only if it is required to complete the current-article → explicit-click → Hacker News comments journey reliably, privately, and with automated verification. Everything else belongs in a later roadmap task.
+This brief defined the scope boundary for the MVP. Features entered the MVP only when they were required to complete the current-article → explicit-click → Hacker News comments journey reliably, privately, and with automated verification. Everything else belongs in a later roadmap task.

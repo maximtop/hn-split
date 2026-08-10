@@ -67,7 +67,8 @@ worker installs one dynamic `declarativeNetRequest` rule that removes
 responses. The rule's lifetime is tied to a runtime port the panel holds open:
 it is installed when the panel connects, removed when the panel closes, and
 cleared on worker startup. The panel frames the discussion only after the worker
-confirms the rule is in place, and it states what is being modified.
+confirms the rule is in place. The framing mechanism is disclosed on the options
+page and in `PRIVACY.md`; the panel itself stays focused on the Hacker News page.
 
 Because the panel embeds the real site inside an extension page for which the
 extension holds host permissions, Chrome treats the frame as same-site: the

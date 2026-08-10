@@ -2,7 +2,7 @@
 
 ## Single source of truth
 
-The canonical list of the 40 priority locales lives in [`src/shared/locales.ts`](../src/shared/locales.ts) (`LOCALE_REGISTRY`). The same module exposes `SHIPPED_LOCALES` as the release-reviewed source/listing inventory and `CHROME_PACKAGED_LOCALES` as the physical Chrome package inventory. The initial release ships the full registry plus one generated Chrome Web Store compatibility alias:
+The canonical list of the 40 priority locales lives in [`src/shared/locales.ts`](../src/shared/locales.ts) (`LOCALE_REGISTRY`). The same module exposes `SHIPPED_LOCALES` as the release-reviewed source/listing inventory and `CHROME_PACKAGED_LOCALES` as the physical Chrome package inventory. The Chrome 0.1.0 release ships the full registry plus one generated Chrome Web Store compatibility alias:
 
 - `scripts/validate-locales.mjs` asserts the registry holds exactly 40 unique codes, that `public/_locales/` directories equal the registry, validates every catalog, and checks that the shipped inventory is valid and contains English;
 - `rspack.config.ts` copies all `SHIPPED_LOCALES` into every target and adds a byte-identical `no` directory generated from the `nb` source only to the Chrome build;
@@ -21,9 +21,9 @@ The set is validated against Chrome only for now. Firefox Add-ons, Microsoft Edg
 
 All 40 languages are supported by Chrome. Norwegian needs one packaging compatibility alias: current Chromium canonicalizes Norwegian Bokmål to `nb` and looks for `_locales/nb`, while the current Web Store locale table labels the same listing `no`. The Chrome package therefore contains byte-identical `_locales/nb` and `_locales/no` directories for one logical Norwegian language. Chromium 151 runtime selection of `nb` is pinned by the browser-level locale test; the packaging gate separately pins the presence and byte equality of the generated `no` alias. Chromium's own locale tooling maps Translation Console `no` to runtime `nb`; published Chrome Web Store extensions confirm that both [`nb` alone](https://chromewebstore.google.com/detail/newtab%2B/jelhkdplckbigkmghpcmfdcfgnocooja) and the [dual-directory package](https://chromewebstore.google.com/detail/new-tab-new-window-reload/ojafpelnbdmpodjfpkppabecagnlmkkj) are accepted and produce one Norwegian listing rather than a duplicate. Other notable confirmations are `es_419`, `fil`, `pt_BR`/`pt_PT` (no bare `pt`), `sr`, `zh_CN`/`zh_TW`, `he`, and `id` under their modern codes.
 
-Chrome's runtime message lookup falls back on its own: a regional locale first strips its region, then falls to `default_locale` (`en`). The initial package includes 40 reviewed source catalogs plus the generated Norwegian alias. `resolveShippedLocale` maps either Norwegian code to the `nb` registry entry so the document language and direction describe the text actually shown; unsupported browser UI languages still fall back to English.
+Chrome's runtime message lookup falls back on its own: a regional locale first strips its region, then falls to `default_locale` (`en`). The 0.1.0 package includes 40 reviewed source catalogs plus the generated Norwegian alias. `resolveShippedLocale` maps either Norwegian code to the `nb` registry entry so the document language and direction describe the text actually shown; unsupported browser UI languages still fall back to English.
 
-Chrome Web Store derives its listing-language selector from the `_locales/<code>` directories in the uploaded package. It does not document a separate switch that hides a packaged locale, so the release package itself is the publication boundary: the initial dashboard exposes all 40 priority locales.
+Chrome Web Store derives its listing-language selector from the `_locales/<code>` directories in the uploaded package. It does not document a separate switch that hides a packaged locale, so the release package itself is the publication boundary: the published 0.1.0 listing exposes all 40 priority locales.
 
 ## Library mappings (@adguard/translate 2.0.8)
 

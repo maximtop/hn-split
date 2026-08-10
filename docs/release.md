@@ -92,9 +92,9 @@ Local packaging (`pnpm package`) is the same build; it warns when tracked files 
 
 ## Store submission
 
-Submission stays a manual, free step; upload the artifacts produced by the release:
+Store submission remains a manual, free step; upload the artifacts produced by the release:
 
-- **Chrome Web Store:** upload `hn-split-chrome-<version>.zip`; listing copy lives in `docs/store-listing.md`. After upload, confirm that the listing-language selector contains exactly 40 languages, including one Norwegian entry, before entering localized copy.
+- **Chrome Web Store:** version 0.1.0 is public at the [canonical store URL](https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm). For future versions, upload `hn-split-chrome-<version>.zip`; listing copy lives in `docs/store-listing.md`. After upload, confirm that the listing-language selector contains exactly 40 languages, including one Norwegian entry, before entering localized copy.
 - **Edge Add-ons:** upload `hn-split-edge-<version>.zip` in Partner Center.
 - **addons.mozilla.org:** upload `hn-split-firefox-<version>.zip`, attach `hn-split-source-<version>.zip` as the source archive, and point reviewers at `docs/development.md` (install and build need only `pnpm install --frozen-lockfile` and `pnpm package`).
 

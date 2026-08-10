@@ -1,25 +1,36 @@
 # Split for Hacker News
 
-Split for Hacker News (repository slug: `hn-split`) is a browser extension that helps a reader move from the article currently open to its Hacker News discussion after an explicit result selection. It is an unofficial, independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
+Find the Hacker News discussion behind the article you are reading, then open it beside the article or in a reusable adjacent tab. No manual search, telemetry, accounts, or surprise navigation.
 
-## Current status
+**[Install Split for Hacker News from the Chrome Web Store →](https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm)**
 
-A working Chrome MV3 MVP is implemented with React and TypeScript. In the default manual mode, it reads the active page only after the extension action is opened, resolves the page and canonical URL, finds exact Hacker News discussions through Algolia, and opens one selected discussion after an explicit click.
+![Split for Hacker News finds exact discussions for the article you are reading](assets/store/screenshot-1-discussion-1280x800.png)
 
-Users may enable automatic availability badges in the options page. The extension includes the `tabs` permission at installation, but automatic checks remain off by default. When enabled, it checks public tab URLs without reading page contents and shows an orange comment-count badge when a discussion exists. Turning the option off stops checks, clears badges, and removes session-only lookup cache entries.
+## Highlights
 
-Chrome 140 documents Split View detection through `Tab.splitViewId`, but not Split View creation through `tabs.create`. The MVP therefore opens the first discussion in an adjacent tab and remembers it. If the user pairs that tab with the article using native Chrome Split View, later selections reuse the same browser-managed pane.
+- **Exact discussions, not fuzzy guesses.** URL candidates are normalized conservatively, every result is verified, and duplicate submissions remain available as alternatives.
+- **Choose the reading flow.** Open comments in Chrome's side panel, or use an adjacent discussion tab that can stay paired with the article in Chrome Split View.
+- **Useful shortcuts, only when you ask.** Use **Open in Split** on a link, opt in to opening discussions beside Hacker News story clicks, or enable a comment-count toolbar badge.
+- **Private by default.** No analytics, telemetry, accounts, advertising, or application backend. Automatic checks and Hacker News story-click handling are both off by default.
+- **Localized for 40 languages.** The extension follows the browser's language and light or dark color scheme.
 
-Any `http:` or `https:` link offers an **Open in Split** item in the right-click menu. Selecting it opens that link in the current tab and shows its Hacker News discussion in the side panel beside it; nothing runs before that selection, and the panel says so plainly when no discussion exists or the lookup fails.
+## Install and use
 
-A separate opt-in setting (off by default) turns story clicks on Hacker News into a split reading flow: the article opens in the current tab as usual, while its discussion opens in Chrome's side panel beside it. A content script is registered for `news.ycombinator.com` only while this setting is on. It acts only on unmodified primary clicks on external story links and resolves the discussion from the item id already present in the page, so the flow makes no network requests.
+1. [Install the extension from the Chrome Web Store](https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm). Chrome 140 or newer is required.
+2. Open an article and select Split for Hacker News from the toolbar.
+3. Choose the primary discussion or an alternative, then open it in a tab or the side panel.
 
-Hacker News is the only discussion source in the MVP. Chrome is the first implementation target; Firefox, Edge, and Safari follow after the Chrome behavior is validated.
+Nothing opens, moves, or replaces a tab until you explicitly select an action. Hacker News is the only discussion source, and the extension is free to use.
+
+## Privacy
+
+In the default manual mode, the extension reads the active page URL and its optional canonical URL only after you open the popup. Eligible sanitized public URLs are sent over HTTPS to Algolia's public Hacker News Search API to locate exact submissions; article text and other page content are never read.
+
+The side panel embeds the real Hacker News site. While a panel is open, the extension temporarily removes Hacker News framing headers from Hacker News sub-frame responses, then restores the normal browser behavior when the panel closes. The permission boundary, stored settings, outbound URL filtering, and Chrome Web Store data disclosures are documented in [PRIVACY.md](PRIVACY.md).
 
 ## Product documentation
 
-- [MVP product brief](docs/product-brief.md)
-- [HNewhere reference analysis](docs/hnewhere-reference.md)
+- [MVP product brief and decision record](docs/product-brief.md)
 - [URL matching and Hacker News lookup contract](docs/url-matching.md)
 - [Lifecycle after tab close or navigation](docs/lifecycle.md)
 - [Priority locales](docs/locales.md)
@@ -40,14 +51,8 @@ Rspack writes the unpacked extension to `dist`. Load that directory in Chrome 14
 
 `pnpm package` produces the reproducible Chrome, Edge, and Firefox store packages plus checksums and provenance in `build/artifacts`; releases are published from signed tags ([docs/release.md](docs/release.md)).
 
-## Product principles
+## Support and license
 
-- Free to use
-- No telemetry
-- Narrow, documented permissions
-- No automatic tab opening or rearrangement
-- User-triggered navigation only
+Report problems or request features in [GitHub Issues](https://github.com/maximtop/hn-split/issues). The source is available under the [MIT License](LICENSE), and feature work is reviewed through pull requests targeting `master`.
 
-## Repository
-
-The source is maintained on GitHub. Feature work is reviewed through pull requests targeting `master`.
+Split for Hacker News is an unofficial, independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
