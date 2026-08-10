@@ -5,7 +5,7 @@ copy, support and privacy answers, data-use questionnaire answers, reviewer
 notes, release notes, and imagery for the four target stores — Chrome Web
 Store, Microsoft Edge Add-ons, Firefox Add-ons (AMO), and the App Store
 (Safari) — and the input for 40 listing localizations
-([`docs/locales.md`](locales.md)). The initial Chrome release publishes all 40
+([`docs/locales.md`](locales.md)). The Chrome 0.1.0 release published all 40
 release-reviewed listings; the review method and its limitations are recorded
 explicitly in the locale document.
 
@@ -15,7 +15,7 @@ Rules of this document:
   another owner.
 - **No local edits.** Store submissions copy from this file; a claim change
   lands here first, in one reviewed pull request, and then fans out.
-- **Sequencing.** Chrome ships first; Firefox, Edge, and Safari follow after
+- **Sequencing.** Chrome shipped first; Firefox, Edge, and Safari follow after
   the Chrome behavior is validated. Browser-specific wording (side panel,
   Split View) is re-cut for each port, but the re-cut text is reviewed here
   before any submission uses it.
@@ -130,14 +130,15 @@ translated captions.
 | --- | --- |
 | Support URL | `https://github.com/maximtop/hn-split/issues` |
 | Homepage URL | `https://github.com/maximtop/hn-split` |
-| Support email | `maximtop@gmail.com` |
+| Chrome Web Store | `https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm` |
+| Support email | `me@maximtop.dev` |
 | Privacy policy URL | `https://github.com/maximtop/hn-split/blob/master/PRIVACY.md` |
 
-Preconditions, owner maximtop:
+Current publication state, owner maximtop:
 
-- The repository and `PRIVACY.md` are public; verify that the support,
-  homepage, and privacy URLs above still resolve before submission. If a
-  store rejects a repository URL as a privacy policy, publish `PRIVACY.md`
+- The repository and `PRIVACY.md` are public. Verify that the support,
+  homepage, store, and privacy URLs above still resolve before each submission.
+  If a store rejects a repository URL as a privacy policy, publish `PRIVACY.md`
   through GitHub Pages from the same repository with the content unchanged.
 - Store dashboards publish contact details (Chrome shows the publisher
   email; Edge shows the registered support contact). The values above are
@@ -417,7 +418,7 @@ re-cut for Firefox (sidebar) and re-reviewed here first.
 | Data collection declaration | manifest `data_collection_permissions`, required since 2025-11-03 | This doc, Firefox data collection declaration |
 | Support email / site, homepage | listed fields | This doc, Support and contact |
 | Privacy policy | required (personal data is transmitted) | `PRIVACY.md` (public URL precondition) |
-| License | AMO asks at submission | Repository has no LICENSE file yet; decide before the repo goes public (All Rights Reserved is a valid AMO choice) |
+| License | AMO asks at submission | MIT; see [`LICENSE`](../LICENSE) |
 | Source code submission | required for minified packages | Repository archive + `pnpm install && pnpm build` per [`docs/development.md`](development.md) |
 | Notes to Reviewer | free text per version | This doc, Reviewer notes (master) |
 

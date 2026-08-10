@@ -2,7 +2,7 @@
 
 Split for Hacker News has no analytics, telemetry, account, or application backend.
 
-Last updated: August 9, 2026. Privacy contact: [maximtop@gmail.com](mailto:maximtop@gmail.com).
+Last updated: August 10, 2026. Privacy contact: [me@maximtop.dev](mailto:me@maximtop.dev).
 
 By default, Split for Hacker News reads the active page URL and the optional URL from its canonical `<link>` element only when the user opens the extension popup. It does not read article text or other page content. It sends eligible public URL candidates over HTTPS to the public Hacker News Algolia search endpoint to find exact matching Hacker News submissions. Algolia is the only third party that receives lookup candidates from the extension; as the network provider, it may also receive standard connection metadata under the [Algolia Privacy Policy](https://www.algolia.com/policies/privacy/). Lookup results are cached only in Chrome's session storage and are removed when the browser session ends.
 
