@@ -82,7 +82,7 @@ git config --global user.signingkey ~/.ssh/id_ed25519.pub
 git config --global tag.gpgSign true
 ```
 
-Then add that public key on GitHub under **Settings → SSH and GPG keys → New SSH key** with key type **Signing Key** (the same key can be registered for both authentication and signing; verification uses the signing-key list only, which currently has no entries).
+Then add that public key on GitHub under **Settings → SSH and GPG keys → New SSH key** with key type **Signing Key** (the same key can be registered for both authentication and signing; verification uses the signing-key list only).
 
 ## Dry run
 
