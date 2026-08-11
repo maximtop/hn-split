@@ -6,10 +6,10 @@ import type { CSSVariablesResolver, MantineColorsTuple } from '@mantine/core';
 // disjoint, so the brand color must be scheme-aware.
 const ACCESSIBLE_DEEP_ORANGE = '#c2410c';
 
-// Stock Mantine orange with shade 9 replaced: this Mantine version resolves
-// light-scheme `-light-color` text (subtle buttons, light-variant alerts) to
-// shade 9, so the single override fixes those consumers globally. The mapping
-// is a Mantine internal; the axe E2E gate guards it across upgrades.
+// Stock Mantine orange with shades 8 and 9 replaced. Primary controls use
+// shade 9 and hover through shade 8, while light controls also resolve their
+// text to shade 9. Keeping both deep prevents either interaction state from
+// dropping below WCAG AA. The axe E2E gate guards Mantine's mapping.
 const ORANGE: MantineColorsTuple = [
     '#fff4e6',
     '#ffe8cc',
@@ -19,7 +19,7 @@ const ORANGE: MantineColorsTuple = [
     '#ff922b',
     '#fd7e14',
     '#f76707',
-    '#e8590c',
+    ACCESSIBLE_DEEP_ORANGE,
     ACCESSIBLE_DEEP_ORANGE,
 ];
 
@@ -38,12 +38,16 @@ const ORANGE_DEEP: MantineColorsTuple = [
 ];
 
 /**
- * Shared Mantine theme for the popup and options surfaces. `brand.7` renders
- * HN orange accessibly in both schemes: #c2410c on light (5.2:1 on white) and
- * #f76707 on dark (5.1:1 on the dark surface).
+ * Shared Mantine theme for every extension surface. Primary controls use the
+ * deep orange shade in both schemes, while `brand.7` remains scheme-aware for
+ * text on the page surface.
  */
 export const theme = createTheme({
     primaryColor: 'orange',
+    primaryShade: {
+        light: 9,
+        dark: 9,
+    },
     colors: {
         orange: ORANGE,
         orangeDeep: ORANGE_DEEP,

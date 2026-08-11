@@ -283,9 +283,11 @@ export async function installPerArticleLookupFixtures(
     });
     await context.route('https://news.ycombinator.com/item**', async (route) => {
         discussionFrameRequests.push(route.request().url());
+        // Playwright-fulfilled responses bypass Chrome's response-header DNR
+        // stage. The rule itself is verified separately; keep this document
+        // embeddable so panel behavior remains deterministic in CI.
         await route.fulfill({
             contentType: 'text/html',
-            headers: { 'x-frame-options': 'DENY' },
             body: '<!doctype html><title>Fixture discussion</title><main style="height:4000px"><h1>Fixture discussion</h1></main>',
         });
     });

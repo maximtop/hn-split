@@ -98,8 +98,12 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
 
         const options = await openExtensionPage(extension, 'options.html');
         await expect(options).toHaveTitle(enMessages.options_document_title.message);
-        await expect(options.getByRole('heading', { name: 'Availability indicator' })).toBeVisible();
-        await expect(options.getByRole('switch', { name: 'Automatically check article URLs' })).not.toBeChecked();
+        await expect(options.getByRole('heading', {
+            name: enMessages.options_heading.message,
+        })).toBeVisible();
+        await expect(options.getByRole('switch', {
+            name: enMessages.automatic_badge_label.message,
+        })).not.toBeChecked();
 
         const hasRequiredTabsPermission = await worker.evaluate(async () => chrome.permissions.contains({
             permissions: ['tabs'],
@@ -146,7 +150,7 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         expect(algoliaRequests).toBe(2);
 
         const automaticSwitch = options.getByRole('switch', {
-            name: 'Automatically check article URLs',
+            name: enMessages.automatic_badge_label.message,
         });
         await automaticSwitch.press('Space');
         await expect(automaticSwitch).toBeChecked();

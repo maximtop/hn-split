@@ -608,7 +608,7 @@ export function SidePanelApp(): React.JSX.Element {
                                     aria-describedby={STATUS_ELEMENT_ID}
                                     disabled={busy}
                                     fullWidth
-                                    variant="light"
+                                    variant="default"
                                     onClick={() => void runPanelAction(
                                         BACKGROUND_REQUEST_TYPE.ENABLE_SIDE_PANEL_FOLLOW,
                                     )}
@@ -639,7 +639,13 @@ export function SidePanelApp(): React.JSX.Element {
                     ? null
                     : (
                             <Box px="md" pb="md">
-                                <Anchor href={HN_ORIGIN} target="_blank" rel="noreferrer" size="sm">
+                                <Anchor
+                                    c="brand.7"
+                                    href={HN_ORIGIN}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    size="sm"
+                                >
                                     {t('side_panel_open_on_hn')}
                                 </Anchor>
                             </Box>

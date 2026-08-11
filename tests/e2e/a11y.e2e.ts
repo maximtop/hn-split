@@ -298,7 +298,9 @@ test.describe('extension accessibility (en)', () => {
         await expectVisibleFocusIndicator(page);
 
         await page.keyboard.press('Tab');
-        await expect(page.getByRole('button', { name: 'Availability settings' })).toBeFocused();
+        await expect(page.getByRole('button', {
+            name: enMessages.availability_settings.message,
+        })).toBeFocused();
         await expectVisibleFocusIndicator(page);
 
         await page.close();
