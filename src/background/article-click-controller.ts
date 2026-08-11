@@ -2,7 +2,7 @@ import { respondToArticleClick } from '../browser/article-click-open';
 import { ensureArticleClickRegistration } from '../browser/article-click-registration';
 import { applySettingTransaction, createSettingQueue } from '../browser/setting-lifecycle';
 import { HN_ORIGIN } from '../domain/hn';
-import { logWarning } from '../shared/logger';
+import { logFollowWarning } from '../shared/logger';
 import type { ArticleClickMessage } from '../shared/messages';
 import {
     contentScriptRegistry,
@@ -10,7 +10,14 @@ import {
     openSidePanel,
     setArticleClickDiscussionEnabled,
 } from './chrome-adapters';
-import { selectSidePanelDiscussion } from './side-panel-content-controller';
+import {
+    cancelSidePanelExpectedNavigation,
+    cancelSidePanelExplicitOperation,
+    prepareSidePanelExplicitOperation,
+    reserveSidePanelExpectedNavigation,
+    reserveSidePanelExplicitOperation,
+    selectSidePanelDiscussion,
+} from './side-panel-content-controller';
 
 /**
  * Mirrors the persisted article-click setting so the message listener can
@@ -68,7 +75,7 @@ export function handleArticleClickMessage(
     sender: chrome.runtime.MessageSender,
 ): void {
     respondToArticleClick(
-        message.itemId,
+        { itemId: message.itemId, articleUrl: message.articleUrl },
         {
             ...(sender.tab?.id === undefined ? {} : { tabId: sender.tab.id }),
             ...(sender.tab?.windowId === undefined ? {} : { windowId: sender.tab.windowId }),
@@ -78,13 +85,32 @@ export function handleArticleClickMessage(
         {
             cachedEnabled: () => cachedEnabled,
             readEnabled: getArticleClickDiscussionEnabled,
+            reserveExpectedNavigation: (tabId, windowId, articleUrl) => (
+                reserveSidePanelExpectedNavigation(windowId, tabId, articleUrl)
+            ),
+            reserveExplicitOperation: (tabId, windowId) => (
+                reserveSidePanelExplicitOperation(windowId, tabId)
+            ),
+            prepareExplicitOperation: async (reservation, windowId) => (
+                prepareSidePanelExplicitOperation(windowId, reservation)
+            ),
+            cancelExpectedNavigation: (reservation, windowId) => {
+                cancelSidePanelExpectedNavigation(windowId, reservation);
+            },
+            cancelExplicitOperation: (reservation, windowId, resynchronize) => {
+                cancelSidePanelExplicitOperation(
+                    windowId,
+                    reservation,
+                    resynchronize,
+                );
+            },
             openSidePanel,
             // Routed through the shared owner so a clicked story supersedes any
             // link lookup still in flight in the same window instead of racing it.
-            setSelection: async (itemId, windowId) => {
-                await selectSidePanelDiscussion(itemId, windowId);
+            setSelection: async (selection) => {
+                await selectSidePanelDiscussion(selection);
             },
-            warn: logWarning,
+            warn: logFollowWarning,
         },
     );
 }

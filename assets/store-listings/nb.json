@@ -7,7 +7,8 @@
             "Velg et resultat i popupvinduet for å åpne kommentarene på Hacker News.",
             "Nøyaktig URL-samsvar — ingen omtrentlige gjetninger; duplikater vises som alternativer.",
             "Det første resultatvalget åpner en tilstøtende fane; koble den til artikkelen med Chrome Split View, og senere valg gjenbruker den fanen.",
-            "Eller åpne diskusjonen i nettleserens sidepanel. For å bygge inn den ekte Hacker News-siden fjerner Split midlertidig HTTP-hodene som blokkerer innramming, kun fra svar fra Hacker News-underrammer og kun mens et panel er åpent.",
+        "Eller åpne diskusjonen i nettleserens sidepanel. For å bygge inn den ekte Hacker News-siden fjerner Split midlertidig HTTP-hodene som blokkerer innramming, kun fra svar fra Hacker News-underrammer og kun mens et panel er åpent.",
+        "Valgfritt: Mens sidepanelet allerede er åpent, kan aktive faner følges automatisk. Funksjonen er av som standard, eller bruk «Sjekk denne fanen» én gang. Den åpner eller flytter aldri faner og kan holde opptil tre nylige diskusjoner aktive, slik at du kan gå raskere tilbake og beholde rulleposisjonen så langt det er mulig.",
             "«Åpne i Split» i høyreklikkmenyen for lenker: lenken åpnes i gjeldende fane, og dens Hacker News-diskusjon åpnes i sidepanelet.",
             "Valgfritt: et klikk på en historie på Hacker News åpner artikkelen som vanlig og diskusjonen i sidepanelet ved siden av. Av som standard.",
             "Valgfritt merke på verktøylinjen med antall kommentarer, av som standard.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privat som standard",
-            "sub": "Automatiske tilgjengelighetsmerker er av til du slår dem på. Oppslag fra popupvinduet leser sidens URL og kanoniske lenke — aldri artikkeltekst eller innhold."
+      "sub": "Verktøykontroller, sidepanelfølging og historieklikk er av som standard. «Sjekk denne fanen» tillater ett oppslag i panelet; artikkeltekst og annet sideinnhold leses aldri."
         },
         {
             "heading": "Hjemme i både lyst og mørkt",

@@ -61,6 +61,20 @@ export interface AlgoliaHitFixture {
 }
 
 /**
+ * Captures deterministic per-article lookup and discussion-frame requests.
+ */
+export interface PerArticleLookupCapture {
+    /**
+     * Records the exact Algolia request URLs observed by the fixture.
+     */
+    algoliaRequests: string[];
+    /**
+     * Records the exact Hacker News sub-frame request URLs observed by the fixture.
+     */
+    discussionFrameRequests: string[];
+}
+
+/**
  * Creates a disposable extension copy in which Chrome must resolve messages
  * from one requested packaged catalog.
  *
@@ -152,11 +166,28 @@ export async function launchExtensionContext(
         ]);
         throw error;
     }
-    const worker = context.serviceWorkers().find((candidate) => candidate.url().startsWith('chrome-extension://'))
-        ?? await context.waitForEvent(
+    let worker: Worker;
+    try {
+        worker = context.serviceWorkers().find(
+            (candidate) => candidate.url().startsWith('chrome-extension://'),
+        ) ?? await context.waitForEvent(
             'serviceworker',
             (candidate) => candidate.url().startsWith('chrome-extension://'),
         );
+    } catch (error) {
+        try {
+            await context.close();
+        } catch {
+            // Preserve the service-worker discovery failure reported below.
+        }
+        await Promise.allSettled([
+            rm(userDataDir, { force: true, recursive: true }),
+            ...(localizedExtensionPath === null
+                ? []
+                : [rm(resolve(localizedExtensionPath, '..'), { force: true, recursive: true })]),
+        ]);
+        throw error;
+    }
     const extensionId = new URL(worker.url()).host;
     return {
         context,
@@ -201,6 +232,64 @@ export async function installLookupFixtures(
             json: { hits: options.hits.map((hit) => ({ ...hit, url: query })) },
         });
     });
+}
+
+/**
+ * Serves exact per-path lookup outcomes and captures every external surface
+ * used by the side-panel synchronization flow.
+ * @param context - The extension browser context to install routes into.
+ * @param discussions - Article pathnames mapped to a discussion item or null.
+ */
+export async function installPerArticleLookupFixtures(
+    context: BrowserContext,
+    discussions: Readonly<Record<string, string | null>>,
+): Promise<PerArticleLookupCapture> {
+    const algoliaRequests: string[] = [];
+    const discussionFrameRequests: string[] = [];
+    await context.route(`${ARTICLE_ORIGIN}/**`, async (route) => {
+        await route.fulfill({
+            contentType: 'text/html',
+            body: '<!doctype html><title>Fixture article</title><main><h1>Fixture article</h1></main>',
+        });
+    });
+    await context.route('https://hn.algolia.com/api/v1/search**', async (route) => {
+        const requestUrl = route.request().url();
+        algoliaRequests.push(requestUrl);
+        const query = new URL(requestUrl).searchParams.get('query');
+        let pathname = '';
+        if (query !== null) {
+            try {
+                pathname = new URL(query).pathname;
+            } catch {
+                pathname = '';
+            }
+        }
+        const itemId = discussions[pathname] ?? null;
+        await route.fulfill({
+            contentType: 'application/json',
+            json: {
+                hits: itemId === null || query === null
+                    ? []
+                    : [{
+                            objectID: itemId,
+                            title: 'Fixture discussion',
+                            url: query,
+                            num_comments: 10,
+                            points: 20,
+                            created_at_i: 1,
+                        }],
+            },
+        });
+    });
+    await context.route('https://news.ycombinator.com/item**', async (route) => {
+        discussionFrameRequests.push(route.request().url());
+        await route.fulfill({
+            contentType: 'text/html',
+            headers: { 'x-frame-options': 'DENY' },
+            body: '<!doctype html><title>Fixture discussion</title><main style="height:4000px"><h1>Fixture discussion</h1></main>',
+        });
+    });
+    return { algoliaRequests, discussionFrameRequests };
 }
 
 /**

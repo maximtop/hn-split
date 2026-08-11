@@ -351,6 +351,18 @@ export function normalizeArticleUrl(value: string): string | null {
 }
 
 /**
+ * Determines whether a value is already the conservative normalized identity
+ * produced by this module for an eligible public article.
+ * @param value - The untrusted identity value to validate.
+ */
+export function isSanitizedArticleIdentity(value: string): boolean {
+    return WEB_PROTOCOLS.some((protocol) => {
+        const url = `${protocol}//${value}`;
+        return sanitizeArticleUrl(url) !== null && normalizeArticleUrl(url) === value;
+    });
+}
+
+/**
  * Builds deduplicated canonical and page candidates in preference order.
  * @param pageUrl - The active page URL.
  * @param canonicalHref - The document canonical URL when one is available.

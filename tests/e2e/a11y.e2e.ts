@@ -7,6 +7,8 @@ import enMessages from '../../public/_locales/en/messages.json' with { type: 'js
 import nbMessages from '../../public/_locales/nb/messages.json' with { type: 'json' };
 import ruMessages from '../../public/_locales/ru/messages.json' with { type: 'json' };
 import zhCnMessages from '../../public/_locales/zh_CN/messages.json' with { type: 'json' };
+import { HN_LOOKUP_STATUS } from '../../src/domain/hn';
+import { sidePanelContentKey } from '../../src/shared/storage-keys';
 import {
     ARTICLE_ORIGIN,
     installLookupFixtures,
@@ -60,6 +62,7 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
         documentLanguage: 'nb',
         label: 'nb (Norwegian Bokmål)',
         optionsSwitchName: nbMessages.automatic_badge_label.message,
+        sidePanelCheckName: nbMessages.side_panel_check_this_tab.message,
         popupButtonNames: {
             primary: new RegExp(nbMessages.open_primary_discussion.message),
             alternative: new RegExp(nbMessages.open_alternative.message),
@@ -74,6 +77,7 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
         documentLanguage: 'ru',
         label: 'ru',
         optionsSwitchName: ruMessages.automatic_badge_label.message,
+        sidePanelCheckName: ruMessages.side_panel_check_this_tab.message,
         popupButtonNames: RU_BUTTON_NAMES,
         uiLanguage: 'ru',
     },
@@ -85,6 +89,7 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
         documentLanguage: 'ar',
         label: 'ar RTL',
         optionsSwitchName: arMessages.automatic_badge_label.message,
+        sidePanelCheckName: arMessages.side_panel_check_this_tab.message,
         popupButtonNames: {
             primary: new RegExp(arMessages.open_primary_discussion.message),
             alternative: new RegExp(arMessages.open_alternative.message),
@@ -99,6 +104,7 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
         documentLanguage: 'zh-CN',
         label: 'zh-CN CJK',
         optionsSwitchName: zhCnMessages.automatic_badge_label.message,
+        sidePanelCheckName: zhCnMessages.side_panel_check_this_tab.message,
         popupButtonNames: {
             primary: new RegExp(zhCnMessages.open_primary_discussion.message),
             alternative: new RegExp(zhCnMessages.open_alternative.message),
@@ -148,6 +154,73 @@ async function openFoundPopup(
     await expect(page.getByRole('button', { name: names.primary })).toBeVisible();
     await expect(page.getByRole('button', { name: names.alternative })).toBeVisible();
     return page;
+}
+
+/**
+ * Launches one isolated English extension context with deterministic lookup fixtures.
+ */
+async function launchEnglishFixture(): Promise<ExtensionContext> {
+    const extension = await launchExtensionContext({ catalogLocale: 'en' });
+    try {
+        expect(await extension.worker.evaluate(
+            () => chrome.i18n.getMessage('automatic_badge_label'),
+        )).toBe(enMessages.automatic_badge_label.message);
+        await installLookupFixtures(extension.context, { hits: FIXTURE_HITS });
+        return extension;
+    } catch (error) {
+        await extension.dispose();
+        throw error;
+    }
+}
+
+/**
+ * Opens the panel and waits for its framed manual-required state.
+ * @param extension - The launched extension context.
+ * @param colorScheme - The emulated browser color scheme.
+ * @param checkName - The locale-owned one-shot button name.
+ */
+async function openManualPanel(
+    extension: ExtensionContext,
+    colorScheme: 'light' | 'dark',
+    checkName = enMessages.side_panel_check_this_tab.message,
+): Promise<Page> {
+    const page = await openExtensionPage(extension, 'side-panel.html', { colorScheme });
+    await expect(page.getByRole('button', { name: checkName })).toBeVisible();
+    return page;
+}
+
+/**
+ * Publishes one strict recoverable-error projection for the currently active
+ * fixture tab after the panel has completed its initial READY handshake.
+ * @param extension - The launched extension context.
+ */
+async function publishRecoverablePanelError(extension: ExtensionContext): Promise<void> {
+    const owner = await extension.worker.evaluate(async () => {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tab?.id === undefined) {
+            throw new Error('Active fixture tab is unavailable');
+        }
+        return { tabId: tab.id, windowId: tab.windowId };
+    });
+    const key = sidePanelContentKey(owner.windowId);
+    await extension.worker.evaluate(async ({ contentKey, reason, tabId }) => {
+        const stored = await chrome.storage.session.get(contentKey);
+        const current = stored[contentKey] as { revision?: unknown } | undefined;
+        const revision = typeof current?.revision === 'number'
+            && Number.isSafeInteger(current.revision)
+            ? current.revision + 1
+            : 1;
+        await chrome.storage.session.set({
+            [contentKey]: {
+                revision,
+                content: { kind: 'unavailable', tabId, reason },
+            },
+        });
+    }, {
+        contentKey: key,
+        reason: HN_LOOKUP_STATUS.ERROR,
+        tabId: owner.tabId,
+    });
 }
 
 async function expectVisibleFocusIndicator(page: Page): Promise<void> {
@@ -242,6 +315,13 @@ test.describe('extension accessibility (en)', () => {
         await expect(automaticSwitch).toBeFocused();
         await expectVisibleFocusIndicator(page);
 
+        const followSwitch = page.getByRole('switch', {
+            name: enMessages.side_panel_follow_label.message,
+        });
+        await page.keyboard.press('Tab');
+        await expect(followSwitch).toBeFocused();
+        await expectVisibleFocusIndicator(page);
+
         const articleClickSwitch = page.getByRole('switch', {
             name: enMessages.article_click_open_label.message,
         });
@@ -250,6 +330,59 @@ test.describe('extension accessibility (en)', () => {
         await expectVisibleFocusIndicator(page);
 
         await page.close();
+    });
+});
+
+test.describe('side panel accessibility (en)', () => {
+    test('manual and recoverable-error states pass axe in light and dark schemes', async () => {
+        let extension: ExtensionContext | undefined;
+        try {
+            extension = await launchEnglishFixture();
+            for (const colorScheme of ['light', 'dark'] as const) {
+                const page = await openManualPanel(extension, colorScheme);
+                await scanForBlockingViolations(page, `side panel manual ${colorScheme}`);
+                await publishRecoverablePanelError(extension);
+                await expect(page.getByRole('button', {
+                    name: enMessages.side_panel_retry.message,
+                })).toBeVisible();
+                await scanForBlockingViolations(page, `side panel error ${colorScheme}`);
+                await page.close();
+            }
+        } finally {
+            await extension?.dispose();
+        }
+    });
+
+    test('manual choices and retry are keyboard reachable in document order', async () => {
+        let extension: ExtensionContext | undefined;
+        try {
+            extension = await launchEnglishFixture();
+            const page = await openManualPanel(extension, 'light');
+            const check = page.getByRole('button', {
+                name: enMessages.side_panel_check_this_tab.message,
+            });
+            const follow = page.getByRole('button', {
+                name: enMessages.side_panel_follow_tabs_automatically.message,
+            });
+
+            await page.keyboard.press('Tab');
+            await expect(check).toBeFocused();
+            await expectVisibleFocusIndicator(page);
+            await page.keyboard.press('Tab');
+            await expect(follow).toBeFocused();
+            await expectVisibleFocusIndicator(page);
+
+            await publishRecoverablePanelError(extension);
+            const retry = page.getByRole('button', {
+                name: enMessages.side_panel_retry.message,
+            });
+            await expect(retry).toBeVisible();
+            await page.keyboard.press('Tab');
+            await expect(retry).toBeFocused();
+            await expectVisibleFocusIndicator(page);
+        } finally {
+            await extension?.dispose();
+        }
     });
 });
 
@@ -300,6 +433,21 @@ for (const locale of REPRESENTATIVE_LOCALIZED_LAYOUTS) {
                 });
                 await expectNoHorizontalOverflow(popup, `popup ${locale.label}`);
                 await popup.close();
+
+                if (locale.catalogLocale === 'ar' || locale.catalogLocale === 'zh_CN') {
+                    const panel = await openManualPanel(
+                        extension,
+                        'light',
+                        locale.sidePanelCheckName,
+                    );
+                    await panel.setViewportSize({ width: 360, height: 800 });
+                    await expect(panel.getByRole('button', {
+                        name: locale.sidePanelCheckName,
+                    })).toBeVisible();
+                    await expectNoHorizontalOverflow(panel, `side panel ${locale.label}`);
+                    await scanForBlockingViolations(panel, `side panel ${locale.label} light`);
+                    await panel.close();
+                }
             } finally {
                 await extension.dispose();
             }

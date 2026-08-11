@@ -4,6 +4,8 @@ import type { BrowserContext } from '@playwright/test';
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { HN_ORIGIN } from '../../src/domain/hn';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../../src/shared/content-scripts';
+import { SIDE_PANEL_CONTENT_KIND } from '../../src/shared/side-panel-content';
+import { isSidePanelProjection } from '../../src/shared/side-panel-projection';
 import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
 import {
     ARTICLE_ORIGIN,
@@ -80,12 +82,15 @@ async function registeredScriptIds(extension: ExtensionContext): Promise<string[
  * @param extension - The launched extension context.
  */
 async function sidePanelSelection(extension: ExtensionContext): Promise<unknown> {
-    return extension.worker.evaluate(async (prefix) => {
+    const candidate: unknown = await extension.worker.evaluate(async (prefix) => {
         const stored = await chrome.storage.session.get(null);
         const key = Object.keys(stored).find((candidate) => candidate.startsWith(prefix));
-        const content: unknown = key === undefined ? undefined : stored[key];
-        return (content as { itemId?: string } | undefined)?.itemId;
+        return key === undefined ? undefined : stored[key];
     }, SESSION_STORAGE_KEY_PREFIX.SIDE_PANEL_DISCUSSION);
+    return isSidePanelProjection(candidate)
+        && candidate.content.kind === SIDE_PANEL_CONTENT_KIND.DISCUSSION
+        ? candidate.content.itemId
+        : undefined;
 }
 
 /**

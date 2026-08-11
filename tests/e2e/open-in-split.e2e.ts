@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { OPEN_IN_SPLIT_MENU } from '../../src/shared/context-menus';
+import { isSidePanelProjection } from '../../src/shared/side-panel-projection';
 import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
 import { ARTICLE_ORIGIN, installLookupFixtures, launchExtensionContext, openExtensionPage } from './extension-context';
 import type { ExtensionContext } from './extension-context';
@@ -26,11 +27,27 @@ const HIT = {
  * @param extension - The launched extension context.
  */
 async function panelContent(extension: ExtensionContext): Promise<unknown> {
-    return extension.worker.evaluate(async (prefix) => {
+    const candidate: unknown = await extension.worker.evaluate(async (prefix) => {
         const stored = await chrome.storage.session.get(null);
         const key = Object.keys(stored).find((candidate) => candidate.startsWith(prefix));
         return key === undefined ? undefined : stored[key];
     }, SESSION_STORAGE_KEY_PREFIX.SIDE_PANEL_DISCUSSION);
+    return isSidePanelProjection(candidate) ? candidate.content : undefined;
+}
+
+/**
+ * Resolves the Chrome tab identifier for one exact fixture URL.
+ * @param extension - The launched extension context.
+ * @param url - The exact fixture page URL.
+ */
+async function tabIdForUrl(extension: ExtensionContext, url: string): Promise<number> {
+    return extension.worker.evaluate(async (pageUrl) => {
+        const [tab] = await chrome.tabs.query({ url: pageUrl });
+        if (tab?.id === undefined) {
+            throw new Error('Fixture page has no Chrome tab identifier');
+        }
+        return tab.id;
+    }, url);
 }
 
 /**
@@ -88,6 +105,7 @@ test('the link menu opens the article in place and its discussion in the panel',
 
         const sourcePage = await active.context.newPage();
         await sourcePage.goto(`${ARTICLE_ORIGIN}${SOURCE_PATH}`);
+        const sourceTabId = await tabIdForUrl(active, `${ARTICLE_ORIGIN}${SOURCE_PATH}`);
         expect(await panelContent(active)).toBeUndefined();
 
         await selectOpenInSplit(active, `${ARTICLE_ORIGIN}${LINK_PATH}`);
@@ -95,11 +113,13 @@ test('the link menu opens the article in place and its discussion in the panel',
         await sourcePage.waitForURL(`${ARTICLE_ORIGIN}${LINK_PATH}`);
         await expect.poll(async () => panelContent(active)).toEqual({
             kind: 'discussion',
+            tabId: sourceTabId,
             itemId: ITEM_ID,
         });
 
         const panel = await openExtensionPage(active, 'side-panel.html');
-        await expect(panel.locator('iframe.discussion-frame'))
+        await sourcePage.bringToFront();
+        await expect(panel.locator('iframe:not([hidden])'))
             .toHaveAttribute('src', `${HN_ORIGIN}/item?id=${ITEM_ID}`);
         await panel.close();
         await sourcePage.close();
@@ -122,18 +142,21 @@ test('the panel says so when the selected link has no discussion', async () => {
 
         const sourcePage = await active.context.newPage();
         await sourcePage.goto(`${ARTICLE_ORIGIN}${SOURCE_PATH}`);
+        const sourceTabId = await tabIdForUrl(active, `${ARTICLE_ORIGIN}${SOURCE_PATH}`);
 
         await selectOpenInSplit(active, `${ARTICLE_ORIGIN}${LINK_PATH}`);
 
         await sourcePage.waitForURL(`${ARTICLE_ORIGIN}${LINK_PATH}`);
         await expect.poll(async () => panelContent(active)).toEqual({
             kind: 'unavailable',
+            tabId: sourceTabId,
             reason: 'not_found',
         });
 
         const panel = await openExtensionPage(active, 'side-panel.html');
+        await sourcePage.bringToFront();
         await expect(panel.getByText(enMessages.discussion_not_found.message)).toBeVisible();
-        await expect(panel.locator('iframe.discussion-frame')).toHaveCount(0);
+        await expect(panel.locator('iframe:not([hidden])')).toHaveCount(0);
         await panel.close();
         await sourcePage.close();
     } finally {

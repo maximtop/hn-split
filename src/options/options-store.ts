@@ -5,10 +5,10 @@ import { t } from '../shared/i18n';
 import type { MessageKey } from '../shared/i18n';
 import { logWarning } from '../shared/logger';
 import {
-    readAutomaticAvailability,
-    updateAutomaticAvailability,
-} from './availability-settings';
-import type { AvailabilitySettingsDependencies } from './availability-settings';
+    readBooleanSetting,
+    updateBooleanSetting,
+} from './setting-client';
+import type { BooleanSettingDependencies } from './setting-client';
 
 /**
  * Names the localized confirmation copy shown after a successful mutation.
@@ -39,7 +39,7 @@ export class OptionsStore {
      * @param copy - The localized confirmation copy for this setting.
      */
     constructor(
-        private readonly dependencies: AvailabilitySettingsDependencies,
+        private readonly dependencies: BooleanSettingDependencies,
         private readonly copy: SettingStatusCopy,
     ) {
         makeAutoObservable(this, {}, { autoBind: true });
@@ -52,7 +52,7 @@ export class OptionsStore {
         this.busy = true;
         this.message = '';
         try {
-            const enabled = await readAutomaticAvailability(this.dependencies);
+            const enabled = await readBooleanSetting(this.dependencies);
             runInAction(() => {
                 this.enabled = enabled;
             });
@@ -76,7 +76,7 @@ export class OptionsStore {
         this.busy = true;
         this.message = '';
         try {
-            const enabled = await updateAutomaticAvailability(nextEnabled, this.dependencies);
+            const enabled = await updateBooleanSetting(nextEnabled, this.dependencies);
             runInAction(() => {
                 this.enabled = enabled;
                 this.message = enabled ? t(this.copy.enabledKey) : t(this.copy.disabledKey);
@@ -85,7 +85,7 @@ export class OptionsStore {
             logWarning('updating the setting failed.', error);
             const updateMessage = userFacingMessage(error, 'unable_to_update_settings');
             try {
-                const enabled = await readAutomaticAvailability(this.dependencies);
+                const enabled = await readBooleanSetting(this.dependencies);
                 runInAction(() => {
                     this.enabled = enabled;
                     this.message = updateMessage;

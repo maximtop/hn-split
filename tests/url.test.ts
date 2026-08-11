@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildArticleCandidates, normalizeArticleUrl } from '../src/domain/url';
+import {
+    buildArticleCandidates,
+    isSanitizedArticleIdentity,
+    normalizeArticleUrl,
+} from '../src/domain/url';
 
 describe('normalizeArticleUrl', () => {
     it.each([
@@ -154,5 +158,31 @@ describe('buildArticleCandidates', () => {
             identity: 'example.com/story',
             source: 'canonical',
         }]);
+    });
+});
+
+describe('isSanitizedArticleIdentity', () => {
+    it.each([
+        'example.com/story',
+        'example.com/story?id=7',
+        'example.com:8443/story',
+        'example.com:80/story',
+        'example.com:443/story',
+        '[::ffff:808:808]/story',
+    ])('accepts normalized public identity %s', (identity) => {
+        expect(isSanitizedArticleIdentity(identity)).toBe(true);
+    });
+
+    it.each([
+        'https://example.com/story',
+        'example.com/story/',
+        'EXAMPLE.com/story',
+        'example.com/story#comments',
+        'example.com/story?utm_source=test',
+        'example.com/story?token=secret',
+        'localhost/story',
+        '192.168.1.1/story',
+    ])('rejects unsanitized identity %s', (identity) => {
+        expect(isSanitizedArticleIdentity(identity)).toBe(false);
     });
 });

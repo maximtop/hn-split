@@ -7,7 +7,8 @@
             "Vælg et resultat i pop op-vinduet for at åbne dets kommentarer på Hacker News.",
             "Præcis URL-matchning — ingen omtrentlige gæt; dubletter vises som alternativer.",
             "Det første valg af et resultat åbner en tilstødende fane; par den med artiklen via Chrome Split View, og senere valg genbruger den fane.",
-            "Eller åbn diskussionen i browserens sidepanel. For at indlejre den rigtige Hacker News-side fjerner Split midlertidigt de headere, der blokerer indramning, udelukkende fra svar fra Hacker News-underrammer og kun, mens et panel er åbent.",
+        "Eller åbn diskussionen i browserens sidepanel. For at indlejre den rigtige Hacker News-side fjerner Split midlertidigt de headere, der blokerer indramning, udelukkende fra svar fra Hacker News-underrammer og kun, mens et panel er åbent.",
+        "Valgfrit: Når sidepanelet allerede er åbent, kan aktive faner følges automatisk; funktionen er slået fra som standard, eller brug »Kontrollér denne fane« én gang. Den åbner eller omarrangerer aldrig faner og kan holde op til tre nylige diskussioner aktive, så du hurtigere kan vende tilbage med bedst mulig bevarelse af rullepositionen.",
             "“Åbn i Split” i linkets højrekliksmenu: linket åbnes i den aktuelle fane, og dets Hacker News-diskussion åbnes i sidepanelet.",
             "Valgfrit: et klik på en historie på Hacker News åbner artiklen som normalt og dens diskussion i sidepanelet ved siden af. Slået fra som standard.",
             "Valgfrit badge på værktøjslinjen med antallet af kommentarer, slået fra som standard.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privat som standard",
-            "sub": "Automatiske tilgængelighedsbadges er slået fra, indtil du aktiverer dem. Opslag fra pop op-vinduet læser sidens URL og kanoniske link — aldrig artikeltekst eller indhold."
+      "sub": "Værktøjstjek, sidepanelfølgning og historieklik er slået fra som standard. »Kontrollér denne fane« tillader ét opslag i panelet; artikeltekst og andet sideindhold læses aldrig."
         },
         {
             "heading": "Hjemme i både lyst og mørkt",

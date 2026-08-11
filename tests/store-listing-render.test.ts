@@ -14,6 +14,7 @@ describe('store listing renderer', () => {
         expect(output).toContain('## Name (from manifest; read-only)');
         expect(output).toContain('## Summary / short description (from manifest; read-only)');
         expect(output).toContain('## Detailed description (paste into dashboard)');
+        expect(output.split('\n').filter((line) => line.startsWith('- '))).toHaveLength(9);
         expect(output).not.toContain('## Release notes');
         expect(output).not.toContain('## Screenshot captions');
     });

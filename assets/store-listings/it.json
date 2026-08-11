@@ -7,7 +7,8 @@
             "Seleziona un risultato nel popup per aprire i relativi commenti su Hacker News.",
             "Corrispondenza esatta dell'URL — niente supposizioni approssimative; i duplicati sono elencati come alternative.",
             "La prima selezione di un risultato apre una scheda adiacente; abbinala all'articolo con Chrome Split View e le selezioni successive riutilizzeranno quella scheda.",
-            "Oppure apri la discussione nel pannello laterale del browser. Per incorporare la pagina reale di Hacker News, Split rimuove temporaneamente le intestazioni che bloccano l'inclusione in frame soltanto dalle risposte dei sottoframe di Hacker News e solo mentre un pannello è aperto.",
+        "Oppure apri la discussione nel pannello laterale del browser. Per incorporare la pagina reale di Hacker News, Split rimuove temporaneamente le intestazioni che bloccano l'inclusione in frame soltanto dalle risposte dei sottoframe di Hacker News e solo mentre un pannello è aperto.",
+        "Facoltativo: mentre il pannello laterale è già aperto, segui automaticamente le schede attive; la funzione è disattivata per impostazione predefinita, oppure usa una volta «Controlla questa scheda». Non apre né riordina mai le schede e può mantenere attive fino a tre discussioni recenti per tornarvi più rapidamente e conservare, quando possibile, la posizione di scorrimento.",
             "«Apri in Split» nel menu del tasto destro sui link: il link si apre nella scheda corrente e la sua discussione di Hacker News si apre nel pannello laterale.",
             "Facoltativo: il clic su una storia su Hacker News apre l'articolo come al solito e la sua discussione nel pannello laterale accanto. Disattivato per impostazione predefinita.",
             "Badge facoltativo nella barra degli strumenti con il numero di commenti, disattivato per impostazione predefinita.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privato per impostazione predefinita",
-            "sub": "I badge automatici di disponibilità restano disattivati finché non li attivi. La ricerca dal popup legge l'URL della pagina e il link canonico — mai il testo o il contenuto dell'articolo."
+      "sub": "Controlli barra, seguito laterale e clic sulle storie: spenti di base. «Controlla questa scheda» consente una ricerca laterale; testo dell'articolo e altri contenuti della pagina non sono mai letti."
         },
         {
             "heading": "Perfetto in modalità chiara e scura",

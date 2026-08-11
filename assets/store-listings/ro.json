@@ -7,7 +7,8 @@
             "Selectați un rezultat în fereastra pop-up pentru a deschide comentariile sale de pe Hacker News.",
             "Potrivire exactă a URL-ului — fără presupuneri aproximative; duplicatele sunt afișate ca alternative.",
             "Prima selectare a unui rezultat deschide o filă adiacentă; asociați-o cu articolul folosind Chrome Split View, iar selecțiile ulterioare vor reutiliza acea filă.",
-            "Sau deschideți discuția în panoul lateral al browserului. Pentru a încorpora pagina Hacker News reală, Split elimină temporar antetele care blochează încadrarea numai din răspunsurile subcadrelor Hacker News și numai cât timp este deschis un panou.",
+        "Sau deschideți discuția în panoul lateral al browserului. Pentru a încorpora pagina Hacker News reală, Split elimină temporar antetele care blochează încadrarea numai din răspunsurile subcadrelor Hacker News și numai cât timp este deschis un panou.",
+        "Opțional: cât timp panoul lateral este deja deschis, urmăriți automat filele active; funcția este dezactivată în mod implicit sau utilizați o singură dată „Verificați această filă”. Nu deschide și nu rearanjează niciodată filele și poate păstra active până la trei discuții recente pentru a reveni mai rapid și a păstra, atunci când este posibil, poziția de derulare.",
             "„Deschide în Split” în meniul de clic dreapta al linkurilor: linkul se deschide în fila curentă, iar discuția lui de pe Hacker News se deschide în panoul lateral.",
             "Opțional: când faceți clic pe o poveste pe Hacker News, articolul se deschide ca de obicei, iar discuția sa în panoul lateral de alături. Dezactivat implicit.",
             "Insignă opțională în bara de instrumente cu numărul de comentarii, dezactivată implicit.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privat în mod implicit",
-            "sub": "Insignele automate de disponibilitate rămân dezactivate până le activați. Căutarea din fereastra pop-up citește URL-ul paginii și linkul canonic — niciodată textul sau conținutul articolului."
+      "sub": "Verificări în bară, urmărire în panou și clicuri pe știri sunt implicit dezactivate. „Verificați această filă” permite o căutare în panou; textul articolului și alt conținut nu sunt citite niciodată."
         },
         {
             "heading": "Potrivit pentru teme luminoase și întunecate",

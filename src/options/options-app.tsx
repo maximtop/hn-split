@@ -27,6 +27,10 @@ export interface OptionsAppProps {
      * Owns the article-click discussion toggle state and actions.
      */
     articleClick: OptionsStore;
+    /**
+     * Owns automatic active-tab following for an already-open side panel.
+     */
+    sidePanelFollow: OptionsStore;
 }
 
 /**
@@ -34,7 +38,7 @@ export interface OptionsAppProps {
  * @param props - The observable options stores to render.
  */
 function OptionsView(props: OptionsAppProps): React.JSX.Element {
-    const { availability, articleClick } = props;
+    const { availability, articleClick, sidePanelFollow } = props;
     return (
         <MantineProvider theme={theme} cssVariablesResolver={cssVariablesResolver} defaultColorScheme="auto">
             <Container component="main" size="md" py={64}>
@@ -64,6 +68,25 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                         </Group>
                     </Paper>
 
+                    <Paper withBorder radius="lg" p="xl" shadow="sm">
+                        <Group justify="space-between" align="center" wrap="nowrap" gap="xl">
+                            <Stack gap="xs">
+                                <Title order={2} size="h4">{t('side_panel_follow')}</Title>
+                                <Text c="dimmed">{t('side_panel_follow_description')}</Text>
+                            </Stack>
+                            <Switch
+                                checked={sidePanelFollow.enabled}
+                                disabled={sidePanelFollow.busy}
+                                size="lg"
+                                label={t('side_panel_follow_label')}
+                                labelPosition="left"
+                                onChange={(event) => {
+                                    void sidePanelFollow.changeEnabled(event.currentTarget.checked);
+                                }}
+                            />
+                        </Group>
+                    </Paper>
+
                     <Text c="dimmed" size="sm">{t('privacy_note')}</Text>
 
                     <Paper withBorder radius="lg" p="xl" shadow="sm">
@@ -87,7 +110,7 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
 
                     <Paper withBorder radius="lg" p="xl" shadow="sm">
                         <Stack gap="xs">
-                            <Title order={2} size="h4">{t('open_in_side_panel')}</Title>
+                            <Title order={2} size="h4">{t('side_panel_notice_title')}</Title>
                             <Text c="dimmed">{t('side_panel_notice')}</Text>
                         </Stack>
                     </Paper>
@@ -105,6 +128,14 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                         : (
                                 <Alert className="settings-status" color="orange" role="status">
                                     {articleClick.message}
+                                </Alert>
+                            )}
+
+                    {sidePanelFollow.message === ''
+                        ? null
+                        : (
+                                <Alert className="settings-status" color="orange" role="status">
+                                    {sidePanelFollow.message}
                                 </Alert>
                             )}
                 </Stack>

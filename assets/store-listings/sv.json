@@ -7,7 +7,8 @@
             "Välj ett resultat i popup-fönstret för att öppna dess kommentarer på Hacker News.",
             "Exakt URL-matchning — inga ungefärliga gissningar; dubbletter visas som alternativ.",
             "Det första valet av ett resultat öppnar en intilliggande flik; para ihop den med artikeln via Chrome Split View, och senare val återanvänder den fliken.",
-            "Eller öppna diskussionen i webbläsarens sidopanel. För att bädda in den riktiga Hacker News-sidan tar Split tillfälligt bort HTTP-huvudena som blockerar inramning, enbart från svar från Hacker News-underramar och bara medan en panel är öppen.",
+        "Eller öppna diskussionen i webbläsarens sidopanel. För att bädda in den riktiga Hacker News-sidan tar Split tillfälligt bort HTTP-huvudena som blockerar inramning, enbart från svar från Hacker News-underramar och bara medan en panel är öppen.",
+        "Valfritt: Medan sidopanelen redan är öppen kan aktiva flikar följas automatiskt. Funktionen är av som standard, eller använd ”Kontrollera den här fliken” en gång. Den öppnar eller flyttar aldrig flikar och kan hålla upp till tre nyliga diskussioner aktiva så att du snabbare kan återvända och rullningspositionen bevaras så långt det är möjligt.",
             "”Öppna i Split” i länkarnas högerklicksmeny: länken öppnas i den aktuella fliken och dess Hacker News-diskussion öppnas i sidopanelen.",
             "Valfritt: ett klick på en artikel på Hacker News öppnar artikeln som vanligt och dess diskussion i sidopanelen bredvid. Av som standard.",
             "Valfri bricka i verktygsfältet med antalet kommentarer, av som standard.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privat som standard",
-            "sub": "Automatiska tillgänglighetsbrickor är av tills du slår på dem. Sökningen från popup-fönstret läser sidans URL och kanoniska länk — aldrig artikeltext eller innehåll."
+      "sub": "Verktygskontroller, sidopanelföljning och artikelklick är av som standard. ”Kontrollera den här fliken” tillåter ett uppslag i panelen; artikeltext och annat sidinnehåll läses aldrig."
         },
         {
             "heading": "Hemma i både ljust och mörkt",

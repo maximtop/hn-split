@@ -9,6 +9,7 @@ import {
 } from '../src/shared/side-panel-content';
 
 const ITEM_ID = '424242';
+const TAB_ID = 7;
 
 const discussion = {
     id: ITEM_ID,
@@ -21,11 +22,22 @@ const discussion = {
 
 describe('isSidePanelContent', () => {
     it.each([
-        { name: 'a discussion', value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, itemId: ITEM_ID } },
-        { name: 'a pending lookup', value: { kind: SIDE_PANEL_CONTENT_KIND.PENDING } },
+        {
+            name: 'a discussion',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId: TAB_ID, itemId: ITEM_ID },
+        },
+        {
+            name: 'manual action required',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.MANUAL_REQUIRED, tabId: TAB_ID },
+        },
+        { name: 'a pending lookup', value: { kind: SIDE_PANEL_CONTENT_KIND.PENDING, tabId: TAB_ID } },
         {
             name: 'an unavailable discussion',
-            value: { kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE, reason: HN_LOOKUP_STATUS.NOT_FOUND },
+            value: {
+                kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE,
+                tabId: TAB_ID,
+                reason: HN_LOOKUP_STATUS.NOT_FOUND,
+            },
         },
     ])('accepts $name', ({ value }) => {
         expect(isSidePanelContent(value)).toBe(true);
@@ -37,14 +49,39 @@ describe('isSidePanelContent', () => {
         // as an empty panel rather than as content.
         { name: 'the bare item id used before this model existed', value: ITEM_ID },
         { name: 'an unknown kind', value: { kind: 'loading' } },
+        { name: 'a pending lookup without a tab', value: { kind: SIDE_PANEL_CONTENT_KIND.PENDING } },
         {
             name: 'an unavailable reason that is not a lookup outcome',
-            value: { kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE, reason: HN_LOOKUP_STATUS.FOUND },
+            value: {
+                kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE,
+                tabId: TAB_ID,
+                reason: HN_LOOKUP_STATUS.FOUND,
+            },
         },
-        { name: 'an unavailable state with no reason', value: { kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE } },
-        { name: 'a non-positive item id', value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, itemId: '0' } },
-        { name: 'a non-numeric item id', value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, itemId: '12x' } },
-        { name: 'a numeric item id', value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, itemId: 42 } },
+        {
+            name: 'an unavailable state with no reason',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE, tabId: TAB_ID },
+        },
+        {
+            name: 'a non-positive item id',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId: TAB_ID, itemId: '0' },
+        },
+        {
+            name: 'a non-numeric item id',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId: TAB_ID, itemId: '12x' },
+        },
+        {
+            name: 'a numeric item id',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId: TAB_ID, itemId: 42 },
+        },
+        {
+            name: 'an unsafe tab id',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.MANUAL_REQUIRED, tabId: Number.MAX_SAFE_INTEGER + 1 },
+        },
+        {
+            name: 'an extra stored field',
+            value: { kind: SIDE_PANEL_CONTENT_KIND.PENDING, tabId: TAB_ID, url: 'https://example.com' },
+        },
         { name: 'null', value: null },
         { name: 'an empty object', value: {} },
     ])('rejects $name', ({ value }) => {
@@ -60,8 +97,9 @@ describe('contentForLookupResult', () => {
             alternatives: [{ ...discussion, id: '999' }],
         };
 
-        expect(contentForLookupResult(result)).toEqual({
+        expect(contentForLookupResult(result, TAB_ID)).toEqual({
             kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION,
+            tabId: TAB_ID,
             itemId: ITEM_ID,
         });
     });
@@ -80,8 +118,9 @@ describe('contentForLookupResult', () => {
             reason: HN_LOOKUP_STATUS.ERROR,
         },
     ])('reports $reason when the lookup returns $result.status', ({ result, reason }) => {
-        expect(contentForLookupResult(result as HnLookupResult)).toEqual({
+        expect(contentForLookupResult(result as HnLookupResult, TAB_ID)).toEqual({
             kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE,
+            tabId: TAB_ID,
             reason,
         });
     });

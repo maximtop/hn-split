@@ -11,7 +11,9 @@ Find the Hacker News discussion behind the article you are reading, then open it
 - **Exact discussions, not fuzzy guesses.** URL candidates are normalized conservatively, every result is verified, and duplicate submissions remain available as alternatives.
 - **Choose the reading flow.** Open comments in Chrome's side panel, or use an adjacent discussion tab that can stay paired with the article in Chrome Split View.
 - **Useful shortcuts, only when you ask.** Use **Open in Split** on a link, opt in to opening discussions beside Hacker News story clicks, or enable a comment-count toolbar badge.
-- **Private by default.** No analytics, telemetry, accounts, advertising, or application backend. Automatic checks and Hacker News story-click handling are both off by default.
+- **An active companion when you want one.** An already-open side panel can follow active tabs automatically, or **Check this tab** can inspect one tab without changing the preference. Following is separate from the toolbar badge and off by default.
+- **Fast return, best effort.** The panel can keep up to three recent real Hacker News discussions alive in memory, so switching back usually preserves the browser-managed position until eviction, reconnect, reload, or memory pressure resets it.
+- **Private by default.** No analytics, telemetry, accounts, advertising, or application backend. Toolbar checks, side-panel following, and Hacker News story-click handling are all off by default.
 - **Localized for 40 languages.** The extension follows the browser's language and light or dark color scheme.
 
 ## Install and use
@@ -19,14 +21,15 @@ Find the Hacker News discussion behind the article you are reading, then open it
 1. [Install the extension from the Chrome Web Store](https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm). Chrome 140 or newer is required.
 2. Open an article and select Split for Hacker News from the toolbar.
 3. Choose the primary discussion or an alternative, then open it in a tab or the side panel.
+4. In an open side panel, use **Check this tab** once or enable **Follow tabs automatically** in one action. Following never opens the panel or rearranges tabs.
 
 Nothing opens, moves, or replaces a tab until you explicitly select an action. Hacker News is the only discussion source, and the extension is free to use.
 
 ## Privacy
 
-In the default manual mode, the extension reads the active page URL and its optional canonical URL only after you open the popup. Eligible sanitized public URLs are sent over HTTPS to Algolia's public Hacker News Search API to locate exact submissions; article text and other page content are never read.
+In the default manual mode, the extension reads the active page URL and its optional canonical URL only after you open the popup. An unchecked side-panel tab is not inspected until you choose **Check this tab** or opt in to following. Eligible sanitized public URLs are sent over HTTPS to Algolia's public Hacker News Search API to locate exact submissions; article text and other page content are never read. Found URL lookups may be reused for one hour and not-found lookups for ten minutes in session storage; restricted pages and failures are not added to that cache.
 
-The side panel embeds the real Hacker News site. While a panel is open, the extension temporarily removes Hacker News framing headers from Hacker News sub-frame responses, then restores the normal browser behavior when the panel closes. The permission boundary, stored settings, outbound URL filtering, and Chrome Web Store data disclosures are documented in [PRIVACY.md](PRIVACY.md).
+The side panel embeds the real Hacker News site. It may retain up to three recent cross-origin Hacker News documents in memory, but extension code does not read, message, serialize, cache, or restore their comments, DOM, focus, cookies, or scroll values. Those documents make normal requests to Hacker News with ordinary request metadata and any cookies the browser sends under its policy. While at least one panel is open, the extension temporarily removes Hacker News framing headers from Hacker News sub-frame responses, then restores normal behavior after the last panel closes. The full permission boundary, session-only associations, reset conditions, outbound URL filtering, and Chrome Web Store data disclosures are documented in [PRIVACY.md](PRIVACY.md).
 
 ## Product documentation
 

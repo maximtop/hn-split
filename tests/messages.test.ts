@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+    SIDE_PANEL_CONTEXT,
+    SIDE_PANEL_DISCARD_TAB,
+    SIDE_PANEL_KEEPALIVE,
+    SIDE_PANEL_READY,
+    SIDE_PANEL_RESET,
+    SIDE_PANEL_TARGET,
     isArticleClickMessage,
     isAvailabilitySettingReadResponse,
     isAvailabilitySettingResponse,
@@ -8,6 +14,7 @@ import {
     isLookupResponse,
     isOpenDiscussionResponse,
     isSidePanelContentResponse,
+    isSidePanelPortMessage,
 } from '../src/shared/messages';
 
 describe('isBackgroundRequest', () => {
@@ -33,8 +40,19 @@ describe('isBackgroundRequest', () => {
         { type: 'set_article_click_setting' },
         { type: 'set_article_click_setting', enabled: 'yes' },
         { type: 'select_side_panel_discussion', itemId: '123' },
-        { type: 'select_side_panel_discussion', itemId: '123', windowId: -1 },
-        { type: 'select_side_panel_discussion', itemId: '123', windowId: 1.5 },
+        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 'https://example.com', windowId: -1 },
+        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 'https://example.com', windowId: 1.5 },
+        { type: 'select_side_panel_discussion', tabId: -1, itemId: '123', sourceUrl: 'https://example.com', windowId: 1 },
+        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 42, windowId: 1 },
+        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', windowId: 1 },
+        { type: 'check_active_side_panel_tab' },
+        { type: 'check_active_side_panel_tab', windowId: -1 },
+        { type: 'check_active_side_panel_tab', windowId: 3, tabId: 7 },
+        { type: 'enable_side_panel_follow' },
+        { type: 'enable_side_panel_follow', windowId: 3, tabId: 7 },
+        { type: 'get_side_panel_follow_setting', enabled: true },
+        { type: 'set_side_panel_follow_setting' },
+        { type: 'set_side_panel_follow_setting', enabled: 'yes' },
         { type: 'get_side_panel_discussion' },
         { type: 'get_side_panel_discussion', windowId: '4' },
         { type: 'open_discussion_for_click', itemId: '123' },
@@ -53,11 +71,62 @@ describe('isBackgroundRequest', () => {
         { type: 'set_article_click_setting', enabled: true },
         { type: 'set_article_click_setting', enabled: false },
         { type: 'get_article_click_setting' },
-        { type: 'select_side_panel_discussion', itemId: '123', windowId: 0 },
-        { type: 'select_side_panel_discussion', itemId: '123', windowId: 42 },
+        {
+            type: 'select_side_panel_discussion',
+            tabId: 0,
+            itemId: '123',
+            sourceUrl: 'https://example.com/story',
+            windowId: 0,
+        },
+        {
+            type: 'select_side_panel_discussion',
+            tabId: 7,
+            itemId: '123',
+            sourceUrl: 'https://example.com/story',
+            windowId: 42,
+        },
         { type: 'get_side_panel_discussion', windowId: 4 },
+        { type: 'check_active_side_panel_tab', windowId: 3 },
+        { type: 'enable_side_panel_follow', windowId: 3 },
+        { type: 'get_side_panel_follow_setting' },
+        { type: 'set_side_panel_follow_setting', enabled: true },
+        { type: 'set_side_panel_follow_setting', enabled: false },
     ])('accepts valid request %#', (request) => {
         expect(isBackgroundRequest(request)).toBe(true);
+    });
+});
+
+describe('isSidePanelPortMessage', () => {
+    it.each([
+        { type: SIDE_PANEL_CONTEXT, windowId: 3 },
+        { type: SIDE_PANEL_KEEPALIVE },
+        { type: SIDE_PANEL_READY, tabId: 7, projectionRevision: 4 },
+        { type: SIDE_PANEL_TARGET, tabId: 8, minimumProjectionRevision: 5 },
+        { type: SIDE_PANEL_DISCARD_TAB, tabId: 7 },
+        { type: SIDE_PANEL_RESET },
+    ])('accepts valid port message %#', (message) => {
+        expect(isSidePanelPortMessage(message)).toBe(true);
+    });
+
+    it.each([
+        null,
+        {},
+        { type: 'unknown' },
+        { type: SIDE_PANEL_CONTEXT },
+        { type: SIDE_PANEL_CONTEXT, windowId: -1 },
+        { type: SIDE_PANEL_CONTEXT, windowId: 3, url: 'https://example.com' },
+        { type: SIDE_PANEL_KEEPALIVE, tabId: 7 },
+        { type: SIDE_PANEL_READY },
+        { type: SIDE_PANEL_READY, tabId: 7, projectionRevision: 0 },
+        { type: SIDE_PANEL_READY, tabId: 1.5, projectionRevision: 4 },
+        { type: SIDE_PANEL_READY, tabId: 7, projectionRevision: Number.MAX_SAFE_INTEGER + 1 },
+        { type: SIDE_PANEL_TARGET, tabId: 8, minimumProjectionRevision: 0 },
+        { type: SIDE_PANEL_TARGET, tabId: Number.POSITIVE_INFINITY, minimumProjectionRevision: 5 },
+        { type: SIDE_PANEL_DISCARD_TAB, tabId: -1 },
+        { type: SIDE_PANEL_DISCARD_TAB, tabId: 7, itemId: '424242' },
+        { type: SIDE_PANEL_RESET, reason: 'reconnect' },
+    ])('rejects malformed port message %#', (message) => {
+        expect(isSidePanelPortMessage(message)).toBe(false);
     });
 });
 
@@ -67,6 +136,15 @@ describe('isArticleClickMessage', () => {
         {},
         { type: 'open_discussion_for_click' },
         { type: 'open_discussion_for_click', itemId: 123 },
+        { type: 'open_discussion_for_click', itemId: '123' },
+        { type: 'open_discussion_for_click', itemId: '123', articleUrl: 42 },
+        { type: 'open_discussion_for_click', itemId: '123', articleUrl: 'not a URL' },
+        {
+            type: 'open_discussion_for_click',
+            itemId: '123',
+            articleUrl: 'https://example.com/story',
+            unexpected: true,
+        },
         { type: 'open_discussion_for_click', itemId: '' },
         { type: 'open_discussion_for_click', itemId: '0' },
         { type: 'open_discussion_for_click', itemId: '12x' },
@@ -78,8 +156,12 @@ describe('isArticleClickMessage', () => {
     });
 
     it.each([
-        { type: 'open_discussion_for_click', itemId: '1' },
-        { type: 'open_discussion_for_click', itemId: '424242' },
+        { type: 'open_discussion_for_click', itemId: '1', articleUrl: 'https://example.com/a' },
+        {
+            type: 'open_discussion_for_click',
+            itemId: '424242',
+            articleUrl: 'http://news.example.org/story',
+        },
     ])('accepts valid click message %#', (message) => {
         expect(isArticleClickMessage(message)).toBe(true);
     });
@@ -155,9 +237,9 @@ describe('background response validation', () => {
 
     it.each([
         { ok: true, result: { content: null } },
-        { ok: true, result: { content: { kind: 'discussion', itemId: '424242' } } },
-        { ok: true, result: { content: { kind: 'pending' } } },
-        { ok: true, result: { content: { kind: 'unavailable', reason: 'not_found' } } },
+        { ok: true, result: { content: { kind: 'discussion', tabId: 7, itemId: '424242' } } },
+        { ok: true, result: { content: { kind: 'pending', tabId: 7 } } },
+        { ok: true, result: { content: { kind: 'unavailable', tabId: 7, reason: 'not_found' } } },
         { ok: false, error: 'side_panel_selection_failed' },
     ])('accepts side panel content response %#', (response) => {
         expect(isSidePanelContentResponse(response)).toBe(true);
@@ -170,6 +252,7 @@ describe('background response validation', () => {
         { ok: true, result: { itemId: '424242' } },
         { ok: true, result: { content: '424242' } },
         { ok: true, result: { content: { kind: 'discussion' } } },
+        { ok: true, result: { content: { kind: 'pending' } } },
         { ok: true, result: { content: { kind: 'unavailable', reason: 'found' } } },
     ])('rejects malformed side panel content response %#', (response) => {
         expect(isSidePanelContentResponse(response)).toBe(false);

@@ -8,6 +8,7 @@
             "Exact URL matching — no fuzzy guesses, duplicates are listed as alternatives.",
             "The first result selection opens an adjacent tab; pair it with the article using Chrome Split View and later selections reuse that pane.",
             "Or open the discussion in the browser side panel. To embed the real Hacker News page, Split temporarily removes framing headers from Hacker News sub-frame responses only while a panel is open.",
+            "Optional: while the side panel is already open, follow active tabs automatically; off by default, or use Check this tab once. It never opens or rearranges tabs, and may keep up to three recent discussions alive for faster return and best-effort scroll position.",
             "Open in Split in the link right-click menu: the link opens in the current tab and its Hacker News discussion opens in the side panel.",
             "Optional: clicking a story on Hacker News opens the article as usual and its discussion in the side panel beside it. Off by default.",
             "Optional toolbar badge with the comment count, off by default.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Private by default",
-            "sub": "Automatic availability badges stay off until you enable them. Popup lookup reads the page URL and canonical link — never article text or content."
+            "sub": "Toolbar checks, side-panel following, and story-click handling are off by default. Check this tab permits one side-panel lookup; article text and other page content are never read."
         },
         {
             "heading": "At home in light and dark",

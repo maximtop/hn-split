@@ -14,6 +14,7 @@ import {
 import { LOCALE_REGISTRY, SHIPPED_LOCALES } from '../src/shared/locales';
 
 const listingsDirectory = resolve(__dirname, '../assets/store-listings');
+const EXPECTED_DESCRIPTION_BULLET_COUNT = 9;
 
 /**
  * Reads one locale's listing file from the repository.
@@ -87,6 +88,7 @@ describe('listing files', () => {
     it.each(LOCALE_REGISTRY.map(({ code }) => code))('validate %s against the English base', (locale) => {
         const content = readListing(locale);
         expect(content.locale).toBe(locale);
+        expect(content.description.bullets).toHaveLength(EXPECTED_DESCRIPTION_BULLET_COUNT);
         expect(collectListingIssues(content, base)).toEqual([]);
     });
 

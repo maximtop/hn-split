@@ -6,6 +6,21 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-08-11
+
+### Added
+
+- Optional active-tab following for an already-open side panel, including one-time checks, session-only result reuse, and up to three live Hacker News discussions with best-effort scroll preservation.
+
+### Changed
+
+- Expanded the options, privacy, lifecycle, and store-listing disclosures across all 40 supported languages to cover active-tab following and the exact Hacker News framing boundary.
+
+### Fixed
+
+- Prevented stale side-panel results when opening a discussion from the popup or switching, navigating, moving, replacing, and closing tabs across browser windows.
+- Restricted the Hacker News framing exception to authenticated live side-panel documents and removed it after the last panel disconnects.
+
 ## [0.1.0] - 2026-08-09
 
 ### Added

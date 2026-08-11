@@ -7,7 +7,8 @@
             "Avaa Hacker News -kommentit valitsemalla tulos ponnahdusikkunasta.",
             "Täsmällinen URL-vastaavuus — ei likimääräisiä arvauksia; kaksoiskappaleet näytetään vaihtoehtoina.",
             "Ensimmäinen tulosvalintasi avaa viereisen välilehden; yhdistä se artikkeliin Chrome Split View -toiminnolla, ja myöhemmät valinnat käyttävät samaa ruutua.",
-            "Voit myös avata keskustelun selaimen sivupaneelissa. Oikean Hacker News -sivun upottamiseksi Split poistaa kehystämisen estävät otsakkeet väliaikaisesti vain Hacker News -alikehysten vastauksista ja vain paneelin ollessa auki.",
+        "Voit myös avata keskustelun selaimen sivupaneelissa. Oikean Hacker News -sivun upottamiseksi Split poistaa kehystämisen estävät otsakkeet väliaikaisesti vain Hacker News -alikehysten vastauksista ja vain paneelin ollessa auki.",
+        "Valinnainen: kun sivupaneeli on jo auki, aktiivisia välilehtiä voidaan seurata automaattisesti. Toiminto on oletuksena pois käytöstä, tai voit käyttää kerran toimintoa ”Tarkista tämä välilehti”. Se ei koskaan avaa eikä järjestä välilehtiä uudelleen ja voi pitää enintään kolme viimeaikaista keskustelua aktiivisena nopeampaa paluuta ja vierityskohdan mahdollisuuksien mukaista säilyttämistä varten.",
             "”Avaa Splitissä” linkin hiiren oikean painikkeen valikossa: linkki avautuu nykyiseen välilehteen ja sen Hacker News -keskustelu sivupaneeliin.",
             "Valinnainen: jutun napsautus Hacker Newsissa avaa artikkelin tavalliseen tapaan ja sen keskustelun viereiseen sivupaneeliin. Oletuksena pois päältä.",
             "Valinnainen työkalupalkin merkki kommenttien määrällä, oletuksena pois päältä.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Oletuksena yksityinen",
-            "sub": "Automaattiset saatavuusmerkit pysyvät pois päältä, kunnes otat ne käyttöön. Ponnahdusikkunan haku lukee sivun URL-osoitteen ja kanonisen linkin — ei koskaan artikkelin tekstiä tai sisältöä."
+      "sub": "Työkalutarkistukset, sivupaneeliseuranta ja tarinaklikkaukset ovat oletuksena pois. ”Tarkista tämä välilehti” sallii yhden sivupaneelihaun; artikkelitekstiä tai sivun muuta sisältöä ei koskaan lueta."
         },
         {
             "heading": "Toimii vaaleassa ja tummassa tilassa",

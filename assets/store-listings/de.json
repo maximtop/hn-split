@@ -7,7 +7,8 @@
             "Wählen Sie im Pop-up ein Ergebnis aus, um dessen Hacker-News-Kommentare zu öffnen.",
             "Exakter URL-Abgleich — kein ungefähres Raten; Duplikate erscheinen als Alternativen.",
             "Die erste Auswahl eines Ergebnisses öffnet einen benachbarten Tab; verbinden Sie ihn über Chrome Split View mit dem Artikel, und spätere Auswahlen verwenden diesen Tab erneut.",
-            "Oder öffnen Sie die Diskussion in der Seitenleiste des Browsers. Um die echte Hacker-News-Seite einzubetten, entfernt Split vorübergehend die Framing-Schutz-Header ausschließlich aus Antworten von Hacker-News-Unterframes und nur, solange eine Seitenleiste geöffnet ist.",
+        "Oder öffnen Sie die Diskussion in der Seitenleiste des Browsers. Um die echte Hacker-News-Seite einzubetten, entfernt Split vorübergehend die Framing-Schutz-Header ausschließlich aus Antworten von Hacker-News-Unterframes und nur, solange eine Seitenleiste geöffnet ist.",
+        "Optional: Solange die Seitenleiste bereits geöffnet ist, aktiven Tabs automatisch folgen; standardmäßig deaktiviert, alternativ einmal „Diesen Tab prüfen“ verwenden. Die Funktion öffnet oder verschiebt niemals Tabs und kann bis zu drei zuletzt verwendete Diskussionen aktiv halten, damit Sie schneller zurückkehren und die Scrollposition nach Möglichkeit erhalten bleibt.",
             "„In Split öffnen“ im Rechtsklickmenü von Links: Der Link öffnet sich im aktuellen Tab und seine Hacker-News-Diskussion in der Seitenleiste.",
             "Optional: Ein Klick auf eine Story auf Hacker News öffnet den Artikel wie gewohnt und seine Diskussion daneben in der Seitenleiste. Standardmäßig aus.",
             "Optionales Badge in der Symbolleiste mit der Kommentarzahl, standardmäßig aus.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Standardmäßig privat",
-            "sub": "Automatische Verfügbarkeits-Badges bleiben aus, bis Sie sie aktivieren. Die Suche im Pop-up liest die Seiten-URL und den kanonischen Link — niemals Artikeltext oder -inhalt."
+      "sub": "Symbolleistenprüfungen, Seitenleistenfolge und Story-Klicks sind standardmäßig aus. „Diesen Tab prüfen“ erlaubt eine Suche in der Seitenleiste; Artikeltext und andere Seiteninhalte werden nie gelesen."
         },
         {
             "heading": "Passt zu hellen und dunklen Designs",

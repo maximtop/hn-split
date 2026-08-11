@@ -7,7 +7,8 @@
             "Vyberte výsledok vo vyskakovacom okne a otvorte jeho komentáre na Hacker News.",
             "Presná zhoda URL — žiadne približné odhady; duplicity sa zobrazujú ako alternatívy.",
             "Prvý výber výsledku otvorí susednú kartu; spárujte ju s článkom cez Chrome Split View a neskoršie výbery toto podokno znova použijú.",
-            "Alebo otvorte diskusiu v bočnom paneli prehliadača. Aby mohol vložiť skutočnú stránku Hacker News, Split dočasne odstraňuje hlavičky zakazujúce vkladanie iba z odpovedí podrámcov Hacker News a len kým je panel otvorený.",
+        "Alebo otvorte diskusiu v bočnom paneli prehliadača. Aby mohol vložiť skutočnú stránku Hacker News, Split dočasne odstraňuje hlavičky zakazujúce vkladanie iba z odpovedí podrámcov Hacker News a len kým je panel otvorený.",
+        "Voliteľné: kým je bočný panel už otvorený, automaticky sledujte aktívne karty; táto funkcia je predvolene vypnutá alebo jednorazovo použite „Skontrolovať túto kartu“. Nikdy neotvára ani nepresúva karty a môže ponechať aktívne až tri nedávne diskusie na rýchlejší návrat a zachovanie polohy posúvania, ak to bude možné.",
             "„Otvoriť v Splite“ v ponuke pravého tlačidla na odkaze: odkaz sa otvorí na aktuálnej karte a jeho diskusia na Hacker News v bočnom paneli.",
             "Voliteľné: kliknutie na príbeh na Hacker News otvorí článok ako zvyčajne a jeho diskusiu v bočnom paneli vedľa neho. Predvolene vypnuté.",
             "Voliteľný odznak na paneli nástrojov s počtom komentárov, predvolene vypnutý.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Predvolene súkromné",
-            "sub": "Automatické odznaky dostupnosti zostávajú vypnuté, kým ich nezapnete. Vyhľadávanie z vyskakovacieho okna číta adresu URL a kanonický odkaz stránky — nikdy text ani obsah článku."
+      "sub": "Kontroly z panela nástrojov, sledovanie v bočnom paneli a kliknutia na príbehy sú predvolene vypnuté. „Skontrolovať túto kartu“ povolí jedno vyhľadanie v paneli; text článku ani iný obsah sa nečíta."
         },
         {
             "heading": "Pohodlne vo svetlom aj tmavom režime",

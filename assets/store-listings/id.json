@@ -7,7 +7,8 @@
             "Pilih hasil di popup untuk membuka komentar Hacker News-nya.",
             "Pencocokan URL yang tepat — tanpa tebakan samar; duplikat ditampilkan sebagai alternatif.",
             "Pilihan hasil pertama Anda membuka tab yang bersebelahan; pasangkan dengan artikel menggunakan Chrome Split View dan pilihan berikutnya akan menggunakan kembali panel itu.",
-            "Atau buka diskusi di panel samping browser. Untuk menyematkan halaman Hacker News yang sebenarnya, Split untuk sementara menghapus header yang memblokir penayangan dalam frame hanya dari respons subframe Hacker News selama panel terbuka.",
+        "Atau buka diskusi di panel samping browser. Untuk menyematkan halaman Hacker News yang sebenarnya, Split untuk sementara menghapus header yang memblokir penayangan dalam frame hanya dari respons subframe Hacker News selama panel terbuka.",
+        "Opsional: saat panel samping sudah terbuka, ikuti tab aktif secara otomatis; fitur ini nonaktif secara default, atau gunakan “Periksa tab ini” satu kali. Fitur ini tidak pernah membuka atau mengatur ulang tab, dan dapat mempertahankan hingga tiga diskusi terbaru agar tetap aktif supaya Anda dapat kembali lebih cepat serta mempertahankan posisi gulir sebisa mungkin.",
             "“Buka di Split” di menu klik kanan tautan: tautan terbuka di tab saat ini dan diskusi Hacker News-nya terbuka di panel samping.",
             "Opsional: mengklik cerita di Hacker News membuka artikel seperti biasa dan diskusinya di panel samping di sebelahnya. Nonaktif secara default.",
             "Lencana bilah alat opsional dengan jumlah komentar, nonaktif secara default.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privat secara default",
-            "sub": "Lencana ketersediaan otomatis tetap nonaktif sampai Anda mengaktifkannya. Pencarian popup membaca URL halaman dan tautan kanonis — tidak pernah teks atau konten artikel."
+      "sub": "Pemeriksaan bilah alat, mengikuti tab di panel, dan klik cerita nonaktif secara default. “Periksa tab ini” mengizinkan satu pencarian di panel; teks artikel dan konten lain tidak pernah dibaca."
         },
         {
             "heading": "Nyaman di tema terang dan gelap",

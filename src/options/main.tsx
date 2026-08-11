@@ -2,9 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { OptionsApp } from './options-app';
-import { OptionsStore } from './options-store';
+import { createOptionsStores } from './options-stores';
 import { applyDocumentLocale, t } from '../shared/i18n';
-import { BACKGROUND_REQUEST_TYPE } from '../shared/messages';
 import '@mantine/core/styles.css';
 import './styles.css';
 
@@ -16,48 +15,24 @@ if (root === null) {
 applyDocumentLocale();
 document.title = t('options_document_title');
 
-const availabilityStore = new OptionsStore({
-    async readCurrent() {
-        const response: unknown = await chrome.runtime.sendMessage({
-            type: BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING,
-        });
-        return response;
-    },
-    async requestUpdate(enabled) {
-        const response: unknown = await chrome.runtime.sendMessage({
-            type: BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING,
-            enabled,
-        });
-        return response;
-    },
-}, {
-    enabledKey: 'automatic_enabled',
-    disabledKey: 'automatic_disabled',
+const {
+    articleClick,
+    availability,
+    sidePanelFollow,
+} = createOptionsStores(async (request) => {
+    const response: unknown = await chrome.runtime.sendMessage(request);
+    return response;
 });
-void availabilityStore.load();
-
-const articleClickStore = new OptionsStore({
-    async readCurrent() {
-        const response: unknown = await chrome.runtime.sendMessage({
-            type: BACKGROUND_REQUEST_TYPE.GET_ARTICLE_CLICK_SETTING,
-        });
-        return response;
-    },
-    async requestUpdate(enabled) {
-        const response: unknown = await chrome.runtime.sendMessage({
-            type: BACKGROUND_REQUEST_TYPE.SET_ARTICLE_CLICK_SETTING,
-            enabled,
-        });
-        return response;
-    },
-}, {
-    enabledKey: 'article_click_open_enabled',
-    disabledKey: 'article_click_open_disabled',
-});
-void articleClickStore.load();
+void availability.load();
+void articleClick.load();
+void sidePanelFollow.load();
 
 createRoot(root).render(
     <StrictMode>
-        <OptionsApp availability={availabilityStore} articleClick={articleClickStore} />
+        <OptionsApp
+            availability={availability}
+            articleClick={articleClick}
+            sidePanelFollow={sidePanelFollow}
+        />
     </StrictMode>,
 );

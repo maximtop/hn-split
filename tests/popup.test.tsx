@@ -2,6 +2,7 @@ import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { App } from '../src/popup/popup-app';
 import type { BackgroundResponse } from '../src/shared/messages';
 
@@ -14,7 +15,7 @@ const foundResponse: BackgroundResponse = {
         primary: {
             id: '123',
             title: 'Primary discussion',
-            articleUrl: 'https://example.com/story',
+            articleUrl: 'https://canonical.example.com/story',
             comments: 10,
             points: 20,
             createdAt: 1,
@@ -22,7 +23,7 @@ const foundResponse: BackgroundResponse = {
         alternatives: [{
             id: '456',
             title: 'Alternative discussion',
-            articleUrl: 'https://example.com/story',
+            articleUrl: 'https://canonical.example.com/story',
             comments: 5,
             points: 8,
             createdAt: 2,
@@ -39,7 +40,11 @@ function installChrome(sendMessage: ReturnType<typeof vi.fn>): ReturnType<typeof
                 result: { pageUrl: 'https://example.com/story', canonicalHref: null },
             }]),
         },
-        tabs: { query: vi.fn(async () => [{ id: 40 }]) },
+        tabs: { query: vi.fn(async () => [{ id: 40, windowId: 5 }]) },
+        // Models the async boundary that never resumes after opening the side
+        // panel tears down the popup. The fixed flow must not depend on it.
+        windows: { getCurrent: vi.fn(() => new Promise(() => undefined)) },
+        sidePanel: { open: vi.fn(async () => undefined) },
     });
     return openOptionsPage;
 }
@@ -67,6 +72,44 @@ afterEach(() => {
 });
 
 describe('App discussion opens', () => {
+    it('requests a known discussion before the side panel can close the popup', async () => {
+        const calls: string[] = [];
+        const sendMessage = vi.fn(async (request: { type: string }) => {
+            if (request.type === 'lookup') {
+                return foundResponse;
+            }
+            calls.push('select');
+            return {
+                ok: true,
+                result: { content: { kind: 'discussion', tabId: 40, itemId: '123' } },
+            };
+        });
+        installChrome(sendMessage);
+        vi.mocked(chrome.sidePanel.open as (options: { tabId: number }) => Promise<void>)
+            .mockImplementation(async () => {
+                calls.push('open');
+            });
+        const view = await renderLoadedApp();
+        const sidePanelButton = [...view.container.querySelectorAll<HTMLButtonElement>('button')]
+            .find(({ textContent }) => textContent === enMessages.open_in_side_panel.message);
+
+        await act(async () => {
+            sidePanelButton?.click();
+            await new Promise((resolve) => setTimeout(resolve, 0));
+        });
+
+        expect(calls).toEqual(['select', 'open']);
+        expect(sendMessage).toHaveBeenLastCalledWith({
+            type: 'select_side_panel_discussion',
+            tabId: 40,
+            itemId: '123',
+            sourceUrl: 'https://example.com/story',
+            windowId: 5,
+        });
+        expect(chrome.windows.getCurrent).not.toHaveBeenCalled();
+        await view.unmount();
+    });
+
     it('shows an actionable error and re-enables buttons when messaging rejects', async () => {
         const sendMessage = vi.fn()
             .mockResolvedValueOnce(foundResponse)
