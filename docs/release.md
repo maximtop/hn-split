@@ -71,6 +71,7 @@ Norwegian `no` alias (41 directories representing 40 languages).
    ```
 
 3. The `Release` workflow then, in order: verifies the tag is annotated and signed by a key registered on the repository owner's GitHub account (`scripts/verify-signed-tag.sh`), requires the tag to match `package.json`, extracts the changelog section, runs `pnpm check`, packages everything, repeats the packaging from a second clean checkout and requires identical bytes, uploads the artifacts, attests provenance (public repositories only — GitHub does not sign attestations for private repositories on the free plan; the unsigned `provenance.json` is always produced), and publishes the GitHub release with the artifacts and notes.
+4. When Chrome auto-deployment is enabled, the release workflow calls `Deploy Chrome Web Store`. It downloads the just-published Chrome ZIP and checksums, verifies the exact checksum and manifest version, uploads that version, and submits it for review. Chrome publishes it automatically after approval; review itself remains asynchronous.
 
 ### One-time signing setup
 
@@ -90,14 +91,45 @@ Run the workflow manually (**Actions → Release → Run workflow**, or `gh work
 
 Local packaging (`pnpm package`) is the same build; it warns when tracked files have uncommitted changes, and the workflows pass `--require-clean` to turn that into an error.
 
-## Store submission
+## Chrome Web Store deployment
 
-Store submission remains a manual, free step; upload the artifacts produced by the release:
+Chrome deployment is automated by `.github/workflows/deploy-chrome-store.yml`. A signed full release invokes it directly after GitHub Release creation, avoiding the GitHub limitation that events created with the workflow token do not start another workflow. The deploy workflow can also be run manually with an already-published `vX.Y.Z` tag, which is the retry path for an upload that was still processing or a release created before the automation existed.
 
-- **Chrome Web Store:** version 0.1.0 is public at the [canonical store URL](https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm). For future versions, upload `hn-split-chrome-<version>.zip`; listing copy lives in `docs/store-listing.md`. After upload, confirm that the listing-language selector contains exactly 40 languages, including one Norwegian entry, before entering localized copy.
+The public listing is [Split for Hacker News](https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm). To deploy an existing release from the command line:
+
+```bash
+gh workflow run deploy-chrome-store.yml -f tag=v0.1.1
+```
+
+Before enabling automatic deployment, configure these GitHub Actions secrets:
+
+- `CHROME_CLIENT_ID`
+- `CHROME_CLIENT_SECRET`
+- `CHROME_REFRESH_TOKEN`
+- `CHROME_PUBLISHER_ID`
+
+Configure these repository variables:
+
+- `CHROME_APP_ID` — the public Chrome Web Store item ID.
+- `CHROME_AUTO_DEPLOY_ENABLED=true` — lets signed tag releases invoke the deploy workflow. Leave it unset while credentials are being prepared; manual deploy runs remain available for validation.
+
+The refresh token must authorize a Google account with access to the publisher. Its Google Cloud project must have the Chrome Web Store API enabled, and the OAuth grant must include the `https://www.googleapis.com/auth/chromewebstore` scope. Keep the consent screen in **In production**: refresh tokens issued while it is in **Testing** expire after seven days. Store values only in GitHub Actions secrets or an ignored local `.env`; never commit them or print them in workflow output.
+
+The deploy workflow installs the pinned `go-webext` version, uses Chrome Web Store API v2, and fails closed unless upload output confirms both `Upload State: SUCCEEDED` and the exact release version. It calls publish without staged publishing, so approval makes the version public without a later dashboard click. Do not use the expedited-review option for ordinary feature releases.
+
+Failure recovery:
+
+- `invalid_grant`, `deleted_client`, or an authentication error means the OAuth client or refresh token must be renewed before retrying; no package is submitted.
+- An upload that has not reached `SUCCEEDED` is not submitted. Wait for Chrome processing, then manually rerun `Deploy Chrome Web Store` with the same release tag.
+- A review rejection requires addressing the store feedback and normally shipping a new version; a green workflow only proves successful submission, not approval.
+
+## Other store submissions
+
+Edge and Firefox submission remain manual, free steps using the artifacts produced by the release:
+
 - **Edge Add-ons:** upload `hn-split-edge-<version>.zip` in Partner Center.
 - **addons.mozilla.org:** upload `hn-split-firefox-<version>.zip`, attach `hn-split-source-<version>.zip` as the source archive, and point reviewers at `docs/development.md` (install and build need only `pnpm install --frozen-lockfile` and `pnpm package`).
 
 ## Secrets policy
 
-Workflows reference secrets by name only, and no secret values are ever committed — today the only credential used is the workflow's built-in `github.token`. If store uploads are automated later, the workflow will reference names such as `CHROME_WEBSTORE_CLIENT_ID`, `CHROME_WEBSTORE_REFRESH_TOKEN`, `EDGE_API_KEY`, `AMO_JWT_ISSUER`, and `AMO_JWT_SECRET` from GitHub Actions secrets; documentation uses `[REDACTED]` placeholders instead of values.
+Workflows reference secrets by name only, and no secret values are ever committed. Chrome deployment uses the four `CHROME_*` GitHub Actions secrets listed above; the public item ID and enable flag are repository variables. Any later Edge or Firefox automation must follow the same pattern, with credentials stored in Actions secrets and documentation containing names or `[REDACTED]` placeholders only.
