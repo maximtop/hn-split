@@ -2,6 +2,7 @@ import * as v from 'valibot';
 
 import { hnLookupResultSchema } from '../domain/hn';
 import type { HnLookupResult } from '../domain/hn';
+import { isWebUrl } from '../domain/url';
 import { ARTICLE_CLICK_MESSAGE_TYPE } from './content-scripts';
 import { sidePanelContentSchema } from './side-panel-content';
 
@@ -17,6 +18,10 @@ export const BACKGROUND_REQUEST_TYPE = {
     GET_ARTICLE_CLICK_SETTING: 'get_article_click_setting',
     SELECT_SIDE_PANEL_DISCUSSION: 'select_side_panel_discussion',
     GET_SIDE_PANEL_DISCUSSION: 'get_side_panel_discussion',
+    CHECK_ACTIVE_SIDE_PANEL_TAB: 'check_active_side_panel_tab',
+    ENABLE_SIDE_PANEL_FOLLOW: 'enable_side_panel_follow',
+    GET_SIDE_PANEL_FOLLOW_SETTING: 'get_side_panel_follow_setting',
+    SET_SIDE_PANEL_FOLLOW_SETTING: 'set_side_panel_follow_setting',
 } as const;
 
 /**
@@ -51,6 +56,26 @@ export const SIDE_PANEL_RECONNECT_DELAY_MS = 250;
 export const SIDE_PANEL_READY = 'side_panel_ready';
 
 /**
+ * Binds one side-panel port to its owning browser window.
+ */
+export const SIDE_PANEL_CONTEXT = 'side_panel_context';
+
+/**
+ * Invalidates framing readiness and every retained discussion context.
+ */
+export const SIDE_PANEL_RESET = 'side_panel_reset';
+
+/**
+ * Discards retained discussion contexts associated with one tab.
+ */
+export const SIDE_PANEL_DISCARD_TAB = 'side_panel_discard_tab';
+
+/**
+ * Hides stale panel UI as soon as a newer authoritative target is reserved.
+ */
+export const SIDE_PANEL_TARGET = 'side_panel_target';
+
+/**
  * Names every supported discussion-tab placement result.
  */
 export const DISCUSSION_OPEN_MODE = {
@@ -79,6 +104,7 @@ export type BackgroundErrorCode = typeof BACKGROUND_ERROR_CODE[keyof typeof BACK
 const backgroundErrorCodeSchema = v.picklist(Object.values(BACKGROUND_ERROR_CODE));
 
 const nonNegativeSafeIntegerSchema = v.pipe(v.number(), v.safeInteger(), v.minValue(0));
+const positiveSafeIntegerSchema = v.pipe(v.number(), v.safeInteger(), v.minValue(1));
 const positiveItemIdSchema = v.pipe(
     v.string(),
     v.regex(/^\d+$/),
@@ -130,14 +156,35 @@ const articleClickSettingGetRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.GET_ARTICLE_CLICK_SETTING),
 });
 
-const sidePanelSelectRequestSchema = v.object({
+const sidePanelSelectRequestSchema = v.strictObject({
     type: v.literal(BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION),
+    tabId: nonNegativeSafeIntegerSchema,
     itemId: positiveItemIdSchema,
+    sourceUrl: v.string(),
     windowId: nonNegativeSafeIntegerSchema,
 });
 
 const sidePanelGetRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_DISCUSSION),
+    windowId: nonNegativeSafeIntegerSchema,
+});
+
+const followSettingSetRequestSchema = v.strictObject({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.SET_SIDE_PANEL_FOLLOW_SETTING),
+    enabled: v.boolean(),
+});
+
+const followSettingGetRequestSchema = v.strictObject({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_FOLLOW_SETTING),
+});
+
+const checkActiveSidePanelTabRequestSchema = v.strictObject({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB),
+    windowId: nonNegativeSafeIntegerSchema,
+});
+
+const enableSidePanelFollowRequestSchema = v.strictObject({
+    type: v.literal(BACKGROUND_REQUEST_TYPE.ENABLE_SIDE_PANEL_FOLLOW),
     windowId: nonNegativeSafeIntegerSchema,
 });
 
@@ -150,6 +197,10 @@ const backgroundRequestSchema = v.variant('type', [
     openDiscussionRequestSchema,
     sidePanelSelectRequestSchema,
     sidePanelGetRequestSchema,
+    followSettingSetRequestSchema,
+    followSettingGetRequestSchema,
+    checkActiveSidePanelTabRequestSchema,
+    enableSidePanelFollowRequestSchema,
 ]);
 
 /**
@@ -192,6 +243,26 @@ export type SidePanelSelectRequest = v.InferOutput<typeof sidePanelSelectRequest
  * Requests the discussion currently selected for one window's side panel.
  */
 export type SidePanelGetRequest = v.InferOutput<typeof sidePanelGetRequestSchema>;
+
+/**
+ * Requests one explicit check of the tab active in a panel window.
+ */
+export type CheckActiveSidePanelTabRequest = v.InferOutput<typeof checkActiveSidePanelTabRequestSchema>;
+
+/**
+ * Requests enabling follow and synchronizing the trusted active tab atomically.
+ */
+export type EnableSidePanelFollowRequest = v.InferOutput<typeof enableSidePanelFollowRequestSchema>;
+
+/**
+ * Requests the authoritative side-panel-follow preference.
+ */
+export type FollowSettingGetRequest = v.InferOutput<typeof followSettingGetRequestSchema>;
+
+/**
+ * Requests a serialized side-panel-follow preference mutation.
+ */
+export type FollowSettingSetRequest = v.InferOutput<typeof followSettingSetRequestSchema>;
 
 /**
  * Represents every request accepted by the background worker.
@@ -334,9 +405,46 @@ export function isBackgroundRequest(value: unknown): value is BackgroundRequest 
     return v.safeParse(backgroundRequestSchema, value).success;
 }
 
-const articleClickMessageSchema = v.object({
+const sidePanelPortMessageSchema = v.variant('type', [
+    v.strictObject({
+        type: v.literal(SIDE_PANEL_CONTEXT),
+        windowId: nonNegativeSafeIntegerSchema,
+    }),
+    v.strictObject({ type: v.literal(SIDE_PANEL_KEEPALIVE) }),
+    v.strictObject({
+        type: v.literal(SIDE_PANEL_READY),
+        tabId: nonNegativeSafeIntegerSchema,
+        projectionRevision: positiveSafeIntegerSchema,
+    }),
+    v.strictObject({
+        type: v.literal(SIDE_PANEL_TARGET),
+        tabId: nonNegativeSafeIntegerSchema,
+        minimumProjectionRevision: positiveSafeIntegerSchema,
+    }),
+    v.strictObject({ type: v.literal(SIDE_PANEL_RESET) }),
+    v.strictObject({
+        type: v.literal(SIDE_PANEL_DISCARD_TAB),
+        tabId: nonNegativeSafeIntegerSchema,
+    }),
+]);
+
+/**
+ * Represents every validated lifecycle message sent over the side-panel port.
+ */
+export type SidePanelPortMessage = v.InferOutput<typeof sidePanelPortMessageSchema>;
+
+/**
+ * Determines whether an unknown value is a strict side-panel port message.
+ * @param value - The unknown port message to validate.
+ */
+export function isSidePanelPortMessage(value: unknown): value is SidePanelPortMessage {
+    return v.is(sidePanelPortMessageSchema, value);
+}
+
+const articleClickMessageSchema = v.strictObject({
     type: v.literal(ARTICLE_CLICK_MESSAGE_TYPE),
     itemId: positiveItemIdSchema,
+    articleUrl: v.pipe(v.string(), v.check(isWebUrl)),
 });
 
 /**

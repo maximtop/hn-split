@@ -1,23 +1,26 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
-    readAutomaticAvailability,
-    updateAutomaticAvailability,
-} from '../src/options/availability-settings';
-import type { AvailabilitySettingsDependencies } from '../src/options/availability-settings';
+    readBooleanSetting,
+    updateBooleanSetting,
+} from '../src/options/setting-client';
+import type { BooleanSettingDependencies } from '../src/options/setting-client';
 
-function dependencies(): AvailabilitySettingsDependencies {
+/**
+ * Creates deterministic background operations for one boolean setting.
+ */
+function dependencies(): BooleanSettingDependencies {
     return {
         readCurrent: vi.fn(async () => ({ ok: true, result: { enabled: false } })),
         requestUpdate: vi.fn(async (enabled: boolean) => ({ ok: true, result: { enabled } })),
     };
 }
 
-describe('updateAutomaticAvailability', () => {
+describe('boolean setting client', () => {
     it('reads the authoritative setting through the background client', async () => {
         const deps = dependencies();
 
-        await expect(readAutomaticAvailability(deps)).resolves.toBe(false);
+        await expect(readBooleanSetting(deps)).resolves.toBe(false);
 
         expect(deps.readCurrent).toHaveBeenCalledOnce();
     });
@@ -25,7 +28,7 @@ describe('updateAutomaticAvailability', () => {
     it('returns the authoritative boolean from the background-owned setting operation', async () => {
         const deps = dependencies();
 
-        await expect(updateAutomaticAvailability(true, deps)).resolves.toBe(true);
+        await expect(updateBooleanSetting(true, deps)).resolves.toBe(true);
 
         expect(deps.requestUpdate).toHaveBeenCalledExactlyOnceWith(true);
     });
@@ -34,7 +37,7 @@ describe('updateAutomaticAvailability', () => {
         const deps = dependencies();
         vi.mocked(deps.requestUpdate).mockRejectedValue(new Error('worker unavailable'));
 
-        await expect(updateAutomaticAvailability(true, deps)).rejects.toThrow('worker unavailable');
+        await expect(updateBooleanSetting(true, deps)).rejects.toThrow('worker unavailable');
 
         expect(deps.requestUpdate).toHaveBeenCalledExactlyOnceWith(true);
     });
@@ -43,7 +46,7 @@ describe('updateAutomaticAvailability', () => {
         const deps = dependencies();
         vi.mocked(deps.requestUpdate).mockResolvedValue({ ok: false, error: 'setting_read_failed' });
 
-        await expect(updateAutomaticAvailability(false, deps))
+        await expect(updateBooleanSetting(false, deps))
             .rejects.toThrow('Unable to load settings.');
     });
 
@@ -58,7 +61,7 @@ describe('updateAutomaticAvailability', () => {
         const deps = dependencies();
         vi.mocked(deps.requestUpdate).mockResolvedValue(response);
 
-        await expect(updateAutomaticAvailability(false, deps))
+        await expect(updateBooleanSetting(false, deps))
             .rejects.toThrow('Unable to update settings.');
 
         expect(deps.requestUpdate).toHaveBeenCalledExactlyOnceWith(false);

@@ -1,3 +1,11 @@
+import type {
+    ExpectedNavigationReservation,
+    ExplicitOperationReservation,
+    ShowDiscussionOptions,
+} from './side-panel-content-manager';
+import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
+import type { FollowWarningSink } from '../shared/logger';
+
 /**
  * Describes the message-sender fields used to validate one article click.
  */
@@ -30,25 +38,83 @@ export interface ArticleClickOpenDependencies {
      */
     readEnabled(): Promise<boolean>;
     /**
+     * Reserves the source tab's exact article navigation synchronously.
+     * @param tabId - The source Hacker News tab.
+     * @param windowId - The source tab's browser window.
+     * @param articleUrl - The exact clicked story target.
+     */
+    reserveExpectedNavigation(
+        tabId: number,
+        windowId: number,
+        articleUrl: string,
+    ): ExpectedNavigationReservation;
+    /**
+     * Reserves explicit projection precedence synchronously.
+     * @param tabId - The source Hacker News tab.
+     * @param windowId - The source tab's browser window.
+     */
+    reserveExplicitOperation(tabId: number, windowId: number): ExplicitOperationReservation;
+    /**
+     * Starts pending projection preparation without awaiting storage.
+     * @param reservation - The exact explicit operation to prepare.
+     * @param windowId - The reservation's browser window.
+     */
+    prepareExplicitOperation(
+        reservation: ExplicitOperationReservation,
+        windowId: number,
+    ): Promise<unknown>;
+    /**
+     * Cancels one exact expected navigation.
+     * @param reservation - The expected navigation to cancel.
+     * @param windowId - The reservation's browser window.
+     */
+    cancelExpectedNavigation(
+        reservation: ExpectedNavigationReservation,
+        windowId: number,
+    ): void;
+    /**
+     * Cancels one exact explicit operation.
+     * @param reservation - The explicit operation to cancel.
+     * @param windowId - The reservation's browser window.
+     * @param resynchronize - Whether its reserved target must be restored.
+     */
+    cancelExplicitOperation(
+        reservation: ExplicitOperationReservation,
+        windowId: number,
+        resynchronize: boolean,
+    ): void;
+    /**
      * Opens the side panel for the clicking tab. Chrome honors the click's
-     * user gesture only while the message listener runs synchronously, so
-     * this must be the first asynchronous operation started, never awaited
-     * behind another one.
+     * user gesture only while the message listener runs synchronously, so the
+     * call must be initiated before any await.
      * @param tabId - The browser tab whose window shows the panel.
      */
     openSidePanel(tabId: number): Promise<void>;
     /**
-     * Records the discussion the clicking window's side panel should display.
-     * @param itemId - The validated Hacker News item identifier.
-     * @param windowId - The browser window the click came from.
+     * Records the clicked discussion with its exact reservation and source URL.
+     * @param options - The explicit discussion selection to commit.
      */
-    setSelection(itemId: string, windowId: number): Promise<void>;
+    setSelection(
+        options: ShowDiscussionOptions & { reservation: ExplicitOperationReservation; windowId: number },
+    ): Promise<void>;
     /**
-     * Reports a non-fatal failure without exposing it to the page.
-     * @param message - The stable diagnostic text.
-     * @param error - The underlying failure.
+     * Reports a privacy-safe, allow-listed failure without page data.
      */
-    warn(message: string, error: unknown): void;
+    warn: FollowWarningSink;
+}
+
+/**
+ * Carries the validated article-click identity from the content script.
+ */
+export interface ArticleClickSelection {
+    /**
+     * Contains the concrete Hacker News item identifier.
+     */
+    itemId: string;
+    /**
+     * Contains the exact external article URL being opened.
+     */
+    articleUrl: string;
 }
 
 /**
@@ -60,13 +126,13 @@ export interface ArticleClickOpenDependencies {
  * still unknown; the registration itself then acts as the gate (the script
  * only exists while the setting is on), and the selection write stays behind
  * the authoritative storage read.
- * @param itemId - The validated Hacker News item identifier that was clicked.
+ * @param selection - The validated Hacker News item and source article URL.
  * @param sender - The runtime message sender to validate.
  * @param expectedOrigin - The only document origin allowed to report clicks.
  * @param dependencies - The setting, panel, and selection operations to use.
  */
 export function respondToArticleClick(
-    itemId: string,
+    selection: ArticleClickSelection,
     sender: ArticleClickSender,
     expectedOrigin: string,
     dependencies: ArticleClickOpenDependencies,
@@ -79,15 +145,41 @@ export function respondToArticleClick(
     if (cached === false) {
         return;
     }
-    void dependencies.openSidePanel(tabId).catch((error: unknown) => {
-        dependencies.warn('opening the side panel for a story click failed.', error);
+    const expected = dependencies.reserveExpectedNavigation(tabId, windowId, selection.articleUrl);
+    const explicit = dependencies.reserveExplicitOperation(tabId, windowId);
+    void dependencies.prepareExplicitOperation(explicit, windowId).catch(() => {
+        dependencies.cancelExpectedNavigation(expected, windowId);
+        dependencies.cancelExplicitOperation(explicit, windowId, true);
+        dependencies.warn(FOLLOW_DIAGNOSTIC_CODE.ACTION_FAILED, { tabId, windowId });
+    });
+    void dependencies.openSidePanel(tabId).catch(() => {
+        dependencies.warn(FOLLOW_DIAGNOSTIC_CODE.OPEN_FAILED, { tabId, windowId });
     });
     void (async () => {
-        const enabled = cached ?? await dependencies.readEnabled();
-        if (enabled) {
-            await dependencies.setSelection(itemId, windowId);
+        let enabled: boolean;
+        try {
+            enabled = cached ?? await dependencies.readEnabled();
+        } catch {
+            dependencies.cancelExpectedNavigation(expected, windowId);
+            dependencies.cancelExplicitOperation(explicit, windowId, true);
+            dependencies.warn(FOLLOW_DIAGNOSTIC_CODE.ACTION_FAILED, { tabId, windowId });
+            return;
         }
-    })().catch((error: unknown) => {
-        dependencies.warn('recording the clicked discussion failed.', error);
-    });
+        if (!enabled) {
+            dependencies.cancelExpectedNavigation(expected, windowId);
+            dependencies.cancelExplicitOperation(explicit, windowId, true);
+            return;
+        }
+        try {
+            await dependencies.setSelection({
+                reservation: explicit,
+                tabId,
+                windowId,
+                itemId: selection.itemId,
+                sourceUrl: selection.articleUrl,
+            });
+        } catch {
+            dependencies.warn(FOLLOW_DIAGNOSTIC_CODE.SELECTION_FAILED, { tabId, windowId });
+        }
+    })();
 }

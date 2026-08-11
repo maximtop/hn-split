@@ -113,8 +113,14 @@ export class SidePanelFraming {
      */
     async reset(): Promise<void> {
         this.holders = 0;
-        this.installed = true;
-        await this.sync();
+        const removeStaleRule = async (): Promise<void> => {
+            await this.rules.updateDynamicRules({
+                removeRuleIds: [SIDE_PANEL_FRAMING_RULE_ID],
+            });
+            this.installed = false;
+        };
+        this.queue = this.queue.then(removeStaleRule, removeStaleRule);
+        await this.queue;
     }
 
     /**

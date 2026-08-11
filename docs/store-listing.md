@@ -79,6 +79,10 @@ bullets re-cut to the shipped feature set of that port.
 > - Or open the discussion in the browser side panel. To embed the real Hacker
 >   News page, Split temporarily removes framing headers from Hacker News
 >   sub-frame responses only while a panel is open.
+> - Optional: while the side panel is already open, follow active tabs
+>   automatically; off by default, or use Check this tab once. It never opens
+>   or rearranges tabs, and may keep up to three recent discussions alive for
+>   faster return and best-effort scroll position.
 > - Open in Split in the link right-click menu: the link opens in the
 >   current tab and its Hacker News discussion opens in the side panel.
 > - Optional: clicking a story on Hacker News opens the article as usual and
@@ -121,7 +125,9 @@ regenerates imagery, and `pnpm assets:generate --locale <code>` renders the
 translated captions.
 
 1. Select a result, open the discussion
-2. Private by default: popup reads URLs, never article text or content
+2. Private by default — Toolbar checks, side-panel following, and story-click
+   handling are off by default. Check this tab permits one side-panel lookup;
+   article text and other page content are never read.
 3. At home in light and dark
 
 ## Support and contact
@@ -152,7 +158,7 @@ answers below are derived from it and must never contradict it.
 ### Single purpose
 
 > Find and open exact Hacker News discussions for pages or links the user
-> explicitly chooses.
+> chooses, including optional checks in an already-open side panel.
 
 ### Permission justifications
 
@@ -161,15 +167,15 @@ The long-form rationale lives in `PRIVACY.md`.
 
 | Permission | Justification |
 | --- | --- |
-| `tabs` | Places and reuses the discussion tab next to the article after an explicit result selection; observes navigations and enumerates tabs only for the opt-in availability badge, and clears badges when that setting is turned off. |
+| `tabs` | Places and reuses the discussion tab next to the article after an explicit result selection; observes navigations and enumerates tabs for the opt-in availability badge; and identifies the active tab for a one-shot side-panel check or the separate opt-in follow setting while a panel is already open. |
 | `activeTab` | Scopes popup-triggered page inspection to the tab the user is viewing when they open the extension action. |
 | `scripting` | Runs one short-lived function in the active page after the popup opens, reading only `location.href` and the canonical `<link>` element; also registers the `news.ycombinator.com` content script while the opt-in article-click setting is on. |
-| `storage` | Persists the two on/off settings in `chrome.storage.local`; keeps time-bounded lookup results and tab associations in `chrome.storage.session`, which the browser discards when the session ends. |
+| `storage` | Persists the three independent on/off settings in `chrome.storage.local`; keeps time-bounded lookup results, revisioned window outcomes, and tab/window associations with optional sanitized article identity in `chrome.storage.session`, which the browser discards when the session ends. Raw article URLs are not stored for panel following. |
 | `contextMenus` | Adds the single Open in Split item to link context menus; the extension learns nothing until the user selects the item. |
-| `sidePanel` | Opens the discussion side panel only after an explicit user action: the popup button, the Open in Split menu item, or an opt-in article click. |
-| `declarativeNetRequestWithHostAccess` | Installs one dynamic rule that removes `X-Frame-Options`, `Content-Security-Policy`, and report-only CSP from Hacker News sub-frame responses so the real discussion can render in the side panel. The rule exists only while a panel is open, never affects top-level navigation or another host, and cannot be scoped more narrowly than all Hacker News sub-frames in the browser profile. The extension does not read, redirect, or block those requests. |
+| `sidePanel` | Opens the discussion side panel only after an explicit user action: the popup button, the Open in Split menu item, or an opt-in article click. Following may change an already-open panel but never opens it. |
+| `declarativeNetRequestWithHostAccess` | Installs one dynamic rule that removes `X-Frame-Options`, `Content-Security-Policy`, and report-only CSP from Hacker News sub-frame responses so the real discussion can render in the side panel. The rule exists from the first live panel connection through the last, never affects top-level navigation or another host, and cannot be scoped more narrowly than all Hacker News sub-frames in the browser profile. The extension does not read, redirect, or block those requests. |
 | Host `https://hn.algolia.com/*` | The discussion lookup endpoint; receives sanitized public article URLs as search queries, with no account, API key, or identifying header. |
-| Host `https://news.ycombinator.com/*` | Lets the side panel embed the real discussion page, supports the header rule above, and hosts the opt-in article-click content script. |
+| Host `https://news.ycombinator.com/*` | Lets the side panel embed the real, cross-origin discussion page, supports the header rule above, and hosts the opt-in article-click content script. The real page makes ordinary Hacker News requests with metadata and cookies the browser sends under its policy; extension code cannot read its comments, DOM, cookies, focus, or scroll. |
 
 ### Remote code
 
@@ -184,10 +190,13 @@ documentation.
 
 - Declare exactly three handled data types. Chrome's disclosure covers local
   handling as well as transmission:
-  - **Web history.** The extension handles the current page or selected link
-    URL. When a lookup is requested, or while the opt-in automatic badge is
-    enabled, eligible sanitized public URLs are sent to the public Hacker News
-    Algolia search API. Lookup results are cached in session storage only.
+  - **Web history.** The extension handles the current page, active tab, or
+    selected link URL. Eligible sanitized public URLs are sent to the public
+    Hacker News Algolia search API only for a popup or link lookup, **Check this
+    tab**, the opt-in automatic badge, or the separate opt-in side-panel follow
+    setting while a panel is already open. Found lookups may be cached for one
+    hour and not-found lookups for ten minutes in session storage; restricted
+    pages and failures are not added to that URL cache.
   - **Website content.** When the popup is opened, the extension reads only the
     page URL and the URL from its canonical `<link>` element, never article
     text or other content. The canonical URL can be sent to Algolia as a lookup
@@ -251,7 +260,9 @@ answers above carry the explanation.
 > backend of its own. All extension network traffic is GET requests to the
 > public Hacker News Algolia search API (hn.algolia.com); the only other
 > remote content is the real news.ycombinator.com page shown in a tab or
-> embedded in the side panel.
+> embedded in the side panel. That cross-origin page makes ordinary Hacker News
+> requests with metadata and cookies controlled by the browser and Hacker News;
+> the extension cannot read its comments, DOM, cookies, focus, or scroll.
 >
 > Suggested test:
 >
@@ -267,14 +278,22 @@ answers above carry the explanation.
 >    browser side panel. The framing-header exception is disclosed on the
 >    options page and in PRIVACY.md; it applies to Hacker News sub-frames only
 >    while the panel is open.
-> 5. Right-click any http(s) link and choose "Open in Split": the link opens
+> 5. Keep "Follow active tabs in the side panel" off and switch to an unchecked
+>    article tab. The panel hides the prior discussion and offers "Check this
+>    tab" and "Follow tabs automatically". The first performs one check without
+>    changing either automatic preference; the second opts in and checks the
+>    current tab in one action. Following never opens or rearranges tabs. Up to
+>    three recent real Hacker News documents may remain alive for faster return;
+>    their browser-managed scroll position is best effort, and extension code
+>    cannot read or restore it.
+> 6. Right-click any http(s) link and choose "Open in Split": the link opens
 >    in the tab where it was clicked. If an exact Hacker News discussion
 >    exists, it loads in the side panel; otherwise the panel reports that no
 >    discussion was found.
-> 6. Options → "Automatic toolbar badge" (off by default): enable it and an
+> 7. Options → "Automatic toolbar badge" (off by default): enable it and an
 >    orange comment-count badge appears as tabs navigate to articles with
 >    discussions; disabling it clears badges and the session lookup cache.
-> 7. Options → "Discussion beside clicked articles" (off by default): enable
+> 8. Options → "Discussion beside clicked articles" (off by default): enable
 >    it, then click a story link on news.ycombinator.com — the article opens
 >    in the same tab and its discussion opens in the side panel. This flow
 >    reads the story id already present in the page and makes no lookup
@@ -284,8 +303,8 @@ answers above carry the explanation.
 > `X-Frame-Options`, `Content-Security-Policy`, and
 > `Content-Security-Policy-Report-Only` from news.ycombinator.com sub-frame
 > responses so the panel can embed the real site. The rule is
-> installed when the panel connects and removed when the panel closes; no
-> other site is affected, and top-level Hacker News navigation keeps its
+> installed when the first panel connects and removed after the last panel
+> disconnects; no other site is affected, and top-level Hacker News navigation keeps its
 > headers. Details: PRIVACY.md and docs/development.md in the repository.
 
 ## Source assets
@@ -340,9 +359,11 @@ text for every surface that supports it (README, website, release posts).
   Open discussion button with 128 comments and 342 points, plus an
   alternative thread, next to the caption 'Select a result, open the
   discussion'."
-- **Screenshot 2:** "Options page with the automatic toolbar badge switch off
-  by default, under the caption 'Private by default: popup reads URLs, never
-  article text or content'."
+- **Screenshot 2:** "Options page with separate automatic toolbar badge,
+  side-panel follow, and Hacker News story-click switches off by default, under
+  the caption 'Private by default' and the explanation that Check this tab
+  permits one side-panel lookup while article text and other page content are
+  never read."
 - **Screenshot 3:** "The same popup in dark mode under the caption 'At home in
   light and dark'."
 
@@ -450,7 +471,7 @@ inventory, and per-store locale mappings live in
 [`docs/locales.md`](locales.md).
 
 - **Translations** live in `assets/store-listings/<code>.json`, one file per
-  registry locale: the structured description (intro, the eight bullets,
+  registry locale: the structured description (intro, the nine bullets,
   disclaimer), release notes per version, the screenshot caption pairs, Edge
   search terms, and App Store keywords. The short summary stays in the
   message catalogs (`extension_description`), which the stores read from the

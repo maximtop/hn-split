@@ -7,7 +7,8 @@
             "Seleccioneu un resultat a la finestra emergent per obrir-ne els comentaris a Hacker News.",
             "Coincidència exacta d'URL — sense conjectures aproximades; els duplicats es mostren com a alternatives.",
             "La primera selecció d'un resultat obre una pestanya adjacent; emparelleu-la amb l'article mitjançant Chrome Split View i les seleccions posteriors reutilitzaran aquesta pestanya.",
-            "O obriu la discussió al plafó lateral del navegador. Per incrustar la pàgina real de Hacker News, Split elimina temporalment, només de les respostes dels submarcs de Hacker News, les capçaleres que impedeixen l'emmarcament, i ho fa únicament mentre hi ha un plafó obert.",
+        "O obriu la discussió al plafó lateral del navegador. Per incrustar la pàgina real de Hacker News, Split elimina temporalment, només de les respostes dels submarcs de Hacker News, les capçaleres que impedeixen l'emmarcament, i ho fa únicament mentre hi ha un plafó obert.",
+        "Opcional: mentre el plafó lateral ja sigui obert, seguiu automàticament les pestanyes actives; està desactivat per defecte, o bé feu servir «Comprova aquesta pestanya» una sola vegada. Mai no obre ni reordena pestanyes i pot mantenir actives fins a tres discussions recents per tornar-hi més ràpidament i conservar, quan sigui possible, la posició de desplaçament.",
             "«Obre a Split» al menú del botó dret dels enllaços: l'enllaç s'obre a la pestanya actual i la seva discussió de Hacker News s'obre al plafó lateral.",
             "Opcional: en fer clic a una història a Hacker News, l'article s'obre com sempre i la seva discussió al plafó lateral del costat. Desactivat per defecte.",
             "Insígnia opcional a la barra d'eines amb el nombre de comentaris, desactivada per defecte.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privat per defecte",
-            "sub": "Les insígnies automàtiques resten desactivades fins que les activeu. La cerca des de la finestra emergent llegeix l'URL i l'enllaç canònic de la pàgina — mai el text ni el contingut de l'article."
+      "sub": "Controls de barra, seguiment al plafó i clics a històries: desactivats per defecte. «Comprova aquesta pestanya» permet una consulta al plafó; mai es llegeixen text de l'article ni altres continguts."
         },
         {
             "heading": "Còmode en clar i en fosc",

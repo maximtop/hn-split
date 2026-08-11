@@ -7,7 +7,8 @@
             "Pilih hasil dalam pop timbul untuk membuka komen Hacker News yang berkaitan.",
             "Padanan URL yang tepat — tiada tekaan kasar; pendua dipaparkan sebagai alternatif.",
             "Pilihan hasil pertama anda membuka tab bersebelahan; padankan dengan artikel menggunakan Chrome Split View dan pilihan seterusnya akan menggunakan semula anak tetingkap itu.",
-            "Atau buka perbincangan dalam panel sisi pelayar. Untuk membenamkan halaman Hacker News yang sebenar, Split mengalih keluar pengepala yang menyekat pembingkaian buat sementara waktu daripada respons subbingkai Hacker News sahaja semasa panel dibuka.",
+        "Atau buka perbincangan dalam panel sisi pelayar. Untuk membenamkan halaman Hacker News yang sebenar, Split mengalih keluar pengepala yang menyekat pembingkaian buat sementara waktu daripada respons subbingkai Hacker News sahaja semasa panel dibuka.",
+        "Pilihan: semasa panel sisi sudah dibuka, ikuti tab aktif secara automatik; ciri ini dimatikan secara lalai, atau gunakan “Semak tab ini” sekali. Ciri ini tidak pernah membuka atau menyusun semula tab dan boleh mengekalkan sehingga tiga perbincangan terkini agar aktif untuk kembali dengan lebih pantas serta mengekalkan kedudukan tatal sebaik mungkin.",
             "“Buka dalam Split” dalam menu klik kanan pautan: pautan dibuka dalam tab semasa dan perbincangan Hacker News-nya dibuka dalam panel sisi.",
             "Pilihan: mengklik cerita di Hacker News membuka artikel seperti biasa dan perbincangannya dalam panel sisi di sebelahnya. Dimatikan secara lalai.",
             "Lencana bar alat pilihan dengan bilangan komen, dimatikan secara lalai.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Peribadi secara lalai",
-            "sub": "Lencana ketersediaan automatik kekal dimatikan sehingga anda menghidupkannya. Carian pop timbul membaca URL halaman dan pautan kanonik — tidak pernah teks atau kandungan artikel."
+      "sub": "Semakan bar alat, penjejakan panel sisi dan klik cerita dimatikan secara lalai. “Semak tab ini” membenarkan satu carian dalam panel; teks artikel dan kandungan halaman lain tidak pernah dibaca."
         },
         {
             "heading": "Selesa dalam tema cerah dan gelap",

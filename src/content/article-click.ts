@@ -61,6 +61,20 @@ export interface ArticleClickEventLike {
 }
 
 /**
+ * Identifies one qualifying story and the article URL the browser will open.
+ */
+export interface DetectedArticleClick {
+    /**
+     * Contains the Hacker News item identifier from the story row.
+     */
+    itemId: string;
+    /**
+     * Contains the exact resolved external article URL from the story anchor.
+     */
+    articleUrl: string;
+}
+
+/**
  * Determines whether one decimal string is a plausible Hacker News item
  * identifier. The wire schema in `messages.ts` stays authoritative; this
  * local check only avoids sending obviously invalid messages.
@@ -87,7 +101,10 @@ function isPlausibleItemId(id: string): boolean {
  * @param pageOrigin - The origin of the observing document, passed in so the
  * check stays a pure function of its inputs under any test base URL.
  */
-export function detectArticleClick(event: ArticleClickEventLike, pageOrigin: string): string | null {
+export function detectArticleClick(
+    event: ArticleClickEventLike,
+    pageOrigin: string,
+): DetectedArticleClick | null {
     if (!event.isTrusted || event.button !== 0 || event.defaultPrevented) {
         return null;
     }
@@ -124,5 +141,5 @@ export function detectArticleClick(event: ArticleClickEventLike, pageOrigin: str
     if (url.origin === pageOrigin) {
         return null;
     }
-    return row.id;
+    return { itemId: row.id, articleUrl: url.href };
 }

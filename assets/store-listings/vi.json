@@ -7,7 +7,8 @@
             "Chọn một kết quả trong cửa sổ bật lên để mở các bình luận Hacker News tương ứng.",
             "Khớp URL chính xác — không đoán mò; các bản trùng lặp được liệt kê làm lựa chọn thay thế.",
             "Lần đầu bạn chọn kết quả sẽ mở một thẻ liền kề; ghép thẻ đó với bài viết bằng Chrome Split View và các lựa chọn sau sẽ dùng lại ngăn đó.",
-            "Hoặc mở cuộc thảo luận trong bảng bên của trình duyệt. Để nhúng trang Hacker News thật, Split tạm thời xóa các header chặn hiển thị trong khung chỉ khỏi phản hồi của khung con Hacker News trong khi bảng đang mở.",
+        "Hoặc mở cuộc thảo luận trong bảng bên của trình duyệt. Để nhúng trang Hacker News thật, Split tạm thời xóa các header chặn hiển thị trong khung chỉ khỏi phản hồi của khung con Hacker News trong khi bảng đang mở.",
+        "Tùy chọn: khi bảng bên đã mở, tự động theo dõi các thẻ đang hoạt động; tính năng này tắt theo mặc định, hoặc dùng “Kiểm tra thẻ này” một lần. Tính năng không bao giờ mở hay sắp xếp lại thẻ và có thể duy trì tối đa ba cuộc thảo luận gần đây để quay lại nhanh hơn và cố gắng giữ vị trí cuộn.",
             "“Mở trong Split” trong menu chuột phải của liên kết: liên kết mở trong thẻ hiện tại và cuộc thảo luận Hacker News của nó mở trong bảng bên.",
             "Tùy chọn: nhấp vào một tin trên Hacker News sẽ mở bài viết như bình thường và cuộc thảo luận của nó trong bảng bên cạnh. Tắt theo mặc định.",
             "Huy hiệu tùy chọn trên thanh công cụ kèm số bình luận, tắt theo mặc định.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Riêng tư theo mặc định",
-            "sub": "Huy hiệu khả dụng tự động luôn tắt cho đến khi bạn bật. Tra cứu từ cửa sổ bật lên chỉ đọc URL trang và liên kết canonical — không bao giờ đọc văn bản hay nội dung bài viết."
+      "sub": "Kiểm tra thanh công cụ, theo dõi trong bảng bên và lượt nhấp vào tin tắt mặc định. “Kiểm tra thẻ này” cho phép một lượt tra cứu trong bảng; văn bản bài viết và nội dung khác không bao giờ được đọc."
         },
         {
             "heading": "Thoải mái ở giao diện sáng và tối",

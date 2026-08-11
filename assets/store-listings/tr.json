@@ -7,7 +7,8 @@
             "Hacker News yorumlarını açmak için açılır pencerede bir sonuç seçin.",
             "Tam URL eşleşmesi — yaklaşık tahmin yok; kopyalar alternatif olarak listelenir.",
             "İlk sonuç seçiminiz bitişik bir sekme açar; Chrome Split View ile makaleyle eşleştirin, sonraki seçimler o bölmeyi yeniden kullanır.",
-            "Ya da tartışmayı tarayıcının yan panelinde açın. Split, gerçek Hacker News sayfasını gömmek için çerçevelemeyi engelleyen üstbilgileri geçici olarak yalnızca Hacker News alt çerçeve yanıtlarından ve yalnızca panel açıkken kaldırır.",
+        "Ya da tartışmayı tarayıcının yan panelinde açın. Split, gerçek Hacker News sayfasını gömmek için çerçevelemeyi engelleyen üstbilgileri geçici olarak yalnızca Hacker News alt çerçeve yanıtlarından ve yalnızca panel açıkken kaldırır.",
+        "İsteğe bağlı: yan panel zaten açıkken etkin sekmeleri otomatik olarak takip edin; özellik varsayılan olarak kapalıdır veya “Bu sekmeyi kontrol et” seçeneğini bir kez kullanın. Sekmeleri asla açmaz veya yeniden düzenlemez; daha hızlı dönmek ve kaydırma konumunu mümkün olduğunca korumak için en fazla üç güncel tartışmayı etkin tutabilir.",
             "Bağlantıların sağ tıklama menüsünde “Split'te aç”: bağlantı geçerli sekmede, Hacker News tartışması ise yan panelde açılır.",
             "İsteğe bağlı: Hacker News'te bir habere tıklamak makaleyi her zamanki gibi, tartışmasını ise yanındaki yan panelde açar. Varsayılan olarak kapalı.",
             "Yorum sayısını gösteren isteğe bağlı araç çubuğu rozeti, varsayılan olarak kapalı.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Varsayılan olarak gizli",
-            "sub": "Otomatik kullanılabilirlik rozetleri siz açana kadar kapalı kalır. Açılır pencere araması sayfanın URL’sini ve standart bağlantısını okur; makale metnini veya içeriğini asla okumaz."
+      "sub": "Araç çubuğu kontrolleri, yan panel takibi ve hikâye tıklaması varsayılan olarak kapalıdır. “Bu sekmeyi kontrol et” panelde tek aramaya izin verir; makale metni ve diğer sayfa içeriği asla okunmaz."
         },
         {
             "heading": "Açık ve koyu temalarla uyumlu",

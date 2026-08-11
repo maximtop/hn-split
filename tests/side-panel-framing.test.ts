@@ -111,4 +111,22 @@ describe('SidePanelFraming', () => {
             removeRuleIds: [SIDE_PANEL_FRAMING_RULE_ID],
         });
     });
+
+    it('removes a stale startup rule before an immediately overlapping acquire', async () => {
+        const rules = client();
+        const framing = new SidePanelFraming(rules);
+
+        const resetting = framing.reset();
+        const acquiring = framing.acquire();
+        await Promise.all([resetting, acquiring]);
+
+        expect(framing.active).toBe(true);
+        expect(rules.updateDynamicRules).toHaveBeenNthCalledWith(1, {
+            removeRuleIds: [SIDE_PANEL_FRAMING_RULE_ID],
+        });
+        expect(rules.updateDynamicRules).toHaveBeenNthCalledWith(2, {
+            removeRuleIds: [SIDE_PANEL_FRAMING_RULE_ID],
+            addRules: [framingRule()],
+        });
+    });
 });

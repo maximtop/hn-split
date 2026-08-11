@@ -7,7 +7,8 @@
             "Selecione um resultado na janela pop-up para abrir os respetivos comentários no Hacker News.",
             "Correspondência exata de URL — sem palpites aproximados; os duplicados aparecem como alternativas.",
             "A primeira seleção de um resultado abre um separador adjacente; emparelhe-o com o artigo através do Chrome Split View e as seleções seguintes reutilizarão esse separador.",
-            "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que bloqueiam o enquadramento apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto.",
+        "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que bloqueiam o enquadramento apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto.",
+        "Opcional: enquanto o painel lateral já estiver aberto, siga automaticamente os separadores ativos; a funcionalidade está desativada por predefinição, ou utilize «Verificar este separador» uma vez. Nunca abre nem reorganiza separadores e pode manter ativas até três discussões recentes para regressar mais depressa e preservar, quando possível, a posição de deslocamento.",
             "“Abrir no Split” no menu do botão direito das ligações: a ligação abre no separador atual e a sua discussão no Hacker News abre no painel lateral.",
             "Opcional: clicar numa história no Hacker News abre o artigo como habitualmente e a sua discussão no painel lateral ao lado. Desativado por predefinição.",
             "Distintivo opcional na barra de ferramentas com o número de comentários, desativado por predefinição.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privado por predefinição",
-            "sub": "Os distintivos automáticos de disponibilidade ficam desativados até os ativar. A pesquisa pela janela pop-up lê o URL da página e a ligação canónica — nunca o texto nem o conteúdo do artigo."
+      "sub": "Controlos de barra, seguimento lateral e cliques em histórias: inativos por predefinição. «Verificar este separador» permite uma pesquisa no painel; texto do artigo e outros conteúdos nunca são lidos."
         },
         {
             "heading": "Perfeito nos modos claro e escuro",

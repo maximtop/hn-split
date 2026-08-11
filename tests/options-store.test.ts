@@ -2,9 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { OptionsStore } from '../src/options/options-store';
 import type { SettingStatusCopy } from '../src/options/options-store';
-import type { AvailabilitySettingsDependencies } from '../src/options/availability-settings';
+import type { BooleanSettingDependencies } from '../src/options/setting-client';
 
-function dependencies(): AvailabilitySettingsDependencies {
+function dependencies(): BooleanSettingDependencies {
     return {
         readCurrent: vi.fn(async () => ({ ok: true, result: { enabled: false } })),
         requestUpdate: vi.fn(async (enabled: boolean) => ({ ok: true, result: { enabled } })),

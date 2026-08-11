@@ -7,7 +7,8 @@
             "Kies een resultaat in de pop-up om de bijbehorende Hacker News-reacties te openen.",
             "Exacte URL-overeenkomst — geen vage gissingen; duplicaten worden als alternatieven getoond.",
             "De eerste selectie van een resultaat opent een aangrenzend tabblad; koppel het aan het artikel met Chrome Split View, en latere selecties hergebruiken dat tabblad.",
-            "Of open de discussie in het zijpaneel van de browser. Om de echte Hacker News-pagina in te sluiten, verwijdert Split tijdelijk de headers die framing blokkeren, alleen uit reacties van Hacker News-subframes en alleen zolang een paneel open is.",
+        "Of open de discussie in het zijpaneel van de browser. Om de echte Hacker News-pagina in te sluiten, verwijdert Split tijdelijk de headers die framing blokkeren, alleen uit reacties van Hacker News-subframes en alleen zolang een paneel open is.",
+        "Optioneel: zolang het zijpaneel al is geopend, actieve tabbladen automatisch volgen; standaard uitgeschakeld, of gebruik ‘Dit tabblad controleren’ één keer. De functie opent of herschikt nooit tabbladen en kan maximaal drie recente discussies actief houden, zodat u sneller kunt terugkeren en de schuifpositie waar mogelijk behouden blijft.",
             "“Openen in Split” in het rechtsklikmenu van links: de link opent in het huidige tabblad en de bijbehorende Hacker News-discussie opent in het zijpaneel.",
             "Optioneel: een klik op een verhaal op Hacker News opent het artikel zoals gewoonlijk en de discussie ernaast in het zijpaneel. Standaard uit.",
             "Optionele werkbalkbadge met het aantal reacties, standaard uit.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Standaard privé",
-            "sub": "Automatische beschikbaarheidsbadges blijven uit totdat u ze inschakelt. De zoekopdracht vanuit de pop-up leest de pagina-URL en canonieke link — nooit artikeltekst of -inhoud."
+      "sub": "Werkbalkcontroles, zijpaneelvolgen en verhaalklikken staan standaard uit. ‘Dit tabblad controleren’ staat één zoekopdracht in het paneel toe; artikeltekst en andere pagina-inhoud worden nooit gelezen."
         },
         {
             "heading": "Thuis in licht en donker",

@@ -3,11 +3,12 @@ import type { AvailabilityBadge } from '../browser/availability-badge';
 import type { CacheCollectionStorage, CacheStorage } from '../browser/lookup-cache';
 import type { SessionStore, TabClient, TabSummary } from '../browser/open-discussion';
 import type { OpenInSplitMenuRegistry } from '../browser/open-in-split-menu';
+import { SidePanelAssociationStore } from '../browser/side-panel-association-store';
+import type { SidePanelAssociationStorage } from '../browser/side-panel-association-store';
 import { HN_ORIGIN } from '../domain/hn';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../shared/content-scripts';
-import type { SidePanelWindowContent } from '../browser/side-panel-content-router';
-import { isSidePanelContent } from '../shared/side-panel-content';
-import type { SidePanelContent } from '../shared/side-panel-content';
+import { isSidePanelProjection } from '../shared/side-panel-projection';
+import type { SidePanelProjection } from '../shared/side-panel-projection';
 import {
     SESSION_STORAGE_KEY_PREFIX,
     STORAGE_KEY,
@@ -100,25 +101,51 @@ export const cacheCollectionStorage: CacheCollectionStorage = {
     },
 };
 
+const sidePanelAssociationStorage: SidePanelAssociationStorage = {
+    async get(key) {
+        return (await chrome.storage.session.get(key))[key];
+    },
+    async getAll() {
+        return chrome.storage.session.get(null);
+    },
+    async set(key, value) {
+        await chrome.storage.session.set({ [key]: value });
+    },
+    async remove(key) {
+        await chrome.storage.session.remove(key);
+    },
+};
+
+/**
+ * Coordinates every tab association through one process-wide FIFO owner.
+ */
+export const sidePanelAssociations = new SidePanelAssociationStore(sidePanelAssociationStorage);
+
 /**
  * Reads what one window's side panel should display in this browser session.
  * Anything the current model does not recognize reads as an empty panel.
  * @param windowId - The browser window whose selection is read.
  */
-export async function getSidePanelContent(windowId: number): Promise<SidePanelContent | null> {
+export async function getSidePanelContent(windowId: number): Promise<SidePanelProjection | null> {
     const key = sidePanelContentKey(windowId);
     const stored = await chrome.storage.session.get(key);
-    const content: unknown = stored[key];
-    return isSidePanelContent(content) ? content : null;
+    const projection: unknown = stored[key];
+    return isSidePanelProjection(projection) ? projection : null;
 }
 
 /**
  * Records what one window's side panel should display.
  * @param windowId - The browser window whose selection is written.
- * @param content - The validated panel content to display.
+ * @param projection - The validated panel projection to display.
  */
-export async function setSidePanelContent(windowId: number, content: SidePanelContent): Promise<void> {
-    await chrome.storage.session.set({ [sidePanelContentKey(windowId)]: content });
+export async function setSidePanelContent(
+    windowId: number,
+    projection: SidePanelProjection,
+): Promise<void> {
+    if (!isSidePanelProjection(projection)) {
+        throw new TypeError('Invalid side panel projection');
+    }
+    await chrome.storage.session.set({ [sidePanelContentKey(windowId)]: projection });
 }
 
 /**
@@ -133,15 +160,18 @@ export async function removeSidePanelContent(windowId: number): Promise<void> {
  * Lists every window's stored side panel selection, skipping entries the
  * current model does not recognize.
  */
-export async function listSidePanelContent(): Promise<SidePanelWindowContent[]> {
+export async function listSidePanelContent(): Promise<Array<{
+    windowId: number;
+    projection: SidePanelProjection;
+}>> {
     const stored = await chrome.storage.session.get(null);
-    const entries: SidePanelWindowContent[] = [];
-    for (const [key, content] of Object.entries(stored)) {
+    const entries: Array<{ windowId: number; projection: SidePanelProjection }> = [];
+    for (const [key, projection] of Object.entries(stored)) {
         const windowId = sidePanelContentWindowId(key);
-        if (windowId === null || !isSidePanelContent(content)) {
+        if (windowId === null || !isSidePanelProjection(projection)) {
             continue;
         }
-        entries.push({ windowId, content });
+        entries.push({ windowId, projection });
     }
     return entries;
 }
@@ -160,6 +190,44 @@ export async function getAutomaticAvailabilityEnabled(): Promise<boolean> {
  */
 export async function setAutomaticAvailabilityEnabled(enabled: boolean): Promise<void> {
     await chrome.storage.local.set({ [STORAGE_KEY.AUTOMATIC_AVAILABILITY]: enabled });
+}
+
+/**
+ * Reads the independent side-panel-follow preference, defaulting to disabled.
+ */
+export async function getSidePanelFollowEnabled(): Promise<boolean> {
+    const stored = await chrome.storage.local.get(STORAGE_KEY.SIDE_PANEL_FOLLOW);
+    return stored[STORAGE_KEY.SIDE_PANEL_FOLLOW] === true;
+}
+
+/**
+ * Persists the independent side-panel-follow preference.
+ * @param enabled - Whether an already-open panel may follow active tabs.
+ */
+export async function setSidePanelFollowEnabled(enabled: boolean): Promise<void> {
+    await chrome.storage.local.set({ [STORAGE_KEY.SIDE_PANEL_FOLLOW]: enabled });
+}
+
+/**
+ * Reads the tab active in one specific browser window.
+ * @param windowId - Browser window whose active tab is requested.
+ */
+export async function getActiveTab(windowId: number): Promise<chrome.tabs.Tab | null> {
+    const [tab] = await chrome.tabs.query({ active: true, windowId });
+    return tab ?? null;
+}
+
+/**
+ * Reads one Chrome tab for lifecycle ownership and lazy URL acquisition,
+ * returning null when the tab disappeared before the read completed.
+ * @param tabId - The browser tab to read.
+ */
+export async function getBrowserTab(tabId: number): Promise<chrome.tabs.Tab | null> {
+    try {
+        return await chrome.tabs.get(tabId);
+    } catch {
+        return null;
+    }
 }
 
 /**

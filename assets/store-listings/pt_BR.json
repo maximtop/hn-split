@@ -7,7 +7,8 @@
             "Selecione um resultado no pop-up para abrir os comentários dele no Hacker News.",
             "Correspondência exata de URL — sem palpites aproximados; duplicatas aparecem como alternativas.",
             "A primeira seleção de um resultado abre uma aba adjacente; emparelhe essa aba com o artigo usando o Chrome Split View e as próximas seleções reutilizarão essa aba.",
-            "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que impedem a exibição em frames apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto.",
+        "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que impedem a exibição em frames apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto.",
+        "Opcional: enquanto o painel lateral já estiver aberto, acompanhe automaticamente as abas ativas; o recurso vem desativado por padrão, ou use “Verificar esta aba” uma vez. Ele nunca abre nem reorganiza abas e pode manter até três discussões recentes ativas para você voltar mais rápido e preservar a posição da rolagem quando possível.",
             "“Abrir no Split” no menu do botão direito dos links: o link abre na aba atual e a discussão dele no Hacker News abre no painel lateral.",
             "Opcional: clicar em uma história no Hacker News abre o artigo normalmente e a discussão dele no painel lateral ao lado. Desativado por padrão.",
             "Selo opcional na barra de ferramentas com o número de comentários, desativado por padrão.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privado por padrão",
-            "sub": "Os selos automáticos de disponibilidade ficam desativados até você ativá-los. A consulta pelo pop-up lê a URL da página e o link canônico — nunca o texto nem o conteúdo do artigo."
+      "sub": "Checagens na barra, acompanhamento lateral e cliques em histórias vêm desativados por padrão. “Verificar esta aba” permite uma consulta no painel; texto do artigo e outros conteúdos nunca são lidos."
         },
         {
             "heading": "Ótimo nos modos claro e escuro",

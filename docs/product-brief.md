@@ -69,6 +69,13 @@ The product deals with one current article at a time. Comments and links inside 
 - Public Chrome Web Store release of version 0.1.0.
 - Extension UI and store listings for 40 priority locales.
 
+### Post-MVP active-panel enhancement
+
+- **Follow active tabs in the side panel** is a separate opt-in, off by default and independent from the toolbar badge. It runs only while the user already has the panel open and never opens or rearranges tabs.
+- With following off, **Check this tab** performs one check; **Follow tabs automatically** opts in and checks the currently active tab in the same action.
+- Checked terminal outcomes and sanitized article identity are session-only. Found URL lookups may be reused for one hour and not-found lookups for ten minutes; restricted pages and failures are not added to the URL cache.
+- The panel may retain up to three recent real Hacker News documents for faster return and best-effort browser-managed position. Extension code never reads or restores their comments, DOM, focus, cookies, or scroll values.
+
 ### Follow-up browser releases
 
 - Firefox Add-ons adaptation and submission.
@@ -80,7 +87,7 @@ These browser ports remain part of the project roadmap but did not delay the Chr
 ## 6. Explicit non-goals for the MVP
 
 - Reddit, Lobsters, or any discussion source other than Hacker News.
-- Automatically opening comments when an article loads.
+- Automatically opening a side panel or comments tab when an article loads. An already-open panel may update only after the separate follow opt-in.
 - Automatically moving, resizing, grouping, or rearranging the user's tabs.
 - Creating a fake split view with an iframe.
 - Embedding or rewriting the article body.
@@ -95,7 +102,7 @@ These browser ports remain part of the project roadmap but did not delay the Chr
 
 ### User action is the boundary
 
-HN Split may detect availability in the background necessary for the current page, but it must not open or rearrange content until the user explicitly clicks.
+HN Split may detect availability under a user-enabled automatic preference, but it must never open the side panel or open, move, replace, or rearrange tabs automatically. Enabling follow authorizes later content changes only inside an already-open panel; one-shot checking remains available without enabling it.
 
 ### Privacy by architecture
 
@@ -142,7 +149,7 @@ The MVP implementation resolved most of the questions originally delegated to sp
 
 - **Split View creation — resolved.** Chrome 140 documents Split View state (`Tab.splitViewId`, Split View queries and update events) but no extension API that creates Split View. The MVP uses only documented behavior.
 - **Fallback — resolved.** The first explicit click opens a normal adjacent tab and the extension remembers it. If the user pairs that tab with the article through native Chrome Split View, later selections reuse the same tab, preserving the browser-managed pane. No iframe or undocumented API is involved in this adjacent-tab flow.
-- **Side panel — added after the original brief.** Explicit user actions can open the real Hacker News discussion in Chrome's side panel. The implementation uses a disclosed, panel-lifetime framing exception for Hacker News sub-frames; the adjacent-tab flow remains the fallback.
+- **Side panel — added after the original brief and later made tab-aware.** Explicit user actions can open the real Hacker News discussion in Chrome's side panel. An independent off-by-default preference can then follow active tabs while that panel remains open, or the user can check one tab without opting in. Session associations prevent stale cross-tab content, and up to three opaque real Hacker News documents may be retained for best-effort return position. The implementation uses a disclosed framing exception lasting from the first live panel connection through the last; the adjacent-tab flow remains the fallback.
 - **HN lookup endpoint — resolved.** The public Algolia Hacker News Search API (`https://hn.algolia.com/api/v1/search`) with `tags=story`, `restrictSearchableAttributes=url`, and local exact-identity verification of every hit, under one five-second lookup timeout. No API key, backend, or fallback endpoint is required; the full contract lives in [docs/url-matching.md](url-matching.md).
 - **Permission set — resolved.** `tabs`, `activeTab`, `scripting`, `storage`, `contextMenus`, `sidePanel`, and `declarativeNetRequestWithHostAccess`, plus host access to `https://hn.algolia.com/*` and `https://news.ycombinator.com/*`. Each permission is justified per purpose in [PRIVACY.md](../PRIVACY.md).
 - **The final public product name and branding — resolved.** The public name is "Split for Hacker News"; "HN Split" stays as the internal working slug. The store listing copy and visual identity are documented in [docs/store-listing.md](store-listing.md).

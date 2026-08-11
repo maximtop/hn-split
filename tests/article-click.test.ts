@@ -84,7 +84,10 @@ describe('detectArticleClick', () => {
     it('accepts an unmodified primary click on an external story link', () => {
         const { storyAnchor } = renderStoryRow();
 
-        expect(detectArticleClick(clickEvent(storyAnchor), pageOrigin())).toBe(STORY_ID);
+        expect(detectArticleClick(clickEvent(storyAnchor), pageOrigin())).toEqual({
+            itemId: STORY_ID,
+            articleUrl: EXTERNAL_HREF,
+        });
     });
 
     it('accepts keyboard activation, which dispatches an equivalent click event', () => {
@@ -92,7 +95,10 @@ describe('detectArticleClick', () => {
 
         // Enter on a focused link fires a click with the primary button and no
         // modifiers, so it intentionally passes the same filter.
-        expect(detectArticleClick(clickEvent(storyAnchor, { button: 0 }), pageOrigin())).toBe(STORY_ID);
+        expect(detectArticleClick(clickEvent(storyAnchor, { button: 0 }), pageOrigin())).toEqual({
+            itemId: STORY_ID,
+            articleUrl: EXTERNAL_HREF,
+        });
     });
 
     it.each([
@@ -127,7 +133,10 @@ describe('detectArticleClick', () => {
         expect(detectArticleClick(clickEvent(storyAnchor), pageOrigin())).toBeNull();
 
         storyAnchor.setAttribute('target', '_self');
-        expect(detectArticleClick(clickEvent(storyAnchor), pageOrigin())).toBe(STORY_ID);
+        expect(detectArticleClick(clickEvent(storyAnchor), pageOrigin())).toEqual({
+            itemId: STORY_ID,
+            articleUrl: EXTERNAL_HREF,
+        });
     });
 
     it('ignores the nested site chip inside the title line', () => {

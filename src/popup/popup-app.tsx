@@ -16,12 +16,18 @@ import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import { readPageContext } from '../page/context';
 import { UserFacingError, messageKeyForBackgroundError, userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
-import { logWarning } from '../shared/logger';
+import {
+    FOLLOW_DIAGNOSTIC_CODE,
+    FOLLOW_DIAGNOSTIC_EVENT,
+    logDiagnosticWarning,
+    logWarning,
+} from '../shared/logger';
 import { cssVariablesResolver, theme } from '../shared/theme';
 import {
     BACKGROUND_REQUEST_TYPE,
     isLookupResponse,
     isOpenDiscussionResponse,
+    isSidePanelContentResponse,
 } from '../shared/messages';
 import type { LookupRequest, OpenDiscussionRequest, SidePanelSelectRequest } from '../shared/messages';
 
@@ -33,6 +39,14 @@ interface PopupState {
      * Identifies the article tab whose discussion will be opened.
      */
     articleTabId: number | null;
+    /**
+     * Identifies the browser window that owns the article tab and side panel.
+     */
+    articleWindowId: number | null;
+    /**
+     * Contains the inspected page URL that originated every selected result.
+     */
+    articleSourceUrl: string | null;
     /**
      * Contains the validated Hacker News lookup result.
      */
@@ -75,6 +89,8 @@ interface DiscussionButtonProps {
 
 const initialState: PopupState = {
     articleTabId: null,
+    articleWindowId: null,
+    articleSourceUrl: null,
     result: null,
     error: null,
     loading: true,
@@ -164,6 +180,8 @@ export function App(): React.JSX.Element {
                 if (!cancelled) {
                     setState({
                         articleTabId: tab.id,
+                        articleWindowId: tab.windowId,
+                        articleSourceUrl: result.pageUrl,
                         result: response.result,
                         error: null,
                         loading: false,
@@ -175,6 +193,8 @@ export function App(): React.JSX.Element {
                 if (!cancelled) {
                     setState({
                         articleTabId: null,
+                        articleWindowId: null,
+                        articleSourceUrl: null,
                         result: null,
                         error: userFacingMessage(error, 'unable_to_inspect'),
                         loading: false,
@@ -219,27 +239,45 @@ export function App(): React.JSX.Element {
         }
     };
 
-    const openInSidePanel = (itemId: string): void => {
-        if (state.articleTabId === null) {
+    const openInSidePanel = (discussion: HnDiscussion): void => {
+        if (state.articleTabId === null
+            || state.articleWindowId === null
+            || state.articleSourceUrl === null) {
             return;
         }
-        // chrome.sidePanel.open must run inside the click gesture, so the panel
-        // is opened first and the selection is recorded right after; the panel
-        // reads it once its own page loads.
-        void chrome.sidePanel.open({ tabId: state.articleTabId });
-        void (async () => {
-            // The popup lives in the same window as the article tab it inspected.
-            const { id: windowId } = await chrome.windows.getCurrent();
-            if (windowId === undefined) {
-                return;
-            }
-            await sendMessage({
-                type: BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION,
-                itemId,
+        const tabId = state.articleTabId;
+        const windowId = state.articleWindowId;
+        const sourceUrl = state.articleSourceUrl;
+        // Opening the side panel closes the action popup, so the selection
+        // message must be initiated before that teardown. Neither operation is
+        // awaited here because sidePanel.open must stay inside the click gesture.
+        const selection = sendMessage({
+            type: BACKGROUND_REQUEST_TYPE.SELECT_SIDE_PANEL_DISCUSSION,
+            tabId,
+            itemId: discussion.id,
+            sourceUrl,
+            windowId,
+        });
+        void chrome.sidePanel.open({ tabId }).catch(() => {
+            logDiagnosticWarning(FOLLOW_DIAGNOSTIC_EVENT.OPEN_FAILED, {
+                code: FOLLOW_DIAGNOSTIC_CODE.OPEN_FAILED,
+                tabId,
                 windowId,
             });
-        })().catch((error: unknown) => {
-            logWarning('selecting the side panel discussion failed.', error);
+        });
+        void selection.then((response) => {
+            if (!isSidePanelContentResponse(response)) {
+                throw new TypeError('Invalid side panel selection response');
+            }
+            if (!response.ok) {
+                throw new Error(`Side panel selection failed: ${response.error}`);
+            }
+        }).catch(() => {
+            logDiagnosticWarning(FOLLOW_DIAGNOSTIC_EVENT.SELECTION_FAILED, {
+                code: FOLLOW_DIAGNOSTIC_CODE.SELECTION_FAILED,
+                tabId,
+                windowId,
+            });
         });
     };
 
@@ -297,7 +335,7 @@ export function App(): React.JSX.Element {
                             <Button
                                 variant="default"
                                 size="compact-sm"
-                                onClick={() => { openInSidePanel(found.primary.id); }}
+                                onClick={() => { openInSidePanel(found.primary); }}
                             >
                                 {t('open_in_side_panel')}
                             </Button>

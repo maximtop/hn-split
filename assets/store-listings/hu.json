@@ -7,7 +7,8 @@
             "Válasszon ki egy találatot az előugró ablakban a Hacker News-hozzászólásainak megnyitásához.",
             "Pontos URL-egyezés — semmi hozzávetőleges találgatás; a duplikátumok alternatívaként jelennek meg.",
             "Az első találat kiválasztása egy szomszédos lapot nyit meg; párosítsa a cikkel a Chrome Split View segítségével, és a későbbi választások ezt az osztott nézetet használják újra.",
-            "Vagy nyissa meg a vitát a böngésző oldalsávjában. A valódi Hacker News-oldal beágyazásához a Split ideiglenesen, kizárólag a panel nyitva tartása alatt eltávolítja a keretezést tiltó fejléceket a Hacker News alkereteinek válaszaiból.",
+        "Vagy nyissa meg a vitát a böngésző oldalsávjában. A valódi Hacker News-oldal beágyazásához a Split ideiglenesen, kizárólag a panel nyitva tartása alatt eltávolítja a keretezést tiltó fejléceket a Hacker News alkereteinek válaszaiból.",
+        "Választható: amíg az oldalsáv már nyitva van, automatikusan követheti az aktív lapokat; alapértelmezés szerint ki van kapcsolva, vagy egyszer használhatja a „Lap ellenőrzése” műveletet. Soha nem nyit meg vagy rendez át lapokat, és a gyorsabb visszatéréshez, valamint a görgetési pozíció lehetőség szerinti megőrzéséhez legfeljebb három legutóbbi vitát tarthat aktívan.",
             "„Megnyitás a Splitben” a hivatkozások jobb gombos menüjében: a hivatkozás az aktuális lapon nyílik meg, Hacker News-vitája pedig az oldalsávban.",
             "Nem kötelező: a Hacker Newson egy sztorira kattintva a cikk a szokásos módon nyílik meg, vitája pedig mellette az oldalsávban. Alapértelmezés szerint kikapcsolva.",
             "Nem kötelező eszköztárjelvény a hozzászólások számával, alapértelmezés szerint kikapcsolva.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Alapértelmezés szerint privát",
-            "sub": "Az automatikus jelvények kikapcsolva maradnak, amíg be nem kapcsolja őket. Az előugró ablak keresése az oldal URL-jét és kanonikus hivatkozását olvassa — a cikk szövegét vagy tartalmát soha."
+      "sub": "Az eszköztári ellenőrzés, az oldalsávos követés és a történetkattintás alapból ki van kapcsolva. „Lap ellenőrzése” egy oldalsávos keresést enged; a cikk szövegét és más oldaltartalmat soha nem olvas."
         },
         {
             "heading": "Világos és sötét módban is kényelmes",

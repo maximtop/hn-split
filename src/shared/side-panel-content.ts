@@ -10,6 +10,7 @@ import type { HnLookupResult } from '../domain/hn';
  */
 export const SIDE_PANEL_CONTENT_KIND = {
     DISCUSSION: 'discussion',
+    MANUAL_REQUIRED: 'manual_required',
     PENDING: 'pending',
     UNAVAILABLE: 'unavailable',
 } as const;
@@ -26,6 +27,11 @@ const unavailableReasonSchema = v.picklist([
 ]);
 
 /**
+ * Validates a Chrome tab identifier at every side-panel state boundary.
+ */
+export const sidePanelTabIdSchema = v.pipe(v.number(), v.safeInteger(), v.minValue(0));
+
+/**
  * Explains why no discussion can be shown, reusing the lookup status names so
  * each reason maps onto the message the popup already uses for that outcome.
  */
@@ -36,13 +42,22 @@ export type SidePanelUnavailableReason = v.InferOutput<typeof unavailableReasonS
  * background protocol.
  */
 export const sidePanelContentSchema = v.variant('kind', [
-    v.object({
+    v.strictObject({
+        kind: v.literal(SIDE_PANEL_CONTENT_KIND.MANUAL_REQUIRED),
+        tabId: sidePanelTabIdSchema,
+    }),
+    v.strictObject({
+        kind: v.literal(SIDE_PANEL_CONTENT_KIND.PENDING),
+        tabId: sidePanelTabIdSchema,
+    }),
+    v.strictObject({
         kind: v.literal(SIDE_PANEL_CONTENT_KIND.DISCUSSION),
+        tabId: sidePanelTabIdSchema,
         itemId: v.pipe(v.string(), v.check(isValidItemId)),
     }),
-    v.object({ kind: v.literal(SIDE_PANEL_CONTENT_KIND.PENDING) }),
-    v.object({
+    v.strictObject({
         kind: v.literal(SIDE_PANEL_CONTENT_KIND.UNAVAILABLE),
+        tabId: sidePanelTabIdSchema,
         reason: unavailableReasonSchema,
     }),
 ]);
@@ -66,16 +81,23 @@ export function isSidePanelContent(value: unknown): value is SidePanelContent {
  * the distinction between a malformed response and a failed request is a
  * diagnostic detail rather than something the reader can act on.
  * @param result - The finished Hacker News lookup result to convert.
+ * @param tabId - The authoritative tab that owns the outcome.
  */
-export function contentForLookupResult(result: HnLookupResult): SidePanelContent {
+export function contentForLookupResult(result: HnLookupResult, tabId: number): SidePanelContent {
     if (result.status === HN_LOOKUP_STATUS.FOUND) {
-        return { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, itemId: result.primary.id };
+        return {
+            kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION,
+            tabId,
+            itemId: result.primary.id,
+        };
     }
-    if (result.status === HN_LOOKUP_STATUS.NOT_FOUND) {
-        return { kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE, reason: HN_LOOKUP_STATUS.NOT_FOUND };
-    }
-    if (result.status === HN_LOOKUP_STATUS.RESTRICTED) {
-        return { kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE, reason: HN_LOOKUP_STATUS.RESTRICTED };
-    }
-    return { kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE, reason: HN_LOOKUP_STATUS.ERROR };
+    const reason = result.status === HN_LOOKUP_STATUS.NOT_FOUND
+        || result.status === HN_LOOKUP_STATUS.RESTRICTED
+        ? result.status
+        : HN_LOOKUP_STATUS.ERROR;
+    return {
+        kind: SIDE_PANEL_CONTENT_KIND.UNAVAILABLE,
+        tabId,
+        reason,
+    };
 }

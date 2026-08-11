@@ -7,7 +7,8 @@
             "Wybierz wynik w wyskakującym oknie, aby otworzyć jego komentarze na Hacker News.",
             "Dokładne dopasowanie URL — bez przybliżonych domysłów; duplikaty są pokazywane jako alternatywy.",
             "Pierwszy wybór wyniku otwiera sąsiednią kartę; połącz ją z artykułem za pomocą Chrome Split View, a kolejne wybory ponownie użyją tego obszaru widoku dzielonego.",
-            "Możesz też otworzyć dyskusję w panelu bocznym przeglądarki. Aby osadzić prawdziwą stronę Hacker News, Split tymczasowo usuwa nagłówki blokujące osadzanie wyłącznie z odpowiedzi ramek podrzędnych Hacker News i tylko wtedy, gdy panel jest otwarty.",
+        "Możesz też otworzyć dyskusję w panelu bocznym przeglądarki. Aby osadzić prawdziwą stronę Hacker News, Split tymczasowo usuwa nagłówki blokujące osadzanie wyłącznie z odpowiedzi ramek podrzędnych Hacker News i tylko wtedy, gdy panel jest otwarty.",
+        "Opcjonalnie: gdy panel boczny jest już otwarty, automatycznie śledź aktywne karty; funkcja jest domyślnie wyłączona, możesz też jednorazowo użyć opcji „Sprawdź tę kartę”. Nigdy nie otwiera ani nie zmienia kolejności kart i może utrzymać aktywność maksymalnie trzech ostatnich dyskusji, aby umożliwić szybszy powrót i w miarę możliwości zachować pozycję przewijania.",
             "„Otwórz w Split” w menu prawego przycisku na linku: link otwiera się w bieżącej karcie, a jego dyskusja z Hacker News — w panelu bocznym.",
             "Opcjonalnie: kliknięcie historii na Hacker News otwiera artykuł jak zwykle, a jego dyskusję w panelu bocznym obok. Domyślnie wyłączone.",
             "Opcjonalna plakietka na pasku narzędzi z liczbą komentarzy, domyślnie wyłączona.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Domyślnie prywatne",
-            "sub": "Automatyczne plakietki dostępności pozostają wyłączone, dopóki ich nie włączysz. Wyszukiwanie w wyskakującym oknie odczytuje adres URL i link kanoniczny strony — nigdy tekst ani zawartość artykułu."
+      "sub": "Kontrole paska, śledzenie w panelu i kliknięcia historii są domyślnie wyłączone. „Sprawdź tę kartę” zezwala na jedno wyszukiwanie w panelu; tekst artykułu ani inna zawartość nigdy nie są odczytywane."
         },
         {
             "heading": "Wygodnie w jasnym i ciemnym motywie",

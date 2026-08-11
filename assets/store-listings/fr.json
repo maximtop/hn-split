@@ -7,7 +7,8 @@
             "Sélectionnez un résultat dans la fenêtre contextuelle pour ouvrir ses commentaires Hacker News.",
             "Correspondance d'URL exacte — pas de devinettes approximatives ; les doublons sont proposés comme alternatives.",
             "La première sélection d'un résultat ouvre un onglet adjacent ; associez-le à l'article avec Chrome Split View, et les sélections suivantes réutiliseront cet onglet.",
-            "Ou ouvrez la discussion dans le panneau latéral du navigateur. Pour intégrer la véritable page Hacker News, Split retire temporairement les en-têtes qui empêchent l'affichage dans un cadre, uniquement des réponses des sous-cadres Hacker News et seulement tant qu'un panneau est ouvert.",
+        "Ou ouvrez la discussion dans le panneau latéral du navigateur. Pour intégrer la véritable page Hacker News, Split retire temporairement les en-têtes qui empêchent l'affichage dans un cadre, uniquement des réponses des sous-cadres Hacker News et seulement tant qu'un panneau est ouvert.",
+        "Facultatif : tant que le panneau latéral est déjà ouvert, suivez automatiquement les onglets actifs ; cette fonction est désactivée par défaut, ou utilisez une fois « Vérifier cet onglet ». Elle n'ouvre ni ne réorganise jamais les onglets et peut conserver jusqu'à trois discussions récentes actives pour y revenir plus rapidement et préserver au mieux la position de défilement.",
             "« Ouvrir dans Split » dans le menu contextuel des liens : le lien s'ouvre dans l'onglet actuel et sa discussion Hacker News s'ouvre dans le panneau latéral.",
             "En option : cliquer sur une histoire sur Hacker News ouvre l'article comme d'habitude et sa discussion dans le panneau latéral à côté. Désactivé par défaut.",
             "Badge facultatif dans la barre d'outils avec le nombre de commentaires, désactivé par défaut.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privé par défaut",
-            "sub": "Les badges automatiques restent désactivés jusqu'à leur activation. La recherche depuis la fenêtre contextuelle lit l'URL et le lien canonique de la page — jamais le texte ni le contenu de l'article."
+      "sub": "Contrôles de barre, suivi latéral et clics d'articles : désactivés par défaut. « Vérifier cet onglet » permet une recherche dans le panneau ; texte d'article et contenus de page ne sont jamais lus."
         },
         {
             "heading": "À l'aise en clair comme en sombre",

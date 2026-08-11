@@ -7,7 +7,8 @@
             "Odaberite rezultat u skočnom prozoru kako biste otvorili njegove komentare na Hacker Newsu.",
             "Točno podudaranje URL-a — bez približnih nagađanja; duplikati se prikazuju kao alternative.",
             "Prvi odabir rezultata otvara susjednu karticu; uparite je s člankom pomoću Chrome Split Viewa i kasniji odabiri ponovno će koristiti to okno.",
-            "Ili otvorite raspravu u bočnoj ploči preglednika. Da bi ugradio stvarnu stranicu Hacker Newsa, Split privremeno uklanja zaglavlja koja onemogućuju uokvirivanje samo iz odgovora podokvira Hacker Newsa i samo dok je ploča otvorena.",
+        "Ili otvorite raspravu u bočnoj ploči preglednika. Da bi ugradio stvarnu stranicu Hacker Newsa, Split privremeno uklanja zaglavlja koja onemogućuju uokvirivanje samo iz odgovora podokvira Hacker Newsa i samo dok je ploča otvorena.",
+        "Neobavezno: dok je bočna ploča već otvorena, automatski pratite aktivne kartice; funkcija je prema zadanim postavkama isključena, ili jednom upotrijebite „Provjeri ovu karticu”. Nikada ne otvara niti premješta kartice, a može zadržati aktivnima do tri nedavne rasprave radi bržeg povratka i očuvanja položaja pomicanja kad god je to moguće.",
             "„Otvori u Splitu“ u izborniku desnog klika na poveznicu: poveznica se otvara u trenutačnoj kartici, a njezina rasprava s Hacker Newsa u bočnoj ploči.",
             "Neobavezno: klik na priču na Hacker Newsu otvara članak kao i obično, a njegovu raspravu u bočnoj ploči pokraj njega. Isključeno prema zadanim postavkama.",
             "Neobavezna značka na alatnoj traci s brojem komentara, isključena prema zadanim postavkama.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Privatno prema zadanim postavkama",
-            "sub": "Automatske značke dostupnosti ostaju isključene dok ih ne uključite. Pretraživanje iz skočnog prozora čita URL i kanonsku poveznicu stranice — nikada tekst ili sadržaj članka."
+      "sub": "Provjere alatne trake, praćenje u bočnoj ploči i klikovi na priče zadano su isključeni. „Provjeri ovu karticu” dopušta jedno pretraživanje u ploči; tekst članka i drugi sadržaj nikada se ne čitaju."
         },
         {
             "heading": "Ugodno u svijetloj i tamnoj temi",

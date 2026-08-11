@@ -10,22 +10,43 @@ import {
 import { sessionStore } from './background/chrome-adapters';
 import { handleRequest } from './background/request-handler';
 import {
+    connectSidePanelWindow,
+    disconnectSidePanelWindow,
+    forgetSidePanelTab,
     forgetSidePanelWindow,
     handleOpenInSplitClick,
+    handleSidePanelTabActivated,
+    handleSidePanelTabAttached,
+    handleSidePanelTabReplaced,
+    handleSidePanelTabUpdated,
     normalizeSidePanelContent,
     reconcileOpenInSplitMenu,
+    sidePanelWindows,
 } from './background/side-panel-content-controller';
 import { SidePanelFraming } from './background/side-panel-framing';
-import { logWarning } from './shared/logger';
+import { SidePanelPortController } from './background/side-panel-port-controller';
 import {
-    SIDE_PANEL_KEEPALIVE,
-    SIDE_PANEL_PORT,
-    SIDE_PANEL_READY,
+    FOLLOW_DIAGNOSTIC_CODE,
+    logFollowWarning,
+    logWarning,
+} from './shared/logger';
+import {
     isArticleClickMessage,
     isBackgroundRequest,
 } from './shared/messages';
 
+const SIDE_PANEL_DOCUMENT_PATH = 'side-panel.html';
+
 const sidePanelFraming = new SidePanelFraming(chrome.declarativeNetRequest);
+const sidePanelPorts = new SidePanelPortController({
+    framing: sidePanelFraming,
+    sidePanelExtensionId: chrome.runtime.id,
+    sidePanelDocumentUrl: chrome.runtime.getURL(SIDE_PANEL_DOCUMENT_PATH),
+    windows: sidePanelWindows,
+    connectWindow: connectSidePanelWindow,
+    disconnectWindow: disconnectSidePanelWindow,
+    warn: logFollowWarning,
+});
 
 // A rule left behind by a crashed worker would outlive the panel that asked
 // for it, so the exception is cleared on every worker start.
@@ -58,37 +79,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 chrome.runtime.onConnect.addListener((port) => {
-    if (port.name !== SIDE_PANEL_PORT) {
-        return;
-    }
-    // The exception exists only while a panel holds this port open: the panel
-    // waits for the ready signal before framing, and Chrome disconnects the
-    // port as soon as the panel closes.
-    let connected = true;
-    port.onMessage.addListener((message: { type?: string }) => {
-        if (message.type !== SIDE_PANEL_KEEPALIVE) {
-            return;
-        }
-        // Delivery is the keepalive operation: Chrome resets the worker idle
-        // deadline for each long-lived-port message, so no reply is needed.
-    });
-    port.onDisconnect.addListener(() => {
-        connected = false;
-        void sidePanelFraming.release().catch((error: unknown) => {
-            logWarning('removing the side panel framing exception failed.', error);
-        });
-    });
-    void sidePanelFraming.acquire()
-        .then(() => {
-            // The panel can close before the rule lands, and posting into a
-            // closed port throws.
-            if (connected) {
-                port.postMessage({ type: SIDE_PANEL_READY });
-            }
-        })
-        .catch((error: unknown) => {
-            logWarning('installing the side panel framing exception failed.', error);
-        });
+    sidePanelPorts.accept(port);
 });
 
 chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) => {
@@ -106,22 +97,91 @@ chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) =>
     return true;
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-    if (!reportsAutomaticAvailabilityNavigation(changeInfo)) {
+chrome.tabs.onActivated.addListener((activeInfo) => {
+    void handleSidePanelTabActivated(activeInfo)
+        .then((projection) => {
+            if (projection !== null) {
+                sidePanelPorts.recoverWindow(activeInfo.windowId);
+            }
+        })
+        .catch(() => {
+            logFollowWarning(FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED, {
+                tabId: activeInfo.tabId,
+                windowId: activeInfo.windowId,
+            });
+        });
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (reportsAutomaticAvailabilityNavigation(changeInfo)) {
+        void updateAutomaticAvailability(tabId).catch((error: unknown) => {
+            // Local diagnostic only; the navigated URL itself is never logged.
+            logWarning('automatic availability update failed.', error);
+        });
+    }
+    if (changeInfo.url === undefined && changeInfo.status !== 'complete') {
         return;
     }
-    void updateAutomaticAvailability(tabId).catch((error: unknown) => {
-        // Local diagnostic only; the navigated URL itself is never logged.
-        logWarning('automatic availability update failed.', error);
+    void handleSidePanelTabUpdated(tabId, tab.windowId, tab.active, {
+        ...(changeInfo.status === 'loading' || changeInfo.status === 'complete'
+            ? { status: changeInfo.status }
+            : {}),
+        ...(changeInfo.url === undefined ? {} : { url: changeInfo.url }),
+    })
+        .then((authoritative) => {
+            if (authoritative) {
+                sidePanelPorts.recoverWindow(tab.windowId);
+            }
+        })
+        .catch(() => {
+            logFollowWarning(FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED, {
+                tabId,
+                windowId: tab.windowId,
+            });
+        });
+});
+
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+    forgetAutomaticAvailabilityTab(tabId);
+    void forgetSidePanelTab(tabId, removeInfo.windowId).catch(() => {
+        logFollowWarning(FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED, {
+            tabId,
+            windowId: removeInfo.windowId,
+        });
+    });
+    void sessionStore.remove(tabId).catch(() => undefined);
+});
+
+chrome.tabs.onReplaced.addListener((addedTabId, removedTabId) => {
+    void handleSidePanelTabReplaced(addedTabId, removedTabId).catch(() => {
+        logFollowWarning(FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED, {
+            tabId: addedTabId,
+            relatedTabId: removedTabId,
+        });
     });
 });
 
-chrome.tabs.onRemoved.addListener((tabId) => {
-    forgetAutomaticAvailabilityTab(tabId);
-    void sessionStore.remove(tabId).catch(() => undefined);
+chrome.tabs.onDetached.addListener((tabId, detachInfo) => {
+    void forgetSidePanelTab(tabId, detachInfo.oldWindowId).catch(() => {
+        logFollowWarning(FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED, {
+            tabId,
+            windowId: detachInfo.oldWindowId,
+        });
+    });
+});
+
+chrome.tabs.onAttached.addListener((tabId, attachInfo) => {
+    void handleSidePanelTabAttached(tabId, attachInfo).catch(() => {
+        logFollowWarning(FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED, {
+            tabId,
+            windowId: attachInfo.newWindowId,
+        });
+    });
 });
 
 chrome.windows.onRemoved.addListener((windowId) => {
     // A closed window's panel selection has no surface left to show it.
-    void forgetSidePanelWindow(windowId).catch(() => undefined);
+    void forgetSidePanelWindow(windowId).catch(() => {
+        logFollowWarning(FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED, { windowId });
+    });
 });

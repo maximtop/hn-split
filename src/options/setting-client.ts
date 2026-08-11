@@ -8,9 +8,9 @@ import {
 } from '../shared/messages';
 
 /**
- * Defines the background messaging operations used by the options page.
+ * Defines the background messaging operations used by one boolean option.
  */
-export interface AvailabilitySettingsDependencies {
+export interface BooleanSettingDependencies {
     /**
      * Requests the authoritative setting from the background worker.
      */
@@ -18,7 +18,7 @@ export interface AvailabilitySettingsDependencies {
     /**
      * Requests one background-owned setting transaction and resolves with the
      * worker's raw response.
-     * @param enabled - Whether automatic availability should be enabled.
+     * @param enabled - Whether the setting should be enabled.
      */
     requestUpdate(enabled: boolean): Promise<unknown>;
 }
@@ -34,11 +34,11 @@ function responseError(response: unknown, fallbackKey: MessageKey): UserFacingEr
 }
 
 /**
- * Reads the authoritative automatic-availability setting through the background worker.
+ * Reads one authoritative boolean setting through the background worker.
  * @param dependencies - The background messaging operations used by the request.
  */
-export async function readAutomaticAvailability(
-    dependencies: AvailabilitySettingsDependencies,
+export async function readBooleanSetting(
+    dependencies: BooleanSettingDependencies,
 ): Promise<boolean> {
     const response = await dependencies.readCurrent();
     if (!isAvailabilitySettingReadResponse(response)) {
@@ -48,14 +48,14 @@ export async function readAutomaticAvailability(
 }
 
 /**
- * Requests one background-owned automatic-availability setting transaction and
- * returns the authoritative persisted value.
- * @param enabled - Whether automatic availability should be enabled.
+ * Requests one background-owned boolean setting transaction and returns its
+ * authoritative persisted value.
+ * @param enabled - Whether the setting should be enabled.
  * @param dependencies - The background messaging operations used by the request.
  */
-export async function updateAutomaticAvailability(
+export async function updateBooleanSetting(
     enabled: boolean,
-    dependencies: AvailabilitySettingsDependencies,
+    dependencies: BooleanSettingDependencies,
 ): Promise<boolean> {
     const response = await dependencies.requestUpdate(enabled);
     if (!isAvailabilitySettingResponse(response)) {

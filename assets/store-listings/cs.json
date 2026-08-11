@@ -7,7 +7,8 @@
             "Vyberte výsledek ve vyskakovacím okně a otevřete jeho komentáře na Hacker News.",
             "Přesná shoda URL — žádné přibližné odhady; duplicity se zobrazují jako alternativy.",
             "První výběr výsledku otevře sousední kartu; spárujte ji s článkem pomocí Chrome Split View a pozdější výběry toto podokno znovu použijí.",
-            "Nebo otevřete diskuzi v postranním panelu prohlížeče. Aby mohl vložit skutečnou stránku Hacker News, Split dočasně odstraňuje hlavičky zakazující vkládání pouze z odpovědí podrámců Hacker News a jen po dobu, kdy je panel otevřený.",
+        "Nebo otevřete diskuzi v postranním panelu prohlížeče. Aby mohl vložit skutečnou stránku Hacker News, Split dočasně odstraňuje hlavičky zakazující vkládání pouze z odpovědí podrámců Hacker News a jen po dobu, kdy je panel otevřený.",
+        "Volitelně: když už je postranní panel otevřený, automaticky sledujte aktivní karty; ve výchozím nastavení je tato funkce vypnutá, případně jednorázově použijte „Zkontrolovat tuto kartu“. Nikdy neotevírá ani nepřesouvá karty a může ponechat aktivní až tři nedávné diskuze pro rychlejší návrat a zachování pozice posunu, pokud to bude možné.",
             "„Otevřít ve Splitu“ v nabídce pravého tlačítka na odkazu: odkaz se otevře v aktuální kartě a jeho diskuze na Hacker News v postranním panelu.",
             "Volitelné: kliknutí na příběh na Hacker News otevře článek jako obvykle a jeho diskuzi v postranním panelu vedle něj. Ve výchozím stavu vypnuto.",
             "Volitelný odznak na panelu nástrojů s počtem komentářů, ve výchozím stavu vypnutý.",
@@ -25,7 +26,7 @@
         },
         {
             "heading": "Ve výchozím stavu soukromé",
-            "sub": "Automatické odznaky dostupnosti zůstávají vypnuté, dokud je nezapnete. Vyhledávání z vyskakovacího okna čte adresu URL a kanonický odkaz stránky — nikdy text ani obsah článku."
+      "sub": "Kontroly na liště, sledování v panelu a kliknutí na příběhy jsou standardně vypnuté. „Zkontrolovat tuto kartu“ povolí jedno hledání v panelu; text článku ani jiný obsah se nikdy nečte."
         },
         {
             "heading": "Pohodlně ve světlém i tmavém režimu",

@@ -11,3 +11,13 @@ body,
     flex: 1;
     width: 100%;
 }
+
+.discussion-frame-stack {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.discussion-frame[hidden] {
+    display: none;
+}
