@@ -7,8 +7,8 @@ name: Release
 #   verifies everything and uploads workflow artifacts, but publishes
 #   nothing and skips tag checks.
 # Secrets are referenced by name only; no store credentials live in this
-# repository or its workflows. Publishing to the browser stores stays a
-# manual step documented in docs/release.md.
+# repository or its workflows. Full releases can deploy the Chrome package
+# automatically after the GitHub release is published.
 on:
   push:
     tags:
@@ -139,3 +139,16 @@ jobs:
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
           fi
+
+  deploy-chrome:
+    name: Deploy Chrome Web Store
+    needs: release
+    if: github.event_name == 'push' && vars.CHROME_AUTO_DEPLOY_ENABLED == 'true'
+    uses: ./.github/workflows/deploy-chrome-store.yml
+    with:
+      tag: ${{ github.ref_name }}
+    secrets:
+      CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+      CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+      CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+      CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}

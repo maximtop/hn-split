@@ -1,0 +1,187 @@
+name: Deploy Chrome Web Store
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: 'Published release tag to deploy (vX.Y.Z)'
+        required: true
+        type: string
+    secrets:
+      CHROME_CLIENT_ID:
+        required: true
+      CHROME_CLIENT_SECRET:
+        required: true
+      CHROME_REFRESH_TOKEN:
+        required: true
+      CHROME_PUBLISHER_ID:
+        required: true
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Published release tag to deploy (vX.Y.Z)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Upload and submit for review
+    runs-on: ubuntu-latest
+    concurrency:
+      group: chrome-store-deploy
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GO_WEBEXT_VERSION: v0.4.2
+    steps:
+      - name: Check out deployment helpers
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.workflow_sha }}
+
+      - name: Resolve and validate release
+        id: release
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: bash scripts/release/resolve-store-release.sh
+
+      - name: Check store configuration
+        env:
+          CHROME_APP_ID: ${{ vars.CHROME_APP_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+        run: |
+          set -euo pipefail
+          missing=()
+          for name in CHROME_APP_ID CHROME_CLIENT_ID CHROME_CLIENT_SECRET \
+            CHROME_REFRESH_TOKEN CHROME_PUBLISHER_ID; do
+            [[ -n "${!name}" ]] || missing+=("$name")
+          done
+          if [[ "${#missing[@]}" -gt 0 ]]; then
+            echo "Missing store configuration: ${missing[*]}" >&2
+            echo "Configure the repository variable and secrets listed in docs/release.md." >&2
+            exit 1
+          fi
+
+      - name: Download release assets
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          CHROME_ASSET: ${{ steps.release.outputs.asset }}
+        run: |
+          set -euo pipefail
+          gh release download "$RELEASE_TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --pattern "$CHROME_ASSET" \
+            --pattern SHA256SUMS \
+            --dir release-assets
+          echo "CHROME_ASSET=$CHROME_ASSET" >> "$GITHUB_ENV"
+
+      - name: Verify asset integrity and version
+        working-directory: release-assets
+        env:
+          PACKAGE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          checksum_line="$(awk -v asset="$CHROME_ASSET" '$2 == asset { print }' SHA256SUMS)"
+          if [[ "$(wc -l <<< "$checksum_line" | tr -d ' ')" != 1 ]]; then
+            echo "SHA256SUMS must contain exactly one entry for $CHROME_ASSET." >&2
+            exit 1
+          fi
+          sha256sum --check --strict <<< "$checksum_line"
+          if [[ "$(unzip -Z1 "$CHROME_ASSET" | grep -cxF manifest.json)" != 1 ]]; then
+            echo "$CHROME_ASSET must contain exactly one root manifest.json." >&2
+            exit 1
+          fi
+          zip_version="$(unzip -p "$CHROME_ASSET" manifest.json | jq -er '.version')"
+          if [[ "$zip_version" != "$PACKAGE_VERSION" ]]; then
+            echo "$CHROME_ASSET manifest version $zip_version does not match release version $PACKAGE_VERSION." >&2
+            exit 1
+          fi
+
+      - name: Set up Go
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version: '1.26.x'
+          cache: false
+
+      - name: Install go-webext
+        id: install
+        run: |
+          set -euo pipefail
+          go install "github.com/adguardteam/go-webext@${GO_WEBEXT_VERSION}"
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Upload to Chrome Web Store
+        env:
+          CHROME_API_VERSION: v2
+          CHROME_APP_ID: ${{ vars.CHROME_APP_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          PACKAGE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          go-webext update chrome \
+            -a "$CHROME_APP_ID" -f "release-assets/$CHROME_ASSET" 2>&1 \
+            | tee "$RUNNER_TEMP/upload-output.txt"
+          if ! grep -qxF "Upload State: SUCCEEDED" "$RUNNER_TEMP/upload-output.txt"; then
+            echo "Upload did not reach SUCCEEDED; refusing to submit an unconfirmed draft." >&2
+            echo "Re-run this workflow after Chrome Web Store finishes processing it." >&2
+            exit 1
+          fi
+          if ! grep -qxF "Version: $PACKAGE_VERSION" "$RUNNER_TEMP/upload-output.txt"; then
+            echo "Store draft version does not match release version $PACKAGE_VERSION." >&2
+            exit 1
+          fi
+
+      - name: Submit for review and automatic publishing
+        id: publish
+        env:
+          CHROME_API_VERSION: v2
+          CHROME_APP_ID: ${{ vars.CHROME_APP_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+        run: |
+          set -euo pipefail
+          go-webext publish chrome -a "$CHROME_APP_ID" 2>&1
+
+      - name: Report store status
+        if: always() && steps.install.outcome == 'success'
+        continue-on-error: true
+        env:
+          CHROME_API_VERSION: v2
+          CHROME_APP_ID: ${{ vars.CHROME_APP_ID }}
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          PACKAGE_VERSION: ${{ steps.release.outputs.version }}
+          PUBLISH_OUTCOME: ${{ steps.publish.outcome }}
+        run: |
+          set -euo pipefail
+          go-webext status chrome -a "$CHROME_APP_ID" 2>&1 \
+            | tee "$RUNNER_TEMP/status-output.txt"
+          {
+            echo "## Chrome Web Store deployment"
+            echo
+            echo "- Release: \`$RELEASE_TAG\` (version $PACKAGE_VERSION)"
+            if [[ "$PUBLISH_OUTCOME" == success ]]; then
+              echo "- Submitted for review and configured to publish automatically after approval."
+            else
+              echo "- Submission step outcome: \`$PUBLISH_OUTCOME\`; review was not confirmed."
+            fi
+            echo
+            echo '```'
+            cat "$RUNNER_TEMP/status-output.txt"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
