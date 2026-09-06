@@ -23,7 +23,7 @@ pnpm verify
 
 ## Packaging
 
-`pnpm package` builds the store packages for every target into `build/artifacts`: Chrome, Edge, and Firefox zips, a source archive, `SHA256SUMS`, and `provenance.json`. Packages are byte-reproducible for a given commit; see [release.md](release.md) for the guarantees and the release process.
+`pnpm release` builds every store target into `build/release/<target>` and zips each one to `build/release/<target>.zip`. The release workflow renames the zips to `hn-split-<version>-<target>.zip`, adds the source archive and `SHA256SUMS.txt`, and publishes them; see [RELEASE.md](RELEASE.md) for the release process and store deployment.
 
 The manifest in every build is generated: `package.json` supplies the version (the base `public/manifest.json` has no `version` key on purpose), and the Firefox target gets structural rewrites (event-page background, `options_ui`, gecko id, no `sidePanel`). Two environment variables drive single-target builds when needed:
 
