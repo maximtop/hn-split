@@ -10,8 +10,8 @@ permissions:
   contents: read
 
 jobs:
+  # The job ids `check` and `package` are the status checks the master ruleset requires.
   check:
-    name: Check and test
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -42,7 +42,6 @@ jobs:
           retention-days: 7
 
   package:
-    name: Build release archives
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
