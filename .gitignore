@@ -21,3 +21,6 @@ playwright-report/
 # Logs
 *.log
 .sdd/
+
+# Store deployment downloads (deploy-*.yml)
+store-upload/

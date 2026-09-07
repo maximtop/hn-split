@@ -39,7 +39,7 @@ The side panel embeds the real Hacker News site. It may retain up to three recen
 - [Priority locales](docs/locales.md)
 - [Development and Chrome loading](docs/development.md)
 - [Store listing master copy and visual assets](docs/store-listing.md)
-- [Releasing and reproducible packaging](docs/release.md)
+- [Releasing and store deployment](docs/RELEASE.md)
 - [Privacy](PRIVACY.md)
 
 ## Development
@@ -52,7 +52,7 @@ pnpm check
 
 Rspack writes the unpacked extension to `dist`. Load that directory in Chrome 140 or newer.
 
-`pnpm package` produces the reproducible Chrome, Edge, and Firefox store packages plus checksums and provenance in `build/artifacts`; releases are published from signed tags ([docs/release.md](docs/release.md)).
+`pnpm release` builds the Chrome, Edge, and Firefox store archives into `build/release`; tagged releases publish them with checksums, and store submission is a separate manual workflow ([docs/RELEASE.md](docs/RELEASE.md)).
 
 ## Support and license
 
