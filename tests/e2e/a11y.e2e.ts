@@ -113,6 +113,18 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
     },
 ] as const;
 
+/**
+ * Runs the axe scan and fails on blocking WCAG violations.
+ *
+ * The scan is not free of side effects for the extension under test:
+ * `@axe-core/playwright` finishes every analysis inside a temporary blank tab
+ * of the same browser window, and creating then closing that tab re-activates
+ * the scanned tab. The background worker treats that like any tab switch and
+ * re-synchronizes the side panel projection afterwards, so nothing may write
+ * the projection directly while that work can still be in flight.
+ * @param page - The extension page to scan.
+ * @param label - The label used in the assertion and advisory output.
+ */
 async function scanForBlockingViolations(page: Page, label: string): Promise<void> {
     const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
     const blocking = results.violations.filter(
@@ -192,6 +204,14 @@ async function openManualPanel(
 /**
  * Publishes one strict recoverable-error projection for the currently active
  * fixture tab after the panel has completed its initial READY handshake.
+ *
+ * The write bypasses the background manager, whose revision counter never
+ * observes it, so it is only safe while the manager is idle: call it right
+ * after `openManualPanel` resolves and before anything creates or closes tabs
+ * in the panel window, in particular before `scanForBlockingViolations`. A
+ * re-synchronization still in flight would otherwise republish the projection
+ * with the same or a higher revision and the panel, which keeps the newest
+ * revision, would never render the error.
  * @param extension - The launched extension context.
  */
 async function publishRecoverablePanelError(extension: ExtensionContext): Promise<void> {
@@ -341,14 +361,20 @@ test.describe('side panel accessibility (en)', () => {
         try {
             extension = await launchEnglishFixture();
             for (const colorScheme of ['light', 'dark'] as const) {
-                const page = await openManualPanel(extension, colorScheme);
-                await scanForBlockingViolations(page, `side panel manual ${colorScheme}`);
+                const manualPanel = await openManualPanel(extension, colorScheme);
+                await scanForBlockingViolations(manualPanel, `side panel manual ${colorScheme}`);
+                await manualPanel.close();
+
+                // The error is published into a freshly opened panel: its READY
+                // handshake guarantees the background has no synchronization in
+                // flight, whereas the manual scan above has just churned tabs.
+                const errorPanel = await openManualPanel(extension, colorScheme);
                 await publishRecoverablePanelError(extension);
-                await expect(page.getByRole('button', {
+                await expect(errorPanel.getByRole('button', {
                     name: enMessages.side_panel_retry.message,
                 })).toBeVisible();
-                await scanForBlockingViolations(page, `side panel error ${colorScheme}`);
-                await page.close();
+                await scanForBlockingViolations(errorPanel, `side panel error ${colorScheme}`);
+                await errorPanel.close();
             }
         } finally {
             await extension?.dispose();
