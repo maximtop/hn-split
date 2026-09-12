@@ -16,6 +16,7 @@ import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import { readPageContext } from '../page/context';
 import { UserFacingError, messageKeyForBackgroundError, userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
+import { openDiscussionSurface, USES_FIREFOX_SIDEBAR } from '../shared/browser-target';
 import {
     FOLLOW_DIAGNOSTIC_CODE,
     FOLLOW_DIAGNOSTIC_EVENT,
@@ -258,7 +259,7 @@ export function App(): React.JSX.Element {
             sourceUrl,
             windowId,
         });
-        void chrome.sidePanel.open({ tabId }).catch(() => {
+        void openDiscussionSurface(tabId).catch(() => {
             logDiagnosticWarning(FOLLOW_DIAGNOSTIC_EVENT.OPEN_FAILED, {
                 code: FOLLOW_DIAGNOSTIC_CODE.OPEN_FAILED,
                 tabId,
@@ -344,7 +345,9 @@ export function App(): React.JSX.Element {
 
                     <Divider />
                     <Box component="footer">
-                        <Text c="dimmed" size="xs" mb="xs">{t('split_view_help')}</Text>
+                        {!USES_FIREFOX_SIDEBAR && (
+                            <Text c="dimmed" size="xs" mb="xs">{t('split_view_help')}</Text>
+                        )}
                         <Button
                             className="settings-link"
                             variant="subtle"

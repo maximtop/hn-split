@@ -301,6 +301,27 @@ export function assembleDescription(description: ListingDescription): string {
 }
 
 /**
+ * Renders one locale's description for a specific store. Firefox omits the
+ * Chrome Split View flow and the Hacker News story-click flow because those
+ * two features are not included in the Firefox package.
+ * @param storeId - Store whose shipped feature set selects the bullets.
+ * @param description - Structured description of one locale.
+ * @returns Complete description ready for the selected store dashboard.
+ */
+export function assembleStoreDescription(
+    storeId: StoreId,
+    description: ListingDescription,
+): string {
+    if (storeId !== 'amo') {
+        return assembleDescription(description);
+    }
+    return assembleDescription({
+        ...description,
+        bullets: description.bullets.filter((_, index) => index !== 2 && index !== 6),
+    });
+}
+
+/**
  * Counts whitespace-separated words across all search terms, the unit Edge
  * budgets (21 words total across at most 7 terms).
  * @param searchTerms - Localized search terms of one locale.

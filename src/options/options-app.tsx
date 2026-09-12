@@ -12,6 +12,7 @@ import {
 import { observer } from 'mobx-react-lite';
 
 import { t } from '../shared/i18n';
+import { SUPPORTS_ARTICLE_CLICK, USES_FIREFOX_SIDEBAR } from '../shared/browser-target';
 import { cssVariablesResolver, theme } from '../shared/theme';
 import type { OptionsStore } from './options-store';
 
@@ -89,31 +90,35 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
 
                     <Text c="dimmed" size="sm">{t('privacy_note')}</Text>
 
-                    <Paper withBorder radius="lg" p="xl" shadow="sm">
-                        <Group justify="space-between" align="center" wrap="nowrap" gap="xl">
-                            <Stack gap="xs">
-                                <Title order={2} size="h4">{t('article_click_open')}</Title>
-                                <Text c="dimmed">{t('article_click_open_description')}</Text>
-                            </Stack>
-                            <Switch
-                                checked={articleClick.enabled}
-                                disabled={articleClick.busy}
-                                size="lg"
-                                label={t('article_click_open_label')}
-                                labelPosition="left"
-                                onChange={(event) => {
-                                    void articleClick.changeEnabled(event.currentTarget.checked);
-                                }}
-                            />
-                        </Group>
-                    </Paper>
+                    {SUPPORTS_ARTICLE_CLICK && (
+                        <Paper withBorder radius="lg" p="xl" shadow="sm">
+                            <Group justify="space-between" align="center" wrap="nowrap" gap="xl">
+                                <Stack gap="xs">
+                                    <Title order={2} size="h4">{t('article_click_open')}</Title>
+                                    <Text c="dimmed">{t('article_click_open_description')}</Text>
+                                </Stack>
+                                <Switch
+                                    checked={articleClick.enabled}
+                                    disabled={articleClick.busy}
+                                    size="lg"
+                                    label={t('article_click_open_label')}
+                                    labelPosition="left"
+                                    onChange={(event) => {
+                                        void articleClick.changeEnabled(event.currentTarget.checked);
+                                    }}
+                                />
+                            </Group>
+                        </Paper>
+                    )}
 
-                    <Paper withBorder radius="lg" p="xl" shadow="sm">
-                        <Stack gap="xs">
-                            <Title order={2} size="h4">{t('side_panel_notice_title')}</Title>
-                            <Text c="dimmed">{t('side_panel_notice')}</Text>
-                        </Stack>
-                    </Paper>
+                    {!USES_FIREFOX_SIDEBAR && (
+                        <Paper withBorder radius="lg" p="xl" shadow="sm">
+                            <Stack gap="xs">
+                                <Title order={2} size="h4">{t('side_panel_notice_title')}</Title>
+                                <Text c="dimmed">{t('side_panel_notice')}</Text>
+                            </Stack>
+                        </Paper>
+                    )}
 
                     {availability.message === ''
                         ? null
@@ -123,7 +128,7 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                                 </Alert>
                             )}
 
-                    {articleClick.message === ''
+                    {!SUPPORTS_ARTICLE_CLICK || articleClick.message === ''
                         ? null
                         : (
                                 <Alert className="settings-status" color="orange" role="status">

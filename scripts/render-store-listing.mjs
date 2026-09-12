@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 import { EXTENSION_BRAND } from '../src/shared/brand.ts';
 import { SHIPPED_LOCALES } from '../src/shared/locales.ts';
-import { assembleDescription, STORE_CATALOG, STORE_IDS } from './lib/store-listings.ts';
+import { assembleStoreDescription, STORE_CATALOG, STORE_IDS } from './lib/store-listings.ts';
 
 const [storeId, locale] = process.argv.slice(2);
 if (!STORE_IDS.includes(storeId) || !SHIPPED_LOCALES.includes(locale)) {
@@ -35,8 +35,8 @@ function printField(label, value) {
 console.log(`# ${store.name} — ${storeLocale} (from ${locale}${listing.reviewed ? '' : ', release review pending'})\n`);
 printField('Name (from manifest; read-only)', EXTENSION_BRAND);
 printField('Summary / short description (from manifest; read-only)', messages.extension_description.message);
-printField(storeId === 'chrome' ? 'Detailed description (paste into dashboard)' : 'Description', assembleDescription(listing.description));
-if (storeId !== 'chrome') {
+printField(storeId === 'chrome' ? 'Detailed description (paste into dashboard)' : 'Description', assembleStoreDescription(storeId, listing.description));
+if (storeId !== 'chrome' && storeId !== 'amo') {
     for (const [version, notes] of Object.entries(listing.releaseNotes)) {
         printField(`Release notes ${version}`, notes);
     }

@@ -5,6 +5,8 @@
 - Node.js 24.15 or newer within the 24 line, or Node.js 26 or newer (Node.js 25 and earlier 24 releases are outside the range supported by the `jsdom` dev dependency); `.node-version` pins the exact toolchain version for fnm, nvm, and similar managers
 - pnpm 11.18.0 or newer (`npm install --global pnpm@11.18.0`)
 - Chrome 140 or newer for documented `Tab.splitViewId` detection
+- Firefox 140 or newer for the Firefox Sidebar package and its manifest data
+  collection declarations
 
 ## Commands
 
@@ -25,7 +27,11 @@ pnpm verify
 
 `pnpm release` builds every store target into `build/release/<target>` and zips each one to `build/release/<target>.zip`. The release workflow renames the zips to `hn-split-<version>-<target>.zip`, adds the source archive and `SHA256SUMS.txt`, and publishes them; see [RELEASE.md](RELEASE.md) for the release process and store deployment.
 
-The manifest in every build is generated: `package.json` supplies the version (the base `public/manifest.json` has no `version` key on purpose), and the Firefox target gets structural rewrites (event-page background, `options_ui`, gecko id, no `sidePanel`). Two environment variables drive single-target builds when needed:
+The manifest in every build is generated: `package.json` supplies the version
+(the base `public/manifest.json` has no `version` key on purpose), and the
+Firefox target gets structural rewrites (event-page background, `options_ui`,
+gecko id, Firefox Sidebar, no Chromium `sidePanel`). Two environment variables
+drive single-target builds when needed:
 
 ```bash
 TARGET_BROWSER=firefox OUTPUT_PATH=build/firefox pnpm build
@@ -50,12 +56,18 @@ The installed extension includes `tabs` access. Automatic URL checks remain off 
 - **Side-panel following (opt-in, off by default):** while a side panel is already open, enabling the independent preference checks the active eligible tab and keeps the panel aligned with later activations and article-identity changes. With it off, **Check this tab** performs one check without changing either automatic preference. Enabling from the panel both persists the preference and checks the active tab in one action; following never opens the panel or rearranges tabs. Disabling cancels unfinished automatic panel work but preserves valid content and associations already opened for unchanged tabs.
 - **Article-click discussion (opt-in, off by default):** enabling the setting registers a content script for `news.ycombinator.com` only. On an unmodified primary click on an external story link, the browser opens the article in the same tab as usual, and the extension opens that story's discussion in the side panel beside it, using the item id already present in the page — no lookup request is made. Modified, middle, and right clicks, downloads, and Hacker News-internal links (self posts, site chips, comment links) stay untouched. Disabling the setting removes the registration; the background worker also re-checks the setting before acting, so pages loaded earlier cannot act after it is turned off.
 
+The article-click setting is absent from Firefox because a content-script
+message does not preserve the user action required by `sidebarAction.open`.
+Popup, context-menu, adjacent-tab, badge, automatic-follow, and one-shot panel
+flows remain available there through Firefox Sidebar.
+
 No mode reads page contents beyond the documented inputs. No tab or side panel opens without an explicit user action; after the separate opt-in, only the contents of an already-open panel may change automatically.
 
-## Side panel
+## Discussion panel
 
-The popup's **Open in side panel** button opens Chrome's side panel with the real
-Hacker News discussion embedded. With the opt-in article-click setting enabled,
+The popup's **Open in side panel** button opens the Chromium side panel or
+Firefox Sidebar with the real Hacker News discussion embedded. In Chromium,
+with the opt-in article-click setting enabled,
 clicking a story link on Hacker News opens the same panel for that story's
 discussion; `chrome.sidePanel.open` accepts that click's user gesture only while
 the background message listener runs synchronously, which is why the click
