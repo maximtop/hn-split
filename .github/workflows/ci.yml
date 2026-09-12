@@ -5,77 +5,120 @@ on:
     branches: [master]
   pull_request:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
 
+# A release reuses this workflow but must not cancel a PR or manual CI run.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.workflow == 'CI' }}
+
 jobs:
-  # The job ids `check` and `package` are the status checks the master ruleset requires.
-  check:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.merge_commit_sha || github.sha }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup-toolchain
+      - run: pnpm lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.merge_commit_sha || github.sha }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup-toolchain
+      - run: pnpm typecheck
+
+  test:
+    name: Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.merge_commit_sha || github.sha }}
           persist-credentials: false
-      - name: Set up pnpm
-        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
-      - name: Set up Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: ./.github/actions/setup-toolchain
+      - run: pnpm test
+
+  locales:
+    name: Locales
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          node-version-file: package.json
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Install Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
-      - name: Run quality checks and end-to-end tests
-        run: pnpm verify
-      - name: Retain Playwright results
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.merge_commit_sha || github.sha }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup-toolchain
+      - run: pnpm locales:validate && pnpm store:validate
+
+  package:
+    name: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.merge_commit_sha || github.sha }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup-toolchain
+      - run: pnpm release
+      - uses: ./.github/actions/package-extension
+        with:
+          build-dir: build/release
+          asset-prefix: hn-split
+          locale-dir: public/_locales
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.merge_commit_sha || github.sha }}
+          persist-credentials: false
+      - uses: ./.github/actions/setup-toolchain
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - name: Retain E2E diagnostics
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: playwright-test-results
-          path: test-results/
+          path: |
+            test-results/
+            playwright-report/
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 14
+          overwrite: true
 
-  package:
+  check:
+    name: check
+    if: always()
+    needs: [lint, typecheck, test, package, locales, e2e]
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
-      - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Set up pnpm
-        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
-      - name: Set up Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version-file: package.json
-          cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build release archives
-        run: pnpm release
-      - name: Verify built manifests
-        run: |
-          set -euo pipefail
-          PACKAGE_VERSION="$(jq -er '.version' package.json)"
-          for ZIP in build/release/*.zip; do
-            BROWSER="$(basename "$ZIP" .zip)"
-            BUILT_VERSION="$(jq -er '.version' "build/release/$BROWSER/manifest.json")"
-            if [[ "$BUILT_VERSION" != "$PACKAGE_VERSION" ]]; then
-              echo "build/release/$BROWSER/manifest.json version $BUILT_VERSION != package.json $PACKAGE_VERSION" >&2
-              exit 1
-            fi
-          done
-      - name: Retain extension archives
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: hn-split-packages
-          path: build/release/*.zip
-          if-no-files-found: error
-          retention-days: 7
+      - name: Require every applicable check
+        env:
+          PASSED: >-
+            ${{ needs.lint.result == 'success' &&
+            needs.typecheck.result == 'success' &&
+            needs.test.result == 'success' &&
+            needs.package.result == 'success' &&
+            needs.locales.result == 'success' &&
+            needs.e2e.result == 'success' }}
+        run: test "$PASSED" = true
