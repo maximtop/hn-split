@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { OptionsApp } from './options-app';
 import { createOptionsStores } from './options-stores';
 import { applyDocumentLocale, t } from '../shared/i18n';
+import { SUPPORTS_ARTICLE_CLICK } from '../shared/browser-target';
 import '@mantine/core/styles.css';
 import './styles.css';
 
@@ -24,7 +25,9 @@ const {
     return response;
 });
 void availability.load();
-void articleClick.load();
+if (SUPPORTS_ARTICLE_CLICK) {
+    void articleClick.load();
+}
 void sidePanelFollow.load();
 
 createRoot(root).render(

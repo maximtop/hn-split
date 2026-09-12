@@ -15,6 +15,7 @@ import {
     sidePanelContentKey,
     sidePanelContentWindowId,
 } from '../shared/storage-keys';
+import { openDiscussionSurface } from '../shared/browser-target';
 
 /**
  * Converts a Chrome tab into the fields used by discussion placement.
@@ -311,7 +312,7 @@ export const contextMenuRegistry: OpenInSplitMenuRegistry = {
  * @param tabId - The browser tab whose window shows the panel.
  */
 export async function openSidePanel(tabId: number): Promise<void> {
-    await chrome.sidePanel.open({ tabId });
+    await openDiscussionSurface(tabId);
 }
 
 /**

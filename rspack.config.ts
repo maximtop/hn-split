@@ -82,6 +82,9 @@ const config: Configuration = {
     },
     performance: false,
     plugins: [
+        new rspack.DefinePlugin({
+            __TARGET_BROWSER__: JSON.stringify(buildTarget),
+        }),
         new rspack.HtmlRspackPlugin({
             chunks: ['popup'],
             filename: 'popup.html',

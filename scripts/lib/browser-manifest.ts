@@ -1,7 +1,6 @@
 /**
- * Store packaging targets. Chrome is the runtime MVP; the Edge and Firefox
- * artifacts exist so store submissions never depend on local untracked steps
- * (see docs/release.md). Runtime support beyond Chrome is tracked separately.
+ * Store packaging targets. Chrome and Edge use the Chromium side panel;
+ * Firefox maps the same panel document to Firefox Sidebar.
  */
 export const BUILD_TARGETS = ['chrome', 'edge', 'firefox'] as const;
 
@@ -89,6 +88,11 @@ interface ExtensionManifest {
     side_panel?: unknown;
 
     /**
+     * Firefox Sidebar declaration generated from the packaged panel page.
+     */
+    sidebar_action?: unknown;
+
+    /**
      * Chrome-style options page reference.
      */
     options_page?: string;
@@ -130,8 +134,8 @@ export function parseBuildTarget(value: string | undefined): BuildTarget {
 
 /**
  * Rewrites the Chrome-shaped base manifest for Firefox. Firefox runs the
- * background bundle as an MV3 event page, has no side panel API, requires
- * `options_ui`, and needs `browser_specific_settings.gecko`, including the
+ * background bundle as an MV3 event page, maps the panel page to Firefox
+ * Sidebar, requires `options_ui`, and needs `browser_specific_settings.gecko`, including the
  * AMO disclosure for the URL candidates sent to the lookup API.
  *
  * @param manifest Cloned manifest mutated in place.
@@ -147,6 +151,16 @@ function applyFirefoxTransform(manifest: ExtensionManifest): void {
         manifest.permissions = manifest.permissions.filter((permission) => permission !== 'sidePanel');
     }
     delete manifest.side_panel;
+    manifest.sidebar_action = {
+        default_panel: 'side-panel.html',
+        default_title: '__MSG_extension_name__',
+        default_icon: {
+            16: 'icons/icon-16.png',
+            32: 'icons/icon-32.png',
+            48: 'icons/icon-48.png',
+            128: 'icons/icon-128.png',
+        },
+    };
     const optionsPage = manifest.options_page;
     if (typeof optionsPage === 'string') {
         manifest.options_ui = {

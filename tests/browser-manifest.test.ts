@@ -82,6 +82,7 @@ describe('buildManifest', () => {
         expect(manifest['background']).toEqual({ scripts: [baseBackground.service_worker] });
         expect(manifest).not.toHaveProperty('minimum_chrome_version');
         expect(manifest).not.toHaveProperty('side_panel');
+        expect(manifest).toHaveProperty('sidebar_action.default_panel', 'side-panel.html');
         expect(manifest['permissions']).toEqual(basePermissions.filter((permission) => permission !== 'sidePanel'));
         expect(manifest).not.toHaveProperty('options_page');
         expect(manifest['options_ui']).toEqual({

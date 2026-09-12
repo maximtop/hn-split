@@ -34,6 +34,7 @@ import {
     isArticleClickMessage,
     isBackgroundRequest,
 } from './shared/messages';
+import { SUPPORTS_ARTICLE_CLICK } from './shared/browser-target';
 
 const SIDE_PANEL_DOCUMENT_PATH = 'side-panel.html';
 
@@ -56,9 +57,11 @@ void sidePanelFraming.reset().catch((error: unknown) => {
 
 // Chrome drops dynamically registered content scripts on extension updates,
 // so every worker start replays the persisted article-click setting.
-void reconcileArticleClickRegistration().catch((error: unknown) => {
-    logWarning('reconciling the article-click content script failed.', error);
-});
+if (SUPPORTS_ARTICLE_CLICK) {
+    void reconcileArticleClickRegistration().catch((error: unknown) => {
+        logWarning('reconciling the article-click content script failed.', error);
+    });
+}
 
 // Menu items are dropped on extension updates and browser restarts too.
 void reconcileOpenInSplitMenu().catch((error: unknown) => {
@@ -83,7 +86,7 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) => {
-    if (isArticleClickMessage(message)) {
+    if (SUPPORTS_ARTICLE_CLICK && isArticleClickMessage(message)) {
         // Handled synchronously and without a response: chrome.sidePanel.open
         // accepts the click's user gesture only before the first await, and
         // the sending page is usually navigating away already.

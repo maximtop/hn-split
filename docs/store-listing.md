@@ -15,10 +15,9 @@ Rules of this document:
   another owner.
 - **No local edits.** Store submissions copy from this file; a claim change
   lands here first, in one reviewed pull request, and then fans out.
-- **Sequencing.** Chrome shipped first; Firefox, Edge, and Safari follow after
-  the Chrome behavior is validated. Browser-specific wording (side panel,
-  Split View) is re-cut for each port, but the re-cut text is reviewed here
-  before any submission uses it.
+- **Sequencing.** Chrome shipped first. Firefox uses Firefox Sidebar and omits
+  the Chrome Split View and story-click bullets. Edge uses the complete
+  Chromium feature set. Safari remains future work.
 
 ## Identity
 
@@ -95,6 +94,10 @@ bullets re-cut to the shipped feature set of that port.
 >
 > Unofficial. This extension is an independent project and is not affiliated
 > with or endorsed by Y Combinator or Hacker News.
+
+For AMO, `pnpm store:render amo <locale>` removes the Chrome Split View bullet
+and the story-click bullet in every one of the 40 reviewed translations. All
+other claims and the disclaimer remain unchanged.
 
 ### Feature list
 

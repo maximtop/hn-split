@@ -3,6 +3,8 @@
 This document has the same structure in every extension repository; only the
 store list, the identifiers, and the repository-specific notes differ.
 
+The cross-repository contract and extraction boundary are documented in [Shared store deployment](STORE_DEPLOYMENT.md).
+
 - [Cut a release](#cut-a-release)
 - [Store deployment](#store-deployment)
   - [Chrome Web Store](#chrome-web-store)
@@ -11,6 +13,29 @@ store list, the identifiers, and the repository-specific notes differ.
 - [Failure playbook](#failure-playbook)
 
 ## Cut a release
+
+Use the manual `Please release` workflow for the normal path:
+
+```sh
+gh workflow run please-release.yml -f version=X.Y.Z
+```
+
+The requested version must be a stable `X.Y.Z` newer than `package.json`.
+Release Please creates or updates a release PR that changes `package.json` and
+`CHANGELOG.md`. Merging that PR is the release approval: `release.yml` runs the
+full checks, builds the archives, creates `vX.Y.Z`, and publishes the GitHub
+Release. Nothing is sent to a browser store. Use `-f mode=validate` to check a
+version without creating a branch or PR.
+
+The workflow uses the built-in `GITHUB_TOKEN` unless an optional
+`RELEASE_PLEASE_TOKEN` is configured. The built-in token requires the repository
+setting that allows Actions to create pull requests. It does not start ordinary
+PR workflows for the PR it creates, so `release.yml` deliberately repeats the
+full quality and artifact checks after merge and creates no tag or release if
+they fail. A fine-grained token can be used when CI on the release PR itself is
+also wanted.
+
+The manual version-and-tag fallback remains available:
 
 1. Bump `version` in `package.json` (semantic `X.Y.Z`) in a normal pull
    request and merge it to `master`.
@@ -44,14 +69,13 @@ delete it with `gh release delete vX.Y.Z --yes` before re-running.
 
 ## Store deployment
 
-Nothing is sent to a store automatically. Each store has its own manual
-workflow that takes an already published GitHub Release. Only the Chrome Web
-Store has a workflow here; Edge Add-ons and Firefox Add-ons submissions remain
-manual uploads of the release archives (attach the source archive for AMO
-review and point reviewers at `docs/development.md`).
+Nothing is sent to a store automatically. Chrome, Edge, and Firefox each
+have a manual workflow that takes an already published GitHub Release.
 
 ```sh
 gh workflow run deploy-chrome-store.yml -f tag=vX.Y.Z
+gh workflow run deploy-edge-addons.yml -f tag=vX.Y.Z
+gh workflow run deploy-firefox-amo.yml -f tag=vX.Y.Z
 ```
 
 The `tag` input is optional; blank deploys the latest published release. The
@@ -86,6 +110,11 @@ with the same tag to submit it again. A green run proves a successful
 submission, not approval.
 
 ## Store configuration
+
+The complete Chrome, Edge, and Firefox configuration matrix is in
+[Shared store deployment](STORE_DEPLOYMENT.md#github-configuration).
+
+The Chrome-specific bootstrap details follow.
 
 The store item must exist before any deployment: the API cannot create the
 listing. One-time setup:
