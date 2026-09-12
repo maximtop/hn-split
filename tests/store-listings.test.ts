@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
     assembleDescription,
+    assembleStoreDescription,
     collectListingIssues,
     countSearchTermWords,
     type ListingContent,
@@ -109,6 +110,23 @@ describe('assembleDescription', () => {
             disclaimer: 'Disclaimer.',
         });
         expect(assembled).toBe('Intro.\n\n- First.\n- Second.\n\nDisclaimer.');
+    });
+});
+
+describe('assembleStoreDescription', () => {
+    it('omits the two features absent from the Firefox package', () => {
+        const assembled = assembleStoreDescription('amo', base.description);
+
+        expect(assembled).not.toContain(base.description.bullets[2]);
+        expect(assembled).not.toContain(base.description.bullets[6]);
+        expect(assembled).toContain(base.description.bullets[3]);
+        expect(assembled).toContain(base.description.bullets[5]);
+        expect(base.description.bullets).toHaveLength(EXPECTED_DESCRIPTION_BULLET_COUNT);
+    });
+
+    it('keeps the complete feature list for Edge', () => {
+        expect(assembleStoreDescription('edge', base.description))
+            .toBe(assembleDescription(base.description));
     });
 });
 
