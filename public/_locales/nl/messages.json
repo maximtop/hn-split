@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Het zijpaneel volgt nu actieve tabbladen.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Automatisch volgen via het zijpaneel is uitgeschakeld.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Openen in Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Zoeken naar de discussie op Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Zoeken naar de discussie op Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnostiek", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Het lokale logboek blijft alleen tijdens deze browsersessie bewaard (maximaal 1.000 vermeldingen / 1 MiB). Pagina-URL’s, inhoud, cookies en geheime gegevens worden niet vastgelegd. Exporteren slaat een bestand op uw apparaat op; er wordt niets automatisch verzonden.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Diagnostiek laden…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Geen diagnostische vermeldingen.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Vermeldingen in deze momentopname: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Logboek exporteren", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Logboek wissen", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Download van logboek aangevraagd.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Logboek gewist.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Kan de diagnostiek niet openen of exporteren. Probeer het opnieuw.", "description": "Local diagnostics: failure"}
 }

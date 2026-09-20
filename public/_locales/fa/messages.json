@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "پنل کناری اکنون زبانه‌های فعال را دنبال می‌کند.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "دنبال‌کردن خودکار در پنل کناری خاموش است.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "باز کردن در Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "در حال جست‌وجوی گفتگوی Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "در حال جست‌وجوی گفتگوی Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "عیب‌یابی", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "گزارش محلی فقط در نشست فعلی مرورگر نگهداری می‌شود (حداکثر ۱٬۰۰۰ مورد / 1 MiB). نشانی صفحات، محتوا، کوکی‌ها و داده‌های محرمانه ثبت نمی‌شوند. خروجی یک فایل روی دستگاه شما ذخیره می‌کند؛ هیچ‌چیز خودکار ارسال نمی‌شود.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "در حال بارگیری گزارش…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "موردی در گزارش نیست.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "موارد این تصویر لحظه‌ای: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "دریافت گزارش", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "پاک کردن گزارش", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "دانلود فایل گزارش درخواست شد.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "گزارش پاک شد.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "دسترسی به گزارش یا دریافت آن ممکن نشد. دوباره تلاش کنید.", "description": "Local diagnostics: failure"}
 }

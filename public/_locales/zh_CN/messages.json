@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "侧边栏现在会跟随活动标签页。", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "自动侧边栏跟随功能已关闭。", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "在 Split 中打开", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "正在查找 Hacker News 讨论…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "正在查找 Hacker News 讨论…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "诊断", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "本地日志仅在当前浏览器会话中保留（最多 1,000 条 / 1 MiB）。不会记录页面 URL、内容、Cookie 或机密数据。导出会将文件保存到您的设备，不会自动发送任何数据。", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "正在加载诊断信息…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "没有诊断记录。", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "此快照中的记录数：%count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "导出日志", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "清空日志", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "已请求下载日志文件。", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "日志已清空。", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "无法访问或导出诊断信息，请重试。", "description": "Local diagnostics: failure"}
 }

@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Sivupaneeli seuraa nyt aktiivisia välilehtiä.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Sivupaneelin automaattinen seuranta on poistettu käytöstä.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Avaa Splitissä", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Etsitään Hacker News -keskustelua…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Etsitään Hacker News -keskustelua…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnostiikka", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Paikallinen loki säilytetään vain tämän selainistunnon ajan (enintään 1 000 merkintää / 1 MiB). Sivujen URL-osoitteita, sisältöä, evästeitä tai salaisia tietoja ei kirjata. Vienti tallentaa tiedoston laitteelle; mitään ei lähetetä automaattisesti.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Ladataan diagnostiikkaa…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Ei diagnostiikkamerkintöjä.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Merkintöjä tässä tilannekuvassa: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Vie lokit", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Tyhjennä lokit", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Lokitiedoston latausta pyydetty.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Lokit tyhjennetty.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Diagnostiikkaa ei voi avata tai viedä. Yritä uudelleen.", "description": "Local diagnostics: failure"}
 }

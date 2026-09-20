@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Panel sisi kini menjejaki tab aktif.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Penjejakan panel sisi automatik dilumpuhkan.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Buka dalam Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Mencari perbincangan Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Mencari perbincangan Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnostik", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Log setempat disimpan hanya sepanjang sesi pelayar ini (sehingga 1,000 entri / 1 MiB). URL halaman, kandungan, kuki dan data rahsia tidak direkodkan. Eksport menyimpan fail pada peranti anda; tiada apa-apa dihantar secara automatik.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Memuatkan diagnostik…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Tiada entri diagnostik.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Entri dalam petikan ini: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Eksport log", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Kosongkan log", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Muat turun fail log diminta.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Log dikosongkan.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Tidak dapat mengakses atau mengeksport diagnostik. Cuba lagi.", "description": "Local diagnostics: failure"}
 }

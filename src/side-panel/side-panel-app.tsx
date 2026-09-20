@@ -1,3 +1,4 @@
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import {
     Alert,
     Anchor,
@@ -182,7 +183,7 @@ export function SidePanelApp(): React.JSX.Element {
         if (becomesReady) {
             framingReadyRef.current = true;
             setFramingReady(true);
-            logDiagnostic('side panel framing ready.', {
+            logDiagnostic(DIAGNOSTIC_EVENT.FRAMING_READY, {
                 tabId: candidate.content.tabId,
                 revision: candidate.revision,
             });
@@ -202,7 +203,7 @@ export function SidePanelApp(): React.JSX.Element {
             setFrameState((current) => activateDiscussionFrame(current, discussion));
         }
         setProjection(candidate);
-        logDiagnostic('side panel projection loaded.', {
+        logDiagnostic(DIAGNOSTIC_EVENT.PROJECTION_LOADED, {
             revision: candidate.revision,
             tabId: candidate.content.tabId,
             kind: candidate.content.kind,
@@ -404,7 +405,7 @@ export function SidePanelApp(): React.JSX.Element {
                 if (!framingReadyRef.current && matchesReadyStamp(candidate, stamp)) {
                     framingReadyRef.current = true;
                     setFramingReady(true);
-                    logDiagnostic('side panel framing ready.', {
+                    logDiagnostic(DIAGNOSTIC_EVENT.FRAMING_READY, {
                         tabId: stamp.tabId,
                         revision: stamp.projectionRevision,
                     });

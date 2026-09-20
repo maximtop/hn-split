@@ -1,3 +1,4 @@
+import { DiagnosticsSection } from './diagnostics-section';
 import {
     Alert,
     Container,
@@ -119,6 +120,8 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                             </Stack>
                         </Paper>
                     )}
+
+                    <DiagnosticsSection />
 
                     {availability.message === ''
                         ? null

@@ -174,3 +174,45 @@ Chrome 140 documents `Tab.splitViewId`, Split View queries, and Split View updat
 - **Side panel (popup button, or the opt-in article-click setting):** the discussion renders in Chrome's side panel beside the page, using the disclosed framing exception described above.
 
 The adjacent-tab flow modifies no page and remains the fallback if Hacker News ever breaks framing. The side panel embeds the real Hacker News page inside the extension's own panel — never inside a page the user is reading — and no undocumented browser API is used anywhere.
+
+## Session diagnostics
+
+`src/shared/logger.ts` preserves console behavior and forwards recognized events
+through a context-specific sink. The three extension UI entries install a
+runtime transport; the background installs a direct `DiagnosticLog` sink.
+Content scripts deliberately install no sink. Add stable event messages to
+`diagnostic-events.ts`; unknown messages are console-only. Every persisted
+scalar is enumerated in `diagnostics.ts`. Never widen that schema to serialize
+raw URLs, caught messages/stacks, arbitrary objects or page data.
+
+The diagnostic handler validates incoming messages with Valibot, checks the
+sender extension ID and exact popup/options/side-panel document URL, and assigns
+the source itself. Snapshot and clear requests are accepted only from Options.
+One collector queue serializes append, snapshot and clear. The dedicated
+`diagnostic_log_v1` session record survives MV3 worker suspension. Retention is
+oldest-first, capped independently at 1,000 entries and 1,048,576 serialized
+UTF-8 bytes; the pending append queue is also capped at 1,000. At overload,
+new appends are dropped with console-only feedback. Diagnostic failures never
+call the logging sink recursively or make product operations await storage.
+Failed reads/writes leave later operations runnable. Malformed stored envelopes
+are cleared rather than partially exported.
+
+Options displays the count from its last snapshot, supports an empty export,
+and reports success or failure in a live status region. Clear removes only the
+diagnostic key; later events can refill the log. Loading Options never saves a
+file. Export uses a Blob and an anchor download, with no temporary tab or extra
+permission. Exported files are independent of session retention and manual clear.
+
+The support format is UTF-8 JSON Lines with a `.txt` extension. Line one is
+`{"formatVersion":1,"extensionVersion":"<manifest version>","exportedAt":"<UTC ISO timestamp>"}`.
+Each subsequent line is a validated entry with `timestamp`, `source`, `level`,
+`message` and `details`. The format version also identifies the session envelope;
+changes to that contract require a new version. Filenames use UTC:
+`yyyyMMdd_HHmmss_hn_split_v{version}.txt`. All metadata comes from the local
+extension and export clock; there is no user, device or browsing fingerprint.
+
+Behavioral tests cover normalization, all context transports, concurrency,
+worker re-creation, count/byte eviction, malformed storage, failure recovery,
+explicit export/clear, metadata and local download. The single diagnostics E2E
+checks Chrome's actual download boundary; the existing Options axe checks cover
+both color schemes. Run `pnpm verify` when browser execution is available.

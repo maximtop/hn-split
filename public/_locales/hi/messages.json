@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "साइड पैनल अब सक्रिय टैब का अनुसरण करता है।", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "साइड पैनल का स्वचालित अनुसरण बंद है।", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Split में खोलें", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Hacker News चर्चा खोजी जा रही है…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Hacker News चर्चा खोजी जा रही है…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "निदान", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "स्थानीय लॉग केवल इस ब्राउज़र सत्र तक रखे जाते हैं (अधिकतम 1,000 प्रविष्टियाँ / 1 MiB)। पृष्ठों के URL, सामग्री, कुकी या गोपनीय डेटा दर्ज नहीं होते। निर्यात आपके डिवाइस पर फ़ाइल सहेजता है; कुछ भी अपने आप नहीं भेजा जाता।", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "निदान लोड हो रहा है…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "कोई निदान प्रविष्टि नहीं।", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "इस स्नैपशॉट में प्रविष्टियाँ: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "लॉग निर्यात करें", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "लॉग साफ़ करें", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "लॉग फ़ाइल डाउनलोड का अनुरोध किया गया।", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "लॉग साफ़ किए गए।", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "निदान खोलना या निर्यात करना संभव नहीं हुआ। फिर से प्रयास करें।", "description": "Local diagnostics: failure"}
 }

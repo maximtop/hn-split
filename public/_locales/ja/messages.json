@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "サイドパネルがアクティブなタブを追跡するようになりました。", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "サイドパネルの自動追跡は無効です。", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Split で開く", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Hacker News のディスカッションを検索しています…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Hacker News のディスカッションを検索しています…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "診断", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "ローカルログは、このブラウザーセッション中のみ保持されます（最大1,000件 / 1 MiB）。ページのURL、コンテンツ、Cookie、機密データは記録されません。エクスポートは端末にファイルを保存し、自動送信は行いません。", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "診断情報を読み込み中…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "診断記録はありません。", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "このスナップショットの記録数：%count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "ログをエクスポート", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "ログを消去", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "ログファイルのダウンロードを要求しました。", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "ログを消去しました。", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "診断情報にアクセスまたはエクスポートできません。もう一度お試しください。", "description": "Local diagnostics: failure"}
 }

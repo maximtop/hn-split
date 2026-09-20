@@ -1,3 +1,4 @@
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import {
     Alert,
     Box,
@@ -190,7 +191,7 @@ export function App(): React.JSX.Element {
                     });
                 }
             } catch (error) {
-                logWarning('popup lookup failed.', error);
+                logWarning(DIAGNOSTIC_EVENT.POPUP_LOOKUP_FAILED, error);
                 if (!cancelled) {
                     setState({
                         articleTabId: null,
@@ -230,7 +231,7 @@ export function App(): React.JSX.Element {
                 error: response.ok ? null : t(messageKeyForBackgroundError(response.error)),
             }));
         } catch (error) {
-            logWarning('opening the discussion failed.', error);
+            logWarning(DIAGNOSTIC_EVENT.DISCUSSION_OPEN_FAILED, error);
             const reason = userFacingMessage(error, 'extension_no_response');
             setState((current) => ({
                 ...current,

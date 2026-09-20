@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Sidopanelen följer nu aktiva flikar.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Automatisk följning i sidopanelen är inaktiverad.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Öppna i Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Söker efter diskussionen på Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Söker efter diskussionen på Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnostik", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Den lokala loggen sparas bara under den här webbläsarsessionen (upp till 1 000 poster / 1 MiB). Sid-URL:er, innehåll, kakor och hemliga uppgifter registreras inte. Export sparar en fil på enheten; ingenting skickas automatiskt.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Läser in diagnostik…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Inga diagnostikposter.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Poster i denna ögonblicksbild: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Exportera loggar", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Rensa loggar", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Nedladdning av loggfil begärd.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Loggar rensade.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Det går inte att öppna eller exportera diagnostiken. Försök igen.", "description": "Local diagnostics: failure"}
 }

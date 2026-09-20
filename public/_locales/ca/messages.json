@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Ara el plafó lateral segueix les pestanyes actives.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "El seguiment automàtic del plafó lateral està desactivat.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Obre a Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "S'està cercant la discussió a Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "S'està cercant la discussió a Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnòstic", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "El registre local es conserva només durant aquesta sessió del navegador (fins a 1.000 entrades / 1 MiB). No s’hi desen URL de pàgines, contingut, galetes ni dades secretes. L’exportació desa un fitxer al dispositiu; no s’envia res automàticament.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "S’està carregant el diagnòstic…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "No hi ha entrades de diagnòstic.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Entrades en aquesta instantània: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Exporta els registres", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Esborra els registres", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "S’ha sol·licitat la baixada del registre.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Registres esborrats.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "No s’ha pogut accedir al diagnòstic o exportar-lo. Torna-ho a provar.", "description": "Local diagnostics: failure"}
 }

@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "側邊面板現在會跟隨使用中的分頁。", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "自動側邊面板跟隨功能已關閉。", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "在 Split 中開啟", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "正在尋找 Hacker News 討論…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "正在尋找 Hacker News 討論…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "診斷", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "本機記錄僅在目前瀏覽器工作階段中保留（最多 1,000 筆 / 1 MiB）。不會記錄網頁 URL、內容、Cookie 或機密資料。匯出會將檔案儲存至您的裝置，不會自動傳送任何資料。", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "正在載入診斷資訊…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "沒有診斷記錄。", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "此快照中的記錄數：%count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "匯出記錄", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "清空記錄", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "已要求下載記錄檔案。", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "記錄已清空。", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "無法存取或匯出診斷資訊，請重試。", "description": "Local diagnostics: failure"}
 }
