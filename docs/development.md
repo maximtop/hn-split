@@ -1,8 +1,34 @@
 # Development
 
+## Shared developer commands
+
+| Make | pnpm | Meaning |
+| --- | --- | --- |
+| `make install` | `pnpm install` | Install dependencies; `make setup` and `make init` are aliases. |
+| `make build [browser]` | `pnpm build [browser]` | Build once in development mode; Chrome by default. |
+| `make dev [browser]` | `pnpm dev [browser]` | Alias for the one-shot development build. |
+| `make start [browser]` | `pnpm start [browser]` | Watch development files; Chrome by default. |
+| `make release [browser]` | `pnpm release [browser]` | Build local production archives; all store targets by default. |
+| `make package [browser]` | `pnpm package [browser]` | Alias for local release packaging. |
+| `make check` | `pnpm check` | Static checks and automated tests, without store submission. |
+
+`make` defaults to `make build`. Pass at most one supported browser as an
+extra goal, for example `make build firefox`. Unknown targets fail before
+building. `lint`, `typecheck`, and `test` also have matching Make targets;
+`make validate` is a compatibility alias for `make check`.
+Store upload/publish commands and CI deployment workflows are separate:
+`release` and `package` never submit to a store or create a GitHub release.
+
+Rspack supports Chrome, Edge, and Firefox. Development output is
+`build/<browser>`; load `build/chrome` in Chrome. Release output remains
+`build/release/<browser>` and `build/release/<browser>.zip`, matching CI.
+A build cleans only the selected browser directory. Arbitrary `OUTPUT_PATH`
+overrides are no longer used.
+
+
 ## Requirements
 
-- Node.js 24.15 or newer within the 24 line, or Node.js 26 or newer (Node.js 25 and earlier 24 releases are outside the range supported by the `jsdom` dev dependency); `.node-version` pins the exact toolchain version for fnm, nvm, and similar managers
+- Node.js 24.x, matching `package.json` and CI.
 - pnpm 11.18.0 or newer (`npm install --global pnpm@11.18.0`)
 - Chrome 140 or newer for documented `Tab.splitViewId` detection
 - Firefox 140 or newer for the Firefox Sidebar package and its manifest data
@@ -19,7 +45,7 @@ pnpm test:e2e
 pnpm verify
 ```
 
-`pnpm dev` produces a one-shot development build; pass `--watch` (`pnpm dev --watch`) to rebuild on file changes. `pnpm build` creates the unpacked extension with Rspack. `test:e2e` builds the extension, launches Playwright's Chromium with `dist` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, automatic-badge lifecycle, the real background lookup, adjacent/reused discussion-tab behavior, article-click registration, and side-panel consent, active-tab synchronization, newest-target wins, retained-frame visibility, and framing cleanup. It does not claim to create native Chrome Split View or prove browser-managed scroll preservation and native global-panel focus behavior; those require the documented manual Chrome checks.
+`pnpm dev` produces a one-shot development build; pass `--watch` (`pnpm dev --watch`) to rebuild on file changes. `pnpm build` creates the unpacked extension with Rspack. `test:e2e` builds the extension, launches Playwright's Chromium with `build/chrome` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, automatic-badge lifecycle, the real background lookup, adjacent/reused discussion-tab behavior, article-click registration, and side-panel consent, active-tab synchronization, newest-target wins, retained-frame visibility, and framing cleanup. It does not claim to create native Chrome Split View or prove browser-managed scroll preservation and native global-panel focus behavior; those require the documented manual Chrome checks.
 
 `pnpm locales:validate` verifies that every locale has the English message keys and that placeholders and tags are structurally valid according to `@adguard/translate`.
 
@@ -30,21 +56,17 @@ pnpm verify
 The manifest in every build is generated: `package.json` supplies the version
 (the base `public/manifest.json` has no `version` key on purpose), and the
 Firefox target gets structural rewrites (event-page background, `options_ui`,
-gecko id, Firefox Sidebar, no Chromium `sidePanel`). Two environment variables
-drive single-target builds when needed:
-
-```bash
-TARGET_BROWSER=firefox OUTPUT_PATH=build/firefox pnpm build
-```
-
-`TARGET_BROWSER` defaults to `chrome` and `OUTPUT_PATH` to `dist`, so plain `pnpm build` remains the Chrome development build that `chrome://extensions` and the e2e suite load.
+gecko id, Firefox Sidebar, no Chromium `sidePanel`). Select the browser with
+`pnpm build firefox` or `make build firefox`. Development and release output
+paths share a validated resolver; `TARGET_BROWSER` remains supported for direct
+Rspack calls, with `BUILD_CHANNEL=release` selecting the release directory.
 
 ## Load in Chrome
 
-1. Run `pnpm build`.
+1. Run `make build`.
 2. Open `chrome://extensions`.
 3. Enable Developer mode.
-4. Choose **Load unpacked** and select the repository's `dist` directory.
+4. Choose **Load unpacked** and select the repository's `build/chrome` directory.
 5. Open the extension's details and choose **Extension options** to test the three independent, off-by-default preferences.
 
 ## Availability modes

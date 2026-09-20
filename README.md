@@ -54,11 +54,12 @@ This README describes the current source. The public Chrome Web Store listing wa
 
 ```bash
 npm install --global pnpm@11.18.0
-pnpm install
-pnpm check
+make install
+make build
+make check
 ```
 
-Rspack writes the unpacked extension to `dist`. Load that directory in Chrome 140 or newer.
+Rspack writes the unpacked extension to `build/chrome`. Load that directory in Chrome 140 or newer.
 
 `pnpm release` builds the Chrome, Edge, and Firefox store archives into `build/release`; tagged releases publish them with checksums, and store submission is a separate manual workflow ([docs/RELEASE.md](docs/RELEASE.md)).
 
@@ -67,3 +68,10 @@ Rspack writes the unpacked extension to `dist`. Load that directory in Chrome 14
 Report problems or request features in [GitHub Issues](https://github.com/maximtop/hn-split/issues). The source is available under the [MIT License](LICENSE), and feature work is reviewed through pull requests targeting `master`.
 
 Split for Hacker News is an unofficial, independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
+
+## Developer workflow
+
+Use `make install`, `make build`, `make start`, `make check`, and
+`make package`. Builds default to Chrome; packaging is local only. See
+[development guide](docs/development.md) for browser targets, output paths,
+and the equivalent pnpm commands.

@@ -17,12 +17,18 @@ import {
     CHROME_PACKAGED_LOCALES,
     SHIPPED_LOCALES,
 } from '../src/shared/locales.ts';
-import { BUILD_TARGETS } from './lib/browser-manifest.ts';
+import { BUILD_CHANNELS, resolveBuildPath } from './lib/build-paths.ts';
+import { BUILD_TARGETS, parseBuildTarget } from './lib/browser-manifest.ts';
 import { readHeadCommit } from './lib/build-info.ts';
 import { collectDirectoryEntries, createDeterministicZip } from './lib/deterministic-zip.ts';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const RELEASE_DIR = resolve(ROOT, 'build/release');
+const args = process.argv.slice(2);
+if (args.length > 1) {
+    throw new Error('Choose at most one browser: chrome, edge or firefox.');
+}
+const targets = args.length === 0 ? BUILD_TARGETS : [parseBuildTarget(args[0])];
 
 // Zip entry timestamps derive from the packaged commit, never from the clock,
 // so rebuilding the same commit reproduces identical bytes.
@@ -35,20 +41,20 @@ const entryTimestamp = new Date(readHeadCommit(ROOT).timestamp * 1000);
  * @returns Absolute path of the unpacked build directory.
  */
 function buildBrowserTarget(target) {
-    const outputPath = `build/release/${target}`;
+    const outputPath = resolveBuildPath(ROOT, target, BUILD_CHANNELS.RELEASE);
     const result = spawnSync('pnpm', ['exec', 'rspack', 'build', '--mode', 'production'], {
         cwd: ROOT,
         stdio: 'inherit',
         env: {
             ...process.env,
             TARGET_BROWSER: target,
-            OUTPUT_PATH: outputPath,
+            BUILD_CHANNEL: BUILD_CHANNELS.RELEASE,
         },
     });
     if (result.status !== 0) {
         throw new Error(`rspack build failed for the ${target} target.`);
     }
-    return resolve(ROOT, outputPath);
+    return outputPath;
 }
 
 /**
@@ -87,10 +93,10 @@ async function validatePackagedLocales(target, outputDirectory) {
     }
 }
 
-await rm(RELEASE_DIR, { force: true, recursive: true });
 await mkdir(RELEASE_DIR, { recursive: true });
 
-for (const target of BUILD_TARGETS) {
+for (const target of targets) {
+    await rm(resolve(RELEASE_DIR, `${target}.zip`), { force: true });
     console.log(`\nBuilding the ${target} package…`);
     const outputDirectory = buildBrowserTarget(target);
     await validatePackagedLocales(target, outputDirectory);
