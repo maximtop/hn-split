@@ -4,6 +4,7 @@ import { rspack } from '@rspack/core';
 import type { Configuration } from '@rspack/core';
 
 import { buildManifest, parseBuildTarget, serializeManifest } from './scripts/lib/browser-manifest';
+import { resolveBuildPath } from './scripts/lib/build-paths';
 import { readPackageVersion } from './scripts/lib/build-info';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from './src/shared/content-scripts';
 import { CHROME_PACKAGED_LOCALE_ALIASES, SHIPPED_LOCALES } from './src/shared/locales';
@@ -13,12 +14,9 @@ import { CHROME_PACKAGED_LOCALE_ALIASES, SHIPPED_LOCALES } from './src/shared/lo
 // both chunks must keep stable, hash-free filenames.
 const FIXED_FILENAME_CHUNKS = new Set(['background', ARTICLE_CLICK_CONTENT_SCRIPT.ID]);
 
-// TARGET_BROWSER selects the store target (chrome by default) and
-// OUTPUT_PATH redirects the build; scripts/package.mjs sets both to lay out
-// build/<target> directories, while plain `pnpm build` keeps writing the
-// Chrome development build to dist.
+// Every build cleans only its validated browser directory.
 const buildTarget = parseBuildTarget(process.env.TARGET_BROWSER);
-const outputPath = process.env.OUTPUT_PATH ?? 'dist';
+const outputPath = resolveBuildPath(import.meta.dirname, buildTarget, process.env.BUILD_CHANNEL);
 const packageVersion = readPackageVersion(import.meta.dirname);
 const packagedLocaleAliases: Readonly<Record<string, string>> = buildTarget === 'chrome'
     ? CHROME_PACKAGED_LOCALE_ALIASES
@@ -34,7 +32,7 @@ const config: Configuration = {
         [ARTICLE_CLICK_CONTENT_SCRIPT.ID]: resolve(import.meta.dirname, 'src/content/main.ts'),
     },
     output: {
-        path: resolve(import.meta.dirname, outputPath),
+        path: outputPath,
         filename: ({ chunk }) => chunk?.name !== undefined && FIXED_FILENAME_CHUNKS.has(chunk.name)
             ? '[name].js'
             : 'assets/[name]-[contenthash].js',

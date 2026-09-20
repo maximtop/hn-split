@@ -1,3 +1,4 @@
+import { resolveBuildPath } from '../../scripts/lib/build-paths.ts';
 import { chromium } from '@playwright/test';
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import {
@@ -114,13 +115,13 @@ async function createLocalizedExtensionCopy(
 }
 
 /**
- * Launches a fresh persistent Chromium context with the extension from dist.
+ * Launches a fresh persistent Chromium context with the extension from the canonical Chrome build directory.
  * @param options - Optional packaged catalog fixture configuration.
  */
 export async function launchExtensionContext(
     options: ExtensionLaunchOptions = {},
 ): Promise<ExtensionContext> {
-    const builtExtensionPath = resolve(import.meta.dirname, '../../dist');
+    const builtExtensionPath = resolveBuildPath(resolve(import.meta.dirname, '../..'), 'chrome');
     const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn-split-playwright-'));
     let localizedExtensionPath: string | null = null;
     try {

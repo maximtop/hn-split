@@ -321,7 +321,7 @@ Vector sources live in [`assets/identity/`](../assets/identity/):
 
 `pnpm assets:generate` renders every store dimension from those sources with
 the project's Chromium (no extra dependencies): it writes the extension icons,
-builds `dist`, and captures the store screenshots from the real built popup and
+builds `build/chrome`, and captures the store screenshots from the real built popup and
 options pages against deterministic lookup fixtures. Regenerate and commit the
 PNGs whenever the sources or the captured UI change.
 
@@ -443,7 +443,7 @@ re-cut for Firefox (sidebar) and re-reviewed here first.
 | Support email / site, homepage | listed fields | This doc, Support and contact |
 | Privacy policy | required (personal data is transmitted) | `PRIVACY.md` (public URL precondition) |
 | License | AMO asks at submission | MIT; see [`LICENSE`](../LICENSE) |
-| Source code submission | required for minified packages | Repository archive + `pnpm install && pnpm build` per [`docs/development.md`](development.md) |
+| Source code submission | required for minified packages | Repository archive + `pnpm install && pnpm release firefox` per [`docs/development.md`](development.md) |
 | Notes to Reviewer | free text per version | This doc, Reviewer notes (master) |
 
 ### App Store (Safari)

@@ -15,7 +15,7 @@ binary package.
 
 ```sh
 pnpm install --frozen-lockfile
-TARGET_BROWSER=firefox OUTPUT_PATH=build/firefox pnpm build
+pnpm release firefox
 ```
 
 Node.js 24.15 or newer within the Node 24 line, or Node.js 26 or newer, and

@@ -1,3 +1,4 @@
+import { resolveBuildPath } from './lib/build-paths.ts';
 import { execFile } from 'node:child_process';
 import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -123,7 +124,7 @@ async function renderStage(page, { heading, sub, capture, displayWidth, layout, 
 
 /** Launches the built extension with a high-density viewport for captures. */
 async function launchExtension() {
-    const extensionPath = resolve(ROOT, 'dist');
+    const extensionPath = resolveBuildPath(ROOT, 'chrome');
     const userDataDir = await mkdtemp(resolve(tmpdir(), 'hn-split-assets-'));
     // `--lang` (with the LANGUAGE fallback for Linux) asks Chromium to run the
     // extension UI in the requested locale; platforms that ignore the switch
@@ -229,7 +230,7 @@ if (isBaseLocale) {
 
 // Screenshots capture the real built extension, so build first.
 console.log('building the extension for screenshot capture…');
-await promisify(execFile)('pnpm', ['build'], { cwd: ROOT });
+await promisify(execFile)('pnpm', ['build', 'chrome'], { cwd: ROOT });
 
 const extension = await launchExtension();
 try {
