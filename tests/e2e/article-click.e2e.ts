@@ -75,22 +75,19 @@ async function registeredScriptIds(extension: ExtensionContext): Promise<string[
 }
 
 /**
- * Reads the item identifier of the discussion currently shown in the panel, or
- * undefined while the panel has nothing to show. The selection is stored per
- * window and the test runs in a single window, so the one entry under the
+ * Reads the content currently shown in the panel, or undefined before its
+ * first projection. Content is stored per window and the test runs in a
+ * single window, so the one entry under the
  * prefix is the selection of that window.
  * @param extension - The launched extension context.
  */
-async function sidePanelSelection(extension: ExtensionContext): Promise<unknown> {
+async function sidePanelContent(extension: ExtensionContext): Promise<unknown> {
     const candidate: unknown = await extension.worker.evaluate(async (prefix) => {
         const stored = await chrome.storage.session.get(null);
         const key = Object.keys(stored).find((candidate) => candidate.startsWith(prefix));
         return key === undefined ? undefined : stored[key];
     }, SESSION_STORAGE_KEY_PREFIX.SIDE_PANEL_DISCUSSION);
-    return isSidePanelProjection(candidate)
-        && candidate.content.kind === SIDE_PANEL_CONTENT_KIND.DISCUSSION
-        ? candidate.content.itemId
-        : undefined;
+    return isSidePanelProjection(candidate) ? candidate.content : undefined;
 }
 
 /**
@@ -120,12 +117,20 @@ test('article clicks open the discussion beside the article only while the opt-i
         await hnPage.goto(`${HN_ORIGIN}/`);
         await hnPage.getByRole('link', { name: STORY_ONE.title }).click();
         await hnPage.waitForURL(`${ARTICLE_ORIGIN}${STORY_ONE.path}`);
-        expect(await sidePanelSelection(active)).toBeUndefined();
+        expect(await sidePanelContent(active)).toBeUndefined();
         expect(fixturePageCount(active)).toBe(1);
+        const articleTabId = await active.worker.evaluate(async () => {
+            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            if (tab?.id === undefined) {
+                throw new Error('The active article tab has no Chrome tab identifier');
+            }
+            return tab.id;
+        });
 
         // Enabling the setting through the options switch registers the
         // Hacker News content script.
         const options = await openExtensionPage(active, 'options.html');
+        await options.bringToFront();
         const articleClickSwitch = options.getByRole('switch', {
             name: enMessages.article_click_open_label.message,
         });
@@ -136,10 +141,17 @@ test('article clicks open the discussion beside the article only while the opt-i
         // Registration reaches documents loaded from now on: a story click
         // navigates this tab to the article and selects the discussion for
         // the side panel without opening any tab.
+        // Playwright can click a background page without activating its tab.
+        // The real side panel initializes from Chrome's active tab.
+        await hnPage.bringToFront();
         await hnPage.goto(`${HN_ORIGIN}/`);
         await hnPage.getByRole('link', { name: STORY_ONE.title }).click();
         await hnPage.waitForURL(`${ARTICLE_ORIGIN}${STORY_ONE.path}`);
-        await expect.poll(async () => sidePanelSelection(active)).toBe(STORY_ONE.id);
+        await expect.poll(async () => sidePanelContent(active)).toEqual({
+            kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION,
+            tabId: articleTabId,
+            itemId: STORY_ONE.id,
+        });
         expect(fixturePageCount(active)).toBe(1);
 
         // A later click reuses the same panel selection instead of stacking
@@ -147,22 +159,35 @@ test('article clicks open the discussion beside the article only while the opt-i
         await hnPage.goto(`${HN_ORIGIN}/`);
         await hnPage.getByRole('link', { name: STORY_TWO.title }).click();
         await hnPage.waitForURL(`${ARTICLE_ORIGIN}${STORY_TWO.path}`);
-        await expect.poll(async () => sidePanelSelection(active)).toBe(STORY_TWO.id);
+        await expect.poll(async () => sidePanelContent(active)).toEqual({
+            kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION,
+            tabId: articleTabId,
+            itemId: STORY_TWO.id,
+        });
         expect(fixturePageCount(active)).toBe(1);
 
         // Turning the setting off removes the registration and freshly loaded
         // pages stop reporting clicks entirely.
+        await options.bringToFront();
         await articleClickSwitch.press('Space');
         await expect(articleClickSwitch).not.toBeChecked();
         expect(await registeredScriptIds(active)).toEqual([]);
 
+        await hnPage.bringToFront();
         await hnPage.goto(`${HN_ORIGIN}/`);
+        // Navigating away from the selected article invalidates its association.
+        // With automatic following off, the active tab requires a manual action.
+        const manualContent = {
+            kind: SIDE_PANEL_CONTENT_KIND.MANUAL_REQUIRED,
+            tabId: articleTabId,
+        };
+        await expect.poll(async () => sidePanelContent(active)).toEqual(manualContent);
         await hnPage.getByRole('link', { name: STORY_ONE.title }).click();
         await hnPage.waitForURL(`${ARTICLE_ORIGIN}${STORY_ONE.path}`);
         // Bounded settle for the negative case: a wrongly sent message would
         // land within this window.
         await hnPage.waitForTimeout(500);
-        expect(await sidePanelSelection(active)).toBe(STORY_TWO.id);
+        expect(await sidePanelContent(active)).toEqual(manualContent);
         expect(fixturePageCount(active)).toBe(1);
 
         await options.close();

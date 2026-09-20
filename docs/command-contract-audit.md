@@ -164,6 +164,41 @@ were fetched again before submission. Website Blocker was rebased onto `11edac1`
 The other six bases were unchanged, so their completed checks were retained.
 
 HN Split's independent [MT-997 product-copy PR](https://github.com/maximtop/hn-split/pull/35)
-remains separate. Its worktree, and the other active No More Ago and Update
-Tracker worktrees, were not edited. Preserve those independent changes when
-merging the command updates. PR links are recorded in MT-1005.
+was merged into `master` as `f892578`. A merge-tree check confirms the command
+branch combines without conflicts and preserves its product/privacy/browser
+copy. Its worktree, and the other active No More Ago and Update Tracker
+worktrees, were not edited. PR links are recorded in MT-1005.
+
+### Article-click E2E diagnosis
+
+The initial [PR #36 CI run](https://github.com/maximtop/hn-split/actions/runs/35500328350)
+and its single rerun each passed 17 of 18 E2E tests. The article-click test lost
+STORY_TWO: one run failed its final assertion, the other timed out waiting for
+the second selection. The retained trace showed the window projection changing
+from a discussion for the article tab to `manual_required` for a different tab.
+
+Temporary browser-event and storage diagnostics identified that tab as options.
+Playwright clicks do not activate a background page: options remained active
+while the test clicked HN. When the native side panel connected, its ordinary
+active-tab synchronization replaced the selection with the options projection.
+The assertion raced panel startup; changing E2E from production to development
+made this existing fixture error visible in CI.
+
+Controlled comparison used exact master `f892578` and PR head `92cd3b4`, the same
+installed Chromium/toolchain, development mode, local routes, and fresh profiles.
+The original scenario passed five consecutive runs on each. Adding a diagnostic
+500 ms pause only before reading the first selection reproduced the failure on
+both: the article association still held STORY_ONE, but the window projection
+was `manual_required` for the active options tab. No application code or Chrome
+API result was replaced by the diagnostic.
+
+The correction activates the intended tab before interaction and checks full
+panel content, including its owning tab ID. After disabling article clicks and
+navigating away, it expects manual content for the active article tab; the old
+expectation incorrectly required a stale STORY_TWO selection from a background
+tab. Both corrected scenarios passed ten consecutive development-mode runs.
+Both also passed the delayed-observation probe, and the corrected test passed
+against master's original production build. The final `pnpm verify` passed
+all 816 unit/integration tests and all 18 E2E tests (21.3 seconds), including axe.
+Temporary diagnostics are removed; application behavior, retries, and timeouts
+are unchanged. Detailed local log: `build/ci-artifacts/article-click-fixed-verify.log`.
