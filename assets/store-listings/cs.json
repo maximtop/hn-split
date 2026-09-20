@@ -2,19 +2,19 @@
     "locale": "cs",
     "reviewed": true,
     "description": {
-        "intro": "Čtete článek a zajímá vás, co si myslí Hacker News? Split for Hacker News najde ve vyskakovacím okně přesné diskuze k otevřené stránce; nic se neotevře, dokud nevyberete výsledek.",
+        "intro": "Čtete článek a zajímá vás, co si myslí Hacker News? Split for Hacker News najde ve vyskakovacím okně přesné diskuze k otevřené stránce; nic se neotevře, dokud nevyberete výsledek. Zdarma a s otevřeným zdrojovým kódem (MIT), bez backendu provozovaného vývojářem.",
         "bullets": [
             "Vyberte výsledek ve vyskakovacím okně a otevřete jeho komentáře na Hacker News.",
             "Přesná shoda URL — žádné přibližné odhady; duplicity se zobrazují jako alternativy.",
             "První výběr výsledku otevře sousední kartu; spárujte ji s článkem pomocí Chrome Split View a pozdější výběry toto podokno znovu použijí.",
-        "Nebo otevřete diskuzi v postranním panelu prohlížeče. Aby mohl vložit skutečnou stránku Hacker News, Split dočasně odstraňuje hlavičky zakazující vkládání pouze z odpovědí podrámců Hacker News a jen po dobu, kdy je panel otevřený.",
-        "Volitelně: když už je postranní panel otevřený, automaticky sledujte aktivní karty; ve výchozím nastavení je tato funkce vypnutá, případně jednorázově použijte „Zkontrolovat tuto kartu“. Nikdy neotevírá ani nepřesouvá karty a může ponechat aktivní až tři nedávné diskuze pro rychlejší návrat a zachování pozice posunu, pokud to bude možné.",
+            "Nebo otevřete diskuzi v postranním panelu prohlížeče. Aby mohl vložit skutečnou stránku Hacker News, Split dočasně odstraňuje hlavičky zakazující vkládání pouze z odpovědí podrámců Hacker News a jen po dobu, kdy je panel otevřený. Výjimka platí pro všechny podrámce Hacker News v profilu prohlížeče, i mimo panel, a odstraňuje omezení skriptů CSP až do zavření posledního panelu. Stránky nejvyšší úrovně a ostatní hostitelé nejsou ovlivněni.",
+            "Volitelně: když už je postranní panel otevřený, automaticky sledujte aktivní karty; ve výchozím nastavení je tato funkce vypnutá, případně jednorázově použijte „Zkontrolovat tuto kartu“. Nikdy neotevírá ani nepřesouvá karty a může ponechat aktivní až tři nedávné diskuze pro rychlejší návrat a zachování pozice posunu, pokud to bude možné.",
             "„Otevřít ve Splitu“ v nabídce pravého tlačítka na odkazu: odkaz se otevře v aktuální kartě a jeho diskuze na Hacker News v postranním panelu.",
             "Volitelné: kliknutí na příběh na Hacker News otevře článek jako obvykle a jeho diskuzi v postranním panelu vedle něj. Ve výchozím stavu vypnuto.",
             "Volitelný odznak na panelu nástrojů s počtem komentářů, ve výchozím stavu vypnutý.",
-            "Zdarma. Bez telemetrie a účtů. Vyhledávání odesílá do veřejného vyhledávacího API Hacker News od Algolie pouze adresy URL vhodných veřejných stránek nebo vybraných odkazů a volitelnou kanonickou adresu URL — nikdy text článku ani jiný obsah. Omezená, zdokumentovaná oprávnění."
+            "Zdarma. Bez telemetrie a účtů. Vyhledávání odesílá do veřejného vyhledávacího API Hacker News od Algolie pouze adresy URL vhodných veřejných stránek nebo vybraných odkazů a volitelnou kanonickou adresu URL — nikdy text článku ani jiný obsah. Omezená, zdokumentovaná oprávnění. Otevřené diskuse se připojují k Hacker News s běžnými metadaty požadavků a cookies povolenými zásadami prohlížeče. Nastavení zůstávají místní; výsledky hledání a vazby mezi kartami se ukládají do úložiště relace."
         ],
-        "disclaimer": "Neoficiální. Toto rozšíření je nezávislý projekt a není spojeno s Y Combinator ani Hacker News, ani jimi není schváleno."
+        "disclaimer": "Neoficiální. Toto rozšíření je nezávislý projekt a není spojeno s Y Combinator ani Hacker News, ani jimi není schváleno.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "První veřejné vydání. Najděte přesné diskuze na Hacker News k článku, který čtete, a pak ve vyskakovacím okně vyberte výsledek, který se má otevřít v sousední kartě spárovatelné s článkem pomocí Chrome Split View nebo v postranním panelu prohlížeče. Obsahuje kontextovou nabídku odkazů „Otevřít ve Splitu“, volitelný režim otevírající diskuze vedle vybraných příběhů na Hacker News a volitelný odznak s počtem komentářů. Zdarma, bez telemetrie a účtů."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Ve výchozím stavu soukromé",
-      "sub": "Kontroly na liště, sledování v panelu a kliknutí na příběhy jsou standardně vypnuté. „Zkontrolovat tuto kartu“ povolí jedno hledání v panelu; text článku ani jiný obsah se nikdy nečte."
+            "sub": "Kontroly na liště, sledování v panelu a kliknutí na příběhy jsou standardně vypnuté. „Zkontrolovat tuto kartu“ povolí jedno hledání v panelu; text článku ani jiný obsah se nikdy nečte."
         },
         {
             "heading": "Pohodlně ve světlém i tmavém režimu",

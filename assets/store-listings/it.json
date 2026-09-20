@@ -2,19 +2,19 @@
     "locale": "it",
     "reviewed": true,
     "description": {
-        "intro": "Stai leggendo un articolo e ti chiedi cosa ne pensa Hacker News? Nel popup, Split for Hacker News trova le discussioni esatte per la pagina che stai visitando; non si apre nulla finché non selezioni un risultato.",
+        "intro": "Stai leggendo un articolo e ti chiedi cosa ne pensa Hacker News? Nel popup, Split for Hacker News trova le discussioni esatte per la pagina che stai visitando; non si apre nulla finché non selezioni un risultato. Gratuito e open source (MIT), senza backend gestito dallo sviluppatore.",
         "bullets": [
             "Seleziona un risultato nel popup per aprire i relativi commenti su Hacker News.",
             "Corrispondenza esatta dell'URL — niente supposizioni approssimative; i duplicati sono elencati come alternative.",
             "La prima selezione di un risultato apre una scheda adiacente; abbinala all'articolo con Chrome Split View e le selezioni successive riutilizzeranno quella scheda.",
-        "Oppure apri la discussione nel pannello laterale del browser. Per incorporare la pagina reale di Hacker News, Split rimuove temporaneamente le intestazioni che bloccano l'inclusione in frame soltanto dalle risposte dei sottoframe di Hacker News e solo mentre un pannello è aperto.",
-        "Facoltativo: mentre il pannello laterale è già aperto, segui automaticamente le schede attive; la funzione è disattivata per impostazione predefinita, oppure usa una volta «Controlla questa scheda». Non apre né riordina mai le schede e può mantenere attive fino a tre discussioni recenti per tornarvi più rapidamente e conservare, quando possibile, la posizione di scorrimento.",
+            "Oppure apri la discussione nel pannello laterale del browser. Per incorporare la pagina reale di Hacker News, Split rimuove temporaneamente le intestazioni che bloccano l'inclusione in frame soltanto dalle risposte dei sottoframe di Hacker News e solo mentre un pannello è aperto. L’eccezione riguarda tutti i sottoframe di Hacker News nel profilo del browser, anche fuori dal pannello, e rimuove le restrizioni sugli script di CSP fino alla chiusura dell’ultimo pannello. Le pagine di primo livello e gli altri host non sono interessati.",
+            "Facoltativo: mentre il pannello laterale è già aperto, segui automaticamente le schede attive; la funzione è disattivata per impostazione predefinita, oppure usa una volta «Controlla questa scheda». Non apre né riordina mai le schede e può mantenere attive fino a tre discussioni recenti per tornarvi più rapidamente e conservare, quando possibile, la posizione di scorrimento.",
             "«Apri in Split» nel menu del tasto destro sui link: il link si apre nella scheda corrente e la sua discussione di Hacker News si apre nel pannello laterale.",
             "Facoltativo: il clic su una storia su Hacker News apre l'articolo come al solito e la sua discussione nel pannello laterale accanto. Disattivato per impostazione predefinita.",
             "Badge facoltativo nella barra degli strumenti con il numero di commenti, disattivato per impostazione predefinita.",
-            "Gratuito. Niente telemetria o account. Le ricerche inviano solo gli URL di pagine pubbliche idonee o di link selezionati e un URL canonico facoltativo all'API pubblica Hacker News Search di Algolia — mai il testo dell'articolo o altri contenuti. Permessi ristretti e documentati."
+            "Gratuito. Niente telemetria o account. Le ricerche inviano solo gli URL di pagine pubbliche idonee o di link selezionati e un URL canonico facoltativo all'API pubblica Hacker News Search di Algolia — mai il testo dell'articolo o altri contenuti. Permessi ristretti e documentati. Le discussioni aperte si collegano a Hacker News con i normali metadati delle richieste e i cookie consentiti dalle regole del browser. Le impostazioni restano locali; risultati e associazioni delle schede sono conservati nell’archivio di sessione."
         ],
-        "disclaimer": "Non ufficiale. Questa estensione è un progetto indipendente e non è affiliata a Y Combinator o Hacker News, né da loro approvata."
+        "disclaimer": "Non ufficiale. Questa estensione è un progetto indipendente e non è affiliata a Y Combinator o Hacker News, né da loro approvata.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Prima versione pubblica. Trova le discussioni esatte di Hacker News per l'articolo che stai leggendo, quindi seleziona un risultato nel popup per aprirlo in una scheda adiacente che puoi abbinare con Chrome Split View oppure nel pannello laterale del browser. Include la voce «Apri in Split» nel menu contestuale dei link, un flusso facoltativo che apre le discussioni accanto alle storie di Hacker News su cui fai clic e un badge facoltativo con il numero di commenti. Gratuito, senza telemetria, senza account."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Privato per impostazione predefinita",
-      "sub": "Controlli barra, seguito laterale e clic sulle storie: spenti di base. «Controlla questa scheda» consente una ricerca laterale; testo dell'articolo e altri contenuti della pagina non sono mai letti."
+            "sub": "Controlli barra, seguito laterale e clic sulle storie: spenti di base. «Controlla questa scheda» consente una ricerca laterale; testo dell'articolo e altri contenuti della pagina non sono mai letti."
         },
         {
             "heading": "Perfetto in modalità chiara e scura",

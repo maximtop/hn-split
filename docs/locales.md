@@ -25,6 +25,24 @@ On 2026-08-11, the Options-page introduction, automatic-badge description, autom
 
 On 2026-08-11, the follow/retention bullet and revised second screenshot caption were translated across the 39 non-English listings in four explicit batches: `ar bg bn ca cs da de el es`; `es_419 fa fi fil fr he hi hr hu id`; `it ja ko ms nb nl pl pt_BR pt_PT ro`; and `ru sk sr sv th tr uk vi zh_CN zh_TW`. A separate multilingual semantic pass then confirmed that each bullet says the panel is already open, following is off by default with the localized **Check this tab** action as the one-shot alternative, tabs are never opened or rearranged, and up to three recent discussions may stay alive for faster return with best-effort scroll preservation. It also confirmed that every caption keeps toolbar checks, side-panel following, and story-click handling off by default; grants one panel lookup through the exact runtime button label; and says article text and other page content are never read. Automated scope and structure checks confirmed nine bullets, three caption pairs, `reviewed: true`, the 200-character caption budget, no non-English copy pasted from English, and no change to release notes, versions, search terms, the other captions, or the original eight bullets. This remains a model-assisted semantic gate, not native-speaker certification.
 
+## Store-listing network and framing review
+
+On 2026-09-20, all 39 non-English store descriptions received the public-copy
+clarifications already present in the English master: free/open source (MIT),
+no developer-operated backend, the profile-wide scope of the temporary HN
+subframe exception, removal of CSP script restrictions until the last panel
+closes, normal HN request metadata and browser-policy-dependent cookies, local
+preferences, and session storage for lookup results and tab associations. Each
+listing also links to the homepage, source, privacy policy, and support.
+
+The existing localized feature bullets and historical release notes were
+preserved. The author reviewed the additions for the same semantic boundaries
+and validated all 40 descriptions against the store renderer and length limits.
+This update used model-assisted translation and an author review; it has not had
+an independent or native-speaker review. The existing `reviewed` flags record
+that source review, not publication to a store. Store publication must be
+verified separately in each dashboard or the authenticated AMO API.
+
 ## Runtime scope
 
 The same 40 UI catalogs ship in Chrome, Edge, and Firefox. Store listing files

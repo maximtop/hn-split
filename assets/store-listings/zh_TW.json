@@ -2,19 +2,19 @@
     "locale": "zh_TW",
     "reviewed": true,
     "description": {
-        "intro": "正在閱讀一篇文章，想知道 Hacker News 上怎麼說？在彈出視窗中，Split for Hacker News 會找到目前頁面對應的確切討論；在您選擇結果之前，不會開啟任何內容。",
+        "intro": "正在閱讀一篇文章，想知道 Hacker News 上怎麼說？在彈出視窗中，Split for Hacker News 會找到目前頁面對應的確切討論；在您選擇結果之前，不會開啟任何內容。 免費開源（MIT），沒有開發者營運的後端。",
         "bullets": [
             "在彈出視窗中選擇結果，即可開啟相應的 Hacker News 留言。",
             "精確的網址比對 — 不做模糊猜測，重複提交會列為替代選項。",
             "第一次選擇結果會開啟相鄰分頁；使用 Chrome Split View 將其與文章並排，之後的選擇會重複使用該窗格。",
-        "也可以在瀏覽器側邊欄開啟討論。為了嵌入真正的 Hacker News 頁面，面板開啟期間，Split 只會暫時移除 Hacker News 子框架回應中的框架限制標頭。",
-        "選用：側邊欄已開啟時自動跟隨目前使用中的分頁；此功能預設關閉，也可單次使用「檢查此分頁」。它絕不會開啟或重新排列分頁，並可保留最多三個近期討論，以便更快返回並盡可能保留捲動位置。",
+            "也可以在瀏覽器側邊欄開啟討論。為了嵌入真正的 Hacker News 頁面，面板開啟期間，Split 只會暫時移除 Hacker News 子框架回應中的框架限制標頭。 此例外涵蓋瀏覽器設定檔中的所有 Hacker News 子框架，包括側邊欄之外的框架，並在最後一個側邊欄關閉前移除 CSP 指令碼限制。頂層頁面和其他主機不受影響。",
+            "選用：側邊欄已開啟時自動跟隨目前使用中的分頁；此功能預設關閉，也可單次使用「檢查此分頁」。它絕不會開啟或重新排列分頁，並可保留最多三個近期討論，以便更快返回並盡可能保留捲動位置。",
             "連結右鍵選單中的「在 Split 中開啟」：連結在目前分頁開啟，其 Hacker News 討論在側邊欄開啟。",
             "選用：在 Hacker News 上點擊文章連結時，文章照常開啟，其討論在旁邊的側邊欄開啟。預設關閉。",
             "選用的工具列徽章，顯示留言數，預設關閉。",
-            "免費。無遙測、無帳號。查詢只會將符合條件的公開頁面或所選連結的網址，以及選用的 canonical URL 傳送到 Algolia 的公開 Hacker News Search API，絕不會傳送文章文字或其他內容。權限範圍窄且有文件說明。"
+            "免費。無遙測、無帳號。查詢只會將符合條件的公開頁面或所選連結的網址，以及選用的 canonical URL 傳送到 Algolia 的公開 Hacker News Search API，絕不會傳送文章文字或其他內容。權限範圍窄且有文件說明。 開啟的討論會使用一般請求中繼資料和瀏覽器政策允許的 Cookie 連線至 Hacker News。設定儲存在本機；搜尋結果和分頁關聯儲存在工作階段儲存空間中。"
         ],
-        "disclaimer": "非官方。本擴充功能是獨立專案，與 Y Combinator 或 Hacker News 無關，也未獲其認可。"
+        "disclaimer": "非官方。本擴充功能是獨立專案，與 Y Combinator 或 Hacker News 無關，也未獲其認可。\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "首個公開版本。找到您正在閱讀的文章對應的確切 Hacker News 討論，然後在彈出視窗中選擇結果，將其開啟到可透過 Chrome Split View 與文章並排的相鄰分頁中，或瀏覽器側邊欄中。包含連結右鍵選單中的「在 Split 中開啟」、在 Hacker News 上點擊文章時在旁邊開啟討論的可選擇啟用功能，以及顯示留言數的可選擇啟用工具列徽章。免費、無遙測、無帳號。"
@@ -26,7 +26,7 @@
         },
         {
             "heading": "預設保護隱私",
-      "sub": "工具列檢查、側邊欄跟隨和文章點擊處理均預設關閉。「檢查此分頁」僅允許在側邊欄查詢一次；絕不會讀取文章文字或頁面中的其他內容。"
+            "sub": "工具列檢查、側邊欄跟隨和文章點擊處理均預設關閉。「檢查此分頁」僅允許在側邊欄查詢一次；絕不會讀取文章文字或頁面中的其他內容。"
         },
         {
             "heading": "淺色深色都自在",

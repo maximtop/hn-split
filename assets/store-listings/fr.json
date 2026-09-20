@@ -2,19 +2,19 @@
     "locale": "fr",
     "reviewed": true,
     "description": {
-        "intro": "Vous lisez un article et vous vous demandez ce qu'en pense Hacker News ? Dans la fenêtre contextuelle, Split for Hacker News trouve les discussions exactes associées à la page consultée ; rien ne s'ouvre avant que vous sélectionniez un résultat.",
+        "intro": "Vous lisez un article et vous vous demandez ce qu'en pense Hacker News ? Dans la fenêtre contextuelle, Split for Hacker News trouve les discussions exactes associées à la page consultée ; rien ne s'ouvre avant que vous sélectionniez un résultat. Gratuit et open source (MIT), sans serveur applicatif exploité par le développeur.",
         "bullets": [
             "Sélectionnez un résultat dans la fenêtre contextuelle pour ouvrir ses commentaires Hacker News.",
             "Correspondance d'URL exacte — pas de devinettes approximatives ; les doublons sont proposés comme alternatives.",
             "La première sélection d'un résultat ouvre un onglet adjacent ; associez-le à l'article avec Chrome Split View, et les sélections suivantes réutiliseront cet onglet.",
-        "Ou ouvrez la discussion dans le panneau latéral du navigateur. Pour intégrer la véritable page Hacker News, Split retire temporairement les en-têtes qui empêchent l'affichage dans un cadre, uniquement des réponses des sous-cadres Hacker News et seulement tant qu'un panneau est ouvert.",
-        "Facultatif : tant que le panneau latéral est déjà ouvert, suivez automatiquement les onglets actifs ; cette fonction est désactivée par défaut, ou utilisez une fois « Vérifier cet onglet ». Elle n'ouvre ni ne réorganise jamais les onglets et peut conserver jusqu'à trois discussions récentes actives pour y revenir plus rapidement et préserver au mieux la position de défilement.",
+            "Ou ouvrez la discussion dans le panneau latéral du navigateur. Pour intégrer la véritable page Hacker News, Split retire temporairement les en-têtes qui empêchent l'affichage dans un cadre, uniquement des réponses des sous-cadres Hacker News et seulement tant qu'un panneau est ouvert. L’exception couvre tous les sous-cadres Hacker News du profil du navigateur, même hors du panneau, et supprime les restrictions de scripts CSP jusqu’à la fermeture du dernier panneau. Les pages de premier niveau et les autres hôtes ne sont pas affectés.",
+            "Facultatif : tant que le panneau latéral est déjà ouvert, suivez automatiquement les onglets actifs ; cette fonction est désactivée par défaut, ou utilisez une fois « Vérifier cet onglet ». Elle n'ouvre ni ne réorganise jamais les onglets et peut conserver jusqu'à trois discussions récentes actives pour y revenir plus rapidement et préserver au mieux la position de défilement.",
             "« Ouvrir dans Split » dans le menu contextuel des liens : le lien s'ouvre dans l'onglet actuel et sa discussion Hacker News s'ouvre dans le panneau latéral.",
             "En option : cliquer sur une histoire sur Hacker News ouvre l'article comme d'habitude et sa discussion dans le panneau latéral à côté. Désactivé par défaut.",
             "Badge facultatif dans la barre d'outils avec le nombre de commentaires, désactivé par défaut.",
-            "Gratuit. Sans télémétrie ni compte. Les recherches n'envoient que les URL de pages publiques éligibles ou de liens sélectionnés, ainsi qu'une URL canonique facultative, à l'API publique Hacker News Search d'Algolia — jamais le texte de l'article ni d'autre contenu. Des autorisations restreintes et documentées."
+            "Gratuit. Sans télémétrie ni compte. Les recherches n'envoient que les URL de pages publiques éligibles ou de liens sélectionnés, ainsi qu'une URL canonique facultative, à l'API publique Hacker News Search d'Algolia — jamais le texte de l'article ni d'autre contenu. Des autorisations restreintes et documentées. Les discussions ouvertes se connectent à Hacker News avec les métadonnées habituelles des requêtes et les cookies autorisés par la politique du navigateur. Les réglages restent locaux ; les résultats et les associations d’onglets sont conservés dans le stockage de session."
         ],
-        "disclaimer": "Non officiel. Cette extension est un projet indépendant, sans affiliation avec Y Combinator ou Hacker News et sans leur approbation."
+        "disclaimer": "Non officiel. Cette extension est un projet indépendant, sans affiliation avec Y Combinator ou Hacker News et sans leur approbation.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Première version publique. Trouvez les discussions Hacker News exactes de l'article que vous lisez, puis sélectionnez un résultat dans la fenêtre contextuelle pour l'ouvrir dans un onglet adjacent que vous pouvez associer avec Chrome Split View ou dans le panneau latéral du navigateur. Comprend l'élément « Ouvrir dans Split » du menu contextuel des liens, un flux facultatif qui ouvre les discussions à côté des histoires Hacker News sur lesquelles vous cliquez, et un badge facultatif avec le nombre de commentaires. Gratuit, sans télémétrie, sans comptes."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Privé par défaut",
-      "sub": "Contrôles de barre, suivi latéral et clics d'articles : désactivés par défaut. « Vérifier cet onglet » permet une recherche dans le panneau ; texte d'article et contenus de page ne sont jamais lus."
+            "sub": "Contrôles de barre, suivi latéral et clics d'articles : désactivés par défaut. « Vérifier cet onglet » permet une recherche dans le panneau ; texte d'article et contenus de page ne sont jamais lus."
         },
         {
             "heading": "À l'aise en clair comme en sombre",

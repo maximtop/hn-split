@@ -2,19 +2,19 @@
     "locale": "hr",
     "reviewed": true,
     "description": {
-        "intro": "Čitate članak i pitate se što misli Hacker News? Split for Hacker News u skočnom prozoru pronalazi točne rasprave za otvorenu stranicu; ništa se ne otvara dok ne odaberete rezultat.",
+        "intro": "Čitate članak i pitate se što misli Hacker News? Split for Hacker News u skočnom prozoru pronalazi točne rasprave za otvorenu stranicu; ništa se ne otvara dok ne odaberete rezultat. Besplatno i otvorenog koda (MIT), bez pozadinskog poslužitelja kojim upravlja razvojni programer.",
         "bullets": [
             "Odaberite rezultat u skočnom prozoru kako biste otvorili njegove komentare na Hacker Newsu.",
             "Točno podudaranje URL-a — bez približnih nagađanja; duplikati se prikazuju kao alternative.",
             "Prvi odabir rezultata otvara susjednu karticu; uparite je s člankom pomoću Chrome Split Viewa i kasniji odabiri ponovno će koristiti to okno.",
-        "Ili otvorite raspravu u bočnoj ploči preglednika. Da bi ugradio stvarnu stranicu Hacker Newsa, Split privremeno uklanja zaglavlja koja onemogućuju uokvirivanje samo iz odgovora podokvira Hacker Newsa i samo dok je ploča otvorena.",
-        "Neobavezno: dok je bočna ploča već otvorena, automatski pratite aktivne kartice; funkcija je prema zadanim postavkama isključena, ili jednom upotrijebite „Provjeri ovu karticu”. Nikada ne otvara niti premješta kartice, a može zadržati aktivnima do tri nedavne rasprave radi bržeg povratka i očuvanja položaja pomicanja kad god je to moguće.",
+            "Ili otvorite raspravu u bočnoj ploči preglednika. Da bi ugradio stvarnu stranicu Hacker Newsa, Split privremeno uklanja zaglavlja koja onemogućuju uokvirivanje samo iz odgovora podokvira Hacker Newsa i samo dok je ploča otvorena. Iznimka obuhvaća sve podokvire Hacker Newsa u profilu preglednika, čak i izvan ploče, te uklanja ograničenja skripti CSP-a do zatvaranja posljednje ploče. Stranice najviše razine i ostali poslužitelji nisu pogođeni.",
+            "Neobavezno: dok je bočna ploča već otvorena, automatski pratite aktivne kartice; funkcija je prema zadanim postavkama isključena, ili jednom upotrijebite „Provjeri ovu karticu”. Nikada ne otvara niti premješta kartice, a može zadržati aktivnima do tri nedavne rasprave radi bržeg povratka i očuvanja položaja pomicanja kad god je to moguće.",
             "„Otvori u Splitu“ u izborniku desnog klika na poveznicu: poveznica se otvara u trenutačnoj kartici, a njezina rasprava s Hacker Newsa u bočnoj ploči.",
             "Neobavezno: klik na priču na Hacker Newsu otvara članak kao i obično, a njegovu raspravu u bočnoj ploči pokraj njega. Isključeno prema zadanim postavkama.",
             "Neobavezna značka na alatnoj traci s brojem komentara, isključena prema zadanim postavkama.",
-            "Besplatno. Bez telemetrije ili računa. Pretraživanja šalju Algolijinom javnom API-ju za pretraživanje Hacker Newsa samo URL-ove prihvatljivih javnih stranica ili odabranih poveznica i neobavezan kanonski URL — nikada tekst članka ili drugi sadržaj. Ograničena, dokumentirana dopuštenja."
+            "Besplatno. Bez telemetrije ili računa. Pretraživanja šalju Algolijinom javnom API-ju za pretraživanje Hacker Newsa samo URL-ove prihvatljivih javnih stranica ili odabranih poveznica i neobavezan kanonski URL — nikada tekst članka ili drugi sadržaj. Ograničena, dokumentirana dopuštenja. Otvorene rasprave povezuju se s Hacker Newsom uz uobičajene metapodatke zahtjeva i kolačiće dopuštene pravilima preglednika. Postavke ostaju lokalne; rezultati pretraživanja i veze kartica čuvaju se u pohrani sesije."
         ],
-        "disclaimer": "Neslužbeno. Ovo je proširenje neovisan projekt i nije povezano s Y Combinatorom ili Hacker Newsom niti ga oni podržavaju."
+        "disclaimer": "Neslužbeno. Ovo je proširenje neovisan projekt i nije povezano s Y Combinatorom ili Hacker Newsom niti ga oni podržavaju.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Prvo javno izdanje. Pronađite točne rasprave na Hacker Newsu za članak koji čitate, a zatim odaberite rezultat u skočnom prozoru kako biste ga otvorili u susjednoj kartici koju možete upariti s člankom pomoću Chrome Split Viewa ili u bočnoj ploči preglednika. Uključuje kontekstni izbornik poveznica „Otvori u Splitu“, neobaveznu mogućnost koja otvara rasprave uz odabrane priče na Hacker Newsu i neobaveznu značku s brojem komentara. Besplatno, bez telemetrije ili računa."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Privatno prema zadanim postavkama",
-      "sub": "Provjere alatne trake, praćenje u bočnoj ploči i klikovi na priče zadano su isključeni. „Provjeri ovu karticu” dopušta jedno pretraživanje u ploči; tekst članka i drugi sadržaj nikada se ne čitaju."
+            "sub": "Provjere alatne trake, praćenje u bočnoj ploči i klikovi na priče zadano su isključeni. „Provjeri ovu karticu” dopušta jedno pretraživanje u ploči; tekst članka i drugi sadržaj nikada se ne čitaju."
         },
         {
             "heading": "Ugodno u svijetloj i tamnoj temi",

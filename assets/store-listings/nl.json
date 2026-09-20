@@ -2,19 +2,19 @@
     "locale": "nl",
     "reviewed": true,
     "description": {
-        "intro": "Leest u een artikel en vraagt u zich af wat Hacker News ervan vindt? In de pop-up vindt Split for Hacker News de exacte discussies voor de huidige pagina; er wordt niets geopend totdat u een resultaat kiest.",
+        "intro": "Leest u een artikel en vraagt u zich af wat Hacker News ervan vindt? In de pop-up vindt Split for Hacker News de exacte discussies voor de huidige pagina; er wordt niets geopend totdat u een resultaat kiest. Gratis en opensource (MIT), zonder backend die door de ontwikkelaar wordt beheerd.",
         "bullets": [
             "Kies een resultaat in de pop-up om de bijbehorende Hacker News-reacties te openen.",
             "Exacte URL-overeenkomst — geen vage gissingen; duplicaten worden als alternatieven getoond.",
             "De eerste selectie van een resultaat opent een aangrenzend tabblad; koppel het aan het artikel met Chrome Split View, en latere selecties hergebruiken dat tabblad.",
-        "Of open de discussie in het zijpaneel van de browser. Om de echte Hacker News-pagina in te sluiten, verwijdert Split tijdelijk de headers die framing blokkeren, alleen uit reacties van Hacker News-subframes en alleen zolang een paneel open is.",
-        "Optioneel: zolang het zijpaneel al is geopend, actieve tabbladen automatisch volgen; standaard uitgeschakeld, of gebruik ‘Dit tabblad controleren’ één keer. De functie opent of herschikt nooit tabbladen en kan maximaal drie recente discussies actief houden, zodat u sneller kunt terugkeren en de schuifpositie waar mogelijk behouden blijft.",
+            "Of open de discussie in het zijpaneel van de browser. Om de echte Hacker News-pagina in te sluiten, verwijdert Split tijdelijk de headers die framing blokkeren, alleen uit reacties van Hacker News-subframes en alleen zolang een paneel open is. De uitzondering geldt voor alle Hacker News-subframes in het browserprofiel, ook buiten het paneel, en verwijdert CSP-scriptbeperkingen totdat het laatste paneel sluit. Pagina’s op het hoogste niveau en andere hosts worden niet beïnvloed.",
+            "Optioneel: zolang het zijpaneel al is geopend, actieve tabbladen automatisch volgen; standaard uitgeschakeld, of gebruik ‘Dit tabblad controleren’ één keer. De functie opent of herschikt nooit tabbladen en kan maximaal drie recente discussies actief houden, zodat u sneller kunt terugkeren en de schuifpositie waar mogelijk behouden blijft.",
             "“Openen in Split” in het rechtsklikmenu van links: de link opent in het huidige tabblad en de bijbehorende Hacker News-discussie opent in het zijpaneel.",
             "Optioneel: een klik op een verhaal op Hacker News opent het artikel zoals gewoonlijk en de discussie ernaast in het zijpaneel. Standaard uit.",
             "Optionele werkbalkbadge met het aantal reacties, standaard uit.",
-            "Gratis. Geen telemetrie of accounts. Zoekopdrachten sturen alleen URL's van geschikte openbare pagina's of geselecteerde links en optioneel een canonieke URL naar Algolia's openbare Hacker News Search API — nooit artikeltekst of andere inhoud. Beperkte, gedocumenteerde machtigingen."
+            "Gratis. Geen telemetrie of accounts. Zoekopdrachten sturen alleen URL's van geschikte openbare pagina's of geselecteerde links en optioneel een canonieke URL naar Algolia's openbare Hacker News Search API — nooit artikeltekst of andere inhoud. Beperkte, gedocumenteerde machtigingen. Geopende discussies verbinden met Hacker News met gebruikelijke verzoekmetadata en cookies die het browserbeleid toestaat. Instellingen blijven lokaal; zoekresultaten en tabbladkoppelingen staan in de sessieopslag."
         ],
-        "disclaimer": "Onofficieel. Deze extensie is een onafhankelijk project en is niet verbonden aan of goedgekeurd door Y Combinator of Hacker News."
+        "disclaimer": "Onofficieel. Deze extensie is een onafhankelijk project en is niet verbonden aan of goedgekeurd door Y Combinator of Hacker News.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Eerste openbare release. Vind de exacte Hacker News-discussies voor het artikel dat u leest en kies vervolgens een resultaat in de pop-up om het te openen in een aangrenzend tabblad dat u met Chrome Split View kunt koppelen, of in het zijpaneel van de browser. Bevat het menu-item “Openen in Split” in het contextmenu van links, een optionele functie die discussies opent naast verhalen op Hacker News waarop u klikt, en een optionele werkbalkbadge met het aantal reacties. Gratis, geen telemetrie, geen accounts."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Standaard privé",
-      "sub": "Werkbalkcontroles, zijpaneelvolgen en verhaalklikken staan standaard uit. ‘Dit tabblad controleren’ staat één zoekopdracht in het paneel toe; artikeltekst en andere pagina-inhoud worden nooit gelezen."
+            "sub": "Werkbalkcontroles, zijpaneelvolgen en verhaalklikken staan standaard uit. ‘Dit tabblad controleren’ staat één zoekopdracht in het paneel toe; artikeltekst en andere pagina-inhoud worden nooit gelezen."
         },
         {
             "heading": "Thuis in licht en donker",

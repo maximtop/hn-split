@@ -2,19 +2,19 @@
     "locale": "fil",
     "reviewed": true,
     "description": {
-        "intro": "Nagbabasa ng artikulo at iniisip kung ano ang sinasabi ng Hacker News? Sa popup, hinahanap ng Split for Hacker News ang eksaktong mga talakayan para sa pahinang binubuksan mo; walang bubukas hangga't hindi ka pumipili ng resulta.",
+        "intro": "Nagbabasa ng artikulo at iniisip kung ano ang sinasabi ng Hacker News? Sa popup, hinahanap ng Split for Hacker News ang eksaktong mga talakayan para sa pahinang binubuksan mo; walang bubukas hangga't hindi ka pumipili ng resulta. Libre at open source (MIT), walang backend na pinapatakbo ng developer.",
         "bullets": [
             "Pumili ng resulta sa popup para buksan ang mga komento nito sa Hacker News.",
             "Eksaktong pagtutugma ng URL — walang pahapyaw na hula; ang mga duplicate ay ipinapakita bilang mga alternatibo.",
             "Ang una mong pagpili ng resulta ay nagbubukas ng katabing tab; ipares ito sa artikulo gamit ang Chrome Split View at gagamitin muli ng mga susunod na pagpili ang pane na iyon.",
-        "O buksan ang talakayan sa side panel ng browser. Para i-embed ang tunay na pahina ng Hacker News, pansamantalang inaalis ng Split ang mga framing header mula lang sa mga tugon ng Hacker News sub-frame habang bukas ang panel.",
-        "Opsyonal: habang nakabukas na ang side panel, awtomatikong sundan ang mga aktibong tab; naka-off ito bilang default, o gamitin nang isang beses ang “Suriin ang tab na ito”. Hindi ito kailanman nagbubukas o nag-aayos muli ng mga tab, at maaari nitong panatilihing aktibo ang hanggang tatlong kamakailang talakayan para mas mabilis balikan at subukang mapanatili ang posisyon ng pag-scroll.",
+            "O buksan ang talakayan sa side panel ng browser. Para i-embed ang tunay na pahina ng Hacker News, pansamantalang inaalis ng Split ang mga framing header mula lang sa mga tugon ng Hacker News sub-frame habang bukas ang panel. Saklaw ng pagbubukod ang lahat ng Hacker News subframe sa browser profile, pati sa labas ng panel, at inaalis nito ang mga paghihigpit sa script ng CSP hanggang isara ang huling panel. Hindi apektado ang mga pangunahing pahina at ibang host.",
+            "Opsyonal: habang nakabukas na ang side panel, awtomatikong sundan ang mga aktibong tab; naka-off ito bilang default, o gamitin nang isang beses ang “Suriin ang tab na ito”. Hindi ito kailanman nagbubukas o nag-aayos muli ng mga tab, at maaari nitong panatilihing aktibo ang hanggang tatlong kamakailang talakayan para mas mabilis balikan at subukang mapanatili ang posisyon ng pag-scroll.",
             "“Buksan sa Split” sa right-click menu ng mga link: bubukas ang link sa kasalukuyang tab at bubukas ang talakayan nito sa Hacker News sa side panel.",
             "Opsyonal: ang pag-click sa isang kuwento sa Hacker News ay nagbubukas ng artikulo gaya ng dati at ng talakayan nito sa side panel sa tabi. Naka-off bilang default.",
             "Opsyonal na badge sa toolbar na may bilang ng mga komento, naka-off bilang default.",
-            "Libre. Walang telemetry o account. Ang mga paghahanap ay nagpapadala lang ng URL ng kwalipikadong pampublikong pahina o piniling link at opsyonal na canonical URL sa pampublikong Hacker News Search API ng Algolia — hindi kailanman teksto ng artikulo o ibang nilalaman. Limitado at dokumentado ang mga pahintulot."
+            "Libre. Walang telemetry o account. Ang mga paghahanap ay nagpapadala lang ng URL ng kwalipikadong pampublikong pahina o piniling link at opsyonal na canonical URL sa pampublikong Hacker News Search API ng Algolia — hindi kailanman teksto ng artikulo o ibang nilalaman. Limitado at dokumentado ang mga pahintulot. Kumokonekta ang mga binuksang talakayan sa Hacker News gamit ang karaniwang metadata ng request at cookies na pinapayagan ng patakaran ng browser. Lokal ang mga setting; nasa session storage ang mga resulta ng paghahanap at ugnayan ng mga tab."
         ],
-        "disclaimer": "Hindi opisyal. Ang extension na ito ay isang malayang proyekto at hindi kaanib o inendorso ng Y Combinator o Hacker News."
+        "disclaimer": "Hindi opisyal. Ang extension na ito ay isang malayang proyekto at hindi kaanib o inendorso ng Y Combinator o Hacker News.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Unang pampublikong release. Hanapin ang eksaktong mga talakayan sa Hacker News para sa artikulong binabasa mo, saka pumili ng resulta sa popup para buksan ito sa katabing tab na maipapares mo sa artikulo gamit ang Chrome Split View, o sa side panel ng browser. Kasama ang “Buksan sa Split” sa context menu ng mga link, isang opt-in na flow na nagbubukas ng mga talakayan sa tabi ng mga na-click na kuwento sa Hacker News, at isang opt-in na badge sa toolbar na may bilang ng mga komento. Libre, walang telemetry, walang account."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Pribado bilang default",
-      "sub": "Default na naka-off: toolbar checks, side-panel follow, at story clicks. Ang “Suriin ang tab na ito” ay isang panel lookup lang; hindi kailanman binabasa ang teksto ng artikulo o ibang nilalaman."
+            "sub": "Default na naka-off: toolbar checks, side-panel follow, at story clicks. Ang “Suriin ang tab na ito” ay isang panel lookup lang; hindi kailanman binabasa ang teksto ng artikulo o ibang nilalaman."
         },
         {
             "heading": "Komportable sa maliwanag at madilim",

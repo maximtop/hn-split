@@ -2,19 +2,19 @@
     "locale": "ro",
     "reviewed": true,
     "description": {
-        "intro": "Citiți un articol și vă întrebați ce părere are Hacker News? În fereastra pop-up, Split for Hacker News găsește discuțiile exacte pentru pagina pe care vă aflați; nu se deschide nimic până când nu selectați un rezultat.",
+        "intro": "Citiți un articol și vă întrebați ce părere are Hacker News? În fereastra pop-up, Split for Hacker News găsește discuțiile exacte pentru pagina pe care vă aflați; nu se deschide nimic până când nu selectați un rezultat. Gratuit și cu sursă deschisă (MIT), fără un backend operat de dezvoltator.",
         "bullets": [
             "Selectați un rezultat în fereastra pop-up pentru a deschide comentariile sale de pe Hacker News.",
             "Potrivire exactă a URL-ului — fără presupuneri aproximative; duplicatele sunt afișate ca alternative.",
             "Prima selectare a unui rezultat deschide o filă adiacentă; asociați-o cu articolul folosind Chrome Split View, iar selecțiile ulterioare vor reutiliza acea filă.",
-        "Sau deschideți discuția în panoul lateral al browserului. Pentru a încorpora pagina Hacker News reală, Split elimină temporar antetele care blochează încadrarea numai din răspunsurile subcadrelor Hacker News și numai cât timp este deschis un panou.",
-        "Opțional: cât timp panoul lateral este deja deschis, urmăriți automat filele active; funcția este dezactivată în mod implicit sau utilizați o singură dată „Verificați această filă”. Nu deschide și nu rearanjează niciodată filele și poate păstra active până la trei discuții recente pentru a reveni mai rapid și a păstra, atunci când este posibil, poziția de derulare.",
+            "Sau deschideți discuția în panoul lateral al browserului. Pentru a încorpora pagina Hacker News reală, Split elimină temporar antetele care blochează încadrarea numai din răspunsurile subcadrelor Hacker News și numai cât timp este deschis un panou. Excepția acoperă toate subcadrele Hacker News din profilul browserului, inclusiv în afara panoului, și elimină restricțiile CSP pentru scripturi până la închiderea ultimului panou. Paginile de nivel superior și celelalte gazde nu sunt afectate.",
+            "Opțional: cât timp panoul lateral este deja deschis, urmăriți automat filele active; funcția este dezactivată în mod implicit sau utilizați o singură dată „Verificați această filă”. Nu deschide și nu rearanjează niciodată filele și poate păstra active până la trei discuții recente pentru a reveni mai rapid și a păstra, atunci când este posibil, poziția de derulare.",
             "„Deschide în Split” în meniul de clic dreapta al linkurilor: linkul se deschide în fila curentă, iar discuția lui de pe Hacker News se deschide în panoul lateral.",
             "Opțional: când faceți clic pe o poveste pe Hacker News, articolul se deschide ca de obicei, iar discuția sa în panoul lateral de alături. Dezactivat implicit.",
             "Insignă opțională în bara de instrumente cu numărul de comentarii, dezactivată implicit.",
-            "Gratuit. Fără telemetrie sau conturi. Căutările trimit numai URL-urile paginilor publice eligibile sau ale linkurilor selectate și, opțional, un URL canonic către API-ul public Hacker News Search de la Algolia — niciodată textul articolului sau alt conținut. Permisiuni restrânse și documentate."
+            "Gratuit. Fără telemetrie sau conturi. Căutările trimit numai URL-urile paginilor publice eligibile sau ale linkurilor selectate și, opțional, un URL canonic către API-ul public Hacker News Search de la Algolia — niciodată textul articolului sau alt conținut. Permisiuni restrânse și documentate. Discuțiile deschise se conectează la Hacker News cu metadatele obișnuite ale cererilor și cookie-urile permise de politica browserului. Setările rămân locale; rezultatele și asocierile filelor sunt păstrate în stocarea sesiunii."
         ],
-        "disclaimer": "Neoficial. Această extensie este un proiect independent și nu este afiliată cu Y Combinator sau Hacker News, nici susținută de acestea."
+        "disclaimer": "Neoficial. Această extensie este un proiect independent și nu este afiliată cu Y Combinator sau Hacker News, nici susținută de acestea.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Prima versiune publică. Găsiți discuțiile exacte de pe Hacker News pentru articolul pe care îl citiți și selectați un rezultat în fereastra pop-up pentru a-l deschide într-o filă adiacentă pe care o puteți asocia cu Chrome Split View sau în panoul lateral al browserului. Include elementul „Deschide în Split” din meniul contextual al linkurilor, un flux opțional care deschide discuțiile lângă poveștile selectate pe Hacker News și o insignă opțională cu numărul de comentarii. Gratuit, fără telemetrie, fără conturi."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Privat în mod implicit",
-      "sub": "Verificări în bară, urmărire în panou și clicuri pe știri sunt implicit dezactivate. „Verificați această filă” permite o căutare în panou; textul articolului și alt conținut nu sunt citite niciodată."
+            "sub": "Verificări în bară, urmărire în panou și clicuri pe știri sunt implicit dezactivate. „Verificați această filă” permite o căutare în panou; textul articolului și alt conținut nu sunt citite niciodată."
         },
         {
             "heading": "Potrivit pentru teme luminoase și întunecate",

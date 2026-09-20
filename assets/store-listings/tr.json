@@ -2,19 +2,19 @@
     "locale": "tr",
     "reviewed": true,
     "description": {
-        "intro": "Bir makale okurken Hacker News ne diyor diye merak mı ediyorsunuz? Split for Hacker News, açılır pencerede bulunduğunuz sayfanın tam tartışmalarını bulur; siz bir sonuç seçene kadar hiçbir şey açılmaz.",
+        "intro": "Bir makale okurken Hacker News ne diyor diye merak mı ediyorsunuz? Split for Hacker News, açılır pencerede bulunduğunuz sayfanın tam tartışmalarını bulur; siz bir sonuç seçene kadar hiçbir şey açılmaz. Ücretsiz ve açık kaynaklıdır (MIT); geliştirici tarafından işletilen bir arka uç yoktur.",
         "bullets": [
             "Hacker News yorumlarını açmak için açılır pencerede bir sonuç seçin.",
             "Tam URL eşleşmesi — yaklaşık tahmin yok; kopyalar alternatif olarak listelenir.",
             "İlk sonuç seçiminiz bitişik bir sekme açar; Chrome Split View ile makaleyle eşleştirin, sonraki seçimler o bölmeyi yeniden kullanır.",
-        "Ya da tartışmayı tarayıcının yan panelinde açın. Split, gerçek Hacker News sayfasını gömmek için çerçevelemeyi engelleyen üstbilgileri geçici olarak yalnızca Hacker News alt çerçeve yanıtlarından ve yalnızca panel açıkken kaldırır.",
-        "İsteğe bağlı: yan panel zaten açıkken etkin sekmeleri otomatik olarak takip edin; özellik varsayılan olarak kapalıdır veya “Bu sekmeyi kontrol et” seçeneğini bir kez kullanın. Sekmeleri asla açmaz veya yeniden düzenlemez; daha hızlı dönmek ve kaydırma konumunu mümkün olduğunca korumak için en fazla üç güncel tartışmayı etkin tutabilir.",
+            "Ya da tartışmayı tarayıcının yan panelinde açın. Split, gerçek Hacker News sayfasını gömmek için çerçevelemeyi engelleyen üstbilgileri geçici olarak yalnızca Hacker News alt çerçeve yanıtlarından ve yalnızca panel açıkken kaldırır. İstisna, panel dışındakiler de dahil olmak üzere tarayıcı profilindeki tüm Hacker News alt çerçevelerini kapsar ve son panel kapanana kadar CSP betik kısıtlamalarını kaldırır. Üst düzey sayfalar ve diğer sunucular etkilenmez.",
+            "İsteğe bağlı: yan panel zaten açıkken etkin sekmeleri otomatik olarak takip edin; özellik varsayılan olarak kapalıdır veya “Bu sekmeyi kontrol et” seçeneğini bir kez kullanın. Sekmeleri asla açmaz veya yeniden düzenlemez; daha hızlı dönmek ve kaydırma konumunu mümkün olduğunca korumak için en fazla üç güncel tartışmayı etkin tutabilir.",
             "Bağlantıların sağ tıklama menüsünde “Split'te aç”: bağlantı geçerli sekmede, Hacker News tartışması ise yan panelde açılır.",
             "İsteğe bağlı: Hacker News'te bir habere tıklamak makaleyi her zamanki gibi, tartışmasını ise yanındaki yan panelde açar. Varsayılan olarak kapalı.",
             "Yorum sayısını gösteren isteğe bağlı araç çubuğu rozeti, varsayılan olarak kapalı.",
-            "Ücretsiz. Telemetri veya hesap yok. Aramalar, Algolia’nın herkese açık Hacker News Search API’sine yalnızca uygun herkese açık sayfaların ya da seçilen bağlantıların URL’lerini ve isteğe bağlı bir standart URL’yi gönderir — makale metnini veya başka içerikleri asla göndermez. Sınırlı ve belgelenmiş izinler."
+            "Ücretsiz. Telemetri veya hesap yok. Aramalar, Algolia’nın herkese açık Hacker News Search API’sine yalnızca uygun herkese açık sayfaların ya da seçilen bağlantıların URL’lerini ve isteğe bağlı bir standart URL’yi gönderir — makale metnini veya başka içerikleri asla göndermez. Sınırlı ve belgelenmiş izinler. Açılan tartışmalar, olağan istek meta verileri ve tarayıcı politikasının izin verdiği çerezlerle Hacker News'e bağlanır. Ayarlar yerel kalır; arama sonuçları ve sekme ilişkileri oturum depolamasında tutulur."
         ],
-        "disclaimer": "Resmî değildir. Bu uzantı bağımsız bir projedir; Y Combinator veya Hacker News ile bağlantılı değildir ve onlar tarafından onaylanmamıştır."
+        "disclaimer": "Resmî değildir. Bu uzantı bağımsız bir projedir; Y Combinator veya Hacker News ile bağlantılı değildir ve onlar tarafından onaylanmamıştır.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "İlk genel sürüm. Okuduğunuz makalenin tam Hacker News tartışmalarını bulun, ardından açılır pencerede bir sonuç seçerek Chrome Split View ile makaleyle eşleştirebileceğiniz bitişik bir sekmede veya tarayıcının yan panelinde açın. Bağlantıların “Split'te aç” bağlam menüsünü, Hacker News'te seçilen haberlerin yanında tartışmaları açan isteğe bağlı bir akışı ve yorum sayısını gösteren isteğe bağlı bir araç çubuğu rozetini içerir. Ücretsiz, telemetri veya hesap yok."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Varsayılan olarak gizli",
-      "sub": "Araç çubuğu kontrolleri, yan panel takibi ve hikâye tıklaması varsayılan olarak kapalıdır. “Bu sekmeyi kontrol et” panelde tek aramaya izin verir; makale metni ve diğer sayfa içeriği asla okunmaz."
+            "sub": "Araç çubuğu kontrolleri, yan panel takibi ve hikâye tıklaması varsayılan olarak kapalıdır. “Bu sekmeyi kontrol et” panelde tek aramaya izin verir; makale metni ve diğer sayfa içeriği asla okunmaz."
         },
         {
             "heading": "Açık ve koyu temalarla uyumlu",

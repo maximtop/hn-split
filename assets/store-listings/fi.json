@@ -2,19 +2,19 @@
     "locale": "fi",
     "reviewed": true,
     "description": {
-        "intro": "Luetko artikkelia ja mietit, mitä Hacker News ajattelee? Split for Hacker News löytää ponnahdusikkunassa avoinna olevan sivun täsmälliset keskustelut; mitään ei avata ennen kuin valitset tuloksen.",
+        "intro": "Luetko artikkelia ja mietit, mitä Hacker News ajattelee? Split for Hacker News löytää ponnahdusikkunassa avoinna olevan sivun täsmälliset keskustelut; mitään ei avata ennen kuin valitset tuloksen. Ilmainen ja avoimen lähdekoodin (MIT) laajennus ilman kehittäjän ylläpitämää taustapalvelua.",
         "bullets": [
             "Avaa Hacker News -kommentit valitsemalla tulos ponnahdusikkunasta.",
             "Täsmällinen URL-vastaavuus — ei likimääräisiä arvauksia; kaksoiskappaleet näytetään vaihtoehtoina.",
             "Ensimmäinen tulosvalintasi avaa viereisen välilehden; yhdistä se artikkeliin Chrome Split View -toiminnolla, ja myöhemmät valinnat käyttävät samaa ruutua.",
-        "Voit myös avata keskustelun selaimen sivupaneelissa. Oikean Hacker News -sivun upottamiseksi Split poistaa kehystämisen estävät otsakkeet väliaikaisesti vain Hacker News -alikehysten vastauksista ja vain paneelin ollessa auki.",
-        "Valinnainen: kun sivupaneeli on jo auki, aktiivisia välilehtiä voidaan seurata automaattisesti. Toiminto on oletuksena pois käytöstä, tai voit käyttää kerran toimintoa ”Tarkista tämä välilehti”. Se ei koskaan avaa eikä järjestä välilehtiä uudelleen ja voi pitää enintään kolme viimeaikaista keskustelua aktiivisena nopeampaa paluuta ja vierityskohdan mahdollisuuksien mukaista säilyttämistä varten.",
+            "Voit myös avata keskustelun selaimen sivupaneelissa. Oikean Hacker News -sivun upottamiseksi Split poistaa kehystämisen estävät otsakkeet väliaikaisesti vain Hacker News -alikehysten vastauksista ja vain paneelin ollessa auki. Poikkeus koskee kaikkia selainprofiilin Hacker News -alikehyksiä, myös paneelin ulkopuolella, ja poistaa CSP:n skriptirajoitukset viimeisen paneelin sulkemiseen asti. Ylimmän tason sivuihin ja muihin palvelimiin se ei vaikuta.",
+            "Valinnainen: kun sivupaneeli on jo auki, aktiivisia välilehtiä voidaan seurata automaattisesti. Toiminto on oletuksena pois käytöstä, tai voit käyttää kerran toimintoa ”Tarkista tämä välilehti”. Se ei koskaan avaa eikä järjestä välilehtiä uudelleen ja voi pitää enintään kolme viimeaikaista keskustelua aktiivisena nopeampaa paluuta ja vierityskohdan mahdollisuuksien mukaista säilyttämistä varten.",
             "”Avaa Splitissä” linkin hiiren oikean painikkeen valikossa: linkki avautuu nykyiseen välilehteen ja sen Hacker News -keskustelu sivupaneeliin.",
             "Valinnainen: jutun napsautus Hacker Newsissa avaa artikkelin tavalliseen tapaan ja sen keskustelun viereiseen sivupaneeliin. Oletuksena pois päältä.",
             "Valinnainen työkalupalkin merkki kommenttien määrällä, oletuksena pois päältä.",
-            "Ilmainen. Ei telemetriaa tai tilejä. Haut lähettävät Algolian julkiseen Hacker News Search APIin vain soveltuvien julkisten sivujen tai valittujen linkkien URL-osoitteet ja valinnaisen kanonisen URL-osoitteen — eivät koskaan artikkelin tekstiä tai muuta sisältöä. Suppeat, dokumentoidut käyttöoikeudet."
+            "Ilmainen. Ei telemetriaa tai tilejä. Haut lähettävät Algolian julkiseen Hacker News Search APIin vain soveltuvien julkisten sivujen tai valittujen linkkien URL-osoitteet ja valinnaisen kanonisen URL-osoitteen — eivät koskaan artikkelin tekstiä tai muuta sisältöä. Suppeat, dokumentoidut käyttöoikeudet. Avatut keskustelut ottavat yhteyden Hacker Newsiin tavallisilla pyyntöjen metatiedoilla ja selaimen käytännön sallimilla evästeillä. Asetukset pysyvät paikallisina; hakutulokset ja välilehtien yhteydet tallennetaan istuntotallennustilaan."
         ],
-        "disclaimer": "Epävirallinen. Tämä laajennus on riippumaton projekti, eikä se ole sidoksissa Y Combinatoriin tai Hacker Newsiin eikä niiden hyväksymä."
+        "disclaimer": "Epävirallinen. Tämä laajennus on riippumaton projekti, eikä se ole sidoksissa Y Combinatoriin tai Hacker Newsiin eikä niiden hyväksymä.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Ensimmäinen julkinen julkaisu. Löydä lukemasi artikkelin täsmälliset Hacker News -keskustelut ja valitse sitten ponnahdusikkunasta tulos, joka avataan viereiseen, Chrome Split View -toiminnolla artikkeliin yhdistettävään välilehteen tai selaimen sivupaneeliin. Sisältää linkkien ”Avaa Splitissä” -pikavalikon, valinnaisen toiminnon, joka avaa keskustelut valittujen Hacker News -juttujen viereen, sekä valinnaisen kommenttimäärän näyttävän työkalupalkin merkin. Ilmainen, ei telemetriaa tai tilejä."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Oletuksena yksityinen",
-      "sub": "Työkalutarkistukset, sivupaneeliseuranta ja tarinaklikkaukset ovat oletuksena pois. ”Tarkista tämä välilehti” sallii yhden sivupaneelihaun; artikkelitekstiä tai sivun muuta sisältöä ei koskaan lueta."
+            "sub": "Työkalutarkistukset, sivupaneeliseuranta ja tarinaklikkaukset ovat oletuksena pois. ”Tarkista tämä välilehti” sallii yhden sivupaneelihaun; artikkelitekstiä tai sivun muuta sisältöä ei koskaan lueta."
         },
         {
             "heading": "Toimii vaaleassa ja tummassa tilassa",
