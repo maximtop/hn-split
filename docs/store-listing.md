@@ -62,42 +62,30 @@ string unchanged.
 
 ### Full description
 
-The master description. Chrome uses it verbatim; Edge requires 250–10,000
+The master description, also applicable to Chrome 0.1.1: its release tag already contains following and retained discussions. The [public-copy handoff](public-copy.md) records the release evidence and publication/translation gates. Chrome uses this copy; Edge requires 250–10,000
 characters (it fits); AMO and the App Store use it with browser-specific
 bullets re-cut to the shipped feature set of that port.
 
-> Reading an article and wondering what Hacker News thinks? In the popup,
-> Split for Hacker News finds exact discussions for the page you are on;
-> nothing opens until you choose a result.
+> Find the Hacker News discussion for the article you are reading, then choose a thread to read beside it. Split for Hacker News is free, open source (MIT), and unofficial.
 >
 > - Select a result in the popup to open its Hacker News comments.
-> - Exact URL matching — no fuzzy guesses, duplicates are listed as
->   alternatives.
-> - The first result selection opens an adjacent tab; pair it with the article
->   using Chrome Split View and later selections reuse that pane.
-> - Or open the discussion in the browser side panel. To embed the real Hacker
->   News page, Split temporarily removes framing headers from Hacker News
->   sub-frame responses only while a panel is open.
-> - Optional: while the side panel is already open, follow active tabs
->   automatically; off by default, or use Check this tab once. It never opens
->   or rearranges tabs, and may keep up to three recent discussions alive for
->   faster return and best-effort scroll position.
-> - Open in Split in the link right-click menu: the link opens in the
->   current tab and its Hacker News discussion opens in the side panel.
-> - Optional: clicking a story on Hacker News opens the article as usual and
->   its discussion in the side panel beside it. Off by default.
+> - Exact URL matching — no fuzzy guesses, duplicates are listed as alternatives.
+> - The first result selection opens an adjacent tab. You can pair it manually with the article using Chrome Split View; later selections reuse that tab. The extension does not create native Split View.
+> - Or open the real Hacker News discussion in the side panel. While at least one panel is open, a temporary rule removes framing and CSP headers from all Hacker News sub-frame responses in that browser profile, including frames outside the panel. This also removes HN script restrictions inside those frames; top-level pages and other hosts are unaffected. The rule is removed after the last panel closes.
+> - Optional: while the side panel is already open, follow active tabs automatically; off by default, or use Check this tab once. It never opens or rearranges tabs, and may keep up to three recent discussions alive for faster return and best-effort scroll position.
+> - Open in Split in the link right-click menu: the link opens in the current tab and its Hacker News discussion opens in the side panel.
+> - Optional: clicking a story on Hacker News opens the article as usual and its discussion in the side panel beside it. Off by default.
 > - Optional toolbar badge with the comment count, off by default.
-> - Free. No telemetry or accounts. Lookups send only eligible public page or
->   selected-link URLs and an optional canonical URL to Algolia's public Hacker
->   News Search API — never article text or other content. Narrow, documented
->   permissions.
+> - No telemetry, extension accounts, or developer-operated backend. Lookups send eligible sanitized public page or selected-link URLs and an optional canonical URL to Algolia's public Hacker News Search API, never article text. Opened discussions connect to Hacker News with ordinary request metadata and any cookies allowed by browser policy. Settings stay local; lookup results and tab associations use session storage.
 >
-> Unofficial. This extension is an independent project and is not affiliated
-> with or endorsed by Y Combinator or Hacker News.
+> Unofficial. This extension is an independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
+>
+> Homepage: https://maximtop.dev/extensions/split-for-hacker-news/
+> Source: https://github.com/maximtop/hn-split
+> Privacy: https://github.com/maximtop/hn-split/blob/master/PRIVACY.md
+> Support: https://github.com/maximtop/hn-split/issues
 
-For AMO, `pnpm store:render amo <locale>` removes the Chrome Split View bullet
-and the story-click bullet in every one of the 40 reviewed translations. All
-other claims and the disclaimer remain unchanged.
+The English description now includes explicit open-source/backend claims, full framing scope, network/cookie disclosures, and trust links. The other 39 localized descriptions retain their earlier reviewed wording: translate and review this revision before publishing them together. Do not interpret their existing `reviewed` flags as approval of this new English revision.
 
 ### Feature list
 
@@ -138,7 +126,8 @@ translated captions.
 | Field | Value |
 | --- | --- |
 | Support URL | `https://github.com/maximtop/hn-split/issues` |
-| Homepage URL | `https://github.com/maximtop/hn-split` |
+| Homepage URL | `https://maximtop.dev/extensions/split-for-hacker-news/` |
+| Source URL | `https://github.com/maximtop/hn-split` |
 | Chrome Web Store | `https://chromewebstore.google.com/detail/split-for-hacker-news/jmocibcalpebojmljmhlkeackggnkhfm` |
 | Support email | `me@maximtop.dev` |
 | Privacy policy URL | `https://github.com/maximtop/hn-split/blob/master/PRIVACY.md` |
@@ -208,8 +197,7 @@ documentation.
   - **User activity.** Only the opt-in Hacker News story-click flow observes a
     click on a story link. The click event is handled locally to open the side
     panel and is not transmitted off the device.
-- No other listed category applies: no personally identifiable, health,
-  financial, authentication, communications, or location data is handled.
+- The extension does not request names, health or financial records, credentials, messages, or location. Eligible public URLs can still contain personal information the URL filter does not recognize; do not describe the filter as an anonymity guarantee.
 - Certify all three Limited Use disclosures: data is not sold to third parties
   outside the approved use cases; is not used or transferred for purposes
   unrelated to the single purpose; and is not used or transferred to determine
