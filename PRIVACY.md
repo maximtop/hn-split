@@ -1,8 +1,8 @@
 # Privacy
 
-Split for Hacker News has no analytics, telemetry, account, or application backend.
+Split for Hacker News is free, open source under the MIT license, and unofficial. It has no analytics, telemetry, extension account, or developer-operated backend. It does make external requests: discussion lookups go to Algolia, and opened discussions load Hacker News. It is not affiliated with or endorsed by Y Combinator or Hacker News.
 
-Last updated: August 11, 2026. Privacy contact: [me@maximtop.dev](mailto:me@maximtop.dev).
+Last updated: September 20, 2026. Privacy contact: [me@maximtop.dev](mailto:me@maximtop.dev).
 
 By default, Split for Hacker News reads the active page URL and the optional URL from its canonical `<link>` element only when the user opens the extension popup. It does not read article text or other page content. It sends eligible public URL candidates over HTTPS to the public Hacker News Algolia search endpoint to find exact matching Hacker News submissions. Algolia is the only third party that receives lookup candidates from the extension; as the network provider, it may also receive standard connection metadata under the [Algolia Privacy Policy](https://www.algolia.com/policies/privacy/). Found URL lookups may remain in Chrome's session storage for one hour and not-found lookups for ten minutes; restricted pages and failures are not added to the URL cache, and all entries are removed when the browser session ends.
 
@@ -12,14 +12,18 @@ Split for Hacker News includes the `tabs` permission at installation. Automatic 
 
 Split for Hacker News adds one right-click item, **Open in Split**, to `http:` and `https:` links. The item is only drawn; nothing runs until the user selects it. Selecting it loads that link in the tab it was clicked in and looks up its discussion, which sends the same sanitized public URL to the Algolia endpoint under the boundary described below. Links the boundary rejects are still opened in the tab, and the panel says no eligible discussion could be looked up.
 
-The article-click opt-in, also off by default, opens a story's discussion beside the article the user clicks on Hacker News. While it is enabled, one content script is registered for `news.ycombinator.com` only. It observes the user's click on a story link, reads only that link and the story's item id already present in the page, and asks the background worker to show that discussion in the side panel. This user activity and website content are handled locally: the flow performs no lookup request and sends nothing off the device. Disabling the setting removes the registration.
+The article-click opt-in, also off by default, opens a story's discussion beside the article the user clicks on Hacker News. While it is enabled, one content script is registered for `news.ycombinator.com` only. It observes the user's click on a story link, reads only that link and the story's item id already present in the page, and asks the background worker to show that discussion in the side panel. This user activity and website content are handled locally: the click handler performs no Algolia lookup and passes the extracted link/item id only to the extension’s background worker to select the discussion. Opening the article and the real Hacker News discussion still makes ordinary browser requests to those sites. Disabling the setting removes the registration.
+
+## Browser scope
+
+The permission list below describes Chrome 140 or newer and the Chromium-based Edge package. The Firefox 140-or-newer package uses Firefox Sidebar instead of `sidePanel`, declares browsing activity and website content for URL lookups, and does not register the Hacker News story-click script or offer that setting. Its lookup, storage, and temporary framing behavior use the same implementation. Safari is not an implemented target.
 
 ## Permissions
 
 Every installed permission exists for one documented purpose:
 
-- **`tabs`** — lets the background worker read tab URLs. It is used to place and reuse the discussion tab next to the article after an explicit result selection; observe navigations and enumerate open tabs for the opt-in automatic badge; and identify the active tab for a one-shot side-panel check or, while a panel is already open, the separate opt-in follow setting. Tab URLs never leave the extension except as sanitized, eligible lookup candidates sent to the endpoint below, and only when one of those lookup paths is authorized.
-- **`activeTab`** — scopes popup-triggered page inspection to the tab the user is looking at when they open the extension action. No page is touched without that explicit action, and article text or other page content is not read.
+- **`tabs`** — lets the background worker read tab URLs. It is used to place and reuse the discussion tab next to the article after an explicit result selection; observe navigations and enumerate open tabs for the opt-in automatic badge; and identify the active tab for a one-shot side-panel check or, while a panel is already open, the separate opt-in follow setting. For discussion lookups, tab URLs are sent only as sanitized, eligible candidates to the endpoint below, and only when one of those lookup paths is authorized. Browser navigation to an article or discussion makes ordinary requests to that destination.
+- **`activeTab`** — scopes popup-triggered page inspection to the tab the user is looking at when they open the extension action. This popup-triggered inspection requires that explicit action and does not read article text. The separate opt-in Hacker News click script is described under `scripting`.
 - **`scripting`** — serves two documented uses. First, it runs one short-lived function in the active page after the popup opens; the function reads only `location.href` and the URL from the `<link rel="canonical">` element, never article text or other content. Second, while the opt-in article-click setting is enabled, it registers one content script for `news.ycombinator.com` only, which observes story-link clicks and reads only the clicked link and story item id. While that setting is off — the default — no content script is registered anywhere; turning the setting off removes the registration.
 - **`storage`** — persists the automatic-availability, side-panel-follow, and article-click on/off settings in `chrome.storage.local`. Chrome's session storage keeps time-bounded lookup results, article-to-discussion tab associations, revisioned per-window panel state, and tab-scoped panel outcomes with sanitized public article identity when needed to recognize an unchanged page. Raw article URLs are not stored for side-panel following, and Chrome discards all session values when the browser session ends. No browsing history is written to persistent storage.
 - **Host access to `https://hn.algolia.com/*`** — the lookup endpoint. It receives sanitized public article URL candidates as search queries and returns matching Hacker News submissions. No account, API key, or identifying header is used.
@@ -47,7 +51,7 @@ Chrome's disclosures cover data handled locally as well as data transmitted off 
 - **Website content** — the canonical link URL is read when the user opens the popup and can be sent to Algolia as a lookup candidate. The clicked story link and item id used by the opt-in Hacker News story-click flow stay on the device. Article text and other content are not read.
 - **User activity** — the opt-in Hacker News story-click flow observes a click on a story link and handles it locally to open the side panel. The click event is not transmitted off the device.
 
-No personally identifiable, health, financial, authentication, communications, or location data is handled.
+The extension does not request names, email addresses, health or financial records, authentication credentials, messages, or location. URL filtering rejects recognized secrets and private addresses, but a public URL can still contain personal information that the filter does not recognize; it is not a guarantee that every eligible URL is anonymous.
 
 ## Limited Use
 
