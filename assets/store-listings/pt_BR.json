@@ -2,19 +2,19 @@
     "locale": "pt_BR",
     "reviewed": true,
     "description": {
-        "intro": "Lendo um artigo e se perguntando o que o Hacker News acha? No pop-up, o Split for Hacker News encontra as discussões exatas da página em que você está; nada abre até você escolher um resultado.",
+        "intro": "Lendo um artigo e se perguntando o que o Hacker News acha? No pop-up, o Split for Hacker News encontra as discussões exatas da página em que você está; nada abre até você escolher um resultado. Gratuito e de código aberto (MIT), sem backend operado pelo desenvolvedor.",
         "bullets": [
             "Selecione um resultado no pop-up para abrir os comentários dele no Hacker News.",
             "Correspondência exata de URL — sem palpites aproximados; duplicatas aparecem como alternativas.",
             "A primeira seleção de um resultado abre uma aba adjacente; emparelhe essa aba com o artigo usando o Chrome Split View e as próximas seleções reutilizarão essa aba.",
-        "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que impedem a exibição em frames apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto.",
-        "Opcional: enquanto o painel lateral já estiver aberto, acompanhe automaticamente as abas ativas; o recurso vem desativado por padrão, ou use “Verificar esta aba” uma vez. Ele nunca abre nem reorganiza abas e pode manter até três discussões recentes ativas para você voltar mais rápido e preservar a posição da rolagem quando possível.",
+            "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que impedem a exibição em frames apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto. A exceção abrange todos os subframes do Hacker News no perfil do navegador, inclusive fora do painel, e remove as restrições de scripts da CSP até o último painel ser fechado. Páginas de nível superior e outros hosts não são afetados.",
+            "Opcional: enquanto o painel lateral já estiver aberto, acompanhe automaticamente as abas ativas; o recurso vem desativado por padrão, ou use “Verificar esta aba” uma vez. Ele nunca abre nem reorganiza abas e pode manter até três discussões recentes ativas para você voltar mais rápido e preservar a posição da rolagem quando possível.",
             "“Abrir no Split” no menu do botão direito dos links: o link abre na aba atual e a discussão dele no Hacker News abre no painel lateral.",
             "Opcional: clicar em uma história no Hacker News abre o artigo normalmente e a discussão dele no painel lateral ao lado. Desativado por padrão.",
             "Selo opcional na barra de ferramentas com o número de comentários, desativado por padrão.",
-            "Grátis. Sem telemetria nem contas. As consultas enviam apenas URLs de páginas públicas qualificadas ou de links selecionados e uma URL canônica opcional para a API pública Hacker News Search da Algolia — nunca o texto do artigo nem outro conteúdo. Permissões restritas e documentadas."
+            "Grátis. Sem telemetria nem contas. As consultas enviam apenas URLs de páginas públicas qualificadas ou de links selecionados e uma URL canônica opcional para a API pública Hacker News Search da Algolia — nunca o texto do artigo nem outro conteúdo. Permissões restritas e documentadas. As discussões abertas se conectam ao Hacker News com os metadados habituais das solicitações e os cookies permitidos pela política do navegador. As configurações ficam locais; resultados e associações de abas ficam no armazenamento da sessão."
         ],
-        "disclaimer": "Não oficial. Esta extensão é um projeto independente e não é afiliada nem endossada pela Y Combinator ou pelo Hacker News."
+        "disclaimer": "Não oficial. Esta extensão é um projeto independente e não é afiliada nem endossada pela Y Combinator ou pelo Hacker News.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Primeira versão pública. Encontre as discussões exatas do Hacker News para o artigo que você está lendo e selecione um resultado no pop-up para abri-lo em uma aba adjacente que você pode emparelhar com o Chrome Split View ou no painel lateral do navegador. Inclui o item “Abrir no Split” no menu de contexto dos links, um fluxo opcional que abre discussões ao lado das histórias em que você clica no Hacker News e um selo opcional com o número de comentários. Grátis, sem telemetria, sem contas."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Privado por padrão",
-      "sub": "Checagens na barra, acompanhamento lateral e cliques em histórias vêm desativados por padrão. “Verificar esta aba” permite uma consulta no painel; texto do artigo e outros conteúdos nunca são lidos."
+            "sub": "Checagens na barra, acompanhamento lateral e cliques em histórias vêm desativados por padrão. “Verificar esta aba” permite uma consulta no painel; texto do artigo e outros conteúdos nunca são lidos."
         },
         {
             "heading": "Ótimo nos modos claro e escuro",

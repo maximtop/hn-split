@@ -3,6 +3,25 @@
 Checked September 20, 2026 for [MT-997](https://www.notion.so/3b803d5910528124899dd3cfba0d80be).
 This is a review and publication handoff, not a record of external publication.
 
+## Publication progress
+
+The English repository copy was merged in [PR #35](https://github.com/maximtop/hn-split/pull/35)
+and the landing copy in [website PR #8](https://github.com/maximtop/maximtop.dev/pull/8).
+The website deployed automatically; the overview, privacy, FAQ, support, and
+side-by-side guide were checked over HTTP after deployment.
+
+All 39 non-English listing sources now include the corresponding trust,
+network, storage, and framing disclosures. All 40 listings pass the structural
+and store-length validation. The localized additions received an author
+semantic review, not an independent or native-speaker review; see
+[the locale review record](locales.md#store-listing-network-and-framing-review).
+
+External store publication, the Store homepage field, the GitHub social-preview
+upload, and a real article/discussion first visual remain unverified. The
+Chrome and Edge public APIs do not support description updates; their publisher
+dashboards are required. AMO supports authenticated description updates. No
+store submission or binary release is implied by these source changes.
+
 ## Evidence and discrepancies
 
 | Surface | Observed state | Prepared correction / remaining action |

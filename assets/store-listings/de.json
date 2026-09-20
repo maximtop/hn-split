@@ -2,19 +2,19 @@
     "locale": "de",
     "reviewed": true,
     "description": {
-        "intro": "Sie lesen einen Artikel und fragen sich, was Hacker News dazu meint? Im Pop-up findet Split for Hacker News die exakten Diskussionen zur aktuellen Seite; nichts wird geöffnet, bevor Sie ein Ergebnis auswählen.",
+        "intro": "Sie lesen einen Artikel und fragen sich, was Hacker News dazu meint? Im Pop-up findet Split for Hacker News die exakten Diskussionen zur aktuellen Seite; nichts wird geöffnet, bevor Sie ein Ergebnis auswählen. Kostenlos und quelloffen (MIT), ohne vom Entwickler betriebenes Backend.",
         "bullets": [
             "Wählen Sie im Pop-up ein Ergebnis aus, um dessen Hacker-News-Kommentare zu öffnen.",
             "Exakter URL-Abgleich — kein ungefähres Raten; Duplikate erscheinen als Alternativen.",
             "Die erste Auswahl eines Ergebnisses öffnet einen benachbarten Tab; verbinden Sie ihn über Chrome Split View mit dem Artikel, und spätere Auswahlen verwenden diesen Tab erneut.",
-        "Oder öffnen Sie die Diskussion in der Seitenleiste des Browsers. Um die echte Hacker-News-Seite einzubetten, entfernt Split vorübergehend die Framing-Schutz-Header ausschließlich aus Antworten von Hacker-News-Unterframes und nur, solange eine Seitenleiste geöffnet ist.",
-        "Optional: Solange die Seitenleiste bereits geöffnet ist, aktiven Tabs automatisch folgen; standardmäßig deaktiviert, alternativ einmal „Diesen Tab prüfen“ verwenden. Die Funktion öffnet oder verschiebt niemals Tabs und kann bis zu drei zuletzt verwendete Diskussionen aktiv halten, damit Sie schneller zurückkehren und die Scrollposition nach Möglichkeit erhalten bleibt.",
+            "Oder öffnen Sie die Diskussion in der Seitenleiste des Browsers. Um die echte Hacker-News-Seite einzubetten, entfernt Split vorübergehend die Framing-Schutz-Header ausschließlich aus Antworten von Hacker-News-Unterframes und nur, solange eine Seitenleiste geöffnet ist. Die Ausnahme gilt für alle Hacker-News-Unterframes im Browserprofil, auch außerhalb des Panels, und entfernt die CSP-Skriptbeschränkungen, bis das letzte Panel geschlossen wird. Seiten der obersten Ebene und andere Hosts sind nicht betroffen.",
+            "Optional: Solange die Seitenleiste bereits geöffnet ist, aktiven Tabs automatisch folgen; standardmäßig deaktiviert, alternativ einmal „Diesen Tab prüfen“ verwenden. Die Funktion öffnet oder verschiebt niemals Tabs und kann bis zu drei zuletzt verwendete Diskussionen aktiv halten, damit Sie schneller zurückkehren und die Scrollposition nach Möglichkeit erhalten bleibt.",
             "„In Split öffnen“ im Rechtsklickmenü von Links: Der Link öffnet sich im aktuellen Tab und seine Hacker-News-Diskussion in der Seitenleiste.",
             "Optional: Ein Klick auf eine Story auf Hacker News öffnet den Artikel wie gewohnt und seine Diskussion daneben in der Seitenleiste. Standardmäßig aus.",
             "Optionales Badge in der Symbolleiste mit der Kommentarzahl, standardmäßig aus.",
-            "Kostenlos. Keine Telemetrie oder Konten. Bei Suchanfragen werden nur die URLs geeigneter öffentlicher Seiten oder ausgewählter Links sowie optional eine kanonische URL an die öffentliche Hacker News Search API von Algolia gesendet — niemals Artikeltext oder andere Inhalte. Eng begrenzte, dokumentierte Berechtigungen."
+            "Kostenlos. Keine Telemetrie oder Konten. Bei Suchanfragen werden nur die URLs geeigneter öffentlicher Seiten oder ausgewählter Links sowie optional eine kanonische URL an die öffentliche Hacker News Search API von Algolia gesendet — niemals Artikeltext oder andere Inhalte. Eng begrenzte, dokumentierte Berechtigungen. Geöffnete Diskussionen verbinden sich mit Hacker News mit üblichen Anfragemetadaten und den von der Browserrichtlinie zugelassenen Cookies. Einstellungen bleiben lokal; Suchergebnisse und Tab-Zuordnungen liegen im Sitzungsspeicher."
         ],
-        "disclaimer": "Inoffiziell. Diese Erweiterung ist ein unabhängiges Projekt und steht in keiner Verbindung zu Y Combinator oder Hacker News und wird von ihnen nicht unterstützt."
+        "disclaimer": "Inoffiziell. Diese Erweiterung ist ein unabhängiges Projekt und steht in keiner Verbindung zu Y Combinator oder Hacker News und wird von ihnen nicht unterstützt.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Erste öffentliche Version. Finden Sie die exakten Hacker-News-Diskussionen zum Artikel, den Sie lesen, und wählen Sie dann im Pop-up ein Ergebnis aus, um es in einem benachbarten Tab, den Sie über Chrome Split View mit dem Artikel verbinden können, oder in der Seitenleiste des Browsers zu öffnen. Enthält den Menüpunkt „In Split öffnen“ im Kontextmenü von Links, einen optionalen Ablauf, der Diskussionen neben angeklickten Storys auf Hacker News öffnet, und ein optionales Badge mit der Kommentarzahl. Kostenlos, ohne Telemetrie, ohne Konten."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Standardmäßig privat",
-      "sub": "Symbolleistenprüfungen, Seitenleistenfolge und Story-Klicks sind standardmäßig aus. „Diesen Tab prüfen“ erlaubt eine Suche in der Seitenleiste; Artikeltext und andere Seiteninhalte werden nie gelesen."
+            "sub": "Symbolleistenprüfungen, Seitenleistenfolge und Story-Klicks sind standardmäßig aus. „Diesen Tab prüfen“ erlaubt eine Suche in der Seitenleiste; Artikeltext und andere Seiteninhalte werden nie gelesen."
         },
         {
             "heading": "Passt zu hellen und dunklen Designs",

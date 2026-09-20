@@ -2,19 +2,19 @@
     "locale": "hu",
     "reviewed": true,
     "description": {
-        "intro": "Egy cikket olvas, és kíváncsi, mit gondol a Hacker News? A Split for Hacker News az előugró ablakban megkeresi a megnyitott oldal pontos vitáit; semmi nem nyílik meg, amíg nem választ ki egy találatot.",
+        "intro": "Egy cikket olvas, és kíváncsi, mit gondol a Hacker News? A Split for Hacker News az előugró ablakban megkeresi a megnyitott oldal pontos vitáit; semmi nem nyílik meg, amíg nem választ ki egy találatot. Ingyenes és nyílt forráskódú (MIT), a fejlesztő által üzemeltetett háttérszolgáltatás nélkül.",
         "bullets": [
             "Válasszon ki egy találatot az előugró ablakban a Hacker News-hozzászólásainak megnyitásához.",
             "Pontos URL-egyezés — semmi hozzávetőleges találgatás; a duplikátumok alternatívaként jelennek meg.",
             "Az első találat kiválasztása egy szomszédos lapot nyit meg; párosítsa a cikkel a Chrome Split View segítségével, és a későbbi választások ezt az osztott nézetet használják újra.",
-        "Vagy nyissa meg a vitát a böngésző oldalsávjában. A valódi Hacker News-oldal beágyazásához a Split ideiglenesen, kizárólag a panel nyitva tartása alatt eltávolítja a keretezést tiltó fejléceket a Hacker News alkereteinek válaszaiból.",
-        "Választható: amíg az oldalsáv már nyitva van, automatikusan követheti az aktív lapokat; alapértelmezés szerint ki van kapcsolva, vagy egyszer használhatja a „Lap ellenőrzése” műveletet. Soha nem nyit meg vagy rendez át lapokat, és a gyorsabb visszatéréshez, valamint a görgetési pozíció lehetőség szerinti megőrzéséhez legfeljebb három legutóbbi vitát tarthat aktívan.",
+            "Vagy nyissa meg a vitát a böngésző oldalsávjában. A valódi Hacker News-oldal beágyazásához a Split ideiglenesen, kizárólag a panel nyitva tartása alatt eltávolítja a keretezést tiltó fejléceket a Hacker News alkereteinek válaszaiból. A kivétel a böngészőprofil összes Hacker News-alkeretére vonatkozik, a panelen kívül is, és az utolsó panel bezárásáig eltávolítja a CSP szkriptkorlátozásait. A legfelső szintű oldalakra és más kiszolgálókra nincs hatással.",
+            "Választható: amíg az oldalsáv már nyitva van, automatikusan követheti az aktív lapokat; alapértelmezés szerint ki van kapcsolva, vagy egyszer használhatja a „Lap ellenőrzése” műveletet. Soha nem nyit meg vagy rendez át lapokat, és a gyorsabb visszatéréshez, valamint a görgetési pozíció lehetőség szerinti megőrzéséhez legfeljebb három legutóbbi vitát tarthat aktívan.",
             "„Megnyitás a Splitben” a hivatkozások jobb gombos menüjében: a hivatkozás az aktuális lapon nyílik meg, Hacker News-vitája pedig az oldalsávban.",
             "Nem kötelező: a Hacker Newson egy sztorira kattintva a cikk a szokásos módon nyílik meg, vitája pedig mellette az oldalsávban. Alapértelmezés szerint kikapcsolva.",
             "Nem kötelező eszköztárjelvény a hozzászólások számával, alapértelmezés szerint kikapcsolva.",
-            "Ingyenes. Nincs telemetria vagy fiók. A keresések kizárólag a megfelelő nyilvános oldalak vagy kiválasztott hivatkozások URL-jeit és egy opcionális kanonikus URL-t küldenek az Algolia nyilvános Hacker News Search API-jának — a cikk szövegét vagy más tartalmat soha. Korlátozott, dokumentált engedélyek."
+            "Ingyenes. Nincs telemetria vagy fiók. A keresések kizárólag a megfelelő nyilvános oldalak vagy kiválasztott hivatkozások URL-jeit és egy opcionális kanonikus URL-t küldenek az Algolia nyilvános Hacker News Search API-jának — a cikk szövegét vagy más tartalmat soha. Korlátozott, dokumentált engedélyek. A megnyitott beszélgetések a szokásos kérésmetaadatokkal és a böngésző szabályzata által engedélyezett sütikkel kapcsolódnak a Hacker Newshoz. A beállítások helyben maradnak; a keresési eredmények és a lapok kapcsolatai a munkamenet-tárolóba kerülnek."
         ],
-        "disclaimer": "Nem hivatalos. Ez a bővítmény független projekt, nem áll kapcsolatban a Y Combinatorral vagy a Hacker Newszal, és nem élvezi támogatásukat."
+        "disclaimer": "Nem hivatalos. Ez a bővítmény független projekt, nem áll kapcsolatban a Y Combinatorral vagy a Hacker Newszal, és nem élvezi támogatásukat.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Első nyilvános kiadás. Keresse meg az olvasott cikk pontos Hacker News-vitáit, majd válasszon találatot az előugró ablakban, hogy megnyissa egy szomszédos lapon, amelyet a Chrome Split View segítségével párosíthat a cikkel, vagy a böngésző oldalsávjában. Tartalmazza a hivatkozások „Megnyitás a Splitben” helyi menüjét, a kiválasztott Hacker News-történetek melletti viták megnyitásának választható módját és a hozzászólásszámot mutató választható jelvényt. Ingyenes, telemetria és fiókok nélkül."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Alapértelmezés szerint privát",
-      "sub": "Az eszköztári ellenőrzés, az oldalsávos követés és a történetkattintás alapból ki van kapcsolva. „Lap ellenőrzése” egy oldalsávos keresést enged; a cikk szövegét és más oldaltartalmat soha nem olvas."
+            "sub": "Az eszköztári ellenőrzés, az oldalsávos követés és a történetkattintás alapból ki van kapcsolva. „Lap ellenőrzése” egy oldalsávos keresést enged; a cikk szövegét és más oldaltartalmat soha nem olvas."
         },
         {
             "heading": "Világos és sötét módban is kényelmes",

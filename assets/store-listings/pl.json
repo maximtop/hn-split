@@ -2,19 +2,19 @@
     "locale": "pl",
     "reviewed": true,
     "description": {
-        "intro": "Czytasz artykuł i zastanawiasz się, co sądzi Hacker News? W wyskakującym oknie Split for Hacker News znajduje dokładne dyskusje dotyczące otwartej strony; nic się nie otworzy, dopóki nie wybierzesz wyniku.",
+        "intro": "Czytasz artykuł i zastanawiasz się, co sądzi Hacker News? W wyskakującym oknie Split for Hacker News znajduje dokładne dyskusje dotyczące otwartej strony; nic się nie otworzy, dopóki nie wybierzesz wyniku. Bezpłatne i otwartoźródłowe (MIT), bez zaplecza serwerowego prowadzonego przez twórcę.",
         "bullets": [
             "Wybierz wynik w wyskakującym oknie, aby otworzyć jego komentarze na Hacker News.",
             "Dokładne dopasowanie URL — bez przybliżonych domysłów; duplikaty są pokazywane jako alternatywy.",
             "Pierwszy wybór wyniku otwiera sąsiednią kartę; połącz ją z artykułem za pomocą Chrome Split View, a kolejne wybory ponownie użyją tego obszaru widoku dzielonego.",
-        "Możesz też otworzyć dyskusję w panelu bocznym przeglądarki. Aby osadzić prawdziwą stronę Hacker News, Split tymczasowo usuwa nagłówki blokujące osadzanie wyłącznie z odpowiedzi ramek podrzędnych Hacker News i tylko wtedy, gdy panel jest otwarty.",
-        "Opcjonalnie: gdy panel boczny jest już otwarty, automatycznie śledź aktywne karty; funkcja jest domyślnie wyłączona, możesz też jednorazowo użyć opcji „Sprawdź tę kartę”. Nigdy nie otwiera ani nie zmienia kolejności kart i może utrzymać aktywność maksymalnie trzech ostatnich dyskusji, aby umożliwić szybszy powrót i w miarę możliwości zachować pozycję przewijania.",
+            "Możesz też otworzyć dyskusję w panelu bocznym przeglądarki. Aby osadzić prawdziwą stronę Hacker News, Split tymczasowo usuwa nagłówki blokujące osadzanie wyłącznie z odpowiedzi ramek podrzędnych Hacker News i tylko wtedy, gdy panel jest otwarty. Wyjątek obejmuje wszystkie podramki Hacker News w profilu przeglądarki, także poza panelem, i usuwa ograniczenia skryptów CSP do zamknięcia ostatniego panelu. Nie wpływa na strony najwyższego poziomu ani innych hostów.",
+            "Opcjonalnie: gdy panel boczny jest już otwarty, automatycznie śledź aktywne karty; funkcja jest domyślnie wyłączona, możesz też jednorazowo użyć opcji „Sprawdź tę kartę”. Nigdy nie otwiera ani nie zmienia kolejności kart i może utrzymać aktywność maksymalnie trzech ostatnich dyskusji, aby umożliwić szybszy powrót i w miarę możliwości zachować pozycję przewijania.",
             "„Otwórz w Split” w menu prawego przycisku na linku: link otwiera się w bieżącej karcie, a jego dyskusja z Hacker News — w panelu bocznym.",
             "Opcjonalnie: kliknięcie historii na Hacker News otwiera artykuł jak zwykle, a jego dyskusję w panelu bocznym obok. Domyślnie wyłączone.",
             "Opcjonalna plakietka na pasku narzędzi z liczbą komentarzy, domyślnie wyłączona.",
-            "Za darmo. Bez telemetrii i kont. Wyszukiwania wysyłają do publicznego interfejsu Hacker News Search API firmy Algolia wyłącznie adresy URL odpowiednich publicznych stron lub wybranych linków oraz opcjonalny kanoniczny adres URL — nigdy tekst artykułu ani inną zawartość. Ograniczone, udokumentowane uprawnienia."
+            "Za darmo. Bez telemetrii i kont. Wyszukiwania wysyłają do publicznego interfejsu Hacker News Search API firmy Algolia wyłącznie adresy URL odpowiednich publicznych stron lub wybranych linków oraz opcjonalny kanoniczny adres URL — nigdy tekst artykułu ani inną zawartość. Ograniczone, udokumentowane uprawnienia. Otwarte dyskusje łączą się z Hacker News ze zwykłymi metadanymi żądań i plikami cookie dozwolonymi przez zasady przeglądarki. Ustawienia pozostają lokalne; wyniki wyszukiwania i powiązania kart są w pamięci sesji."
         ],
-        "disclaimer": "Nieoficjalne. To rozszerzenie jest niezależnym projektem i nie jest powiązane z Y Combinator ani Hacker News, ani przez nie wspierane."
+        "disclaimer": "Nieoficjalne. To rozszerzenie jest niezależnym projektem i nie jest powiązane z Y Combinator ani Hacker News, ani przez nie wspierane.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Pierwsze publiczne wydanie. Znajdź dokładne dyskusje na Hacker News dotyczące czytanego artykułu, a następnie wybierz wynik w wyskakującym oknie, aby otworzyć go w sąsiedniej karcie, którą można połączyć z artykułem za pomocą Chrome Split View, albo w panelu bocznym przeglądarki. Zawiera menu kontekstowe linków „Otwórz w Split”, opcjonalny tryb otwierający dyskusje obok wybranych historii na Hacker News oraz opcjonalną plakietkę z liczbą komentarzy. Za darmo, bez telemetrii i kont."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Domyślnie prywatne",
-      "sub": "Kontrole paska, śledzenie w panelu i kliknięcia historii są domyślnie wyłączone. „Sprawdź tę kartę” zezwala na jedno wyszukiwanie w panelu; tekst artykułu ani inna zawartość nigdy nie są odczytywane."
+            "sub": "Kontrole paska, śledzenie w panelu i kliknięcia historii są domyślnie wyłączone. „Sprawdź tę kartę” zezwala na jedno wyszukiwanie w panelu; tekst artykułu ani inna zawartość nigdy nie są odczytywane."
         },
         {
             "heading": "Wygodnie w jasnym i ciemnym motywie",

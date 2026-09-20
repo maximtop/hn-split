@@ -2,19 +2,19 @@
     "locale": "ca",
     "reviewed": true,
     "description": {
-        "intro": "Esteu llegint un article i us pregunteu què en pensa Hacker News? A la finestra emergent, Split for Hacker News troba les discussions exactes de la pàgina on sou; no s'obre res fins que seleccioneu un resultat.",
+        "intro": "Esteu llegint un article i us pregunteu què en pensa Hacker News? A la finestra emergent, Split for Hacker News troba les discussions exactes de la pàgina on sou; no s'obre res fins que seleccioneu un resultat. Gratuït i de codi obert (MIT), sense servidor propi del desenvolupador.",
         "bullets": [
             "Seleccioneu un resultat a la finestra emergent per obrir-ne els comentaris a Hacker News.",
             "Coincidència exacta d'URL — sense conjectures aproximades; els duplicats es mostren com a alternatives.",
             "La primera selecció d'un resultat obre una pestanya adjacent; emparelleu-la amb l'article mitjançant Chrome Split View i les seleccions posteriors reutilitzaran aquesta pestanya.",
-        "O obriu la discussió al plafó lateral del navegador. Per incrustar la pàgina real de Hacker News, Split elimina temporalment, només de les respostes dels submarcs de Hacker News, les capçaleres que impedeixen l'emmarcament, i ho fa únicament mentre hi ha un plafó obert.",
-        "Opcional: mentre el plafó lateral ja sigui obert, seguiu automàticament les pestanyes actives; està desactivat per defecte, o bé feu servir «Comprova aquesta pestanya» una sola vegada. Mai no obre ni reordena pestanyes i pot mantenir actives fins a tres discussions recents per tornar-hi més ràpidament i conservar, quan sigui possible, la posició de desplaçament.",
+            "O obriu la discussió al plafó lateral del navegador. Per incrustar la pàgina real de Hacker News, Split elimina temporalment, només de les respostes dels submarcs de Hacker News, les capçaleres que impedeixen l'emmarcament, i ho fa únicament mentre hi ha un plafó obert. L’excepció afecta tots els submarcs de Hacker News del perfil del navegador, també fora del panell, i elimina les restriccions de scripts de CSP fins que es tanca l’últim panell. Les pàgines principals i els altres amfitrions no es veuen afectats.",
+            "Opcional: mentre el plafó lateral ja sigui obert, seguiu automàticament les pestanyes actives; està desactivat per defecte, o bé feu servir «Comprova aquesta pestanya» una sola vegada. Mai no obre ni reordena pestanyes i pot mantenir actives fins a tres discussions recents per tornar-hi més ràpidament i conservar, quan sigui possible, la posició de desplaçament.",
             "«Obre a Split» al menú del botó dret dels enllaços: l'enllaç s'obre a la pestanya actual i la seva discussió de Hacker News s'obre al plafó lateral.",
             "Opcional: en fer clic a una història a Hacker News, l'article s'obre com sempre i la seva discussió al plafó lateral del costat. Desactivat per defecte.",
             "Insígnia opcional a la barra d'eines amb el nombre de comentaris, desactivada per defecte.",
-            "Gratuït. Sense telemetria ni comptes. Les cerques només envien els URL de pàgines públiques aptes o d'enllaços seleccionats i un URL canònic opcional a l'API pública Hacker News Search d'Algolia — mai el text de l'article ni altres continguts. Permisos limitats i documentats."
+            "Gratuït. Sense telemetria ni comptes. Les cerques només envien els URL de pàgines públiques aptes o d'enllaços seleccionats i un URL canònic opcional a l'API pública Hacker News Search d'Algolia — mai el text de l'article ni altres continguts. Permisos limitats i documentats. Les discussions obertes es connecten a Hacker News amb les metadades habituals de la petició i les galetes que permet la política del navegador. La configuració queda en local; els resultats i les associacions de pestanyes es desen a l’emmagatzematge de sessió."
         ],
-        "disclaimer": "No oficial. Aquesta extensió és un projecte independent i no està afiliada a Y Combinator ni a Hacker News, ni compta amb el seu suport."
+        "disclaimer": "No oficial. Aquesta extensió és un projecte independent i no està afiliada a Y Combinator ni a Hacker News, ni compta amb el seu suport.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Primera versió pública. Trobeu les discussions exactes de Hacker News de l'article que llegiu i seleccioneu un resultat a la finestra emergent per obrir-lo en una pestanya adjacent que podeu emparellar amb Chrome Split View o al plafó lateral del navegador. Inclou l'element «Obre a Split» al menú contextual dels enllaços, un flux opcional que obre les discussions al costat de les històries en què feu clic a Hacker News, i una insígnia opcional amb el nombre de comentaris. Gratuït, sense telemetria, sense comptes."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Privat per defecte",
-      "sub": "Controls de barra, seguiment al plafó i clics a històries: desactivats per defecte. «Comprova aquesta pestanya» permet una consulta al plafó; mai es llegeixen text de l'article ni altres continguts."
+            "sub": "Controls de barra, seguiment al plafó i clics a històries: desactivats per defecte. «Comprova aquesta pestanya» permet una consulta al plafó; mai es llegeixen text de l'article ni altres continguts."
         },
         {
             "heading": "Còmode en clar i en fosc",

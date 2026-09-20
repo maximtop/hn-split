@@ -2,19 +2,19 @@
     "locale": "id",
     "reviewed": true,
     "description": {
-        "intro": "Sedang membaca artikel dan penasaran apa kata Hacker News? Di popup, Split for Hacker News menemukan diskusi yang tepat untuk halaman yang sedang Anda buka; tidak ada yang terbuka hingga Anda memilih hasil.",
+        "intro": "Sedang membaca artikel dan penasaran apa kata Hacker News? Di popup, Split for Hacker News menemukan diskusi yang tepat untuk halaman yang sedang Anda buka; tidak ada yang terbuka hingga Anda memilih hasil. Gratis dan sumber terbuka (MIT), tanpa backend yang dioperasikan pengembang.",
         "bullets": [
             "Pilih hasil di popup untuk membuka komentar Hacker News-nya.",
             "Pencocokan URL yang tepat — tanpa tebakan samar; duplikat ditampilkan sebagai alternatif.",
             "Pilihan hasil pertama Anda membuka tab yang bersebelahan; pasangkan dengan artikel menggunakan Chrome Split View dan pilihan berikutnya akan menggunakan kembali panel itu.",
-        "Atau buka diskusi di panel samping browser. Untuk menyematkan halaman Hacker News yang sebenarnya, Split untuk sementara menghapus header yang memblokir penayangan dalam frame hanya dari respons subframe Hacker News selama panel terbuka.",
-        "Opsional: saat panel samping sudah terbuka, ikuti tab aktif secara otomatis; fitur ini nonaktif secara default, atau gunakan “Periksa tab ini” satu kali. Fitur ini tidak pernah membuka atau mengatur ulang tab, dan dapat mempertahankan hingga tiga diskusi terbaru agar tetap aktif supaya Anda dapat kembali lebih cepat serta mempertahankan posisi gulir sebisa mungkin.",
+            "Atau buka diskusi di panel samping browser. Untuk menyematkan halaman Hacker News yang sebenarnya, Split untuk sementara menghapus header yang memblokir penayangan dalam frame hanya dari respons subframe Hacker News selama panel terbuka. Pengecualian ini mencakup semua subframe Hacker News dalam profil browser, termasuk di luar panel, dan menghapus pembatasan skrip CSP hingga panel terakhir ditutup. Halaman tingkat atas dan host lain tidak terpengaruh.",
+            "Opsional: saat panel samping sudah terbuka, ikuti tab aktif secara otomatis; fitur ini nonaktif secara default, atau gunakan “Periksa tab ini” satu kali. Fitur ini tidak pernah membuka atau mengatur ulang tab, dan dapat mempertahankan hingga tiga diskusi terbaru agar tetap aktif supaya Anda dapat kembali lebih cepat serta mempertahankan posisi gulir sebisa mungkin.",
             "“Buka di Split” di menu klik kanan tautan: tautan terbuka di tab saat ini dan diskusi Hacker News-nya terbuka di panel samping.",
             "Opsional: mengklik cerita di Hacker News membuka artikel seperti biasa dan diskusinya di panel samping di sebelahnya. Nonaktif secara default.",
             "Lencana bilah alat opsional dengan jumlah komentar, nonaktif secara default.",
-            "Gratis. Tanpa telemetri atau akun. Pencarian hanya mengirim URL halaman publik yang memenuhi syarat atau tautan yang dipilih serta URL kanonis opsional ke API Hacker News Search publik Algolia — tidak pernah teks artikel atau konten lain. Izin terbatas dan terdokumentasi."
+            "Gratis. Tanpa telemetri atau akun. Pencarian hanya mengirim URL halaman publik yang memenuhi syarat atau tautan yang dipilih serta URL kanonis opsional ke API Hacker News Search publik Algolia — tidak pernah teks artikel atau konten lain. Izin terbatas dan terdokumentasi. Diskusi yang dibuka terhubung ke Hacker News dengan metadata permintaan biasa dan cookie yang diizinkan kebijakan browser. Pengaturan tetap lokal; hasil pencarian dan kaitan tab disimpan di penyimpanan sesi."
         ],
-        "disclaimer": "Tidak resmi. Ekstensi ini adalah proyek independen dan tidak berafiliasi dengan atau didukung oleh Y Combinator maupun Hacker News."
+        "disclaimer": "Tidak resmi. Ekstensi ini adalah proyek independen dan tidak berafiliasi dengan atau didukung oleh Y Combinator maupun Hacker News.\n\nhttps://maximtop.dev/extensions/split-for-hacker-news/\nhttps://github.com/maximtop/hn-split\nhttps://github.com/maximtop/hn-split/blob/master/PRIVACY.md\nhttps://github.com/maximtop/hn-split/issues"
     },
     "releaseNotes": {
         "v0.1.0": "Rilis publik pertama. Temukan diskusi Hacker News yang tepat untuk artikel yang Anda baca, lalu pilih hasil di popup untuk membukanya di tab bersebelahan yang dapat dipasangkan dengan artikel menggunakan Chrome Split View, atau di panel samping browser. Menyertakan item “Buka di Split” di menu konteks tautan, alur opt-in yang membuka diskusi di samping cerita yang diklik di Hacker News, dan lencana bilah alat opt-in dengan jumlah komentar. Gratis, tanpa telemetri, tanpa akun."
@@ -26,7 +26,7 @@
         },
         {
             "heading": "Privat secara default",
-      "sub": "Pemeriksaan bilah alat, mengikuti tab di panel, dan klik cerita nonaktif secara default. “Periksa tab ini” mengizinkan satu pencarian di panel; teks artikel dan konten lain tidak pernah dibaca."
+            "sub": "Pemeriksaan bilah alat, mengikuti tab di panel, dan klik cerita nonaktif secara default. “Periksa tab ini” mengizinkan satu pencarian di panel; teks artikel dan konten lain tidak pernah dibaca."
         },
         {
             "heading": "Nyaman di tema terang dan gelap",
