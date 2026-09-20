@@ -5,6 +5,11 @@ store list, the identifiers, and the repository-specific notes differ.
 
 The cross-repository contract and extraction boundary are documented in [Shared store deployment](STORE_DEPLOYMENT.md).
 
+For this extension's post-publication checks, support intake, and incident
+response, use [Release health and rollback criteria](release-health.md) and
+[Support](support.md). Store publication and evidence-based roadmap decisions
+remain separate from preparing those procedures.
+
 - [Cut a release](#cut-a-release)
 - [Store deployment](#store-deployment)
   - [Chrome Web Store](#chrome-web-store)

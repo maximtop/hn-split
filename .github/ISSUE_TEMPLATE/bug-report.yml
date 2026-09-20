@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a reproducible problem with Split for Hacker News.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search [open and closed issues](https://github.com/maximtop/hn-split/issues?q=is%3Aissue) first; add new evidence to a matching report.
+        **Reports and attachments are public.** Do not include private URLs, tokens, cookies, browsing history, raw console logs or network captures.
+        For sensitive privacy/security reports, use the private contact in [Support](https://github.com/maximtop/hn-split/blob/master/docs/support.md#private-reports).
+  - type: input
+    id: extension-version
+    attributes:
+      label: Installed extension version
+      description: Read the version from the browser's extension details; do not copy the repository version. Use unknown if unavailable.
+    validations:
+      required: true
+  - type: dropdown
+    id: install-source
+    attributes:
+      label: Installation source
+      options:
+        - Chrome Web Store
+        - Microsoft Edge Add-ons
+        - Firefox Add-ons
+        - Unpacked build or release archive
+        - Unknown
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and operating system
+      description: Browser name/version and OS/version only; no profile paths or device identifiers. Include UI language for translation/layout problems.
+      placeholder: Chrome [version], macOS [version], English
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: State the action, popup/panel/tab flow, and whether automatic badge, panel following or HN story-click handling is enabled. Say how often it occurs and the last working version if known.
+      placeholder: |
+        1. Open an article and ...
+        2. Select ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual result
+      description: Include the visible error or unexpected tab behavior. Do not paste raw console exceptions.
+    validations:
+      required: true
+  - type: textarea
+    id: public-example
+    attributes:
+      label: Optional safe public example
+      description: For matching problems, an openly shareable article URL and expected HN item URL help. Omit private, signed or query-bearing links; a public URL can still identify you. Leave blank if unsure.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Optional diagnostics or cropped screenshot
+      description: Export logs in Options → Diagnostics only if available, inspect the downloaded .txt file, then attach it voluntarily. See Support for contents and limits. Omit screenshots of other tabs, account details and private addresses. A report without attachments is welcome.
