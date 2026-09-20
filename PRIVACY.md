@@ -25,7 +25,7 @@ Every installed permission exists for one documented purpose:
 - **`tabs`** — lets the background worker read tab URLs. It is used to place and reuse the discussion tab next to the article after an explicit result selection; observe navigations and enumerate open tabs for the opt-in automatic badge; and identify the active tab for a one-shot side-panel check or, while a panel is already open, the separate opt-in follow setting. For discussion lookups, tab URLs are sent only as sanitized, eligible candidates to the endpoint below, and only when one of those lookup paths is authorized. Browser navigation to an article or discussion makes ordinary requests to that destination.
 - **`activeTab`** — scopes popup-triggered page inspection to the tab the user is looking at when they open the extension action. This popup-triggered inspection requires that explicit action and does not read article text. The separate opt-in Hacker News click script is described under `scripting`.
 - **`scripting`** — serves two documented uses. First, it runs one short-lived function in the active page after the popup opens; the function reads only `location.href` and the URL from the `<link rel="canonical">` element, never article text or other content. Second, while the opt-in article-click setting is enabled, it registers one content script for `news.ycombinator.com` only, which observes story-link clicks and reads only the clicked link and story item id. While that setting is off — the default — no content script is registered anywhere; turning the setting off removes the registration.
-- **`storage`** — persists the automatic-availability, side-panel-follow, and article-click on/off settings in `chrome.storage.local`. Chrome's session storage keeps time-bounded lookup results, article-to-discussion tab associations, revisioned per-window panel state, and tab-scoped panel outcomes with sanitized public article identity when needed to recognize an unchanged page. Raw article URLs are not stored for side-panel following, and Chrome discards all session values when the browser session ends. No browsing history is written to persistent storage.
+- **`storage`** — persists the automatic-availability, side-panel-follow, and article-click on/off settings in `chrome.storage.local`. Chrome's session storage keeps time-bounded lookup results, article-to-discussion tab associations, revisioned per-window panel state, and tab-scoped panel outcomes with sanitized public article identity when needed to recognize an unchanged page. Raw article URLs are not stored for side-panel following, and Chrome discards all session values when the browser session ends. It also keeps a bounded, privacy-safe diagnostic log for the current browser session only, as described below. No browsing history is written to persistent storage.
 - **Host access to `https://hn.algolia.com/*`** — the lookup endpoint. It receives sanitized public article URL candidates as search queries and returns matching Hacker News submissions. No account, API key, or identifying header is used.
 - **`contextMenus`** — adds the single **Open in Split** item to the right-click menu for `http:` and `https:` links. Chrome decides where the item is shown from that declared pattern alone; the extension is told nothing about a right-click, and receives the link URL only when the user selects the item.
 - **`sidePanel`** — opens the browser side panel, and only after an explicit user action: the side panel button in the popup, the **Open in Split** context-menu item, or — when the opt-in article-click setting is enabled — a click on a story link on Hacker News. Following can change the contents of an already-open panel but never opens the panel itself.
@@ -66,3 +66,30 @@ The side panel embeds `news.ycombinator.com` directly instead of re-rendering it
 For faster return and best-effort browser-managed scroll position, one panel may keep up to three recent real Hacker News documents alive in memory. Only one is visible or keyboard-reachable. Closing or reloading the panel, a framing disconnect or reconnect, extension reload or update, least-recently-used eviction, or browser memory pressure discards a live document and can reset its position. No scroll value is ever read or stored by the extension.
 
 Checked terminal outcomes and any sanitized article identity needed to recognize an unchanged tab are associated with their tab and window in session storage only. They are discarded when tab ownership or article identity changes and are not promised after a browser restart, extension reload, or update. The framing exception lasts while at least one valid panel connection exists; it is disclosed on the options page and in this privacy policy, while the panel itself stays focused on the real Hacker News page.
+
+## Local diagnostics and support export
+
+Extension-owned background, popup, options and side-panel contexts collect a
+local diagnostic history in `chrome.storage.session`. Content scripts do not
+participate. The background worker is the only writer and retains at most
+1,000 entries and 1 MiB of serialized UTF-8 JSON, evicting the oldest entries
+first. The log survives worker suspension but is discarded when the browser
+session ends; extension reload, disable or update can also discard session
+storage. It is never written to `storage.local` or synchronized storage.
+
+Entries contain a receipt timestamp, severity, source context, an allow-listed
+application event, and optional numeric tab/window identifiers or projection
+revision, a fixed panel-state label, a stable warning code and a broad error
+category. They contain no page URLs (raw, canonical or query-bearing), lookup
+candidates, titles, article text, markup, selections, cookies, authentication
+state, credentials, tokens, request headers, storage values, arbitrary error
+payloads or raw error messages/stacks. Existing console diagnostics remain
+separate from this filtered session log and are not copied into the export.
+
+**Options → Diagnostics → Export logs** saves a versioned text file to your
+device only after your click. It includes the extension version, export time
+and the retained safe entries. No `downloads` permission, temporary tab,
+backend, automatic upload or support submission is used. You decide whether to
+share the file; exported files remain on disk until you delete them.
+**Clear logs** removes the diagnostic session record without clearing lookup
+results, preferences or tab associations. Later activity may add new entries.

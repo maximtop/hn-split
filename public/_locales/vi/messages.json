@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Bảng bên hiện đang theo dõi các thẻ đang hoạt động.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Tính năng tự động theo dõi trong bảng bên đã tắt.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Mở trong Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Đang tìm thảo luận trên Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Đang tìm thảo luận trên Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Chẩn đoán", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Nhật ký cục bộ chỉ được giữ trong phiên trình duyệt này (tối đa 1.000 mục / 1 MiB). Không ghi lại URL trang, nội dung, cookie hoặc dữ liệu bí mật. Xuất nhật ký sẽ lưu tệp vào thiết bị; không có dữ liệu nào được gửi tự động.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Đang tải dữ liệu chẩn đoán…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Không có mục chẩn đoán.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Số mục trong ảnh chụp này: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Xuất nhật ký", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Xóa nhật ký", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Đã yêu cầu tải tệp nhật ký.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Đã xóa nhật ký.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Không thể truy cập hoặc xuất dữ liệu chẩn đoán. Hãy thử lại.", "description": "Local diagnostics: failure"}
 }

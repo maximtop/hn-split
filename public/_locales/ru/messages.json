@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Теперь боковая панель отслеживает активные вкладки.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Автоматическое отслеживание в боковой панели выключено.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Открыть в Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Ищем обсуждение на Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Ищем обсуждение на Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Диагностика", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Локальный журнал хранится только в текущем сеансе браузера (до 1 000 записей / 1 МиБ). URL страниц, содержимое, cookies и секретные данные не записываются. Экспорт сохраняет файл на устройство; автоматической отправки нет.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Загрузка журнала…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Журнал пуст.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Записей в этом снимке: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Экспортировать журнал", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Очистить журнал", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Запрошено скачивание журнала.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Журнал очищен.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Не удалось открыть или экспортировать журнал. Повторите попытку.", "description": "Local diagnostics: failure"}
 }

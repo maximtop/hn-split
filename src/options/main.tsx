@@ -1,3 +1,4 @@
+import { installDiagnosticTransport } from '../shared/diagnostic-protocol';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -7,6 +8,11 @@ import { applyDocumentLocale, t } from '../shared/i18n';
 import { SUPPORTS_ARTICLE_CLICK } from '../shared/browser-target';
 import '@mantine/core/styles.css';
 import './styles.css';
+
+installDiagnosticTransport(async (request) => {
+    const response: unknown = await chrome.runtime.sendMessage(request);
+    return response;
+});
 
 const root = document.querySelector('#root');
 if (root === null) {

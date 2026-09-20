@@ -1,3 +1,4 @@
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { userFacingMessage } from '../shared/error-messages';
@@ -57,7 +58,7 @@ export class OptionsStore {
                 this.enabled = enabled;
             });
         } catch (error) {
-            logWarning('loading the setting failed.', error);
+            logWarning(DIAGNOSTIC_EVENT.SETTING_LOAD_FAILED, error);
             runInAction(() => {
                 this.message = userFacingMessage(error, 'unable_to_load_settings');
             });
@@ -82,7 +83,7 @@ export class OptionsStore {
                 this.message = enabled ? t(this.copy.enabledKey) : t(this.copy.disabledKey);
             });
         } catch (error) {
-            logWarning('updating the setting failed.', error);
+            logWarning(DIAGNOSTIC_EVENT.SETTING_UPDATE_FAILED, error);
             const updateMessage = userFacingMessage(error, 'unable_to_update_settings');
             try {
                 const enabled = await readBooleanSetting(this.dependencies);
@@ -91,7 +92,7 @@ export class OptionsStore {
                     this.message = updateMessage;
                 });
             } catch (resyncError) {
-                logWarning('reloading the setting failed.', resyncError);
+                logWarning(DIAGNOSTIC_EVENT.SETTING_RELOAD_FAILED, resyncError);
                 const resyncMessage = userFacingMessage(resyncError, 'unable_to_reload_settings');
                 runInAction(() => {
                     this.message = `${updateMessage} ${resyncMessage}`;

@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Bočný panel teraz sleduje aktívne karty.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Automatické sledovanie v bočnom paneli je vypnuté.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Otvoriť v Splite", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Hľadá sa diskusia na Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Hľadá sa diskusia na Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnostika", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Lokálny denník sa uchováva iba počas tejto relácie prehliadača (do 1 000 záznamov / 1 MiB). URL stránok, obsah, cookies ani tajné údaje sa nezaznamenávajú. Export uloží súbor do zariadenia; nič sa automaticky neodosiela.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Načítava sa diagnostika…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Žiadne diagnostické záznamy.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Záznamy v tejto snímke: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Exportovať denník", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Vymazať denník", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Vyžiadané stiahnutie denníka.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Denník bol vymazaný.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Diagnostiku nemožno otvoriť ani exportovať. Skúste to znova.", "description": "Local diagnostics: failure"}
 }

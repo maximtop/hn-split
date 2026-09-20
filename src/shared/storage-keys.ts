@@ -2,6 +2,7 @@
  * Names persistent and session storage keys owned by the extension.
  */
 export const STORAGE_KEY = {
+    DIAGNOSTICS: 'diagnostic_log_v1',
     AUTOMATIC_AVAILABILITY: 'automatic_availability',
     ARTICLE_CLICK_DISCUSSION: 'article_click_discussion',
     SIDE_PANEL_FOLLOW: 'side_panel_follow',

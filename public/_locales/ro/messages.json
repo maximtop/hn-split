@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Panoul lateral urmărește acum filele active.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Urmărirea automată în panoul lateral este dezactivată.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Deschide în Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Se caută discuția de pe Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Se caută discuția de pe Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnosticare", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Jurnalul local este păstrat doar în această sesiune a browserului (maximum 1.000 de înregistrări / 1 MiB). Nu sunt înregistrate URL-uri de pagini, conținut, cookie-uri sau date secrete. Exportul salvează un fișier pe dispozitiv; nimic nu este trimis automat.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Se încarcă diagnosticul…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Nu există înregistrări de diagnosticare.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Înregistrări în acest instantaneu: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Exportă jurnalul", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Șterge jurnalul", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Descărcarea jurnalului a fost solicitată.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Jurnalul a fost șters.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Nu se poate accesa sau exporta diagnosticul. Încearcă din nou.", "description": "Local diagnostics: failure"}
 }

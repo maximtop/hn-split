@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "O painel lateral segue agora os separadores ativos.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "O seguimento automático no painel lateral está desativado.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Abrir no Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "A procurar a discussão no Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "A procurar a discussão no Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnóstico", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "O registo local é guardado apenas nesta sessão do navegador (até 1 000 entradas / 1 MiB). Não são registados URLs de páginas, conteúdo, cookies ou dados secretos. A exportação guarda um ficheiro no dispositivo; nada é enviado automaticamente.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "A carregar diagnóstico…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Sem entradas de diagnóstico.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Entradas neste instantâneo: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Exportar registos", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Limpar registos", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Transferência do registo solicitada.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Registos apagados.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Não foi possível aceder ao diagnóstico ou exportá-lo. Tente novamente.", "description": "Local diagnostics: failure"}
 }

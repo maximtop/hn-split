@@ -1,3 +1,9 @@
+import { DiagnosticLog } from './browser/diagnostic-log';
+import { createDiagnosticHandler } from './background/diagnostic-handler';
+import { DIAGNOSTIC_SOURCE } from './shared/diagnostics';
+import { setDiagnosticSink } from './shared/logger';
+import { STORAGE_KEY } from './shared/storage-keys';
+import { DIAGNOSTIC_EVENT } from './shared/diagnostic-events';
 import {
     handleArticleClickMessage,
     reconcileArticleClickRegistration,
@@ -36,6 +42,14 @@ import {
 } from './shared/messages';
 import { SUPPORTS_ARTICLE_CLICK } from './shared/browser-target';
 
+const diagnosticLog = new DiagnosticLog({
+    read: async () => (await chrome.storage.session.get(STORAGE_KEY.DIAGNOSTICS))[STORAGE_KEY.DIAGNOSTICS],
+    write: async (buffer) => chrome.storage.session.set({ [STORAGE_KEY.DIAGNOSTICS]: buffer }),
+    clear: async () => chrome.storage.session.remove(STORAGE_KEY.DIAGNOSTICS),
+});
+setDiagnosticSink((event) => diagnosticLog.append(event, DIAGNOSTIC_SOURCE.BACKGROUND));
+const handleDiagnostic = createDiagnosticHandler(diagnosticLog, chrome.runtime);
+
 const SIDE_PANEL_DOCUMENT_PATH = 'side-panel.html';
 
 const sidePanelFraming = new SidePanelFraming(chrome.declarativeNetRequest);
@@ -52,26 +66,26 @@ const sidePanelPorts = new SidePanelPortController({
 // A rule left behind by a crashed worker would outlive the panel that asked
 // for it, so the exception is cleared on every worker start.
 void sidePanelFraming.reset().catch((error: unknown) => {
-    logWarning('clearing the side panel framing exception failed.', error);
+    logWarning(DIAGNOSTIC_EVENT.FRAMING_RESET_FAILED, error);
 });
 
 // Chrome drops dynamically registered content scripts on extension updates,
 // so every worker start replays the persisted article-click setting.
 if (SUPPORTS_ARTICLE_CLICK) {
     void reconcileArticleClickRegistration().catch((error: unknown) => {
-        logWarning('reconciling the article-click content script failed.', error);
+        logWarning(DIAGNOSTIC_EVENT.REGISTRATION_FAILED, error);
     });
 }
 
 // Menu items are dropped on extension updates and browser restarts too.
 void reconcileOpenInSplitMenu().catch((error: unknown) => {
-    logWarning('publishing the link context menu failed.', error);
+    logWarning(DIAGNOSTIC_EVENT.MENU_FAILED, error);
 });
 
 // A worker that stopped mid-lookup would leave the panel waiting for a result
 // that can no longer arrive, so that state is resolved on every worker start.
 void normalizeSidePanelContent().catch((error: unknown) => {
-    logWarning('normalizing the side panel content failed.', error);
+    logWarning(DIAGNOSTIC_EVENT.NORMALIZATION_FAILED, error);
 });
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -86,6 +100,11 @@ chrome.runtime.onConnect.addListener((port) => {
 });
 
 chrome.runtime.onMessage.addListener((message: unknown, sender, sendResponse) => {
+    const diagnostic = handleDiagnostic(message, sender);
+    if (diagnostic !== null) {
+        void diagnostic.then(sendResponse);
+        return true;
+    }
     if (SUPPORTS_ARTICLE_CLICK && isArticleClickMessage(message)) {
         // Handled synchronously and without a response: chrome.sidePanel.open
         // accepts the click's user gesture only before the first await, and
@@ -119,7 +138,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (reportsAutomaticAvailabilityNavigation(changeInfo)) {
         void updateAutomaticAvailability(tabId).catch((error: unknown) => {
             // Local diagnostic only; the navigated URL itself is never logged.
-            logWarning('automatic availability update failed.', error);
+            logWarning(DIAGNOSTIC_EVENT.AVAILABILITY_FAILED, error);
         });
     }
     if (changeInfo.url === undefined && changeInfo.status !== 'complete') {

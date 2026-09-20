@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "이제 사이드 패널이 활성 탭을 추적합니다.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "사이드 패널 자동 추적이 꺼졌습니다.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Split에서 열기", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Hacker News 토론을 찾는 중…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Hacker News 토론을 찾는 중…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "진단", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "로컬 로그는 현재 브라우저 세션 동안만 보관됩니다(최대 1,000개 항목 / 1 MiB). 페이지 URL, 콘텐츠, 쿠키 또는 비밀 데이터는 기록되지 않습니다. 내보내기는 기기에 파일을 저장하며 자동으로 전송하지 않습니다.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "진단 정보 불러오는 중…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "진단 항목이 없습니다.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "이 스냅샷의 항목 수: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "로그 내보내기", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "로그 지우기", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "로그 파일 다운로드를 요청했습니다.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "로그를 지웠습니다.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "진단 정보에 접근하거나 내보낼 수 없습니다. 다시 시도하세요.", "description": "Local diagnostics: failure"}
 }

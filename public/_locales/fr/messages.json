@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Le panneau latéral suit maintenant les onglets actifs.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Le suivi automatique par le panneau latéral est désactivé.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Ouvrir dans Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Recherche de la discussion Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Recherche de la discussion Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnostic", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Le journal local est conservé uniquement pendant cette session du navigateur (1 000 entrées / 1 Mio maximum). Aucune URL de page, contenu, cookie ou donnée secrète n’est enregistré. L’export enregistre un fichier sur votre appareil ; rien n’est envoyé automatiquement.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Chargement du journal…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Aucune entrée de diagnostic.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Entrées dans cet instantané : %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Exporter le journal", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Effacer le journal", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Téléchargement du journal demandé.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Journal effacé.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Impossible d’accéder au journal ou de l’exporter. Réessayez.", "description": "Local diagnostics: failure"}
 }

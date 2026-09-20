@@ -1,98 +1,60 @@
 import { EXTENSION_BRAND } from './brand';
 
+import {
+    FOLLOW_DIAGNOSTIC_CODE,
+    FOLLOW_DIAGNOSTIC_EVENT,
+    FOLLOW_DIAGNOSTIC_EVENT_BY_CODE,
+} from './diagnostic-events';
+import type { FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent } from './diagnostic-events';
+import { DIAGNOSTIC_LEVEL, normalizeDiagnostic } from './diagnostics';
+import type { DiagnosticEvent } from './diagnostics';
+
 type DiagnosticValue = boolean | number | string | null | undefined;
 
-/**
- * Provides the closed set of privacy-safe side-panel diagnostic messages.
- */
-export const FOLLOW_DIAGNOSTIC_EVENT = {
-    ACTION_FAILED: 'running the side panel action failed.',
-    ASSOCIATION_WRITE_FAILED: 'persisting the side panel association failed.',
-    FRAMING_ACQUIRE_FAILED: 'acquiring side panel framing failed.',
-    FRAMING_RELEASE_FAILED: 'releasing side panel framing failed.',
-    DISCONNECT_FAILED: 'disconnecting the side panel failed.',
-    INITIALIZATION_FAILED: 'initializing the side panel failed.',
-    LOOKUP_FAILED: 'looking up the side panel tab failed.',
-    OPEN_FAILED: 'opening the side panel failed.',
-    SELECTION_FAILED: 'selecting the side panel discussion failed.',
-    TAB_LIFECYCLE_FAILED: 'processing a side panel tab lifecycle event failed.',
-    REJECTED: 'invalid side panel diagnostic was rejected.',
-} as const;
+export { FOLLOW_DIAGNOSTIC_CODE, FOLLOW_DIAGNOSTIC_EVENT } from './diagnostic-events';
+export type { FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent, FollowWarningSink } from './diagnostic-events';
 
 /**
- * Provides stable machine-readable codes for side-panel diagnostics.
+ * Receives sanitized events without making product operations await storage.
  */
-export const FOLLOW_DIAGNOSTIC_CODE = {
-    ACTION_FAILED: 'side_panel_action_failed',
-    ASSOCIATION_WRITE_FAILED: 'association_write_failed',
-    FRAMING_ACQUIRE_FAILED: 'framing_acquire_failed',
-    FRAMING_RELEASE_FAILED: 'framing_release_failed',
-    DISCONNECT_FAILED: 'side_panel_disconnect_failed',
-    INITIALIZATION_FAILED: 'side_panel_initialization_failed',
-    LOOKUP_FAILED: 'side_panel_lookup_failed',
-    OPEN_FAILED: 'side_panel_open_failed',
-    SELECTION_FAILED: 'side_panel_selection_failed',
-    TAB_LIFECYCLE_FAILED: 'side_panel_tab_lifecycle_failed',
-    REJECTED: 'side_panel_diagnostic_rejected',
-} as const;
+export type DiagnosticSink = (event: DiagnosticEvent) => Promise<unknown>;
+
+let diagnosticSink: DiagnosticSink | undefined;
 
 /**
- * Represents one allow-listed side-panel diagnostic event.
+ * Installs the current extension entry's transport; content scripts leave it unset.
+ * @param sink - Direct background writer or one-way UI event transport.
  */
-export type FollowDiagnosticEvent = typeof FOLLOW_DIAGNOSTIC_EVENT[
-    keyof typeof FOLLOW_DIAGNOSTIC_EVENT
-];
-
-/**
- * Represents one allow-listed side-panel diagnostic code.
- */
-export type FollowDiagnosticCode = typeof FOLLOW_DIAGNOSTIC_CODE[
-    keyof typeof FOLLOW_DIAGNOSTIC_CODE
-];
-
-/**
- * Contains the only ephemeral identifiers accepted by side-panel diagnostics.
- */
-export interface FollowDiagnosticDetails {
-    /**
-     * Contains the stable allow-listed failure code.
-     */
-    code: FollowDiagnosticCode;
-    /**
-     * Identifies the affected tab when known.
-     */
-    tabId?: number;
-    /**
-     * Identifies a related tab for lifecycle operations when known.
-     */
-    relatedTabId?: number;
-    /**
-     * Identifies the affected browser window when known.
-     */
-    windowId?: number;
+export function setDiagnosticSink(sink: DiagnosticSink | undefined): void {
+    diagnosticSink = sink;
 }
 
 /**
- * Accepts one typed follow diagnostic without any caught values or page data.
+ * Reports collector failures directly without retaining error payloads or recursing.
  */
-export type FollowWarningSink = (
-    code: FollowDiagnosticCode,
-    details: Readonly<Omit<FollowDiagnosticDetails, 'code'>>,
-) => void;
+export function reportDiagnosticFailure(): void {
+    console.warn(`${EXTENSION_BRAND}: diagnostic collection unavailable.`);
+}
 
-const FOLLOW_DIAGNOSTIC_EVENT_BY_CODE: Record<FollowDiagnosticCode, FollowDiagnosticEvent> = {
-    [FOLLOW_DIAGNOSTIC_CODE.ACTION_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.ACTION_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.ASSOCIATION_WRITE_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.ASSOCIATION_WRITE_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.FRAMING_ACQUIRE_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.FRAMING_ACQUIRE_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.FRAMING_RELEASE_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.FRAMING_RELEASE_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.DISCONNECT_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.DISCONNECT_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.INITIALIZATION_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.INITIALIZATION_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.LOOKUP_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.LOOKUP_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.OPEN_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.OPEN_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.SELECTION_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.SELECTION_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED]: FOLLOW_DIAGNOSTIC_EVENT.TAB_LIFECYCLE_FAILED,
-    [FOLLOW_DIAGNOSTIC_CODE.REJECTED]: FOLLOW_DIAGNOSTIC_EVENT.REJECTED,
-};
+/**
+ * Sends one normalized event to the configured best-effort sink.
+ * @param level - Stable severity of the console event.
+ * @param message - Application message checked against the event catalog.
+ * @param details - Untrusted values normalized before reaching a transport.
+ */
+function collectDiagnostic(level: DiagnosticEvent['level'], message: string, details: unknown[]): void {
+    if (diagnosticSink === undefined) {
+        return;
+    }
+    try {
+        const event = normalizeDiagnostic(level, message, details);
+        if (event !== null) {
+            void diagnosticSink(event).catch(reportDiagnosticFailure);
+        }
+    } catch {
+        reportDiagnosticFailure();
+    }
+}
 
 const ALLOWED_FOLLOW_DIAGNOSTIC_EVENTS = new Set<FollowDiagnosticEvent>(
     Object.values(FOLLOW_DIAGNOSTIC_EVENT),
@@ -113,6 +75,7 @@ export function logDiagnostic(
 ): void {
     const serializedDetails = details === undefined ? '' : ` ${JSON.stringify(details)}`;
     console.info(`${EXTENSION_BRAND}: ${message}${serializedDetails}`);
+    collectDiagnostic(DIAGNOSTIC_LEVEL.INFO, message, [details]);
 }
 
 /**
@@ -139,6 +102,7 @@ export function logDiagnosticWarning(
         ...(Number.isSafeInteger(details.windowId) ? { windowId: details.windowId } : {}),
     };
     console.warn(`${EXTENSION_BRAND}: ${safeEvent} ${JSON.stringify(safeDetails)}`);
+    collectDiagnostic(DIAGNOSTIC_LEVEL.WARNING, safeEvent, [safeDetails]);
 }
 
 /**
@@ -161,4 +125,5 @@ export function logFollowWarning(
  */
 export function logWarning(message: string, ...details: unknown[]): void {
     console.warn(`${EXTENSION_BRAND}:`, message, ...details);
+    collectDiagnostic(DIAGNOSTIC_LEVEL.WARNING, message, details);
 }

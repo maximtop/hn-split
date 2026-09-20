@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "ขณะนี้แผงด้านข้างติดตามแท็บที่ใช้งานอยู่", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "การติดตามอัตโนมัติในแผงด้านข้างถูกปิดใช้งาน", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "เปิดใน Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "กำลังค้นหาการสนทนาใน Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "กำลังค้นหาการสนทนาใน Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "การวินิจฉัย", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "บันทึกในเครื่องจะเก็บไว้เฉพาะเซสชันเบราว์เซอร์นี้ (สูงสุด 1,000 รายการ / 1 MiB) โดยไม่บันทึก URL ของหน้า เนื้อหา คุกกี้ หรือข้อมูลลับ การส่งออกจะบันทึกไฟล์ลงในอุปกรณ์ของคุณ โดยไม่มีการส่งข้อมูลอัตโนมัติ", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "กำลังโหลดข้อมูลวินิจฉัย…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "ไม่มีรายการวินิจฉัย", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "รายการในสแนปช็อตนี้: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "ส่งออกบันทึก", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "ล้างบันทึก", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "ขอดาวน์โหลดไฟล์บันทึกแล้ว", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "ล้างบันทึกแล้ว", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "ไม่สามารถเข้าถึงหรือส่งออกข้อมูลวินิจฉัยได้ โปรดลองอีกครั้ง", "description": "Local diagnostics: failure"}
 }

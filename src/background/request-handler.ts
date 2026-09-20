@@ -1,3 +1,4 @@
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { DiscussionTabManager } from '../browser/open-discussion';
 import { logDiagnostic, logWarning } from '../shared/logger';
 import { BACKGROUND_ERROR_CODE, BACKGROUND_REQUEST_TYPE } from '../shared/messages';
@@ -106,7 +107,7 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
                 cancelSidePanelExplicitOperation(request.windowId, reservation, true);
                 throw error;
             }
-            logDiagnostic('side panel selection stored.', {
+            logDiagnostic(DIAGNOSTIC_EVENT.SELECTION_STORED, {
                 tabId: request.tabId,
                 windowId: request.windowId,
                 kind: content.kind,
@@ -162,7 +163,7 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
     } catch (error) {
         // Keep the raw diagnostic local; the protocol carries only stable codes
         // that each UI surface translates in its own locale.
-        logWarning('background request failed.', { requestType: request.type }, error);
+        logWarning(DIAGNOSTIC_EVENT.REQUEST_FAILED, { requestType: request.type }, error);
         return { ok: false, error: REQUEST_ERROR_CODE[request.type] };
     }
 }

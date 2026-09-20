@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "সাইড প্যানেল এখন সক্রিয় ট্যাব অনুসরণ করছে।", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "সাইড প্যানেলের স্বয়ংক্রিয় ট্যাব অনুসরণ বন্ধ আছে।", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Split-এ খুলুন", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Hacker News-এর আলোচনা খোঁজা হচ্ছে…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Hacker News-এর আলোচনা খোঁজা হচ্ছে…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "রোগনির্ণয়", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "স্থানীয় লগ শুধু এই ব্রাউজার সেশনে রাখা হয় (সর্বোচ্চ ১,০০০টি এন্ট্রি / 1 MiB)। পৃষ্ঠার URL, বিষয়বস্তু, কুকি বা গোপন তথ্য রেকর্ড করা হয় না। রপ্তানি আপনার ডিভাইসে একটি ফাইল সংরক্ষণ করে; কিছুই স্বয়ংক্রিয়ভাবে পাঠানো হয় না।", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "রোগনির্ণয়ের তথ্য লোড হচ্ছে…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "কোনো রোগনির্ণয় এন্ট্রি নেই।", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "এই স্ন্যাপশটে এন্ট্রি: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "লগ রপ্তানি করুন", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "লগ মুছুন", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "লগ ফাইল ডাউনলোডের অনুরোধ করা হয়েছে।", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "লগ মুছে ফেলা হয়েছে।", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "রোগনির্ণয়ের তথ্য খোলা বা রপ্তানি করা যায়নি। আবার চেষ্টা করুন।", "description": "Local diagnostics: failure"}
 }

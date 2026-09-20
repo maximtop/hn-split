@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Ahora el panel lateral sigue las pestañas activas.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "El seguimiento automático del panel lateral está desactivado.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Abrir en Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Buscando el debate en Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Buscando el debate en Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Diagnóstico", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "El registro local se conserva solo durante esta sesión del navegador (hasta 1000 entradas / 1 MiB). No se guardan URL de páginas, contenido, cookies ni datos secretos. La exportación guarda un archivo en el dispositivo; no se envía nada automáticamente.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Cargando diagnóstico…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "No hay entradas de diagnóstico.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Entradas en esta instantánea: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Exportar registros", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Borrar registros", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Se ha solicitado la descarga del registro.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Registros borrados.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "No se pudo acceder al diagnóstico o exportarlo. Inténtalo de nuevo.", "description": "Local diagnostics: failure"}
 }

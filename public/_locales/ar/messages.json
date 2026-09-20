@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "تتابع اللوحة الجانبية الآن علامات التبويب النشطة.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "المتابعة التلقائية في اللوحة الجانبية معطّلة.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "الفتح في Split", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "جارٍ البحث عن مناقشة Hacker News…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "جارٍ البحث عن مناقشة Hacker News…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "التشخيص", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "يُحفظ السجل المحلي خلال جلسة المتصفح الحالية فقط (حتى 1,000 إدخال / 1 MiB). لا تُسجَّل عناوين الصفحات أو المحتوى أو ملفات تعريف الارتباط أو البيانات السرية. يحفظ التصدير ملفًا على جهازك؛ ولا يُرسَل أي شيء تلقائيًا.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "جارٍ تحميل التشخيص…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "لا توجد إدخالات تشخيصية.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "الإدخالات في هذه اللقطة: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "تصدير السجلات", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "مسح السجلات", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "طُلب تنزيل ملف السجل.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "مُسحت السجلات.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "تعذّر الوصول إلى التشخيص أو تصديره. حاول مجددًا.", "description": "Local diagnostics: failure"}
 }

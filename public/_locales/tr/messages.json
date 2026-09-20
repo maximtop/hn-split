@@ -57,5 +57,15 @@
   "side_panel_follow_enabled": { "message": "Yan panel artık etkin sekmeleri takip ediyor.", "description": "Side panel follow enabled confirmation" },
   "side_panel_follow_disabled": { "message": "Otomatik yan panel takibi devre dışı.", "description": "Side panel follow disabled confirmation" },
   "context_menu_open_in_split": { "message": "Split'te aç", "description": "Context menu item shown on links" },
-  "side_panel_pending": { "message": "Hacker News tartışması aranıyor…", "description": "Side panel status while a discussion lookup runs" }
+  "side_panel_pending": { "message": "Hacker News tartışması aranıyor…", "description": "Side panel status while a discussion lookup runs" },
+  "diagnostics_title": {"message": "Tanılama", "description": "Local diagnostics: title"},
+  "diagnostics_description": {"message": "Yerel günlük yalnızca bu tarayıcı oturumu boyunca saklanır (en fazla 1.000 kayıt / 1 MiB). Sayfa URL’leri, içerik, çerezler ve gizli veriler kaydedilmez. Dışa aktarma, cihazınıza bir dosya kaydeder; hiçbir şey otomatik gönderilmez.", "description": "Local diagnostics: description"},
+  "diagnostics_loading": {"message": "Tanılama yükleniyor…", "description": "Local diagnostics: loading"},
+  "diagnostics_empty": {"message": "Tanılama kaydı yok.", "description": "Local diagnostics: empty"},
+  "diagnostics_count": {"message": "Bu anlık görüntüdeki kayıtlar: %count%", "description": "Local diagnostics: count"},
+  "diagnostics_export": {"message": "Günlükleri dışa aktar", "description": "Local diagnostics: export"},
+  "diagnostics_clear": {"message": "Günlükleri temizle", "description": "Local diagnostics: clear"},
+  "diagnostics_exported": {"message": "Günlük dosyasının indirilmesi istendi.", "description": "Local diagnostics: exported"},
+  "diagnostics_cleared": {"message": "Günlükler temizlendi.", "description": "Local diagnostics: cleared"},
+  "diagnostics_failure": {"message": "Tanılamaya erişilemiyor veya dışa aktarılamıyor. Tekrar deneyin.", "description": "Local diagnostics: failure"}
 }

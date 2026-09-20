@@ -96,6 +96,7 @@ vi.mock('../src/shared/logger', () => ({
     },
     logFollowWarning: mocks.logFollowWarning,
     logWarning: vi.fn(),
+    setDiagnosticSink: vi.fn(),
 }));
 
 const WINDOW_ID = 3;
