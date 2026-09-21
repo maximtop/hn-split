@@ -16,11 +16,18 @@ and store-length validation. The localized additions received an author
 semantic review, not an independent or native-speaker review; see
 [the locale review record](locales.md#store-listing-network-and-framing-review).
 
-External store publication, the Store homepage field, the GitHub social-preview
-upload, and a real article/discussion first visual remain unverified. The
-Chrome and Edge public APIs do not support description updates; their publisher
-dashboards are required. AMO supports authenticated description updates. No
-store submission or binary release is implied by these source changes.
+On September 21, the 29 production-supported AMO descriptions and the product
+homepage were published through the authenticated metadata API. Public readback
+confirmed all translated text, seven Firefox feature bullets and four trust
+links per locale; version 0.1.2 and its artifact were unchanged. The other 11
+source locales use the English listing because AMO production does not accept
+them. See [the locale inventory](locales.md#store-locale-mappings-and-fallbacks).
+
+Chrome and Edge publication, the Chrome Store homepage field, the GitHub
+social-preview upload, and a real article/discussion first visual remain
+unverified. Chrome and Edge require their publisher dashboards for description
+updates. Browser access returned `Not allowed` on September 21; no Chrome or
+Edge changes were submitted. No binary release was performed.
 
 ## Evidence and discrepancies
 

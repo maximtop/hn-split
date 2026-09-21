@@ -483,8 +483,8 @@ inventory, and per-store locale mappings live in
   keyword/description/What's-New limits, and the caption layout budgets, for
   every locale. Store locale coverage is explicit in
   `scripts/lib/store-listings.ts`: all 40 codes resolve per store, with the
-  four App-Store-unsupported locales (bg, fa, fil, sr) served by the en-US
-  listing.
+  11 AMO-unsupported locales and four App-Store-unsupported locales
+  served by the en-US listing; see the exact inventory in `docs/locales.md`.
 - **Paste-ready copy:** `pnpm store:render <store> <locale>` prints the fields
   relevant to that store for one shipped locale submission. For Chrome it
   omits release notes and screenshot captions because those are not dashboard
