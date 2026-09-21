@@ -42,18 +42,21 @@ describe('store locale catalog', () => {
         }
     });
 
-    it('renames exactly the documented codes on AMO with no fallbacks', () => {
+    it('maps AMO production locales and falls back for unsupported languages', () => {
         const amo = STORE_CATALOG.amo.locales;
         expect(amo.en).toBe('en-US');
         expect(amo.es).toBe('es-ES');
         expect(amo.es_419).toBe('es-MX');
-        expect(amo.fil).toBe('tl');
         expect(amo.nb).toBe('nb-NO');
         expect(amo.sv).toBe('sv-SE');
         expect(amo.pt_BR).toBe('pt-BR');
         expect(amo.zh_CN).toBe('zh-CN');
-        expect(Object.values(amo).every((storeLocale) => storeLocale !== null)).toBe(true);
-        expect(STORE_CATALOG.amo.unsupportedFallback).toBeNull();
+        const unsupported = Object.entries(amo)
+            .filter(([, storeLocale]) => storeLocale === null)
+            .map(([code]) => code)
+            .sort();
+        expect(unsupported).toEqual(['ar', 'bg', 'bn', 'ca', 'da', 'fa', 'fil', 'hi', 'id', 'ms', 'th']);
+        expect(STORE_CATALOG.amo.unsupportedFallback).toBe('en-US');
     });
 
     it('falls back to en-US for exactly the four App-Store-unsupported locales', () => {

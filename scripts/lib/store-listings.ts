@@ -247,24 +247,22 @@ export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     },
     amo: {
         name: 'Firefox Add-ons (AMO)',
-        checked: '2026-08-06',
-        source: 'github.com/mozilla/addons-server src/olympia/core/languages.py (AMO_LANGUAGES)',
-        // AMO names ten of our codes differently; `fil` maps to AMO's
-        // Tagalog slot (`tl`), the standardized register of the same
-        // language, rather than falling back to English.
+        checked: '2026-09-21',
+        source: 'github.com/mozilla/addons-server src/olympia/core/languages.py (PROD_LANGUAGES); production metadata API',
+        // Production accepts only PROD_LANGUAGES, not the broader development
+        // AMO_LANGUAGES inventory. Unsupported audiences use the default listing.
         locales: buildLocaleMap({
             en: 'en-US',
             es: 'es-ES',
             es_419: 'es-MX',
-            fil: 'tl',
             nb: 'nb-NO',
             pt_BR: 'pt-BR',
             pt_PT: 'pt-PT',
             sv: 'sv-SE',
             zh_CN: 'zh-CN',
             zh_TW: 'zh-TW',
-        }),
-        unsupportedFallback: null,
+        }, ['ar', 'bg', 'bn', 'ca', 'da', 'fa', 'fil', 'hi', 'id', 'ms', 'th']),
+        unsupportedFallback: 'en-US',
     },
     appStore: {
         name: 'App Store (Safari)',
