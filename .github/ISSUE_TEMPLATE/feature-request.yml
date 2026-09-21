@@ -1,0 +1,28 @@
+name: Feature request
+description: Describe a reading problem and the evidence for an improvement.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Search [existing issues](https://github.com/maximtop/hn-split/issues?q=is%3Aissue) before adding a request.
+        Requests are public. Do not include private browsing examples or personal details.
+        Hacker News is the current source; [roadmap criteria](https://github.com/maximtop/hn-split/blob/master/docs/post-mvp-roadmap.md) explain how broader ideas are evaluated. A request is not a delivery commitment.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Reading problem
+      description: What are you trying to do, where does the current flow fail, and how often does it matter?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome and current workaround
+      description: Describe the result you need and any workaround you use. A specific implementation is optional.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Optional evidence and constraints
+      description: Link related reports or safe public examples. Mention browser/version and accessibility needs where relevant; do not share browsing history or diagnostic files for feature voting.

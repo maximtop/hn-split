@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Support and safe diagnostic export
+    url: https://github.com/maximtop/hn-split/blob/master/docs/support.md
+    about: Troubleshooting, optional diagnostics, and the private reporting contact.
