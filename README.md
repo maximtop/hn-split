@@ -50,6 +50,9 @@ This README describes the current source. The public Chrome Web Store listing wa
 - [Development and Chrome loading](docs/development.md)
 - [Store listing master copy and visual assets](docs/store-listing.md)
 - [Releasing and store deployment](docs/RELEASE.md)
+- [Support and safe diagnostic export](docs/support.md)
+- [Release health and rollback criteria](docs/release-health.md)
+- [Post-MVP roadmap criteria](docs/post-mvp-roadmap.md)
 - [Privacy](PRIVACY.md)
 
 ## Development
@@ -67,7 +70,7 @@ Rspack writes the unpacked extension to `build/chrome`. Load that directory in C
 
 ## Support and license
 
-Report problems or request features in [GitHub Issues](https://github.com/maximtop/hn-split/issues). The source is available under the [MIT License](LICENSE), and feature work is reviewed through pull requests targeting `master`.
+Report problems or request features using the [GitHub issue templates](https://github.com/maximtop/hn-split/issues/new/choose). Read [Support](docs/support.md) for safe reporting and optional diagnostic export. The source is available under the [MIT License](LICENSE), and feature work is reviewed through pull requests targeting `master`.
 
 Split for Hacker News is an unofficial, independent project and is not affiliated with or endorsed by Y Combinator or Hacker News.
 
