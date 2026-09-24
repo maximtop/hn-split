@@ -250,18 +250,16 @@ export async function lookupHnDiscussions(
             } else {
                 lookupFailure = true;
             }
-            continue;
-        }
-
-        for (const hit of result.value) {
-            const identity = normalizeArticleUrl(hit.url);
-            if (identity === null || !identities.has(identity)) {
-                continue;
-            }
-            const discussion = toDiscussion(hit);
-            const existing = discussions.get(discussion.id);
-            if (existing === undefined || compareDiscussions(discussion, existing) < 0) {
-                discussions.set(discussion.id, discussion);
+        } else {
+            for (const hit of result.value) {
+                const identity = normalizeArticleUrl(hit.url);
+                if (identity !== null && identities.has(identity)) {
+                    const discussion = toDiscussion(hit);
+                    const existing = discussions.get(discussion.id);
+                    if (existing === undefined || compareDiscussions(discussion, existing) < 0) {
+                        discussions.set(discussion.id, discussion);
+                    }
+                }
             }
         }
     }

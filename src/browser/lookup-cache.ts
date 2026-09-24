@@ -12,6 +12,18 @@ const CACHE_KEY_FAMILY_PREFIX = 'hn_lookup_';
 const CACHE_KEY_PREFIX = `${CACHE_KEY_FAMILY_PREFIX}v${CACHE_VERSION}:`;
 
 /**
+ * Chooses how long a lookup result stays cached; errors are not cached.
+ *
+ * @param result - The completed lookup result.
+ */
+function resultTtl(result: HnLookupResult): number | null {
+    if (result.status === HN_LOOKUP_STATUS.FOUND) {
+        return POSITIVE_TTL_MS;
+    }
+    return result.status === HN_LOOKUP_STATUS.NOT_FOUND ? NEGATIVE_TTL_MS : null;
+}
+
+/**
  * Describes one validated session-cache record.
  */
 interface CacheRecord {
@@ -149,9 +161,7 @@ export async function lookupWithCache(
     }
 
     const result = await lookup();
-    const ttl = result.status === HN_LOOKUP_STATUS.FOUND
-        ? POSITIVE_TTL_MS
-        : result.status === HN_LOOKUP_STATUS.NOT_FOUND ? NEGATIVE_TTL_MS : null;
+    const ttl = resultTtl(result);
     if (ttl !== null) {
         try {
             await storage.set(key, {

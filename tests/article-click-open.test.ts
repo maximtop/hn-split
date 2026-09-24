@@ -47,7 +47,9 @@ function dependencies(cached: boolean | undefined, stored = true): ArticleClickO
 }
 
 async function settle(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+    });
 }
 
 describe('respondToArticleClick', () => {

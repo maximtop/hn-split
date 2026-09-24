@@ -175,10 +175,9 @@ export async function listSidePanelContent(): Promise<{
     const entries: { windowId: number; projection: SidePanelProjection }[] = [];
     for (const [key, projection] of Object.entries(stored)) {
         const windowId = sidePanelContentWindowId(key);
-        if (windowId === null || !isSidePanelProjection(projection)) {
-            continue;
+        if (windowId !== null && isSidePanelProjection(projection)) {
+            entries.push({ windowId, projection });
         }
-        entries.push({ windowId, projection });
     }
     return entries;
 }

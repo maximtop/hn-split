@@ -161,19 +161,20 @@ async function synchronizeActiveSidePanelTab(
     initialAuthority: SidePanelFollowAuthorityReservation,
 ): Promise<SidePanelContent | null> {
     let authority = initialAuthority;
-    while (sidePanelWindows.has(authority.windowId)) {
-        const tab = await getActiveTab(authority.windowId);
-        if (!sidePanelWindows.has(authority.windowId)) {
+    const { windowId } = initialAuthority;
+    while (sidePanelWindows.has(windowId)) {
+        const tab = await getActiveTab(windowId);
+        if (!sidePanelWindows.has(windowId)) {
             return null;
         }
-        const tabId = ownedTabId(tab, authority.windowId);
+        const tabId = ownedTabId(tab, windowId);
         if (tabId === null) {
             return null;
         }
         const result = await synchronizeSidePanelFollowSettingWithStatus(
             authority,
             tabId,
-            async () => readCurrentTabUrl(authority.windowId, tabId),
+            async () => readCurrentTabUrl(windowId, tabId),
         );
         if (result.kind === SIDE_PANEL_FOLLOW_CONTINUATION_KIND.CONTINUED) {
             return result.projection.content;
@@ -181,7 +182,7 @@ async function synchronizeActiveSidePanelTab(
         if (result.kind === SIDE_PANEL_FOLLOW_CONTINUATION_KIND.SUPERSEDED) {
             return result.projection?.content ?? null;
         }
-        authority = captureSidePanelFollowAuthority(authority.windowId);
+        authority = captureSidePanelFollowAuthority(windowId);
     }
     return null;
 }
@@ -355,20 +356,20 @@ export async function checkActiveSidePanelTab(windowId: number): Promise<SidePan
                 tabId,
                 async () => readCurrentTabUrl(windowId, tabId),
             );
-            if (result.kind === SIDE_PANEL_FOLLOW_CONTINUATION_KIND.ACTIVE_TAB_CHANGED) {
-                continue;
+            if (result.kind !== SIDE_PANEL_FOLLOW_CONTINUATION_KIND.ACTIVE_TAB_CHANGED) {
+                if (result.projection === null) {
+                    throw new Error(FOLLOW_SYNCHRONIZATION_FAILED_MESSAGE);
+                }
+                return result.projection.content;
             }
-            if (result.projection === null) {
-                throw new Error(FOLLOW_SYNCHRONIZATION_FAILED_MESSAGE);
-            }
-            return result.projection.content;
+        } else {
+            const projection = await restoreOrCheckSidePanelTab(
+                windowId,
+                tabId,
+                async () => readCurrentTabUrl(windowId, tabId),
+            );
+            return projection.content;
         }
-        const projection = await restoreOrCheckSidePanelTab(
-            windowId,
-            tabId,
-            async () => readCurrentTabUrl(windowId, tabId),
-        );
-        return projection.content;
     }
     throw new Error(PANEL_WINDOW_DISCONNECTED_MESSAGE);
 }

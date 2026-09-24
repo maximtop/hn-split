@@ -241,23 +241,23 @@ export class SidePanelPortController {
                     if (this.signaledRecoveries.get(windowId) === generation) {
                         this.signaledRecoveries.delete(windowId);
                     }
-                    continue;
-                }
-                const recoverySignaled = this.signaledRecoveries.get(windowId) === generation;
-                this.clearInitialization(windowId, generation);
-                if (this.generations.get(windowId) === generation
-                    && this.dependencies.windows.has(windowId)) {
-                    this.dependencies.warn(
-                        FOLLOW_DIAGNOSTIC_CODE.INITIALIZATION_FAILED,
-                        { windowId },
-                    );
-                    if (recoverySignaled) {
-                        void this.reinitialize(windowId);
-                    } else {
-                        this.pendingRecoveries.add(windowId);
+                } else {
+                    const recoverySignaled = this.signaledRecoveries.get(windowId) === generation;
+                    this.clearInitialization(windowId, generation);
+                    if (this.generations.get(windowId) === generation
+                        && this.dependencies.windows.has(windowId)) {
+                        this.dependencies.warn(
+                            FOLLOW_DIAGNOSTIC_CODE.INITIALIZATION_FAILED,
+                            { windowId },
+                        );
+                        if (recoverySignaled) {
+                            void this.reinitialize(windowId);
+                        } else {
+                            this.pendingRecoveries.add(windowId);
+                        }
                     }
+                    return;
                 }
-                return;
             }
         }
         this.clearInitialization(windowId, generation);

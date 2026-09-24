@@ -84,6 +84,18 @@ export const diagnosticBufferSchema = v.strictObject({
 export type DiagnosticBuffer = v.InferOutput<typeof diagnosticBufferSchema>;
 
 /**
+ * Reduces an error to its constructor category so no message or stack is retained.
+ *
+ * @param error - The console argument that is an Error.
+ */
+function categorizeError(error: Error): (typeof DIAGNOSTIC_ERROR)[keyof typeof DIAGNOSTIC_ERROR] {
+    if (error instanceof TypeError) {
+        return DIAGNOSTIC_ERROR.TYPE;
+    }
+    return error instanceof RangeError ? DIAGNOSTIC_ERROR.RANGE : DIAGNOSTIC_ERROR.OTHER;
+}
+
+/**
  * Drops unrecognized messages and rebuilds details from the scalar allowlist.
  *
  * @param level - Console severity to preserve.
@@ -94,9 +106,7 @@ export function normalizeDiagnostic(level: DiagnosticEvent['level'], message: st
     const details: DiagnosticEvent['details'] = {};
     for (const value of values) {
         if (value instanceof Error) {
-            details.errorCategory = value instanceof TypeError
-                ? DIAGNOSTIC_ERROR.TYPE
-                : value instanceof RangeError ? DIAGNOSTIC_ERROR.RANGE : DIAGNOSTIC_ERROR.OTHER;
+            details.errorCategory = categorizeError(value);
         } else {
             const parsed = v.safeParse(detailsInput, value);
             if (parsed.success) {

@@ -34,7 +34,7 @@ const HIT = {
 async function panelContent(extension: ExtensionContext): Promise<unknown> {
     const candidate: unknown = await extension.worker.evaluate(async (prefix) => {
         const stored = await chrome.storage.session.get(null);
-        const key = Object.keys(stored).find((candidate) => candidate.startsWith(prefix));
+        const key = Object.keys(stored).find((storageKey) => storageKey.startsWith(prefix));
         return key === undefined ? undefined : stored[key];
     }, SESSION_STORAGE_KEY_PREFIX.SIDE_PANEL_DISCUSSION);
     return isSidePanelProjection(candidate) ? candidate.content : undefined;

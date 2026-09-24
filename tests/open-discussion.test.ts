@@ -103,7 +103,9 @@ describe('DiscussionTabManager', () => {
 
         const first = manager.open(40, '123');
         const second = manager.open(40, '456');
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+        });
         const createsBeforeFirstCompleted = vi.mocked(tabs.create).mock.calls.length;
         resolveCreated?.({ id: 91, index: 5, windowId: 2 });
 

@@ -622,7 +622,7 @@ export class SidePanelContentManager {
             if (error instanceof DOMException
                 && error.name === 'AbortError'
                 && controller.supersededBy !== null) {
-                return this.followSupersession(controller);
+                return await this.followSupersession(controller);
             }
             throw error;
         } finally {
@@ -1355,6 +1355,8 @@ export class SidePanelContentManager {
             return;
         }
         const intent = this.beginRequest('explicit', controller.tabId, controller);
+        // Controllers are the manager's mutable per-operation state.
+        // eslint-disable-next-line no-param-reassign
         controller.intent = intent;
         controller.resolveStarted(intent);
     }
@@ -1395,12 +1397,11 @@ export class SidePanelContentManager {
         tabId?: number,
     ): void {
         for (const controller of this.followActivations.values()) {
-            if (tabId !== undefined && controller.tabId !== tabId) {
-                continue;
-            }
-            controller.supersededBy = reason;
-            if (this.followActivation === controller) {
-                this.followActivation = null;
+            if (tabId === undefined || controller.tabId === tabId) {
+                controller.supersededBy = reason;
+                if (this.followActivation === controller) {
+                    this.followActivation = null;
+                }
             }
         }
     }
@@ -1514,6 +1515,7 @@ export class SidePanelContentManager {
         if (controller.readinessSettled) {
             return;
         }
+        // eslint-disable-next-line no-param-reassign
         controller.readinessSettled = true;
         controller.resolveReadiness(projection);
     }
@@ -1531,6 +1533,7 @@ export class SidePanelContentManager {
         if (controller.settled) {
             return;
         }
+        // eslint-disable-next-line no-param-reassign
         controller.settled = true;
         if (this.explicitOperations.get(controller.tabId) === controller) {
             this.explicitOperations.delete(controller.tabId);
@@ -1813,6 +1816,7 @@ export class SidePanelContentManager {
         const revision = intent.hasPublished
             ? this.reserveProjectionRevision()
             : intent.firstProjectionRevision;
+        // eslint-disable-next-line no-param-reassign
         intent.hasPublished = true;
         const operation = this.projectionQueue.catch(() => undefined).then(async () => {
             if (!this.isCurrent(intent)) {

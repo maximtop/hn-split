@@ -11,6 +11,8 @@ import {
     logFollowWarning,
 } from '../src/shared/logger';
 
+const ITEM_SENTINEL = '424242';
+
 afterEach(() => {
     vi.restoreAllMocks();
 });
@@ -113,5 +115,3 @@ describe('logDiagnosticWarning', () => {
         expect(compileTimeAssertions).toBeTypeOf('function');
     });
 });
-
-const ITEM_SENTINEL = '424242';

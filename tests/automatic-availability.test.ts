@@ -100,7 +100,9 @@ describe('AutomaticAvailabilityUpdater', () => {
             },
             alternatives: [],
         });
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+        });
 
         expect(deps.applyBadge).not.toHaveBeenCalledWith(7, expect.objectContaining({ text: '99' }));
 
@@ -350,7 +352,7 @@ describe('AutomaticAvailabilityUpdater', () => {
 
     it('clears the previous page badge before starting the next lookup', async () => {
         const deps = dependencies();
-        vi.mocked(deps.lookup).mockReturnValue(new Promise(() => undefined));
+        vi.mocked(deps.lookup).mockReturnValue(new Promise(() => {}));
         const updater = new AutomaticAvailabilityUpdater(deps);
 
         void updater.update(7, 'https://example.com/next');
@@ -537,7 +539,9 @@ describe('AutomaticAvailabilityUpdater', () => {
         const disable = updater.disable([7]).then(() => {
             disableCompleted = true;
         });
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+        });
         expect(disableCompleted).toBe(false);
 
         resolveLookup({ status: 'not_found' });

@@ -142,14 +142,14 @@ describe('local Blob download', () => {
         const create = vi.fn<(blob: Blob) => string>().mockReturnValue('blob:local-support');
         const revoke = vi.fn();
         vi.stubGlobal('URL', { createObjectURL: create, revokeObjectURL: revoke });
-        const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+        const anchorClick = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function recordClick(this: HTMLAnchorElement) {
             expect(this.download).toBe('support.txt');
             expect(this.href).toBe('blob:local-support');
             expect(this.isConnected).toBe(true);
         });
         const open = vi.spyOn(window, 'open');
         downloadDiagnostics({ filename: 'support.txt', text: 'safe diagnostic text' });
-        expect(click).toHaveBeenCalledTimes(1);
+        expect(anchorClick).toHaveBeenCalledTimes(1);
         expect(create.mock.calls[0]?.[0]).toBeInstanceOf(Blob);
         expect(open).not.toHaveBeenCalled();
         expect(document.querySelector('a[download]')).toBeNull();

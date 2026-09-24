@@ -51,6 +51,8 @@ const CREDENTIAL_KEY_PREFIXES = ['x-amz-', 'x-goog-'];
 
 // The only schemes the extension ever navigates a tab to or looks up.
 const WEB_PROTOCOLS = ['http:', 'https:'];
+// Distinct values of one IPv4 octet; an IPv6 word holds two of them.
+const OCTET_VALUES = 256;
 
 /**
  * Names every source used to construct an article candidate.
@@ -155,7 +157,12 @@ function parseIpv6(hostname: string): number[] | null {
  * @param low - The low-order 16-bit IPv6 word.
  */
 function embeddedIpv4(high: number, low: number): string {
-    return `${high >> 8}.${high & 0xff}.${low >> 8}.${low & 0xff}`;
+    return [
+        Math.floor(high / OCTET_VALUES),
+        high % OCTET_VALUES,
+        Math.floor(low / OCTET_VALUES),
+        low % OCTET_VALUES,
+    ].join('.');
 }
 
 /**
@@ -357,9 +364,7 @@ export function normalizeArticleUrl(value: string): string | null {
     }
     const url = sanitizeParsedUrl(parsed);
 
-    const pathname = url.pathname !== '/' && url.pathname.endsWith('/')
-        ? url.pathname.slice(0, -1)
-        : url.pathname === '/' ? '' : url.pathname;
+    const pathname = url.pathname.endsWith('/') ? url.pathname.slice(0, -1) : url.pathname;
     const port = url.port === '' ? '' : `:${url.port}`;
     const hostname = url.hostname.toLowerCase().replace(/\.+$/, '');
 
@@ -401,21 +406,19 @@ export function buildArticleCandidates(pageUrl: string, canonicalHref?: string |
     const seen = new Set<string>();
     const candidates: ArticleCandidate[] = [];
     for (const candidate of rawCandidates) {
-        if (candidate.url === null) {
-            continue;
+        if (candidate.url !== null) {
+            const sanitizedUrl = sanitizeParsedUrl(candidate.url);
+            const url = sanitizedUrl.href;
+            const identity = normalizeArticleUrl(url);
+            if (identity !== null && !seen.has(identity)) {
+                seen.add(identity);
+                candidates.push({
+                    url,
+                    identity,
+                    source: candidate.source,
+                });
+            }
         }
-        const sanitizedUrl = sanitizeParsedUrl(candidate.url);
-        const url = sanitizedUrl.href;
-        const identity = normalizeArticleUrl(url);
-        if (identity === null || seen.has(identity)) {
-            continue;
-        }
-        seen.add(identity);
-        candidates.push({
-            url,
-            identity,
-            source: candidate.source,
-        });
     }
     return candidates;
 }

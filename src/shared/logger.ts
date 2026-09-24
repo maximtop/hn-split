@@ -79,6 +79,8 @@ export function logDiagnostic(
     details?: Readonly<Record<string, DiagnosticValue>>,
 ): void {
     const serializedDetails = details === undefined ? '' : ` ${JSON.stringify(details)}`;
+    // The logger is the only place that writes to the console; info keeps these events visible by default.
+    // eslint-disable-next-line no-console
     console.info(`${EXTENSION_BRAND}: ${message}${serializedDetails}`);
     collectDiagnostic(DIAGNOSTIC_LEVEL.INFO, message, [details]);
 }

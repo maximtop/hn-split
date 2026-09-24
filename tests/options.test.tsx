@@ -139,15 +139,21 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             availabilitySwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
         await act(async () => {
             articleClickSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
         await act(async () => {
             sidePanelFollowSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(chromeMocks.sendMessage).toHaveBeenCalledWith({
@@ -179,7 +185,9 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             availabilitySwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(availabilitySwitch?.checked).toBe(false);
@@ -206,7 +214,9 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             articleClickSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(articleClickSwitch?.checked).toBe(false);
@@ -236,7 +246,9 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             sidePanelFollowSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(sidePanelFollowSwitch?.checked).toBe(false);

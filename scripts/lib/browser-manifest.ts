@@ -139,13 +139,16 @@ export function parseBuildTarget(value: string | undefined): BuildTarget {
  * Sidebar, requires `options_ui`, and needs `browser_specific_settings.gecko`, including the
  * AMO disclosure for the URL candidates sent to the lookup API.
  *
- * @param manifest Cloned manifest mutated in place.
+ * @param source Chrome-shaped manifest; never mutated.
+ *
+ * @returns A new manifest for Firefox.
  */
-function applyFirefoxTransform(manifest: ExtensionManifest): void {
-    const serviceWorker = manifest.background?.service_worker;
+function applyFirefoxTransform(source: ExtensionManifest): ExtensionManifest {
+    const serviceWorker = source.background?.service_worker;
     if (typeof serviceWorker !== 'string') {
         throw new Error('The base manifest must declare background.service_worker.');
     }
+    const manifest = { ...source };
     delete manifest.minimum_chrome_version;
     manifest.background = { scripts: [serviceWorker] };
     if (manifest.permissions !== undefined) {
@@ -179,6 +182,7 @@ function applyFirefoxTransform(manifest: ExtensionManifest): void {
             },
         },
     };
+    return manifest;
 }
 
 /**
@@ -201,12 +205,8 @@ export function buildManifest(
     if (!EXTENSION_VERSION_PATTERN.test(version)) {
         throw new Error(`Version "${version}" must be three dot-separated integers.`);
     }
-    const manifest = structuredClone(base) as ExtensionManifest;
-    manifest.version = version;
-    if (target === 'firefox') {
-        applyFirefoxTransform(manifest);
-    }
-    return manifest;
+    const manifest = { ...(structuredClone(base) as ExtensionManifest), version };
+    return target === 'firefox' ? applyFirefoxTransform(manifest) : manifest;
 }
 
 /**

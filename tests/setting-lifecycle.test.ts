@@ -90,7 +90,9 @@ describe('applySettingTransaction', () => {
         const enable = queued(true);
         await vi.waitFor(() => expect(order).toEqual(['start:true']));
         const disable = queued(false);
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+        });
         expect(order).toEqual(['start:true']);
 
         releaseEnable();

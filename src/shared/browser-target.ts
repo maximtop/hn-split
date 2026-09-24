@@ -3,14 +3,14 @@
  */
 export type BrowserTarget = 'chrome' | 'edge' | 'firefox';
 
-declare const __TARGET_BROWSER__: BrowserTarget;
+declare const BUILD_TARGET_BROWSER: BrowserTarget;
 
 /**
  * Browser selected by the bundle, with Chrome as the unit-test default.
  */
-export const CURRENT_BROWSER: BrowserTarget = typeof __TARGET_BROWSER__ === 'undefined'
+export const CURRENT_BROWSER: BrowserTarget = typeof BUILD_TARGET_BROWSER === 'undefined'
     ? 'chrome'
-    : __TARGET_BROWSER__;
+    : BUILD_TARGET_BROWSER;
 
 /**
  * Whether the current package uses Firefox Sidebar instead of Chromium Side Panel.

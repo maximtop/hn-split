@@ -117,15 +117,20 @@ export function DiagnosticsSection({ send = sendRuntime, download = downloadDiag
         }
     };
 
+    let summary: string | null = null;
+    if (count !== null) {
+        summary = count === 0 ? t('diagnostics_empty') : t('diagnostics_count', { count });
+    } else if (feedback === null) {
+        summary = t('diagnostics_loading');
+    }
+
     return (
         <Paper withBorder radius="lg" p="xl" shadow="sm">
             <Stack gap="sm">
                 <Title order={2} size="h4">{t('diagnostics_title')}</Title>
                 <Text c="dimmed">{t('diagnostics_description')}</Text>
                 <Text role="status" aria-live="polite">
-                    {count === null
-                        ? feedback === null ? t('diagnostics_loading') : null
-                        : count === 0 ? t('diagnostics_empty') : t('diagnostics_count', { count })}
+                    {summary}
                     {feedback === null ? null : ` ${t(feedback)}` }
                 </Text>
                 <Group>

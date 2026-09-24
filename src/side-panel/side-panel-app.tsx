@@ -338,6 +338,8 @@ export function SidePanelApp(): React.JSX.Element {
             }
             reconnectTimer = window.setTimeout(() => {
                 reconnectTimer = null;
+                // connectPort and scheduleReconnect call each other, so one must come first.
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
                 connectPort();
             }, SIDE_PANEL_RECONNECT_DELAY_MS);
         }
@@ -611,9 +613,9 @@ export function SidePanelApp(): React.JSX.Element {
                                 aria-describedby={STATUS_ELEMENT_ID}
                                 disabled={busy}
                                 fullWidth
-                                onClick={() => void runPanelAction(
-                                    BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB,
-                                )}
+                                onClick={() => {
+                                    void runPanelAction(BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB);
+                                }}
                             >
                                 {t('side_panel_check_this_tab')}
                             </Button>
@@ -622,9 +624,9 @@ export function SidePanelApp(): React.JSX.Element {
                                 disabled={busy}
                                 fullWidth
                                 variant="default"
-                                onClick={() => void runPanelAction(
-                                    BACKGROUND_REQUEST_TYPE.ENABLE_SIDE_PANEL_FOLLOW,
-                                )}
+                                onClick={() => {
+                                    void runPanelAction(BACKGROUND_REQUEST_TYPE.ENABLE_SIDE_PANEL_FOLLOW);
+                                }}
                             >
                                 {t('side_panel_follow_tabs_automatically')}
                             </Button>
@@ -639,9 +641,9 @@ export function SidePanelApp(): React.JSX.Element {
                                 aria-describedby={STATUS_ELEMENT_ID}
                                 disabled={busy}
                                 fullWidth
-                                onClick={() => void runPanelAction(
-                                    BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB,
-                                )}
+                                onClick={() => {
+                                    void runPanelAction(BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB);
+                                }}
                             >
                                 {t('side_panel_retry')}
                             </Button>
@@ -674,7 +676,7 @@ export function SidePanelApp(): React.JSX.Element {
                                 hidden={!active}
                                 inert={!active}
                                 src={discussionUrl(frame.itemId)}
-                                tabIndex={active ? 0 : -1}
+                                tabIndex={active ? undefined : -1}
                                 title={t('popup_heading')}
                             />
                         );

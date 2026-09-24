@@ -37,10 +37,7 @@ const ZIP_COMPRESSION = { level: 9, mem: 8 } as const;
 export async function collectDirectoryEntries(directory: string): Promise<ZipEntry[]> {
     const dirents = await readdir(directory, { recursive: true, withFileTypes: true });
     const entries: ZipEntry[] = [];
-    for (const dirent of dirents) {
-        if (!dirent.isFile()) {
-            continue;
-        }
+    for (const dirent of dirents.filter((candidate) => candidate.isFile())) {
         const absolutePath = join(dirent.parentPath, dirent.name);
         entries.push({
             path: relative(directory, absolutePath).split(sep).join('/'),

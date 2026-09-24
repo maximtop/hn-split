@@ -18,7 +18,9 @@ describe('refreshTabsBounded', () => {
         const refresh = vi.fn(async () => {
             active += 1;
             maximumActive = Math.max(maximumActive, active);
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
             active -= 1;
         });
 

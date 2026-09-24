@@ -170,6 +170,7 @@ describe('detectArticleClick', () => {
         expect(detectArticleClick(clickEvent(storyAnchor), pageOrigin())).toBeNull();
     });
 
+    // eslint-disable-next-line no-script-url -- the fixture is a script URL that must be rejected
     it.each(['mailto:someone@example.com', 'javascript:void(0)'])(
         'ignores non-HTTP(S) story links (%s)',
         (href) => {
