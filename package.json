@@ -50,7 +50,7 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitest/coverage-v8": "4.1.10",
-    "adm-zip": "^0.6.0",
+    "adm-zip": "^0.6.1",
     "eslint": "10.11.0",
     "eslint-config-airbnb-extended": "3.2.0",
     "eslint-plugin-jsdoc": "64.5.4",
