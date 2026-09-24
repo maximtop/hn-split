@@ -1,9 +1,6 @@
 # Releasing
 
-This document has the same structure in every extension repository; only the
-store list, the identifiers, and the repository-specific notes differ.
-
-The cross-repository contract and extraction boundary are documented in [Shared store deployment](STORE_DEPLOYMENT.md).
+The release-to-store boundary and its files are documented in [Store deployment](STORE_DEPLOYMENT.md).
 
 For this extension's post-publication checks, support intake, and incident
 response, use [Release health and rollback criteria](release-health.md) and
@@ -41,7 +38,6 @@ the PR workflow. See [GitHub workflow triggers](https://docs.github.com/en/actio
 
 The release workflow reuses
 the same CI workflow and publishes its verified artifacts without rebuilding.
-For Kode Injector, publication also waits for the signed native helpers.
 
 The manual version-and-tag fallback remains available:
 
@@ -97,9 +93,9 @@ differs from the tag. It then downloads the release assets, never a fresh
 rebuild, verifies their SHA-256 checksums against `SHA256SUMS.txt`, and checks
 the manifest inside the archive: exactly one root `manifest.json`, manifest
 version 3, the release version, and the background format of the target
-browser. Only then does the store-specific part start. The validation code and
-its tests (`tests/deploy`) are identical across the repositories; the
-repository specifics live in `scripts/deploy/constants.ts`.
+browser. Only then does the store-specific part start. The validation code is
+tested in `tests/deploy`; the repository specifics live in
+`scripts/deploy/constants.ts`.
 
 ### Chrome Web Store
 
@@ -120,7 +116,7 @@ submission, not approval.
 ## Store configuration
 
 The complete Chrome, Edge, and Firefox configuration matrix is in
-[Shared store deployment](STORE_DEPLOYMENT.md#github-configuration).
+[Store deployment](STORE_DEPLOYMENT.md#github-configuration).
 
 The Chrome-specific bootstrap details follow.
 
@@ -148,10 +144,10 @@ committed.
 | Secret | `CHROME_CLIENT_SECRET` | Secret of that OAuth client. |
 | Secret | `CHROME_REFRESH_TOKEN` | Refresh token granted for the `https://www.googleapis.com/auth/chromewebstore` scope. |
 
-The publisher ID and the three secrets belong to the Google account and are
-shared by every extension it publishes. Their source of truth is the 1Password
-item `chrome-web-store-api`, whose notes list every repository that uses them
-and the rotation steps. Push a value to a repository without printing it:
+The publisher ID and the three secrets belong to the Google account, not to
+this extension. Their source of truth is the 1Password item
+`chrome-web-store-api`, whose notes hold the rotation steps. Push a value to
+this repository without printing it:
 
 ```sh
 op read op://Private/chrome-web-store-api/CHROME_REFRESH_TOKEN | gh secret set CHROME_REFRESH_TOKEN
@@ -181,13 +177,14 @@ Without 1Password, a `.env` filled in from `.env.example` works the same way;
 - **`invalid_client`:** `CHROME_CLIENT_ID` or `CHROME_CLIENT_SECRET` is wrong;
   the refresh token is fine. Google no longer shows an existing client secret:
   add a new secret to the same OAuth client in the Google Cloud Console,
-  store it in `chrome-web-store-api`, push it to every repository, and re-run.
+  store it in `chrome-web-store-api`, set it as the repository secret, and
+  re-run.
 - **`invalid_grant`:** the refresh token is dead and nothing was uploaded.
   Mint a new one for the existing OAuth client in the
   [OAuth Playground](https://developers.google.com/oauthplayground) with
   "Use your own OAuth credentials" and the
   `https://www.googleapis.com/auth/chromewebstore` scope, store it in
-  `chrome-web-store-api`, push it to every repository, and re-run. The OAuth
+  `chrome-web-store-api`, set it as the repository secret, and re-run. The OAuth
   consent screen must be **In production**; refresh tokens issued while it is
   in **Testing** expire after seven days.
 - **`deleted_client`:** the OAuth client itself is gone. Create a new Web
