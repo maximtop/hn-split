@@ -1,10 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { reportsAutomaticAvailabilityNavigation } from '../src/background/automatic-availability-controller';
 import { AutomaticAvailabilityUpdater } from '../src/browser/automatic-availability';
+import { EXTENSION_BRAND } from '../src/shared/brand';
+
 import type { AutomaticAvailabilityDependencies } from '../src/browser/automatic-availability';
 import type { HnLookupResult } from '../src/domain/hn';
-import { EXTENSION_BRAND } from '../src/shared/brand';
 
 function dependencies(): AutomaticAvailabilityDependencies {
     return {
@@ -88,8 +91,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveOlderLookup({
             status: 'found',
             primary: {
-                id: '1', title: 'Older', articleUrl: 'https://example.com/older',
-                comments: 99, points: 1, createdAt: 1,
+                id: '1',
+                title: 'Older',
+                articleUrl: 'https://example.com/older',
+                comments: 99,
+                points: 1,
+                createdAt: 1,
             },
             alternatives: [],
         });
@@ -121,8 +128,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveLookup({
             status: 'found',
             primary: {
-                id: '1', title: 'Current', articleUrl: 'https://example.com/article',
-                comments: 17, points: 1, createdAt: 1,
+                id: '1',
+                title: 'Current',
+                articleUrl: 'https://example.com/article',
+                comments: 17,
+                points: 1,
+                createdAt: 1,
             },
             alternatives: [],
         });
@@ -158,8 +169,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveCurrentLookup({
             status: 'found',
             primary: {
-                id: '1', title: 'Current', articleUrl: url,
-                comments: 23, points: 1, createdAt: 1,
+                id: '1',
+                title: 'Current',
+                articleUrl: url,
+                comments: 23,
+                points: 1,
+                createdAt: 1,
             },
             alternatives: [],
         });
@@ -186,8 +201,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveOlderLookup({
             status: 'found',
             primary: {
-                id: '1', title: 'Older', articleUrl: 'https://example.com/older',
-                comments: 99, points: 1, createdAt: 1,
+                id: '1',
+                title: 'Older',
+                articleUrl: 'https://example.com/older',
+                comments: 99,
+                points: 1,
+                createdAt: 1,
             },
             alternatives: [],
         });
@@ -382,8 +401,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveSecond({
             status: 'found',
             primary: {
-                id: '2', title: 'Current', articleUrl: 'https://example.com/current',
-                comments: 2, points: 2, createdAt: 2,
+                id: '2',
+                title: 'Current',
+                articleUrl: 'https://example.com/current',
+                comments: 2,
+                points: 2,
+                createdAt: 2,
             },
             alternatives: [],
         });
@@ -391,8 +414,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveFirst({
             status: 'found',
             primary: {
-                id: '1', title: 'Old', articleUrl: 'https://example.com/old',
-                comments: 1, points: 1, createdAt: 1,
+                id: '1',
+                title: 'Old',
+                articleUrl: 'https://example.com/old',
+                comments: 1,
+                points: 1,
+                createdAt: 1,
             },
             alternatives: [],
         });
@@ -450,8 +477,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         vi.mocked(deps.lookup).mockResolvedValue({
             status: 'found',
             primary: {
-                id: '1', title: 'Discussion', articleUrl: 'https://example.com/article',
-                comments: 8, points: 2, createdAt: 1,
+                id: '1',
+                title: 'Discussion',
+                articleUrl: 'https://example.com/article',
+                comments: 8,
+                points: 2,
+                createdAt: 1,
             },
             alternatives: [],
         });
@@ -477,8 +508,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveLookup({
             status: 'found',
             primary: {
-                id: '1', title: 'Stale', articleUrl: 'https://example.com/article',
-                comments: 8, points: 2, createdAt: 1,
+                id: '1',
+                title: 'Stale',
+                articleUrl: 'https://example.com/article',
+                comments: 8,
+                points: 2,
+                createdAt: 1,
             },
             alternatives: [],
         });
@@ -540,8 +575,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveNew({
             status: 'found',
             primary: {
-                id: '2', title: 'Current', articleUrl: 'https://example.com/new',
-                comments: 22, points: 2, createdAt: 2,
+                id: '2',
+                title: 'Current',
+                articleUrl: 'https://example.com/new',
+                comments: 22,
+                points: 2,
+                createdAt: 2,
             },
             alternatives: [],
         });
@@ -549,8 +588,12 @@ describe('AutomaticAvailabilityUpdater', () => {
         resolveOld({
             status: 'found',
             primary: {
-                id: '1', title: 'Stale', articleUrl: 'https://example.com/old',
-                comments: 11, points: 1, createdAt: 1,
+                id: '1',
+                title: 'Stale',
+                articleUrl: 'https://example.com/old',
+                comments: 11,
+                points: 1,
+                createdAt: 1,
             },
             alternatives: [],
         });

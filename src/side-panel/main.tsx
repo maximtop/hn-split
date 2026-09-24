@@ -1,8 +1,9 @@
-import { installDiagnosticTransport } from '../shared/diagnostic-protocol';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { installDiagnosticTransport } from '../shared/diagnostic-protocol';
 import { applyDocumentLocale, t } from '../shared/i18n';
+
 import { SidePanelApp } from './side-panel-app';
 import '@mantine/core/styles.css';
 import './styles.css';

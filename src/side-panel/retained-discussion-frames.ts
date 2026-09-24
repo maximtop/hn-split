@@ -11,14 +11,17 @@ export interface RetainedDiscussionFrame {
      * Identifies the browser tab that owns the context.
      */
     tabId: number;
+
     /**
      * Identifies the concrete Hacker News discussion loaded by the context.
      */
     itemId: string;
+
     /**
      * Provides the stable React and DOM identity for the tab/item tuple.
      */
     key: string;
+
     /**
      * Records the monotonic access order used for least-recently-used eviction.
      */
@@ -33,6 +36,7 @@ export interface DiscussionFrameSelection {
      * Identifies the browser tab that owns the selected discussion.
      */
     tabId: number;
+
     /**
      * Identifies the concrete Hacker News discussion for the selected tab.
      */
@@ -47,10 +51,12 @@ export interface RetainedDiscussionFrameState {
      * Keeps contexts in stable insertion and render order.
      */
     frames: RetainedDiscussionFrame[];
+
     /**
      * Identifies the sole context that should be visible, or none.
      */
     activeKey: string | null;
+
     /**
      * Supplies the next monotonic access sequence value.
      */
@@ -68,6 +74,7 @@ export const EMPTY_RETAINED_DISCUSSION_FRAMES: RetainedDiscussionFrameState = {
 
 /**
  * Builds the stable identity for one tab-scoped discussion context.
+ *
  * @param selection - The browser tab and concrete Hacker News item tuple.
  */
 export function discussionFrameKey(selection: DiscussionFrameSelection): string {
@@ -77,6 +84,7 @@ export function discussionFrameKey(selection: DiscussionFrameSelection): string 
 /**
  * Activates an exact retained context or appends a new context after enforcing
  * the per-tab replacement rule and least-recently-used capacity bound.
+ *
  * @param state - The current retained-context state.
  * @param selection - The browser tab and discussion that should become active.
  */
@@ -115,6 +123,7 @@ export function activateDiscussionFrame(
 
 /**
  * Removes every retained discussion context owned by one browser tab.
+ *
  * @param state - The current retained-context state.
  * @param tabId - The browser tab whose contexts must be discarded.
  */

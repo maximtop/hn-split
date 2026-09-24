@@ -1,7 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    beforeEach, describe, expect, it, vi,
+} from 'vitest';
 
-import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
+import { handleRequest } from '../src/background/request-handler';
 import { BACKGROUND_REQUEST_TYPE } from '../src/shared/messages';
+import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
 
 const mocks = vi.hoisted(() => ({
     tabsGet: vi.fn(),
@@ -54,8 +57,6 @@ vi.mock('../src/background/side-panel-follow-controller', () => ({
     enableSidePanelFollow: mocks.enableFollow,
     setSidePanelFollowSetting: mocks.setFollow,
 }));
-
-import { handleRequest } from '../src/background/request-handler';
 
 const TAB_ID = 7;
 const WINDOW_ID = 3;

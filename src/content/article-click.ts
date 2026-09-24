@@ -30,30 +30,37 @@ export interface ArticleClickEventLike {
      * action.
      */
     isTrusted: boolean;
+
     /**
      * Contains the pressed pointer button, where zero is the primary button.
      */
     button: number;
+
     /**
      * Indicates whether the Meta key was held during the click.
      */
     metaKey: boolean;
+
     /**
      * Indicates whether the Control key was held during the click.
      */
     ctrlKey: boolean;
+
     /**
      * Indicates whether the Shift key was held during the click.
      */
     shiftKey: boolean;
+
     /**
      * Indicates whether the Alt key was held during the click.
      */
     altKey: boolean;
+
     /**
      * Indicates whether a page handler already canceled the default action.
      */
     defaultPrevented: boolean;
+
     /**
      * Contains the event target the click landed on.
      */
@@ -68,6 +75,7 @@ export interface DetectedArticleClick {
      * Contains the Hacker News item identifier from the story row.
      */
     itemId: string;
+
     /**
      * Contains the exact resolved external article URL from the story anchor.
      */
@@ -78,6 +86,7 @@ export interface DetectedArticleClick {
  * Determines whether one decimal string is a plausible Hacker News item
  * identifier. The wire schema in `messages.ts` stays authoritative; this
  * local check only avoids sending obviously invalid messages.
+ *
  * @param id - The candidate row identifier to check.
  */
 function isPlausibleItemId(id: string): boolean {
@@ -97,6 +106,7 @@ function isPlausibleItemId(id: string): boolean {
  * that stays on Hacker News itself (self posts, site chips, comment links).
  * Keyboard activation of a focused link dispatches an equivalent click event
  * and qualifies deliberately.
+ *
  * @param event - The observed click event.
  * @param pageOrigin - The origin of the observing document, passed in so the
  * check stays a pure function of its inputs under any test base URL.

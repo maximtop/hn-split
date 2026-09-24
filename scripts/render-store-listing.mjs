@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 
 import { EXTENSION_BRAND } from '../src/shared/brand.ts';
 import { SHIPPED_LOCALES } from '../src/shared/locales.ts';
+
 import { assembleStoreDescription, STORE_CATALOG, STORE_IDS } from './lib/store-listings.ts';
 
 const [storeId, locale] = process.argv.slice(2);

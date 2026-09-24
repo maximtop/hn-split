@@ -1,6 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { ensureArticleClickRegistration } from '../src/browser/article-click-registration';
+
 import type { ContentScriptRegistry } from '../src/browser/article-click-registration';
 
 function registry(registered: boolean): ContentScriptRegistry {

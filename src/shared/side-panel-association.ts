@@ -2,6 +2,7 @@ import * as v from 'valibot';
 
 import { HN_LOOKUP_STATUS, isValidItemId } from '../domain/hn';
 import { isSanitizedArticleIdentity } from '../domain/url';
+
 import {
     SIDE_PANEL_CONTENT_KIND,
     sidePanelTabIdSchema,
@@ -60,6 +61,7 @@ export type SidePanelAssociation = v.InferOutput<typeof sidePanelAssociationSche
 
 /**
  * Determines whether an unknown value is a strict reusable tab association.
+ *
  * @param value - The unknown storage value to validate.
  */
 export function isSidePanelAssociation(value: unknown): value is SidePanelAssociation {

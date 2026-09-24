@@ -1,9 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import {
     applySettingTransaction,
     createSettingQueue,
 } from '../src/browser/setting-lifecycle';
+
 import type { SettingLifecycleDependencies } from '../src/browser/setting-lifecycle';
 
 function dependencies(enabled: boolean): SettingLifecycleDependencies {

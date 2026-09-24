@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import type { BrowserContext } from '@playwright/test';
 
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { HN_ORIGIN } from '../../src/domain/hn';
@@ -7,12 +6,15 @@ import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../../src/shared/content-scripts';
 import { SIDE_PANEL_CONTENT_KIND } from '../../src/shared/side-panel-content';
 import { isSidePanelProjection } from '../../src/shared/side-panel-projection';
 import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
+
 import {
     ARTICLE_ORIGIN,
     launchExtensionContext,
     openExtensionPage,
 } from './extension-context';
+
 import type { ExtensionContext } from './extension-context';
+import type { BrowserContext } from '@playwright/test';
 
 const STORY_ONE = { id: '424242', path: '/story-one', title: 'Fixture story one' };
 const STORY_TWO = { id: '424243', path: '/story-two', title: 'Fixture story two' };
@@ -20,6 +22,11 @@ const STORY_TWO = { id: '424243', path: '/story-two', title: 'Fixture story two'
 /**
  * One realistic Hacker News listing row: the external story link inside
  * `.titleline`, the nested `from?site=` chip, and the subtext comments link.
+ *
+ * @param story
+ * @param story.id
+ * @param story.path
+ * @param story.title
  */
 function storyRow(story: { id: string; path: string; title: string }): string {
     return `
@@ -38,6 +45,7 @@ function storyRow(story: { id: string; path: string; title: string }): string {
 /**
  * Serves a deterministic Hacker News listing, comment pages, and article
  * pages, so no test traffic reaches live sites.
+ *
  * @param context - The extension browser context to install routes into.
  */
 async function installArticleClickFixtures(context: BrowserContext): Promise<void> {
@@ -65,6 +73,7 @@ async function installArticleClickFixtures(context: BrowserContext): Promise<voi
 
 /**
  * Reads the registered content-script identifiers from the background worker.
+ *
  * @param extension - The launched extension context.
  */
 async function registeredScriptIds(extension: ExtensionContext): Promise<string[]> {
@@ -79,6 +88,7 @@ async function registeredScriptIds(extension: ExtensionContext): Promise<string[
  * first projection. Content is stored per window and the test runs in a
  * single window, so the one entry under the
  * prefix is the selection of that window.
+ *
  * @param extension - The launched extension context.
  */
 async function sidePanelContent(extension: ExtensionContext): Promise<unknown> {
@@ -93,6 +103,7 @@ async function sidePanelContent(extension: ExtensionContext): Promise<unknown> {
 /**
  * Counts the open top-level pages on the fixture origins, so a discussion
  * accidentally opened as a tab (instead of the side panel) fails the test.
+ *
  * @param extension - The launched extension context.
  */
 function fixturePageCount(extension: ExtensionContext): number {

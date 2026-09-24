@@ -13,6 +13,7 @@ export const SIDE_PANEL_FRAMING_RULE_ID = 1;
 export interface FramingRuleClient {
     /**
      * Atomically removes and adds dynamic rules.
+     *
      * @param options - The rule identifiers to remove and the rules to add.
      */
     updateDynamicRules(options: {
@@ -75,6 +76,7 @@ export class SidePanelFraming {
 
     /**
      * Creates the framing owner with no exception installed.
+     *
      * @param rules - The dynamic-rule client used to install the exception.
      */
     constructor(rules: FramingRuleClient) {

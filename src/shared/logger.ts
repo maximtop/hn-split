@@ -1,18 +1,20 @@
 import { EXTENSION_BRAND } from './brand';
-
 import {
     FOLLOW_DIAGNOSTIC_CODE,
     FOLLOW_DIAGNOSTIC_EVENT,
     FOLLOW_DIAGNOSTIC_EVENT_BY_CODE,
 } from './diagnostic-events';
-import type { FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent } from './diagnostic-events';
 import { DIAGNOSTIC_LEVEL, normalizeDiagnostic } from './diagnostics';
+
+import type { FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent } from './diagnostic-events';
 import type { DiagnosticEvent } from './diagnostics';
 
 type DiagnosticValue = boolean | number | string | null | undefined;
 
 export { FOLLOW_DIAGNOSTIC_CODE, FOLLOW_DIAGNOSTIC_EVENT } from './diagnostic-events';
-export type { FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent, FollowWarningSink } from './diagnostic-events';
+export type {
+    FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent, FollowWarningSink,
+} from './diagnostic-events';
 
 /**
  * Receives sanitized events without making product operations await storage.
@@ -23,6 +25,7 @@ let diagnosticSink: DiagnosticSink | undefined;
 
 /**
  * Installs the current extension entry's transport; content scripts leave it unset.
+ *
  * @param sink - Direct background writer or one-way UI event transport.
  */
 export function setDiagnosticSink(sink: DiagnosticSink | undefined): void {
@@ -38,6 +41,7 @@ export function reportDiagnosticFailure(): void {
 
 /**
  * Sends one normalized event to the configured best-effort sink.
+ *
  * @param level - Stable severity of the console event.
  * @param message - Application message checked against the event catalog.
  * @param details - Untrusted values normalized before reaching a transport.
@@ -66,6 +70,7 @@ const ALLOWED_FOLLOW_DIAGNOSTIC_CODES = new Set<FollowDiagnosticCode>(
 /**
  * Logs a privacy-safe lifecycle event locally so cross-context extension flows
  * can be traced without telemetry or persistent diagnostic storage.
+ *
  * @param message - The stable lifecycle description.
  * @param details - Optional allow-listed primitive context serialized inline.
  */
@@ -81,6 +86,7 @@ export function logDiagnostic(
 /**
  * Logs one typed side-panel warning after rebuilding its runtime payload from
  * the identifier allow-list, preventing excess object properties from leaking.
+ *
  * @param event - The stable allow-listed lifecycle description.
  * @param details - The stable code and optional ephemeral numeric identifiers.
  */
@@ -107,6 +113,7 @@ export function logDiagnosticWarning(
 
 /**
  * Maps one typed warning code to its stable event and logs a sanitized payload.
+ *
  * @param code - The stable allow-listed warning code.
  * @param details - Optional ephemeral numeric identifiers only.
  */
@@ -120,6 +127,7 @@ export function logFollowWarning(
 /**
  * Logs a recoverable failure with the brand prefix so extension entries stay
  * attributable in consoles shared with page scripts.
+ *
  * @param message - The human-readable failure description.
  * @param details - Optional error or context values appended to the entry.
  */

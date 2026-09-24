@@ -40,11 +40,21 @@ describe('isBackgroundRequest', () => {
         { type: 'set_article_click_setting' },
         { type: 'set_article_click_setting', enabled: 'yes' },
         { type: 'select_side_panel_discussion', itemId: '123' },
-        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 'https://example.com', windowId: -1 },
-        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 'https://example.com', windowId: 1.5 },
-        { type: 'select_side_panel_discussion', tabId: -1, itemId: '123', sourceUrl: 'https://example.com', windowId: 1 },
-        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 42, windowId: 1 },
-        { type: 'select_side_panel_discussion', tabId: 1, itemId: '123', windowId: 1 },
+        {
+            type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 'https://example.com', windowId: -1,
+        },
+        {
+            type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 'https://example.com', windowId: 1.5,
+        },
+        {
+            type: 'select_side_panel_discussion', tabId: -1, itemId: '123', sourceUrl: 'https://example.com', windowId: 1,
+        },
+        {
+            type: 'select_side_panel_discussion', tabId: 1, itemId: '123', sourceUrl: 42, windowId: 1,
+        },
+        {
+            type: 'select_side_panel_discussion', tabId: 1, itemId: '123', windowId: 1,
+        },
         { type: 'check_active_side_panel_tab' },
         { type: 'check_active_side_panel_tab', windowId: -1 },
         { type: 'check_active_side_panel_tab', windowId: 3, tabId: 7 },

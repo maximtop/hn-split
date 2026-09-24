@@ -1,6 +1,7 @@
 import {
     SIDE_PANEL_DISCARD_TAB,
 } from '../shared/messages';
+
 import type { SidePanelPortMessage } from '../shared/messages';
 
 /**
@@ -9,6 +10,7 @@ import type { SidePanelPortMessage } from '../shared/messages';
 export interface SidePanelPortClient {
     /**
      * Sends one validated lifecycle message to the side-panel document.
+     *
      * @param message - The strict lifecycle message to deliver.
      */
     postMessage(message: SidePanelPortMessage): void;
@@ -27,6 +29,7 @@ export class SidePanelWindowRegistry {
 
     /**
      * Registers one panel port and its framing-readiness barrier.
+     *
      * @param windowId - The browser window that owns the panel document.
      * @param port - The live panel port to retain.
      * @param framed - The framing acquisition associated with this port.
@@ -55,6 +58,7 @@ export class SidePanelWindowRegistry {
 
     /**
      * Determines whether one window still owns at least one live panel port.
+     *
      * @param windowId - The browser window to inspect.
      */
     has(windowId: number): boolean {
@@ -71,6 +75,7 @@ export class SidePanelWindowRegistry {
     /**
      * Waits for every port currently registered to one window to acquire the
      * shared framing exception.
+     *
      * @param windowId - The browser window whose framing barriers are awaited.
      */
     async waitUntilFramed(windowId: number): Promise<void> {
@@ -80,6 +85,7 @@ export class SidePanelWindowRegistry {
 
     /**
      * Destroys retained discussion contexts for one tab in its owning window.
+     *
      * @param windowId - The panel window receiving the invalidation.
      * @param tabId - The tab whose retained discussion contexts are discarded.
      */
@@ -91,6 +97,7 @@ export class SidePanelWindowRegistry {
      * Delivers one lifecycle message to every live port in one window. A stale
      * throwing port is pruned without preventing surviving documents from
      * receiving the same message.
+     *
      * @param windowId - The browser window whose ports receive the message.
      * @param message - The strict lifecycle message to broadcast.
      */

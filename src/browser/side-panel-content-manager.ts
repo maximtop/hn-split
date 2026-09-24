@@ -1,25 +1,26 @@
-import type { PanelLookupResult } from '../background/article-lookup';
-import type { SidePanelAssociationStore } from './side-panel-association-store';
 import { HN_LOOKUP_ERROR_REASON, HN_LOOKUP_STATUS } from '../domain/hn';
 import { isWebUrl } from '../domain/url';
+import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
 import {
     SIDE_PANEL_ASSOCIATION_ORIGIN,
-} from '../shared/side-panel-association';
-import type {
-    SidePanelAssociation,
-    SidePanelAssociationOrigin,
 } from '../shared/side-panel-association';
 import {
     SIDE_PANEL_CONTENT_KIND,
     contentForLookupResult,
 } from '../shared/side-panel-content';
-import type { SidePanelContent } from '../shared/side-panel-content';
-import type { SidePanelProjection } from '../shared/side-panel-projection';
-import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
+
+import type { SidePanelAssociationStore } from './side-panel-association-store';
+import type { PanelLookupResult } from '../background/article-lookup';
 import type {
     FollowDiagnosticDetails,
     FollowWarningSink,
 } from '../shared/logger';
+import type {
+    SidePanelAssociation,
+    SidePanelAssociationOrigin,
+} from '../shared/side-panel-association';
+import type { SidePanelContent } from '../shared/side-panel-content';
+import type { SidePanelProjection } from '../shared/side-panel-projection';
 
 const SUPERSEDED_INTENT_MESSAGE = 'Side panel intent was superseded';
 
@@ -42,6 +43,7 @@ export interface SidePanelRecoveryAuthority {
      * Identifies this exact recovery attempt within the manager lifetime.
      */
     token: number;
+
     /**
      * Aborts when a newer trusted manager boundary supersedes the recovery.
      */
@@ -57,65 +59,87 @@ export interface SidePanelContentDependencies {
      * Coordinates all session associations through the process-wide per-tab FIFO.
      */
     associations: Pick<SidePanelAssociationStore, 'mutate' | 'settledGet'>;
+
     /**
      * Reads the last strict projection stored for this manager's window.
      */
     readProjection(): Promise<SidePanelProjection | null>;
+
     /**
      * Persists one strict revisioned projection for this manager's window.
+     *
      * @param projection - The exact projection to persist.
      */
     writeProjection(projection: SidePanelProjection): Promise<void>;
+
     /**
      * Reads the independent side-panel-follow preference.
      */
     isFollowEnabled(): Promise<boolean>;
+
     /**
      * Resolves one consented page URL through the shared lookup cache.
+     *
      * @param url - The consented page URL to resolve.
      * @param signal - The signal that aborts a superseded resolution.
      */
     lookup(url: string, signal: AbortSignal): Promise<PanelLookupResult>;
+
     /**
      * Reads the current browser window ownership of one tab without its URL.
+     *
      * @param tabId - The tab whose window ownership is checked.
      */
     getTabWindow(tabId: number): Promise<number | null>;
+
     /**
      * Normalizes one URL only after association state or explicit consent
      * authorizes inspecting it.
+     *
      * @param url - The URL whose privacy-safe identity is requested.
      */
     normalizeArticleUrl(url: string): string | null;
+
     /**
      * Opens the side panel within an explicit browser gesture.
+     *
      * @param tabId - The tab whose window should reveal the panel.
      */
     openSidePanel(tabId: number): Promise<void>;
+
     /**
      * Navigates one tab after a concrete context-menu selection.
+     *
      * @param tabId - The explicitly targeted tab.
      * @param url - The exact user-selected URL.
      */
     navigate(tabId: number, url: string): Promise<void>;
+
     /**
      * Re-runs the live-window consent gate after an explicit operation cancels.
+     *
      * @param authority - The manager-owned recovery attempt to preserve across browser reads.
      */
     resynchronize(authority: SidePanelRecoveryAuthority): Promise<void>;
+
     /**
      * Asks the live panel to discard every retained frame for one tab.
+     *
      * @param tabId - The tab whose retained contexts are discarded.
      */
     discardFrame(tabId: number): void;
+
     /**
      * Announces a newer authoritative target before its queued write completes.
+     *
      * @param tabId - The newly authoritative tab.
      * @param minimumProjectionRevision - The first projection revision for the intent.
      */
     target(tabId: number, minimumProjectionRevision: number): void;
+
     /**
      * Reports one privacy-safe, allow-listed synchronization failure.
+     *
      * @param code - The stable allow-listed failure code.
      * @param details - Ephemeral numeric identifiers only.
      */
@@ -130,18 +154,22 @@ interface SynchronizationIntent {
      * Identifies this manager operation monotonically within the worker lifetime.
      */
     generation: number;
+
     /**
      * Identifies the user authority behind this operation.
      */
     cause: 'automatic' | 'explicit' | 'manual';
+
     /**
      * Identifies the tab whose state this operation may publish.
      */
     tabId: number;
+
     /**
      * Reserves the first projection revision announced by TARGET.
      */
     firstProjectionRevision: number;
+
     /**
      * Records whether the reserved first revision has already been consumed.
      */
@@ -156,6 +184,7 @@ export interface ExpectedNavigationReservation {
      * Identifies the tab expected to navigate.
      */
     tabId: number;
+
     /**
      * Identifies this exact reservation within the worker lifetime.
      */
@@ -170,6 +199,7 @@ export interface SidePanelFollowActivationToken {
      * Identifies the tab active at the trusted request boundary.
      */
     tabId: number;
+
     /**
      * Identifies this exact capture within the manager lifetime.
      */
@@ -199,11 +229,10 @@ export const SIDE_PANEL_FOLLOW_CONTINUATION_KIND = {
  * Reports whether a queued follow activation continued, yielded to a real tab
  * activation, or preserved a newer explicit/manual operation.
  */
-export type SidePanelFollowContinuation =
-    | {
-        kind: typeof SIDE_PANEL_FOLLOW_CONTINUATION_KIND.CONTINUED;
-        projection: SidePanelProjection;
-    }
+export type SidePanelFollowContinuation = | {
+    kind: typeof SIDE_PANEL_FOLLOW_CONTINUATION_KIND.CONTINUED;
+    projection: SidePanelProjection;
+}
     | {
         kind: typeof SIDE_PANEL_FOLLOW_CONTINUATION_KIND.ACTIVE_TAB_CHANGED;
     }
@@ -220,14 +249,17 @@ export interface ExplicitOperationReservation {
      * Identifies the explicitly targeted tab.
      */
     tabId: number;
+
     /**
      * Identifies this exact operation within the worker lifetime.
      */
     token: number;
+
     /**
      * Resolves when the first pending or terminal projection is applied.
      */
     readiness: Promise<SidePanelProjection | null>;
+
     /**
      * Resolves after terminal association persistence finishes.
      */
@@ -242,14 +274,17 @@ export interface ShowDiscussionOptions {
      * Reuses a synchronously reserved operation when one exists.
      */
     reservation?: ExplicitOperationReservation;
+
     /**
      * Identifies the article tab receiving the discussion.
      */
     tabId: number;
+
     /**
      * Identifies the concrete Hacker News discussion.
      */
     itemId: string;
+
     /**
      * Contains the inspected article page URL, never the Algolia hit URL.
      */
@@ -264,18 +299,22 @@ interface ExpectedNavigationController extends ExpectedNavigationReservation {
      * Contains the exact browser navigation target.
      */
     rawUrl: string;
+
     /**
      * Contains its sanitized identity when the URL is eligible.
      */
     articleIdentity: string | null;
+
     /**
      * Identifies the explicit operation that keeps this guard alive until settlement.
      */
     pairedExplicitToken: number | null;
+
     /**
      * Prevents a completed action's delayed-navigation guard from being rebound.
      */
     hasBeenPaired: boolean;
+
     /**
      * Records whether the expected target has already been observed once.
      */
@@ -290,42 +329,54 @@ interface ExplicitOperationController {
      * Identifies the explicitly targeted tab.
      */
     tabId: number;
+
     /**
      * Identifies this operation within the worker lifetime.
      */
     token: number;
+
     /**
      * Contains the hydrated explicit intent after start.
      */
     intent: SynchronizationIntent | null;
+
     /**
      * Resolves after hydration installs the intent, or null on cancellation.
      */
     started: Promise<SynchronizationIntent | null>;
+
     /**
      * Carries the public operation handles.
      */
     reservation: ExplicitOperationReservation;
+
     /**
      * Prevents duplicate settlement across superseding paths.
      */
     settled: boolean;
+
     /**
      * Prevents more than one readiness projection from being published.
      */
     readinessSettled: boolean;
+
     /**
      * Resolves the internal hydration barrier.
+     *
      * @param intent - The installed intent, or null when cancelled first.
      */
     resolveStarted(intent: SynchronizationIntent | null): void;
+
     /**
      * Resolves the first-projection readiness handle.
+     *
      * @param projection - The first applied projection, or null on cancellation.
      */
     resolveReadiness(projection: SidePanelProjection | null): void;
+
     /**
      * Resolves terminal completion.
+     *
      * @param projection - The terminal projection, or null on cancellation.
      */
     resolveCompletion(projection: SidePanelProjection | null): void;
@@ -343,6 +394,7 @@ interface FollowActivationController extends SidePanelFollowActivationToken {
 
 /**
  * Creates one exactly-once explicit operation controller.
+ *
  * @param tabId - The explicitly targeted tab.
  * @param token - The worker-local operation token.
  */
@@ -367,7 +419,9 @@ function createExplicitOperationController(
         token,
         intent: null,
         started,
-        reservation: { tabId, token, readiness, completion },
+        reservation: {
+            tabId, token, readiness, completion,
+        },
         settled: false,
         readinessSettled: false,
         resolveStarted,
@@ -385,6 +439,7 @@ function supersededIntentError(): DOMException {
 
 /**
  * Requires a queued projection to have applied while its intent was current.
+ *
  * @param value - The nullable queued projection result.
  */
 function requireApplied(value: SidePanelProjection | null): SidePanelProjection {
@@ -396,6 +451,7 @@ function requireApplied(value: SidePanelProjection | null): SidePanelProjection 
 
 /**
  * Reconstructs strict tab-aware content from one reusable association.
+ *
  * @param association - The validated session association to restore.
  */
 function contentForAssociation(association: SidePanelAssociation): SidePanelContent {
@@ -461,6 +517,7 @@ export class SidePanelContentManager {
 
     /**
      * Creates one manager fixed to one browser window.
+     *
      * @param windowId - The browser window this manager exclusively owns.
      * @param dependencies - Consent, storage, lookup, and live-panel boundaries.
      */
@@ -479,6 +536,7 @@ export class SidePanelContentManager {
     /**
      * Captures a one-click follow activation only while an earlier active-tab
      * read still belongs to the same trusted authority revision.
+     *
      * @param tabId - The tab returned by the trusted active-tab read.
      * @param authority - The revision captured before that asynchronous read.
      */
@@ -494,6 +552,7 @@ export class SidePanelContentManager {
     /**
      * Captures the trusted action-time tab without reading storage, acquiring a
      * URL, allocating a projection revision, or changing visible content.
+     *
      * @param tabId - The tab active when the background accepted the action.
      */
     reserveFollowActivation(tabId: number): SidePanelFollowActivationToken {
@@ -513,6 +572,7 @@ export class SidePanelContentManager {
     /**
      * Cancels one exact queued follow capture after its setting transaction
      * fails before synchronization begins.
+     *
      * @param reservation - The exact capture returned by reserveFollowActivation.
      */
     cancelFollowActivation(reservation: SidePanelFollowActivationToken): void {
@@ -529,6 +589,7 @@ export class SidePanelContentManager {
     /**
      * Continues one unchanged action-time capture after follow consent has been
      * persisted, while reporting whether a newer trusted boundary won instead.
+     *
      * @param reservation - The exact queued follow capture.
      * @param readUrl - Lazy URL acquisition used only after association restore.
      */
@@ -572,6 +633,7 @@ export class SidePanelContentManager {
     /**
      * Continues one exact follow capture, returning null when a newer trusted
      * boundary superseded it.
+     *
      * @param reservation - The exact queued follow capture.
      * @param readUrl - Lazy consented URL acquisition.
      */
@@ -588,6 +650,7 @@ export class SidePanelContentManager {
     /**
      * Reserves one exact expected navigation before an explicit browser action.
      * The raw URL never leaves this in-memory controller.
+     *
      * @param tabId - The tab expected to navigate.
      * @param rawUrl - The exact target chosen by the user.
      */
@@ -613,6 +676,7 @@ export class SidePanelContentManager {
 
     /**
      * Cancels one exact expected navigation without affecting a replacement.
+     *
      * @param reservation - The reservation returned at the explicit boundary.
      */
     cancelExpectedNavigation(reservation: ExpectedNavigationReservation): void {
@@ -624,6 +688,7 @@ export class SidePanelContentManager {
 
     /**
      * Reports whether one tab still has an unconsumed exact expectation.
+     *
      * @param tabId - The tab whose expectation is inspected.
      */
     hasExpectedNavigation(tabId: number): boolean {
@@ -633,6 +698,7 @@ export class SidePanelContentManager {
     /**
      * Reserves one explicit newest-wins operation before opening UI or awaiting
      * browser storage. Hydration installs its intent asynchronously.
+     *
      * @param tabId - The explicitly targeted tab.
      */
     reserveExplicitOperation(tabId: number): ExplicitOperationReservation {
@@ -664,6 +730,7 @@ export class SidePanelContentManager {
 
     /**
      * Publishes pending for a previously reserved explicit operation.
+     *
      * @param reservation - The exact explicit operation to prepare.
      */
     async prepareExplicitOperation(
@@ -691,6 +758,7 @@ export class SidePanelContentManager {
     /**
      * Cancels one exact explicit reservation and optionally restores the live
      * window through the ordinary consent gate.
+     *
      * @param reservation - The exact operation to cancel.
      * @param resynchronize - Whether a reserved target must be replaced.
      */
@@ -714,6 +782,7 @@ export class SidePanelContentManager {
 
     /**
      * Publishes one concrete discussion selected by an explicit entry point.
+     *
      * @param options - Tab identity, item identity, source URL, and reservation.
      */
     async showDiscussion(options: ShowDiscussionOptions): Promise<SidePanelProjection> {
@@ -761,6 +830,7 @@ export class SidePanelContentManager {
     /**
      * Runs the concrete context-menu pipeline while preserving the initiating
      * click gesture for side-panel opening.
+     *
      * @param tabId - The tab whose clicked link is opened.
      * @param targetUrl - The exact selected link target.
      */
@@ -778,6 +848,7 @@ export class SidePanelContentManager {
 
     /**
      * Initializes a newly connected panel from its active tab.
+     *
      * @param tabId - The authoritative active tab reported for this window.
      * @param readUrl - Lazy URL acquisition used only after consent is established.
      */
@@ -804,6 +875,7 @@ export class SidePanelContentManager {
     /**
      * Processes one browser navigation with association identity and consent
      * checks ordered before any untrusted URL inspection.
+     *
      * @param tabId - The tab that reported the navigation.
      * @param reportedUrl - The optional URL carried by the browser event.
      * @param active - Whether the tab is active in its window.
@@ -914,6 +986,7 @@ export class SidePanelContentManager {
     /**
      * Completes a consented automatic activation whose first browser event did
      * not include the URL.
+     *
      * @param tabId - The still-current pending tab.
      * @param readUrl - Lazy status-complete URL acquisition.
      */
@@ -937,6 +1010,7 @@ export class SidePanelContentManager {
     /**
      * Synchronizes one newly active tab, first restoring any reusable session
      * association and otherwise enforcing the independent follow preference.
+     *
      * @param tabId - The newly authoritative tab.
      * @param readUrl - Lazy URL acquisition used only when follow is enabled.
      */
@@ -952,6 +1026,7 @@ export class SidePanelContentManager {
     /**
      * Continues one manager-owned recovery only if no newer trusted action
      * crossed the lifecycle coordinator's asynchronous active-tab read.
+     *
      * @param authority - The exact opaque recovery attempt to continue.
      * @param tabId - The tab active when the browser read completed.
      * @param readUrl - Lazy URL acquisition used only after follow consent.
@@ -972,6 +1047,7 @@ export class SidePanelContentManager {
     /**
      * Synchronizes a live window for an earlier serialized setting transaction
      * without invalidating a later one-click capture already waiting in queue.
+     *
      * @param tabId - The tab active in the live panel window.
      * @param readUrl - Lazy URL acquisition used only after follow consent.
      */
@@ -999,6 +1075,7 @@ export class SidePanelContentManager {
     /**
      * Applies one queued setting synchronization only while no newer trusted
      * activation, explicit selection, or manual check has taken authority.
+     *
      * @param authority - The manager revision captured at request time.
      * @param tabId - The tab active when the setting effect is applied.
      * @param readUrl - Lazy URL acquisition used only after follow consent.
@@ -1037,6 +1114,7 @@ export class SidePanelContentManager {
     /**
      * Executes the shared activation pipeline after its caller has established
      * whether queued follow captures should be superseded.
+     *
      * @param tabId - The authoritative tab to synchronize.
      * @param readUrl - Lazy URL acquisition used only after follow consent.
      */
@@ -1051,6 +1129,7 @@ export class SidePanelContentManager {
     /**
      * Starts the shared activation pipeline after hydration and any caller-owned
      * authority check have completed without another asynchronous gap.
+     *
      * @param tabId - The authoritative tab to synchronize.
      * @param readUrl - Lazy URL acquisition used only after follow consent.
      */
@@ -1094,6 +1173,7 @@ export class SidePanelContentManager {
     /**
      * Performs one explicitly requested check without reading or changing the
      * follow preference, while still restoring reusable state first.
+     *
      * @param tabId - The tab active at the trusted action boundary.
      * @param readUrl - Lazy URL acquisition authorized by this manual action.
      */
@@ -1162,6 +1242,7 @@ export class SidePanelContentManager {
     /**
      * Removes one tab's reusable association after every earlier mutation and
      * invalidates any in-flight operation that still targets that tab.
+     *
      * @param tabId - The closed, replaced, detached, or otherwise invalid tab.
      */
     async forgetTab(tabId: number): Promise<void> {
@@ -1263,6 +1344,7 @@ export class SidePanelContentManager {
 
     /**
      * Starts one hydrated explicit intent if its reservation is still newest.
+     *
      * @param controller - The internal reservation controller to start.
      */
     private startExplicitOperation(controller: ExplicitOperationController): void {
@@ -1279,6 +1361,7 @@ export class SidePanelContentManager {
 
     /**
      * Finds one exact queued follow controller.
+     *
      * @param reservation - The public capture token to resolve.
      */
     private followActivationController(
@@ -1291,6 +1374,7 @@ export class SidePanelContentManager {
     /**
      * Advances the manager's trusted authority revision synchronously at a
      * browser or user-action boundary.
+     *
      * @param cause - Whether the newest boundary was a real activation or another action.
      */
     private advanceFollowAuthority(cause: 'activation' | 'other'): void {
@@ -1302,6 +1386,7 @@ export class SidePanelContentManager {
     /**
      * Marks queued follow captures as superseded at a trusted synchronous
      * boundary. An optional tab restricts lifecycle cleanup to its own capture.
+     *
      * @param reason - Whether a genuine activation or another authority won.
      * @param tabId - The optional invalidated tab.
      */
@@ -1323,6 +1408,7 @@ export class SidePanelContentManager {
     /**
      * Converts a superseded capture into a stable continuation result, waiting
      * for a newer explicit operation's first projection when one is available.
+     *
      * @param controller - The capture whose newer authority is reported.
      */
     private async followSupersession(
@@ -1387,6 +1473,7 @@ export class SidePanelContentManager {
     /**
      * Reads the mutable follow-capture supersession cause without retaining a
      * stale control-flow narrowing across an awaited operation.
+     *
      * @param controller - The capture whose newest cause is inspected.
      */
     private wasFollowActivationSupersededByActivation(
@@ -1404,6 +1491,7 @@ export class SidePanelContentManager {
 
     /**
      * Finds the exact controller represented by one public reservation.
+     *
      * @param reservation - The public reservation to resolve.
      */
     private explicitController(
@@ -1415,6 +1503,7 @@ export class SidePanelContentManager {
 
     /**
      * Resolves an explicit operation's first projection at most once.
+     *
      * @param controller - The explicit controller whose readiness settles.
      * @param projection - The first applied projection, or null on cancellation.
      */
@@ -1431,6 +1520,7 @@ export class SidePanelContentManager {
 
     /**
      * Settles all remaining handles for one explicit operation exactly once.
+     *
      * @param controller - The explicit controller to settle.
      * @param projection - Its terminal projection, or null on cancellation.
      */
@@ -1461,6 +1551,7 @@ export class SidePanelContentManager {
     /**
      * Consumes one exact expected navigation or fails the reservation closed on
      * the first unrelated URL-bearing event.
+     *
      * @param tabId - The tab reporting navigation.
      * @param reportedUrl - The exact browser-reported URL.
      */
@@ -1492,6 +1583,7 @@ export class SidePanelContentManager {
 
     /**
      * Completes navigation and lookup for one concrete context-menu operation.
+     *
      * @param tabId - The explicitly targeted tab.
      * @param targetUrl - The exact selected link target.
      * @param expected - The optional exact navigation expectation.
@@ -1534,6 +1626,7 @@ export class SidePanelContentManager {
     /**
      * Persists one reusable association through the process-wide FIFO while
      * preserving any newer association already owned by another window.
+     *
      * @param association - The association to commit when ownership still holds.
      */
     private async persistAssociation(association: SidePanelAssociation): Promise<void> {
@@ -1589,6 +1682,7 @@ export class SidePanelContentManager {
 
     /**
      * Checks one recovery immediately before it may allocate visible authority.
+     *
      * @param authority - The opaque recovery attempt returning from browser work.
      */
     private isRecoveryCurrent(authority: SidePanelRecoveryAuthority): boolean {
@@ -1618,6 +1712,7 @@ export class SidePanelContentManager {
 
     /**
      * Reserves a new target synchronously after hydration and invalidates older work.
+     *
      * @param cause - The authority that permits the new operation.
      * @param tabId - The tab targeted by the operation.
      * @param protectedExplicit - The controller currently installing its intent.
@@ -1661,6 +1756,7 @@ export class SidePanelContentManager {
 
     /**
      * Determines whether one intent still owns visible state.
+     *
      * @param intent - The intent whose authority is checked.
      */
     private isCurrent(intent: SynchronizationIntent): boolean {
@@ -1669,6 +1765,7 @@ export class SidePanelContentManager {
 
     /**
      * Throws the standard abort when one intent has been superseded.
+     *
      * @param intent - The intent required to still be current.
      */
     private requireCurrent(intent: SynchronizationIntent): void {
@@ -1679,6 +1776,7 @@ export class SidePanelContentManager {
 
     /**
      * Cancels lookup and visible-state authority for one exact intent.
+     *
      * @param intent - The current intent to invalidate.
      */
     private invalidateIntent(intent: SynchronizationIntent): void {
@@ -1701,6 +1799,7 @@ export class SidePanelContentManager {
     /**
      * Queues one revisioned projection and applies it only while its intent is
      * current. Terminal writes release intent authority atomically with commit.
+     *
      * @param intent - The synchronization intent that owns the projection.
      * @param content - The tab-aware content to persist.
      * @param terminal - Whether successful commit completes the intent.
@@ -1753,6 +1852,7 @@ export class SidePanelContentManager {
 
     /**
      * Reads a settled association while treating storage failure as a safe miss.
+     *
      * @param tabId - The tab whose reusable association is read.
      */
     private async readAssociation(tabId: number): Promise<SidePanelAssociation | null> {
@@ -1767,6 +1867,7 @@ export class SidePanelContentManager {
     /**
      * Resolves one consented URL, publishes its terminal outcome, and only then
      * queues reusable association persistence through the process-wide FIFO.
+     *
      * @param intent - The synchronization intent owning this lookup.
      * @param url - The consented page URL to resolve.
      * @param origin - The authority recorded with a reusable association.
@@ -1834,6 +1935,7 @@ export class SidePanelContentManager {
     /**
      * Verifies that one tab still belongs to this manager immediately before a
      * terminal projection or association can be committed.
+     *
      * @param intent - The intent whose tab ownership is checked.
      */
     private async requireTabOwnership(intent: SynchronizationIntent): Promise<void> {
@@ -1847,6 +1949,7 @@ export class SidePanelContentManager {
 
     /**
      * Reads tab ownership without acquiring or exposing the tab URL.
+     *
      * @param tabId - The tab whose current browser window is checked.
      */
     private async tabBelongsToWindow(tabId: number): Promise<boolean> {
@@ -1860,6 +1963,7 @@ export class SidePanelContentManager {
 
     /**
      * Emits one manager warning with its fixed window identifier.
+     *
      * @param code - The stable allow-listed warning code.
      * @param details - Optional tab identifiers for this manager operation.
      */

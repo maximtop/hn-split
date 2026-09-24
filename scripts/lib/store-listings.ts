@@ -210,6 +210,7 @@ export interface StoreDescriptor {
  * Builds a complete registry-code map, applying explicit renames and marking
  * explicitly unsupported codes with `null` so no locale is ever dropped
  * implicitly.
+ *
  * @param renames - Registry codes whose store code differs from the registry code.
  * @param unsupported - Registry codes the store cannot represent.
  */
@@ -288,6 +289,7 @@ export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
  * Renders the store description field from its structured parts: intro
  * paragraph, dashed bullet list, and disclaimer paragraph separated by blank
  * lines — the exact shape of the master description in docs/store-listing.md.
+ *
  * @param description - Structured description of one locale.
  */
 export function assembleDescription(description: ListingDescription): string {
@@ -302,8 +304,10 @@ export function assembleDescription(description: ListingDescription): string {
  * Renders one locale's description for a specific store. Firefox omits the
  * Chrome Split View flow and the Hacker News story-click flow because those
  * two features are not included in the Firefox package.
+ *
  * @param storeId - Store whose shipped feature set selects the bullets.
  * @param description - Structured description of one locale.
+ *
  * @returns Complete description ready for the selected store dashboard.
  */
 export function assembleStoreDescription(
@@ -322,6 +326,7 @@ export function assembleStoreDescription(
 /**
  * Counts whitespace-separated words across all search terms, the unit Edge
  * budgets (21 words total across at most 7 terms).
+ *
  * @param searchTerms - Localized search terms of one locale.
  */
 export function countSearchTermWords(searchTerms: readonly string[]): number {
@@ -333,12 +338,15 @@ export function countSearchTermWords(searchTerms: readonly string[]): number {
  * store budget, returning human-readable problems (empty when valid). Store
  * budgets are applied uniformly to keep the files interchangeable; issues
  * name the store whose rule produced them.
+ *
  * @param content - Parsed listing content of the locale under validation.
  * @param base - Parsed English base listing the structure is compared against.
  */
 export function collectListingIssues(content: ListingContent, base: ListingContent): string[] {
     const issues: string[] = [];
-    const { description, releaseNotes, captions, searchTerms, appStoreKeywords } = content;
+    const {
+        description, releaseNotes, captions, searchTerms, appStoreKeywords,
+    } = content;
 
     if (typeof content.reviewed !== 'boolean') {
         issues.push('reviewed must be a boolean');

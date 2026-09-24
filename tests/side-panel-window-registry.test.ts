@@ -1,11 +1,14 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { SidePanelWindowRegistry } from '../src/browser/side-panel-window-registry';
-import type { SidePanelPortClient } from '../src/browser/side-panel-window-registry';
 import {
     SIDE_PANEL_DISCARD_TAB,
     SIDE_PANEL_RESET,
 } from '../src/shared/messages';
+
+import type { SidePanelPortClient } from '../src/browser/side-panel-window-registry';
 import type { SidePanelPortMessage } from '../src/shared/messages';
 
 const WINDOW_ID = 3;

@@ -13,6 +13,7 @@ export const BUILD_CHANNELS = { DEV: 'dev', RELEASE: 'release' } as const;
  * @param root Repository root directory.
  * @param target Browser name, defaulting to Chrome.
  * @param channel Development output or store release output.
+ *
  * @returns Absolute unpacked extension directory.
  */
 export function resolveBuildPath(

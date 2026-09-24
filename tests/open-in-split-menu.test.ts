@@ -1,9 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { ensureOpenInSplitMenu } from '../src/browser/open-in-split-menu';
-import type { OpenInSplitMenuProperties, OpenInSplitMenuRegistry } from '../src/browser/open-in-split-menu';
 import { HTTP_LINK_TARGET_PATTERNS, LINK_MENU_CONTEXT, OPEN_IN_SPLIT_MENU } from '../src/shared/context-menus';
+
+import type { OpenInSplitMenuProperties, OpenInSplitMenuRegistry } from '../src/browser/open-in-split-menu';
 
 /**
  * Builds a registry that records the order of its calls.

@@ -1,6 +1,9 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import {
+    afterEach, describe, expect, it,
+} from 'vitest';
 
 import { detectArticleClick } from '../src/content/article-click';
+
 import type { ArticleClickEventLike } from '../src/content/article-click';
 
 const STORY_ID = '424242';
@@ -15,6 +18,11 @@ interface StoryRowOptions {
 /**
  * Renders one realistic Hacker News listing row: the story anchor inside
  * `.titleline`, the nested `from?site=` chip, and the subtext comments link.
+ *
+ * @param root0
+ * @param root0.rowId
+ * @param root0.href
+ * @param root0.rowClass
  */
 function renderStoryRow({
     rowId = STORY_ID,
@@ -51,12 +59,17 @@ function renderStoryRow({
     if (storyAnchor === null || siteAnchor === null || commentsAnchor === null || rankCell === null) {
         throw new Error('Fixture markup is missing an expected element');
     }
-    return { storyAnchor, siteAnchor, commentsAnchor, rankCell };
+    return {
+        storyAnchor, siteAnchor, commentsAnchor, rankCell,
+    };
 }
 
 /**
  * Fabricates the click-event fields; jsdom keeps `isTrusted` read-only on real
  * events, so the pure detector receives plain objects instead.
+ *
+ * @param target
+ * @param overrides
  */
 function clickEvent(target: unknown, overrides: Partial<ArticleClickEventLike> = {}): ArticleClickEventLike {
     return {
@@ -110,7 +123,7 @@ describe('detectArticleClick', () => {
         { name: 'alt click', overrides: { altKey: true } },
         { name: 'canceled click', overrides: { defaultPrevented: true } },
         { name: 'synthetic click', overrides: { isTrusted: false } },
-    ] satisfies Array<{ name: string; overrides: Partial<ArticleClickEventLike> }>)(
+    ] satisfies { name: string; overrides: Partial<ArticleClickEventLike> }[])(
         'ignores a $name on a story link',
         ({ overrides }) => {
             const { storyAnchor } = renderStoryRow();

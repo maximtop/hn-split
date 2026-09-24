@@ -1,10 +1,11 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { HN_LOOKUP_STATUS, discussionUrl } from '../src/domain/hn';
-import { SidePanelApp } from '../src/side-panel/side-panel-app';
 import {
     BACKGROUND_ERROR_CODE,
     BACKGROUND_REQUEST_TYPE,
@@ -18,9 +19,11 @@ import {
     SIDE_PANEL_TARGET,
 } from '../src/shared/messages';
 import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
+import { sidePanelContentKey } from '../src/shared/storage-keys';
+import { SidePanelApp } from '../src/side-panel/side-panel-app';
+
 import type { SidePanelContent } from '../src/shared/side-panel-content';
 import type { SidePanelProjection } from '../src/shared/side-panel-projection';
-import { sidePanelContentKey } from '../src/shared/storage-keys';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -42,6 +45,7 @@ interface Deferred<T> {
      * Contains the pending promise.
      */
     promise: Promise<T>;
+
     /**
      * Resolves the pending promise.
      */
@@ -56,14 +60,17 @@ interface FakePort {
      * Delivers one background message to the panel's port listener.
      */
     emitMessage: (message: unknown) => void;
+
     /**
      * Reports that the background disconnected this port.
      */
     emitDisconnect: () => void;
+
     /**
      * Records every message the panel sends through its long-lived port.
      */
     postMessage: ReturnType<typeof vi.fn>;
+
     /**
      * Records when the panel disconnects its long-lived port.
      */
@@ -78,14 +85,17 @@ interface FakeChromeOptions {
      * Supplies the initial stored projection.
      */
     initialProjection?: SidePanelProjection | null;
+
     /**
      * Delays the initial session-storage read until the test resolves it.
      */
     initialRead?: Promise<SidePanelProjection | null>;
+
     /**
      * Makes the initial session-storage read fail.
      */
     failInitialRead?: boolean;
+
     /**
      * Selects the zero-based port whose first postMessage call throws.
      */
@@ -100,18 +110,22 @@ interface FakeChrome {
      * Contains every port created by runtime.connect, in connection order.
      */
     ports: FakePort[];
+
     /**
      * Records every runtime request the panel sends.
      */
     sendMessage: ReturnType<typeof vi.fn>;
+
     /**
      * Records whether the storage listener has been subscribed.
      */
     storageListenerRegistered: () => boolean;
+
     /**
      * Publishes one authoritative projection through the storage boundary.
      */
     publishProjection: (projection: SidePanelProjection) => void;
+
     /**
      * Records settings-page navigation attempts.
      */
@@ -126,22 +140,27 @@ interface PanelView {
      * Contains the rendered panel DOM.
      */
     container: HTMLDivElement;
+
     /**
      * Contains the installed Chrome double.
      */
     fake: FakeChrome;
+
     /**
      * Publishes one authoritative projection.
      */
     publishProjection: (projection: SidePanelProjection) => Promise<void>;
+
     /**
      * Publishes one message over the newest port.
      */
     publishPortMessage: (message: unknown) => Promise<void>;
+
     /**
      * Disconnects the newest port.
      */
     disconnectPort: () => Promise<void>;
+
     /**
      * Unmounts the panel.
      */
@@ -161,6 +180,7 @@ function deferred<T>(): Deferred<T> {
 
 /**
  * Builds one strict revisioned panel projection.
+ *
  * @param revision - The monotonic projection revision.
  * @param content - The authoritative panel content.
  */
@@ -170,6 +190,7 @@ function projection(revision: number, content: SidePanelContent): SidePanelProje
 
 /**
  * Builds one discussion content value.
+ *
  * @param tabId - The owning browser tab.
  * @param itemId - The concrete Hacker News item.
  */
@@ -187,6 +208,7 @@ async function flush(): Promise<void> {
 
 /**
  * Installs a revisioned session-storage and runtime-port Chrome double.
+ *
  * @param options - Initial storage and port-failure behavior.
  */
 function installChrome(options: FakeChromeOptions = {}): FakeChrome {
@@ -202,8 +224,8 @@ function installChrome(options: FakeChromeOptions = {}): FakeChrome {
     vi.stubGlobal('chrome', {
         runtime: {
             connect: vi.fn(() => {
-                const messageListeners: Array<(message: unknown) => void> = [];
-                const disconnectListeners: Array<() => void> = [];
+                const messageListeners: ((message: unknown) => void)[] = [];
+                const disconnectListeners: (() => void)[] = [];
                 const portIndex = ports.length;
                 let postMessageAttempts = 0;
                 const postMessage = vi.fn(() => {
@@ -280,6 +302,7 @@ function installChrome(options: FakeChromeOptions = {}): FakeChrome {
 
 /**
  * Returns one connected fake port or fails with a useful test error.
+ *
  * @param fake - The installed Chrome double.
  * @param index - The zero-based connection index to return.
  */
@@ -293,6 +316,7 @@ function requirePort(fake: FakeChrome, index: number): FakePort {
 
 /**
  * Finds one button by its visible localized name.
+ *
  * @param container - The panel DOM to search.
  * @param name - The exact localized button name.
  */
@@ -307,6 +331,7 @@ function requireButton(container: HTMLElement, name: string): HTMLButtonElement 
 
 /**
  * Renders one panel and waits for its initial storage reconciliation.
+ *
  * @param options - Initial storage and port-failure behavior.
  */
 async function renderPanel(options: FakeChromeOptions = {}): Promise<PanelView> {
@@ -349,6 +374,7 @@ async function renderPanel(options: FakeChromeOptions = {}): Promise<PanelView> 
 
 /**
  * Makes one initial projection visible by publishing its exact READY stamp.
+ *
  * @param initialProjection - The projection to load and authorize.
  */
 async function renderReadyPanel(initialProjection: SidePanelProjection): Promise<PanelView> {

@@ -1,11 +1,13 @@
-import { installDiagnosticTransport } from '../shared/diagnostic-protocol';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import { SUPPORTS_ARTICLE_CLICK } from '../shared/browser-target';
+import { installDiagnosticTransport } from '../shared/diagnostic-protocol';
+import { applyDocumentLocale, t } from '../shared/i18n';
+
 import { OptionsApp } from './options-app';
 import { createOptionsStores } from './options-stores';
-import { applyDocumentLocale, t } from '../shared/i18n';
-import { SUPPORTS_ARTICLE_CLICK } from '../shared/browser-target';
+
 import '@mantine/core/styles.css';
 import './styles.css';
 

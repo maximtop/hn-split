@@ -1,4 +1,5 @@
 import { createTheme, virtualColor } from '@mantine/core';
+
 import type { CSSVariablesResolver, MantineColorsTuple } from '@mantine/core';
 
 // WCAG AA (4.5:1) for small text excludes every stock Mantine orange in the

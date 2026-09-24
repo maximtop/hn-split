@@ -1,13 +1,14 @@
 import {
     isSidePanelAssociation,
 } from '../shared/side-panel-association';
-import type {
-    SidePanelAssociation,
-} from '../shared/side-panel-association';
 import {
     sidePanelAssociationKey,
     sidePanelAssociationTabId,
 } from '../shared/storage-keys';
+
+import type {
+    SidePanelAssociation,
+} from '../shared/side-panel-association';
 
 /**
  * Defines the key/value storage boundary used for session associations.
@@ -15,21 +16,27 @@ import {
 export interface SidePanelAssociationStorage {
     /**
      * Reads one unknown stored value.
+     *
      * @param key - Exact session-storage key to read.
      */
     get(key: string): Promise<unknown>;
+
     /**
      * Reads every stored key/value pair for validated listing.
      */
     getAll(): Promise<Record<string, unknown>>;
+
     /**
      * Writes one value under an exact session-storage key.
+     *
      * @param key - Exact session-storage key to write.
      * @param value - Strict association value to persist.
      */
     set(key: string, value: unknown): Promise<void>;
+
     /**
      * Removes one exact session-storage key.
+     *
      * @param key - Exact session-storage key to remove.
      */
     remove(key: string): Promise<void>;
@@ -38,8 +45,7 @@ export interface SidePanelAssociationStorage {
 /**
  * Describes one serialized association read/decide/write operation.
  */
-export type SidePanelAssociationMutation =
-    | { kind: 'keep' }
+export type SidePanelAssociationMutation = | { kind: 'keep' }
     | { kind: 'remove' }
     | { kind: 'set'; association: SidePanelAssociation };
 
@@ -51,12 +57,14 @@ export class SidePanelAssociationStore {
 
     /**
      * Creates a strict session association store.
+     *
      * @param storage - Key/value storage used by the process-wide coordinator.
      */
     constructor(private readonly storage: SidePanelAssociationStorage) {}
 
     /**
      * Reads and validates one association against its key suffix.
+     *
      * @param tabId - Tab whose association is read.
      */
     async get(tabId: number): Promise<SidePanelAssociation | null> {
@@ -66,6 +74,7 @@ export class SidePanelAssociationStore {
 
     /**
      * Waits for every earlier mutation of a tab before reading it.
+     *
      * @param tabId - Tab whose settled association is read.
      */
     async settledGet(tabId: number): Promise<SidePanelAssociation | null> {
@@ -75,6 +84,7 @@ export class SidePanelAssociationStore {
 
     /**
      * Persists one runtime-validated association.
+     *
      * @param association - Strict session association to persist.
      */
     async set(association: SidePanelAssociation): Promise<void> {
@@ -86,6 +96,7 @@ export class SidePanelAssociationStore {
 
     /**
      * Removes one tab association.
+     *
      * @param tabId - Tab whose association is removed.
      */
     async remove(tabId: number): Promise<void> {
@@ -94,6 +105,7 @@ export class SidePanelAssociationStore {
 
     /**
      * Runs one read/decide/write operation after every earlier tab mutation.
+     *
      * @param tabId - Tab whose association is mutated.
      * @param operation - Pure decision based on the settled current value.
      */

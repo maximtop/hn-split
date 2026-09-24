@@ -1,24 +1,30 @@
+import { MantineProvider } from '@mantine/core';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MantineProvider } from '@mantine/core';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json';
 import { DiagnosticsSection, downloadDiagnostics } from '../src/options/diagnostics-section';
-import { DIAGNOSTIC_REQUEST } from '../src/shared/diagnostic-protocol';
-import type { DiagnosticTransport } from '../src/shared/diagnostic-protocol';
-import { DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_SOURCE } from '../src/shared/diagnostics';
 import { DIAGNOSTIC_EVENT } from '../src/shared/diagnostic-events';
-import type { DiagnosticExport } from '../src/shared/diagnostic-export';
+import { DIAGNOSTIC_REQUEST } from '../src/shared/diagnostic-protocol';
+import { DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_SOURCE } from '../src/shared/diagnostics';
 import { theme } from '../src/shared/theme';
+
+import type { DiagnosticExport } from '../src/shared/diagnostic-export';
+import type { DiagnosticTransport } from '../src/shared/diagnostic-protocol';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const empty = { formatVersion: DIAGNOSTIC_FORMAT_VERSION, entries: [] };
 const entry = {
-    level: DIAGNOSTIC_LEVEL.INFO, source: DIAGNOSTIC_SOURCE.OPTIONS,
-    message: DIAGNOSTIC_EVENT.FRAMING_READY, details: { tabId: 1 }, timestamp: '2026-09-20T12:34:56.000Z',
+    level: DIAGNOSTIC_LEVEL.INFO,
+    source: DIAGNOSTIC_SOURCE.OPTIONS,
+    message: DIAGNOSTIC_EVENT.FRAMING_READY,
+    details: { tabId: 1 },
+    timestamp: '2026-09-20T12:34:56.000Z',
 };
-const unmounts: Array<() => void> = [];
+const unmounts: (() => void)[] = [];
 
 async function render(send: DiagnosticTransport, download = vi.fn()) {
     vi.stubGlobal('chrome', { runtime: { getManifest: () => ({ version: '0.1.2' }) } });

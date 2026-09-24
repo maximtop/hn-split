@@ -1,9 +1,3 @@
-import { DiagnosticLog } from './browser/diagnostic-log';
-import { createDiagnosticHandler } from './background/diagnostic-handler';
-import { DIAGNOSTIC_SOURCE } from './shared/diagnostics';
-import { setDiagnosticSink } from './shared/logger';
-import { STORAGE_KEY } from './shared/storage-keys';
-import { DIAGNOSTIC_EVENT } from './shared/diagnostic-events';
 import {
     handleArticleClickMessage,
     reconcileArticleClickRegistration,
@@ -14,6 +8,7 @@ import {
     updateAutomaticAvailability,
 } from './background/automatic-availability-controller';
 import { sessionStore } from './background/chrome-adapters';
+import { createDiagnosticHandler } from './background/diagnostic-handler';
 import { handleRequest } from './background/request-handler';
 import {
     connectSidePanelWindow,
@@ -31,7 +26,12 @@ import {
 } from './background/side-panel-content-controller';
 import { SidePanelFraming } from './background/side-panel-framing';
 import { SidePanelPortController } from './background/side-panel-port-controller';
+import { DiagnosticLog } from './browser/diagnostic-log';
+import { SUPPORTS_ARTICLE_CLICK } from './shared/browser-target';
+import { DIAGNOSTIC_EVENT } from './shared/diagnostic-events';
+import { DIAGNOSTIC_SOURCE } from './shared/diagnostics';
 import {
+    setDiagnosticSink,
     FOLLOW_DIAGNOSTIC_CODE,
     logFollowWarning,
     logWarning,
@@ -40,7 +40,7 @@ import {
     isArticleClickMessage,
     isBackgroundRequest,
 } from './shared/messages';
-import { SUPPORTS_ARTICLE_CLICK } from './shared/browser-target';
+import { STORAGE_KEY } from './shared/storage-keys';
 
 const diagnosticLog = new DiagnosticLog({
     read: async () => (await chrome.storage.session.get(STORAGE_KEY.DIAGNOSTICS))[STORAGE_KEY.DIAGNOSTICS],

@@ -1,18 +1,22 @@
+import {
+    Button, Group, Paper, Stack, Text, Title,
+} from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import * as v from 'valibot';
 
-import { DIAGNOSTIC_REQUEST, diagnosticResponseSchema } from '../shared/diagnostic-protocol';
-import type { DiagnosticTransport } from '../shared/diagnostic-protocol';
 import { formatDiagnosticExport } from '../shared/diagnostic-export';
-import type { DiagnosticExport } from '../shared/diagnostic-export';
+import { DIAGNOSTIC_REQUEST, diagnosticResponseSchema } from '../shared/diagnostic-protocol';
 import { t } from '../shared/i18n';
+
+import type { DiagnosticExport } from '../shared/diagnostic-export';
+import type { DiagnosticTransport } from '../shared/diagnostic-protocol';
 import type { MessageKey } from '../shared/i18n';
 
 const DOWNLOAD_URL_LIFETIME_MS = 60_000;
 
 /**
  * Downloads only in response to an explicit export action, without a new tab.
+ *
  * @param file - Validated text and deterministic filename to offer locally.
  */
 export function downloadDiagnostics(file: DiagnosticExport): void {
@@ -39,6 +43,7 @@ export interface DiagnosticsSectionProps {
      * Sends diagnostic requests to the background worker.
      */
     send?: DiagnosticTransport;
+
     /**
      * Saves an explicitly requested local support bundle.
      */
@@ -52,6 +57,7 @@ const sendRuntime: DiagnosticTransport = async (request) => {
 
 /**
  * Displays session-log state and explicit export/clear actions with live feedback.
+ *
  * @param props - Runtime and download adapters; the browser owns both in production.
  * @param props.send - Runtime transport for the options document.
  * @param props.download - Explicit local file-saving callback.
@@ -62,7 +68,7 @@ export function DiagnosticsSection({ send = sendRuntime, download = downloadDiag
     const [feedback, setFeedback] = useState<MessageKey | null>(null);
     const generation = useRef(0);
     useEffect(() => {
-        const current = generation.current;
+        const { current } = generation;
         let active = true;
         void send({ type: DIAGNOSTIC_REQUEST.SNAPSHOT }).then((raw) => {
             const response = v.parse(diagnosticResponseSchema, raw);
@@ -123,8 +129,12 @@ export function DiagnosticsSection({ send = sendRuntime, download = downloadDiag
                     {feedback === null ? null : ` ${t(feedback)}` }
                 </Text>
                 <Group>
-                    <Button disabled={busy} onClick={() => { void perform(false); }}>{t('diagnostics_export')}</Button>
-                    <Button variant="default" disabled={busy} onClick={() => { void perform(true); }}>{t('diagnostics_clear')}</Button>
+                    <Button disabled={busy} onClick={() => {
+                        void perform(false);
+                    }}>{t('diagnostics_export')}</Button>
+                    <Button variant="default" disabled={busy} onClick={() => {
+                        void perform(true);
+                    }}>{t('diagnostics_clear')}</Button>
                 </Group>
             </Stack>
         </Paper>

@@ -1,9 +1,8 @@
-import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { DiscussionTabManager } from '../browser/open-discussion';
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { logDiagnostic, logWarning } from '../shared/logger';
 import { BACKGROUND_ERROR_CODE, BACKGROUND_REQUEST_TYPE } from '../shared/messages';
-import type { BackgroundErrorCode, BackgroundRequest, BackgroundResponse } from '../shared/messages';
-import type { SidePanelContent } from '../shared/side-panel-content';
+
 import { setArticleClickSetting } from './article-click-controller';
 import { lookupArticle } from './article-lookup';
 import { setAutomaticAvailability } from './automatic-availability-controller';
@@ -26,6 +25,9 @@ import {
     setSidePanelFollowSetting,
 } from './side-panel-follow-controller';
 
+import type { BackgroundErrorCode, BackgroundRequest, BackgroundResponse } from '../shared/messages';
+import type { SidePanelContent } from '../shared/side-panel-content';
+
 const REQUEST_ERROR_CODE: Record<BackgroundRequest['type'], BackgroundErrorCode> = {
     [BACKGROUND_REQUEST_TYPE.LOOKUP]: BACKGROUND_ERROR_CODE.LOOKUP_REQUEST_FAILED,
     [BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION]: BACKGROUND_ERROR_CODE.OPEN_DISCUSSION_FAILED,
@@ -45,6 +47,7 @@ const discussionTabs = new DiscussionTabManager(tabs, sessionStore);
 
 /**
  * Routes one validated runtime request to its background operation.
+ *
  * @param request - The validated background request to process.
  */
 export async function handleRequest(request: BackgroundRequest): Promise<BackgroundResponse> {

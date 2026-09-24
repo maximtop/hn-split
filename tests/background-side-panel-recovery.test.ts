@@ -1,11 +1,13 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    beforeAll, beforeEach, describe, expect, it, vi,
+} from 'vitest';
 
 const mocks = vi.hoisted(() => {
     /**
      * Creates an observable Chrome event boundary.
      */
     function event() {
-        const listeners: Array<(...arguments_: never[]) => unknown> = [];
+        const listeners: ((...arguments_: never[]) => unknown)[] = [];
         return {
             addListener: vi.fn((listener: (...arguments_: never[]) => unknown) => {
                 listeners.push(listener);
@@ -75,7 +77,9 @@ vi.mock('../src/background/side-panel-content-controller', () => ({
 
 vi.mock('../src/background/side-panel-framing', () => ({
     SidePanelFraming: class {
-        /** Clears any stale framing rule. */
+        /**
+         * Clears any stale framing rule.
+         */
         async reset(): Promise<void> {
             await Promise.resolve();
         }

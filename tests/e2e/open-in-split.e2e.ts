@@ -4,7 +4,11 @@ import enMessages from '../../public/_locales/en/messages.json' with { type: 'js
 import { OPEN_IN_SPLIT_MENU } from '../../src/shared/context-menus';
 import { isSidePanelProjection } from '../../src/shared/side-panel-projection';
 import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
-import { ARTICLE_ORIGIN, installLookupFixtures, launchExtensionContext, openExtensionPage } from './extension-context';
+
+import {
+    ARTICLE_ORIGIN, installLookupFixtures, launchExtensionContext, openExtensionPage,
+} from './extension-context';
+
 import type { ExtensionContext } from './extension-context';
 
 const HN_ORIGIN = 'https://news.ycombinator.com';
@@ -24,6 +28,7 @@ const HIT = {
  * Reads what the side panel is currently asked to display. The selection is
  * stored per window and the test runs in a single window, so the one entry
  * under the prefix is the selection of that window.
+ *
  * @param extension - The launched extension context.
  */
 async function panelContent(extension: ExtensionContext): Promise<unknown> {
@@ -37,6 +42,7 @@ async function panelContent(extension: ExtensionContext): Promise<unknown> {
 
 /**
  * Resolves the Chrome tab identifier for one exact fixture URL.
+ *
  * @param extension - The launched extension context.
  * @param url - The exact fixture page URL.
  */
@@ -54,6 +60,7 @@ async function tabIdForUrl(extension: ExtensionContext, url: string): Promise<nu
  * Invokes the menu item the way Chrome does when the user selects it. The
  * click carries no user gesture here, so `chrome.sidePanel.open` rejects and
  * the flow's own error handling is what keeps the rest of it running.
+ *
  * @param extension - The launched extension context.
  * @param linkUrl - The link URL the menu was invoked on.
  */

@@ -1,19 +1,22 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
-import { DiagnosticLog } from '../src/browser/diagnostic-log';
-import type { DiagnosticStorage } from '../src/browser/diagnostic-log';
 import { createDiagnosticHandler } from '../src/background/diagnostic-handler';
+import { DiagnosticLog } from '../src/browser/diagnostic-log';
+import { DIAGNOSTIC_EVENT, FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/diagnostic-events';
+import { formatDiagnosticExport } from '../src/shared/diagnostic-export';
+import { DIAGNOSTIC_REQUEST, installDiagnosticTransport } from '../src/shared/diagnostic-protocol';
 import {
     DIAGNOSTIC_ERROR, DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_LIMIT,
     DIAGNOSTIC_SOURCE, diagnosticBytes, normalizeDiagnostic,
 } from '../src/shared/diagnostics';
-import type { DiagnosticBuffer, DiagnosticEvent } from '../src/shared/diagnostics';
-import { DIAGNOSTIC_EVENT, FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/diagnostic-events';
-import { DIAGNOSTIC_REQUEST, installDiagnosticTransport } from '../src/shared/diagnostic-protocol';
 import {
     logDiagnostic, logFollowWarning, logWarning, setDiagnosticSink,
 } from '../src/shared/logger';
-import { formatDiagnosticExport } from '../src/shared/diagnostic-export';
+
+import type { DiagnosticStorage } from '../src/browser/diagnostic-log';
+import type { DiagnosticBuffer, DiagnosticEvent } from '../src/shared/diagnostics';
 
 const event: DiagnosticEvent = {
     level: DIAGNOSTIC_LEVEL.INFO,
@@ -25,9 +28,15 @@ const empty = (): DiagnosticBuffer => ({ formatVersion: DIAGNOSTIC_FORMAT_VERSIO
 function memoryStorage(initial?: unknown): DiagnosticStorage & { value: unknown } {
     return {
         value: initial,
-        async read() { return structuredClone(this.value); },
-        async write(buffer) { this.value = structuredClone(buffer); },
-        async clear() { this.value = undefined; },
+        async read() {
+            return structuredClone(this.value);
+        },
+        async write(buffer) {
+            this.value = structuredClone(buffer);
+        },
+        async clear() {
+            this.value = undefined;
+        },
     };
 }
 
@@ -43,7 +52,9 @@ describe('diagnostic privacy boundary', () => {
         const error = new TypeError(secret);
         error.name = secret;
         const result = normalizeDiagnostic(DIAGNOSTIC_LEVEL.WARNING, DIAGNOSTIC_EVENT.POPUP_LOOKUP_FAILED, [
-            { tabId: 2, windowId: 3, url: secret, cookie: secret, title: secret, content: secret, candidates: [secret], headers: secret },
+            {
+                tabId: 2, windowId: 3, url: secret, cookie: secret, title: secret, content: secret, candidates: [secret], headers: secret,
+            },
             error,
         ]);
         expect(result?.details).toEqual({ tabId: 2, windowId: 3, errorCategory: DIAGNOSTIC_ERROR.TYPE });
@@ -155,7 +166,12 @@ describe('background session collector', () => {
 
     it.each([
         { entries: 'malformed' },
-        { ...empty(), entries: [{ ...event, source: DIAGNOSTIC_SOURCE.POPUP, timestamp: new Date().toISOString(), url: 'secret' }] },
+        {
+            ...empty(),
+            entries: [{
+                ...event, source: DIAGNOSTIC_SOURCE.POPUP, timestamp: new Date().toISOString(), url: 'secret',
+            }],
+        },
     ])('drops malformed storage without exporting unsafe fields', async (initial) => {
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const storage = memoryStorage(initial);
@@ -196,7 +212,9 @@ describe('runtime ownership and export', () => {
         // The snapshot is queued behind all three incoming appends.
         const response = await handle({ type: DIAGNOSTIC_REQUEST.SNAPSHOT }, sender('options.html'));
         expect(response?.ok).toBe(true);
-        if (!response?.ok || !response.buffer) throw new Error('Missing buffer');
+        if (!response?.ok || !response.buffer) {
+            throw new Error('Missing buffer');
+        }
         expect(response.buffer.entries.map((entry) => entry.source)).toEqual([
             DIAGNOSTIC_SOURCE.POPUP, DIAGNOSTIC_SOURCE.OPTIONS, DIAGNOSTIC_SOURCE.SIDE_PANEL,
         ]);
@@ -218,7 +236,9 @@ describe('runtime ownership and export', () => {
             { id: runtime.id, url: 'https://news.ycombinator.com' },
             { id: 'other', url: runtime.getURL('options.html') },
             { id: runtime.id },
-        ]) expect(handle(append, untrusted)).toBeNull();
+        ]) {
+            expect(handle(append, untrusted)).toBeNull();
+        }
         expect(handle({ ...append, source: DIAGNOSTIC_SOURCE.BACKGROUND }, sender('popup.html'))).toBeNull();
         expect(handle({ ...append, event: { ...event, details: { url: 'secret' } } }, sender('popup.html'))).toBeNull();
         expect(handle({ type: DIAGNOSTIC_REQUEST.CLEAR }, sender('popup.html'))).toBeNull();

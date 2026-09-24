@@ -54,14 +54,17 @@ export interface FollowDiagnosticDetails {
      * Contains the stable allow-listed failure code.
      */
     code: FollowDiagnosticCode;
+
     /**
      * Identifies the affected tab when known.
      */
     tabId?: number;
+
     /**
      * Identifies a related tab for lifecycle operations when known.
      */
     relatedTabId?: number;
+
     /**
      * Identifies the affected browser window when known.
      */

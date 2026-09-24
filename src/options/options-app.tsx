@@ -1,4 +1,3 @@
-import { DiagnosticsSection } from './diagnostics-section';
 import {
     Alert,
     Container,
@@ -12,9 +11,12 @@ import {
 } from '@mantine/core';
 import { observer } from 'mobx-react-lite';
 
-import { t } from '../shared/i18n';
 import { SUPPORTS_ARTICLE_CLICK, USES_FIREFOX_SIDEBAR } from '../shared/browser-target';
+import { t } from '../shared/i18n';
 import { cssVariablesResolver, theme } from '../shared/theme';
+
+import { DiagnosticsSection } from './diagnostics-section';
+
 import type { OptionsStore } from './options-store';
 
 /**
@@ -25,10 +27,12 @@ export interface OptionsAppProps {
      * Owns the automatic-availability toggle state and actions.
      */
     availability: OptionsStore;
+
     /**
      * Owns the article-click discussion toggle state and actions.
      */
     articleClick: OptionsStore;
+
     /**
      * Owns automatic active-tab following for an already-open side panel.
      */
@@ -37,6 +41,7 @@ export interface OptionsAppProps {
 
 /**
  * Renders the HN Split options page from observable MobX state.
+ *
  * @param props - The observable options stores to render.
  */
 function OptionsView(props: OptionsAppProps): React.JSX.Element {
@@ -126,26 +131,26 @@ function OptionsView(props: OptionsAppProps): React.JSX.Element {
                     {availability.message === ''
                         ? null
                         : (
-                                <Alert className="settings-status" color="orange" role="status">
-                                    {availability.message}
-                                </Alert>
-                            )}
+                            <Alert className="settings-status" color="orange" role="status">
+                                {availability.message}
+                            </Alert>
+                        )}
 
                     {!SUPPORTS_ARTICLE_CLICK || articleClick.message === ''
                         ? null
                         : (
-                                <Alert className="settings-status" color="orange" role="status">
-                                    {articleClick.message}
-                                </Alert>
-                            )}
+                            <Alert className="settings-status" color="orange" role="status">
+                                {articleClick.message}
+                            </Alert>
+                        )}
 
                     {sidePanelFollow.message === ''
                         ? null
                         : (
-                                <Alert className="settings-status" color="orange" role="status">
-                                    {sidePanelFollow.message}
-                                </Alert>
-                            )}
+                            <Alert className="settings-status" color="orange" role="status">
+                                {sidePanelFollow.message}
+                            </Alert>
+                        )}
                 </Stack>
             </Container>
         </MantineProvider>

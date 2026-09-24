@@ -2,6 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
 import { zipSync } from 'fflate';
+
 import type { Zippable } from 'fflate';
 
 /**
@@ -29,6 +30,7 @@ const ZIP_COMPRESSION = { level: 9, mem: 8 } as const;
  * Reads every file below a directory as archive entries.
  *
  * @param directory Directory whose contents become the archive root.
+ *
  * @returns Entries with forward-slash relative paths; order is not
  * significant because archiving sorts.
  */
@@ -59,6 +61,7 @@ export async function collectDirectoryEntries(directory: string): Promise<ZipEnt
  * @param entries Files to archive.
  * @param mtime Timestamp recorded for every entry, normally the committer
  * time of the packaged commit.
+ *
  * @returns The zip file bytes.
  */
 export function createDeterministicZip(entries: ZipEntry[], mtime: Date): Uint8Array {

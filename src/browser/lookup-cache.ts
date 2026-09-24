@@ -1,4 +1,5 @@
 import { HN_LOOKUP_STATUS, isHnLookupResult } from '../domain/hn';
+
 import type { HnLookupResult } from '../domain/hn';
 import type { ArticleCandidate } from '../domain/url';
 
@@ -18,6 +19,7 @@ interface CacheRecord {
      * Contains the expiration time as Unix milliseconds.
      */
     expiresAt: number;
+
     /**
      * Contains the validated lookup result.
      */
@@ -30,17 +32,22 @@ interface CacheRecord {
 export interface CacheStorage {
     /**
      * Reads one unknown cache value.
+     *
      * @param key - The versioned lookup-cache key to read.
      */
     get(key: string): Promise<unknown>;
+
     /**
      * Writes one validated cache record.
+     *
      * @param key - The versioned lookup-cache key to write.
      * @param value - The validated lookup-cache record to persist.
      */
     set(key: string, value: CacheRecord): Promise<void>;
+
     /**
      * Removes one cache entry.
+     *
      * @param key - The versioned lookup-cache key to remove.
      */
     remove(key: string): Promise<void>;
@@ -48,6 +55,7 @@ export interface CacheStorage {
 
 /**
  * Builds a versioned cache key from normalized article identities.
+ *
  * @param candidates - The normalized article candidates used for the cache key.
  */
 function cacheKey(candidates: ArticleCandidate[]): string {
@@ -62,8 +70,10 @@ export interface CacheCollectionStorage {
      * Reads every session-storage entry.
      */
     getAll(): Promise<Record<string, unknown>>;
+
     /**
      * Removes only the provided session-storage keys.
+     *
      * @param keys - The lookup-cache keys to remove from session storage.
      */
     remove(keys: string[]): Promise<void>;
@@ -71,6 +81,7 @@ export interface CacheCollectionStorage {
 
 /**
  * Removes HN lookup entries of every cache version from session storage.
+ *
  * @param storage - The session-storage adapter that owns lookup cache records.
  */
 export async function clearLookupCacheEntries(storage: CacheCollectionStorage): Promise<void> {
@@ -83,6 +94,7 @@ export async function clearLookupCacheEntries(storage: CacheCollectionStorage): 
 
 /**
  * Determines whether an unknown value is a non-null object record.
+ *
  * @param value - The unknown cache value to inspect.
  */
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -91,6 +103,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * Determines whether an unknown value is a valid lookup-cache record.
+ *
  * @param value - The unknown cache value to validate.
  */
 function isCacheRecord(value: unknown): value is CacheRecord {
@@ -105,6 +118,7 @@ function isCacheRecord(value: unknown): value is CacheRecord {
 
 /**
  * Returns a fresh cached lookup or performs and conditionally caches a new lookup.
+ *
  * @param candidates - The normalized article candidates used for the lookup.
  * @param storage - The session-storage adapter that owns lookup cache records.
  * @param lookup - The lookup operation to run after a cache miss.

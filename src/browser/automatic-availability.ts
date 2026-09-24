@@ -1,6 +1,8 @@
-import { EMPTY_AVAILABILITY_BADGE, badgeForLookupResult } from './availability-badge';
-import type { AvailabilityBadge } from './availability-badge';
 import { HN_LOOKUP_STATUS } from '../domain/hn';
+
+import { EMPTY_AVAILABILITY_BADGE, badgeForLookupResult } from './availability-badge';
+
+import type { AvailabilityBadge } from './availability-badge';
 import type { HnLookupResult } from '../domain/hn';
 
 /**
@@ -11,14 +13,18 @@ export interface AutomaticAvailabilityDependencies {
      * Reads whether automatic availability is currently enabled.
      */
     isEnabled(): Promise<boolean>;
+
     /**
      * Looks up Hacker News availability for one public URL.
+     *
      * @param url - The eligible public article URL to inspect.
      * @param signal - The abort signal that cancels a superseded lookup.
      */
     lookup(url: string, signal: AbortSignal): Promise<HnLookupResult>;
+
     /**
      * Applies validated badge state to one browser tab.
+     *
      * @param tabId - The browser tab identifier that receives the badge.
      * @param badge - The validated availability badge state to apply.
      */
@@ -33,6 +39,7 @@ interface CurrentTabReservation {
      * Resolves when this URL acquisition is either completed or superseded.
      */
     completed: Promise<void>;
+
     /**
      * Releases mutations waiting for this URL acquisition.
      */
@@ -44,15 +51,22 @@ interface CurrentTabReservation {
  */
 export class AutomaticAvailabilityUpdater {
     private readonly generations = new Map<number, number>();
+
     private readonly currentTabReservations = new Map<number, CurrentTabReservation>();
+
     private readonly badgeMutations = new Map<number, Promise<void>>();
+
     private readonly inFlightUpdates = new Set<Promise<void>>();
+
     private readonly lookupControllers = new Map<number, AbortController>();
+
     private readonly scheduledUrls = new Map<number, string>();
+
     private revision = 0;
 
     /**
      * Creates an automatic-availability coordinator.
+     *
      * @param dependencies - The browser, lookup, and badge operations used by the updater.
      */
     constructor(private readonly dependencies: AutomaticAvailabilityDependencies) {}
@@ -61,6 +75,7 @@ export class AutomaticAvailabilityUpdater {
      * Reads and processes one tab URL only while automatic availability is
      * enabled. Keeping URL acquisition behind this gate ensures the disabled
      * default does not inspect or retain navigation URLs.
+     *
      * @param tabId - The updated browser tab identifier.
      * @param readUrl - Reads the tab's current URL after the enabled gate passes.
      */
@@ -89,6 +104,7 @@ export class AutomaticAvailabilityUpdater {
     /**
      * Updates one tab after navigation, ignoring the duplicate event Chrome
      * fires when one navigation reports both a URL change and completion.
+     *
      * @param tabId - The updated browser tab identifier.
      * @param url - The navigated public URL to inspect.
      */
@@ -102,6 +118,7 @@ export class AutomaticAvailabilityUpdater {
     /**
      * Re-evaluates one tab even when its URL was already scheduled, as needed
      * right after the automatic mode is enabled.
+     *
      * @param tabId - The browser tab identifier to refresh.
      * @param url - The current public URL to inspect.
      */
@@ -118,6 +135,7 @@ export class AutomaticAvailabilityUpdater {
 
     /**
      * Cancels pending work and clears badges for affected tabs.
+     *
      * @param tabIds - The currently open browser tab identifiers to clear.
      */
     async disable(tabIds: number[]): Promise<void> {
@@ -140,6 +158,7 @@ export class AutomaticAvailabilityUpdater {
 
     /**
      * Discards queued state for a tab that no longer exists.
+     *
      * @param tabId - The removed browser tab identifier to forget.
      */
     forget(tabId: number): void {

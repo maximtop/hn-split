@@ -3,7 +3,7 @@ import { ensureArticleClickRegistration } from '../browser/article-click-registr
 import { applySettingTransaction, createSettingQueue } from '../browser/setting-lifecycle';
 import { HN_ORIGIN } from '../domain/hn';
 import { logFollowWarning } from '../shared/logger';
-import type { ArticleClickMessage } from '../shared/messages';
+
 import {
     contentScriptRegistry,
     getArticleClickDiscussionEnabled,
@@ -18,6 +18,8 @@ import {
     reserveSidePanelExplicitOperation,
     selectSidePanelDiscussion,
 } from './side-panel-content-controller';
+
+import type { ArticleClickMessage } from '../shared/messages';
 
 /**
  * Mirrors the persisted article-click setting so the message listener can
@@ -46,6 +48,7 @@ const applyArticleClickChange = createSettingQueue(async (enabled) => {
 
 /**
  * Applies one serialized article-click setting transaction.
+ *
  * @param enabled - Whether article clicks should open the discussion panel.
  */
 export async function setArticleClickSetting(enabled: boolean): Promise<boolean> {
@@ -67,6 +70,7 @@ export async function reconcileArticleClickRegistration(): Promise<void> {
 /**
  * Handles one validated story-click message from the content script. Runs
  * synchronously so the side panel can open within the click's user gesture.
+ *
  * @param message - The validated article-click message.
  * @param sender - The Chrome runtime sender reported for the message.
  */

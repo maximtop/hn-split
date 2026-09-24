@@ -1,5 +1,6 @@
 import { discussionUrl, isHnUrl } from '../domain/hn';
 import { DISCUSSION_OPEN_MODE } from '../shared/messages';
+
 import type { OpenDiscussionResult } from '../shared/messages';
 
 /**
@@ -10,18 +11,22 @@ export interface TabSummary {
      * Contains the optional browser tab identifier.
      */
     id?: number;
+
     /**
      * Contains the tab index within its window.
      */
     index: number;
+
     /**
      * Contains the owning browser window identifier.
      */
     windowId: number;
+
     /**
      * Contains Chrome's Split View identifier when available.
      */
     splitViewId?: number;
+
     /**
      * Contains the tab's committed URL when Chrome reports one.
      */
@@ -34,11 +39,14 @@ export interface TabSummary {
 export interface TabClient {
     /**
      * Reads one browser tab.
+     *
      * @param tabId - The browser tab identifier to read.
      */
     get(tabId: number): Promise<TabSummary>;
+
     /**
      * Creates one adjacent browser tab.
+     *
      * @param properties - The placement, opener, and URL for the new tab.
      */
     create(properties: {
@@ -48,9 +56,11 @@ export interface TabClient {
         url: string;
         windowId: number;
     }): Promise<TabSummary>;
+
     /**
      * Navigates and activates an existing browser tab, resolving only after
      * the browser accepts the navigation.
+     *
      * @param tabId - The browser tab identifier to update.
      * @param properties - The active state and URL to apply.
      */
@@ -63,17 +73,22 @@ export interface TabClient {
 export interface SessionStore {
     /**
      * Reads the remembered discussion tab for an article tab.
+     *
      * @param articleTabId - The source article tab identifier.
      */
     get(articleTabId: number): Promise<number | undefined>;
+
     /**
      * Remembers a discussion tab for an article tab.
+     *
      * @param articleTabId - The source article tab identifier.
      * @param discussionTabId - The associated discussion tab identifier.
      */
     set(articleTabId: number, discussionTabId: number): Promise<void>;
+
     /**
      * Removes a stale article-to-discussion association.
+     *
      * @param articleTabId - The source article tab identifier to forget.
      */
     remove(articleTabId: number): Promise<void>;
@@ -87,6 +102,7 @@ export class DiscussionTabManager {
 
     /**
      * Creates a discussion-tab manager.
+     *
      * @param tabs - The Chrome tabs adapter used to query, update, or create tabs.
      * @param store - The session store that tracks article-to-discussion associations.
      */
@@ -97,6 +113,7 @@ export class DiscussionTabManager {
 
     /**
      * Opens or reuses one discussion tab while serializing requests per article tab.
+     *
      * @param articleTabId - The source article tab identifier.
      * @param itemId - The Hacker News discussion item identifier.
      */
@@ -133,6 +150,7 @@ export class DiscussionTabManager {
      * keep the pane regardless of where they navigated it. Any other
      * navigation means the user repurposed the tab, and navigating it back
      * would take the tab over instead of serving it.
+     *
      * @param article - The article tab the pane belongs to.
      * @param discussion - The remembered discussion tab to evaluate.
      */

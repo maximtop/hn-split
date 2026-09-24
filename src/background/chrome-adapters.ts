@@ -1,24 +1,26 @@
-import type { ContentScriptRegistry } from '../browser/article-click-registration';
-import type { AvailabilityBadge } from '../browser/availability-badge';
-import type { CacheCollectionStorage, CacheStorage } from '../browser/lookup-cache';
-import type { SessionStore, TabClient, TabSummary } from '../browser/open-discussion';
-import type { OpenInSplitMenuRegistry } from '../browser/open-in-split-menu';
 import { SidePanelAssociationStore } from '../browser/side-panel-association-store';
-import type { SidePanelAssociationStorage } from '../browser/side-panel-association-store';
 import { HN_ORIGIN } from '../domain/hn';
+import { openDiscussionSurface } from '../shared/browser-target';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../shared/content-scripts';
 import { isSidePanelProjection } from '../shared/side-panel-projection';
-import type { SidePanelProjection } from '../shared/side-panel-projection';
 import {
     SESSION_STORAGE_KEY_PREFIX,
     STORAGE_KEY,
     sidePanelContentKey,
     sidePanelContentWindowId,
 } from '../shared/storage-keys';
-import { openDiscussionSurface } from '../shared/browser-target';
+
+import type { ContentScriptRegistry } from '../browser/article-click-registration';
+import type { AvailabilityBadge } from '../browser/availability-badge';
+import type { CacheCollectionStorage, CacheStorage } from '../browser/lookup-cache';
+import type { SessionStore, TabClient, TabSummary } from '../browser/open-discussion';
+import type { OpenInSplitMenuRegistry } from '../browser/open-in-split-menu';
+import type { SidePanelAssociationStorage } from '../browser/side-panel-association-store';
+import type { SidePanelProjection } from '../shared/side-panel-projection';
 
 /**
  * Converts a Chrome tab into the fields used by discussion placement.
+ *
  * @param tab - The Chrome tab to convert.
  */
 function toTabSummary(tab: chrome.tabs.Tab): TabSummary {
@@ -33,6 +35,7 @@ function toTabSummary(tab: chrome.tabs.Tab): TabSummary {
 
 /**
  * Builds the session-storage key for one article-to-discussion association.
+ *
  * @param articleTabId - The source article tab identifier.
  */
 function discussionTabKey(articleTabId: number): string {
@@ -125,6 +128,7 @@ export const sidePanelAssociations = new SidePanelAssociationStore(sidePanelAsso
 /**
  * Reads what one window's side panel should display in this browser session.
  * Anything the current model does not recognize reads as an empty panel.
+ *
  * @param windowId - The browser window whose selection is read.
  */
 export async function getSidePanelContent(windowId: number): Promise<SidePanelProjection | null> {
@@ -136,6 +140,7 @@ export async function getSidePanelContent(windowId: number): Promise<SidePanelPr
 
 /**
  * Records what one window's side panel should display.
+ *
  * @param windowId - The browser window whose selection is written.
  * @param projection - The validated panel projection to display.
  */
@@ -151,6 +156,7 @@ export async function setSidePanelContent(
 
 /**
  * Removes one window's stored side panel selection.
+ *
  * @param windowId - The browser window whose selection is removed.
  */
 export async function removeSidePanelContent(windowId: number): Promise<void> {
@@ -161,12 +167,12 @@ export async function removeSidePanelContent(windowId: number): Promise<void> {
  * Lists every window's stored side panel selection, skipping entries the
  * current model does not recognize.
  */
-export async function listSidePanelContent(): Promise<Array<{
+export async function listSidePanelContent(): Promise<{
     windowId: number;
     projection: SidePanelProjection;
-}>> {
+}[]> {
     const stored = await chrome.storage.session.get(null);
-    const entries: Array<{ windowId: number; projection: SidePanelProjection }> = [];
+    const entries: { windowId: number; projection: SidePanelProjection }[] = [];
     for (const [key, projection] of Object.entries(stored)) {
         const windowId = sidePanelContentWindowId(key);
         if (windowId === null || !isSidePanelProjection(projection)) {
@@ -187,6 +193,7 @@ export async function getAutomaticAvailabilityEnabled(): Promise<boolean> {
 
 /**
  * Persists the authoritative automatic-availability setting.
+ *
  * @param enabled - Whether automatic availability should be enabled.
  */
 export async function setAutomaticAvailabilityEnabled(enabled: boolean): Promise<void> {
@@ -203,6 +210,7 @@ export async function getSidePanelFollowEnabled(): Promise<boolean> {
 
 /**
  * Persists the independent side-panel-follow preference.
+ *
  * @param enabled - Whether an already-open panel may follow active tabs.
  */
 export async function setSidePanelFollowEnabled(enabled: boolean): Promise<void> {
@@ -211,6 +219,7 @@ export async function setSidePanelFollowEnabled(enabled: boolean): Promise<void>
 
 /**
  * Reads the tab active in one specific browser window.
+ *
  * @param windowId - Browser window whose active tab is requested.
  */
 export async function getActiveTab(windowId: number): Promise<chrome.tabs.Tab | null> {
@@ -221,6 +230,7 @@ export async function getActiveTab(windowId: number): Promise<chrome.tabs.Tab | 
 /**
  * Reads one Chrome tab for lifecycle ownership and lazy URL acquisition,
  * returning null when the tab disappeared before the read completed.
+ *
  * @param tabId - The browser tab to read.
  */
 export async function getBrowserTab(tabId: number): Promise<chrome.tabs.Tab | null> {
@@ -241,6 +251,7 @@ export async function getArticleClickDiscussionEnabled(): Promise<boolean> {
 
 /**
  * Persists the authoritative article-click setting.
+ *
  * @param enabled - Whether article clicks should open the discussion panel.
  */
 export async function setArticleClickDiscussionEnabled(enabled: boolean): Promise<void> {
@@ -309,6 +320,7 @@ export const contextMenuRegistry: OpenInSplitMenuRegistry = {
  * Opens the extension side panel in the window of one tab. Chrome accepts the
  * call only while the originating user gesture is valid, so callers must not
  * await anything before invoking this.
+ *
  * @param tabId - The browser tab whose window shows the panel.
  */
 export async function openSidePanel(tabId: number): Promise<void> {
@@ -317,6 +329,7 @@ export async function openSidePanel(tabId: number): Promise<void> {
 
 /**
  * Applies localized browser-action badge state to one live tab.
+ *
  * @param tabId - The Chrome tab that receives the badge state.
  * @param badge - The localized badge state to apply.
  */

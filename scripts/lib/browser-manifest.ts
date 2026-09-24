@@ -118,6 +118,7 @@ interface ExtensionManifest {
  *
  * @param value Raw environment value; `undefined` or empty selects the
  * default Chrome target.
+ *
  * @returns The validated build target.
  */
 export function parseBuildTarget(value: string | undefined): BuildTarget {
@@ -189,6 +190,7 @@ function applyFirefoxTransform(manifest: ExtensionManifest): void {
  * @param base Parsed public/manifest.json content; never mutated.
  * @param target Browser target to generate for.
  * @param version Version taken from package.json.
+ *
  * @returns A new manifest object ready for serialization.
  */
 export function buildManifest(
@@ -212,6 +214,7 @@ export function buildManifest(
  * manifests stay byte-stable across builds.
  *
  * @param manifest Manifest object to serialize.
+ *
  * @returns Two-space-indented JSON with a trailing newline.
  */
 export function serializeManifest(manifest: Record<string, unknown>): string {

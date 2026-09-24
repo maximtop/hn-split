@@ -1,11 +1,19 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    beforeEach, describe, expect, it, vi,
+} from 'vitest';
 
+import {
+    checkActiveSidePanelTab,
+    enableSidePanelFollow,
+    setSidePanelFollowSetting,
+} from '../src/background/side-panel-follow-controller';
 import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
-import type { SidePanelProjection } from '../src/shared/side-panel-projection';
+
 import type {
     SidePanelFollowActivationReservation,
     SidePanelFollowAuthorityReservation,
 } from '../src/browser/side-panel-content-router';
+import type { SidePanelProjection } from '../src/shared/side-panel-projection';
 
 const mocks = vi.hoisted(() => ({
     getActiveTab: vi.fn(),
@@ -44,12 +52,6 @@ vi.mock('../src/background/side-panel-content-controller', () => ({
     disableAutomaticSidePanelFollow: mocks.disableAutomatic,
 }));
 
-import {
-    checkActiveSidePanelTab,
-    enableSidePanelFollow,
-    setSidePanelFollowSetting,
-} from '../src/background/side-panel-follow-controller';
-
 const WINDOW_ID = 3;
 const OTHER_WINDOW_ID = 4;
 const TAB_ID = 7;
@@ -83,6 +85,7 @@ function deferred<Value>(): Deferred<Value> {
 
 /**
  * Builds one strict discussion projection.
+ *
  * @param tabId - The tab displayed by the projection.
  */
 function discussionProjection(tabId: number): SidePanelProjection {
@@ -322,12 +325,12 @@ describe('side panel follow controller', () => {
         mocks.activate.mockImplementation(async (
             authority: SidePanelFollowAuthorityReservation,
             tabId: number,
-        ) => authority.token === 0
+        ) => (authority.token === 0
             ? { kind: 'active_tab_changed' }
             : {
-                    kind: 'continued',
-                    projection: discussionProjection(tabId),
-                });
+                kind: 'continued',
+                projection: discussionProjection(tabId),
+            }));
 
         const enabling = enableSidePanelFollow(WINDOW_ID);
         await vi.waitFor(() => {

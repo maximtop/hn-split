@@ -1,16 +1,5 @@
 import { ensureOpenInSplitMenu } from '../browser/open-in-split-menu';
-import type {
-    ExpectedNavigationReservation,
-    ExplicitOperationReservation,
-    ShowDiscussionOptions,
-    SidePanelFollowContinuation,
-} from '../browser/side-panel-content-manager';
 import { SidePanelContentRouter } from '../browser/side-panel-content-router';
-import type {
-    SidePanelFollowActivationReservation,
-    SidePanelFollowAuthorityReservation,
-    SidePanelRecoveryReservation,
-} from '../browser/side-panel-content-router';
 import { SidePanelWindowRegistry } from '../browser/side-panel-window-registry';
 import { normalizeArticleUrl } from '../domain/url';
 import { OPEN_IN_SPLIT_MENU } from '../shared/context-menus';
@@ -18,12 +7,8 @@ import {
     FOLLOW_DIAGNOSTIC_CODE,
     logFollowWarning,
 } from '../shared/logger';
-import type { SidePanelContent } from '../shared/side-panel-content';
-import type {
-    SidePanelProjection,
-    SidePanelReadyStamp,
-} from '../shared/side-panel-projection';
 import { SIDE_PANEL_TARGET } from '../shared/messages';
+
 import { lookupArticleForPanel } from './article-lookup';
 import {
     contextMenuRegistry,
@@ -39,6 +24,23 @@ import {
     tabs,
 } from './chrome-adapters';
 
+import type {
+    ExpectedNavigationReservation,
+    ExplicitOperationReservation,
+    ShowDiscussionOptions,
+    SidePanelFollowContinuation,
+} from '../browser/side-panel-content-manager';
+import type {
+    SidePanelFollowActivationReservation,
+    SidePanelFollowAuthorityReservation,
+    SidePanelRecoveryReservation,
+} from '../browser/side-panel-content-router';
+import type { SidePanelContent } from '../shared/side-panel-content';
+import type {
+    SidePanelProjection,
+    SidePanelReadyStamp,
+} from '../shared/side-panel-projection';
+
 const ACTIVE_TAB_UNAVAILABLE_MESSAGE = 'Active side panel tab is unavailable';
 
 /**
@@ -47,6 +49,7 @@ const ACTIVE_TAB_UNAVAILABLE_MESSAGE = 'Active side panel tab is unavailable';
 export interface SidePanelLifecycleContentOwner {
     /**
      * Initializes one newly connected panel window.
+     *
      * @param windowId - The browser window whose panel connected.
      * @param tabId - The tab active in that window.
      * @param readUrl - Consent-gated lazy URL acquisition.
@@ -56,8 +59,10 @@ export interface SidePanelLifecycleContentOwner {
         tabId: number,
         readUrl: () => Promise<string | undefined>,
     ): Promise<SidePanelProjection>;
+
     /**
      * Synchronizes one active tab in a live panel window.
+     *
      * @param windowId - The browser window whose panel is live.
      * @param tabId - The newly active tab.
      * @param readUrl - Consent-gated lazy URL acquisition.
@@ -67,8 +72,10 @@ export interface SidePanelLifecycleContentOwner {
         tabId: number,
         readUrl: () => Promise<string | undefined>,
     ): Promise<SidePanelProjection>;
+
     /**
      * Continues one manager-owned recovery after an asynchronous active-tab read.
+     *
      * @param reservation - The opaque recovery and its owning browser window.
      * @param tabId - The tab active when the browser read completed.
      * @param readUrl - Consent-gated lazy URL acquisition.
@@ -78,8 +85,10 @@ export interface SidePanelLifecycleContentOwner {
         tabId: number,
         readUrl: () => Promise<string | undefined>,
     ): Promise<SidePanelProjection | null>;
+
     /**
      * Processes one tab URL update through association and follow consent.
+     *
      * @param windowId - The current or former tab window.
      * @param tabId - The tab that navigated.
      * @param reportedUrl - The browser-reported URL.
@@ -93,8 +102,10 @@ export interface SidePanelLifecycleContentOwner {
         active: boolean,
         panelLive: boolean,
     ): Promise<SidePanelProjection | null>;
+
     /**
      * Resumes a pending consented synchronization after status completion.
+     *
      * @param windowId - The live panel window.
      * @param tabId - The still-active pending tab.
      * @param readUrl - Lazy authoritative URL acquisition.
@@ -104,19 +115,25 @@ export interface SidePanelLifecycleContentOwner {
         tabId: number,
         readUrl: () => Promise<string | undefined>,
     ): Promise<SidePanelProjection | null>;
+
     /**
      * Removes one invalid tab association and its in-flight manager state.
+     *
      * @param tabId - The invalid browser tab.
      * @param windowId - Its known former owner when available.
      */
     forgetTab(tabId: number, windowId?: number): Promise<void>;
+
     /**
      * Cancels unfinished work after a window loses its last panel port.
+     *
      * @param windowId - The disconnected browser window.
      */
     disconnectWindow(windowId: number): Promise<void>;
+
     /**
      * Removes all manager and projection state for a closed browser window.
+     *
      * @param windowId - The closed browser window.
      */
     forgetWindow(windowId: number): Promise<void>;
@@ -131,17 +148,22 @@ export interface SidePanelLifecycleControllerDependencies {
      * Reports whether a browser window currently has a live panel port.
      */
     windows: Pick<SidePanelWindowRegistry, 'has'>;
+
     /**
      * Owns all per-window panel projections and tab associations.
      */
     content: SidePanelLifecycleContentOwner;
+
     /**
      * Reads the tab active in one browser window.
+     *
      * @param windowId - The browser window to query.
      */
     getActiveTab(windowId: number): Promise<chrome.tabs.Tab | null>;
+
     /**
      * Reads one tab for ownership validation and consent-gated URL access.
+     *
      * @param tabId - The browser tab to read.
      */
     getTab(tabId: number): Promise<chrome.tabs.Tab | null>;
@@ -155,6 +177,7 @@ export interface SidePanelTabUpdate {
      * Contains the browser loading status when Chrome reports it.
      */
     status?: 'loading' | 'complete';
+
     /**
      * Contains the browser-reported navigation URL when Chrome reports it.
      */
@@ -168,12 +191,14 @@ export interface SidePanelTabUpdate {
 export class SidePanelLifecycleController {
     /**
      * Creates the lifecycle coordinator.
+     *
      * @param dependencies - Live-window, browser-read, and content-owner boundaries.
      */
     constructor(private readonly dependencies: SidePanelLifecycleControllerDependencies) {}
 
     /**
      * Initializes one framed panel from the tab active at handling time.
+     *
      * @param windowId - The browser window whose panel connected.
      */
     async connectWindow(windowId: number): Promise<SidePanelReadyStamp> {
@@ -195,6 +220,7 @@ export class SidePanelLifecycleController {
 
     /**
      * Synchronizes a newly active tab only while its window has a live panel.
+     *
      * @param tabId - The newly active browser tab.
      * @param windowId - The browser window that owns the tab.
      */
@@ -211,10 +237,12 @@ export class SidePanelLifecycleController {
 
     /**
      * Routes one tab update through invalidation and optional pending completion.
+     *
      * @param tabId - The updated browser tab.
      * @param windowId - The tab's current browser window.
      * @param active - Whether the tab is active.
      * @param change - Relevant URL and loading-status fields.
+     *
      * @returns Whether the update authoritatively represented an active tab in
      * a live panel window and completed without failure.
      */
@@ -246,6 +274,7 @@ export class SidePanelLifecycleController {
 
     /**
      * Removes one closed, replaced, or detached tab.
+     *
      * @param tabId - The invalid browser tab.
      * @param windowId - Its known former owner when available.
      */
@@ -259,6 +288,7 @@ export class SidePanelLifecycleController {
 
     /**
      * Cleans up a replaced tab before inspecting and synchronizing its successor.
+     *
      * @param addedTabId - The replacement tab created by Chrome.
      * @param removedTabId - The invalidated prior tab.
      */
@@ -278,6 +308,7 @@ export class SidePanelLifecycleController {
 
     /**
      * Validates an attached tab's destination before synchronizing it when active.
+     *
      * @param tabId - The tab attached to another window.
      * @param windowId - The destination browser window.
      */
@@ -291,6 +322,7 @@ export class SidePanelLifecycleController {
 
     /**
      * Re-runs the ordinary live-panel gate for the tab active at recovery time.
+     *
      * @param reservation - The manager-owned recovery and its browser window.
      */
     async resynchronizeWindow(reservation: SidePanelRecoveryReservation): Promise<void> {
@@ -315,6 +347,7 @@ export class SidePanelLifecycleController {
 
     /**
      * Cancels unfinished state when a window loses its final live panel port.
+     *
      * @param windowId - The disconnected browser window.
      */
     async disconnectWindow(windowId: number): Promise<void> {
@@ -323,6 +356,7 @@ export class SidePanelLifecycleController {
 
     /**
      * Removes all projection and manager state for a closed window.
+     *
      * @param windowId - The closed browser window.
      */
     async removeWindow(windowId: number): Promise<void> {
@@ -332,6 +366,7 @@ export class SidePanelLifecycleController {
     /**
      * Reads a tab URL only after the content owner invokes the consent-gated
      * callback, and only while the tab still belongs to the expected window.
+     *
      * @param windowId - The expected owning browser window.
      * @param tabId - The tab whose URL is requested.
      */
@@ -346,6 +381,7 @@ export class SidePanelLifecycleController {
     /**
      * Returns a tab identifier only when the browser read still belongs to the
      * expected window.
+     *
      * @param tab - The browser tab read at the lifecycle boundary.
      * @param windowId - The expected owning window.
      */
@@ -419,6 +455,7 @@ const sidePanelLifecycle = new SidePanelLifecycleController({
 /**
  * Handles one context-menu selection. Runs synchronously so the side panel can
  * open within the click's user gesture; everything else happens afterwards.
+ *
  * @param info - The Chrome click data reported for the menu selection.
  * @param tab - The tab the context menu was invoked in, when Chrome reports one.
  */
@@ -441,6 +478,7 @@ export function handleOpenInSplitClick(
 
 /**
  * Reserves one exact expected navigation for an article-click action.
+ *
  * @param windowId - The panel window owning the source tab.
  * @param tabId - The source Hacker News tab.
  * @param articleUrl - The exact clicked article target.
@@ -455,6 +493,7 @@ export function reserveSidePanelExpectedNavigation(
 
 /**
  * Cancels one exact expected navigation.
+ *
  * @param windowId - The reservation's panel window.
  * @param reservation - The exact expected navigation to cancel.
  */
@@ -467,6 +506,7 @@ export function cancelSidePanelExpectedNavigation(
 
 /**
  * Reserves explicit projection precedence before an action opens the panel.
+ *
  * @param windowId - The panel window owning the action.
  * @param tabId - The explicitly targeted tab.
  */
@@ -479,6 +519,7 @@ export function reserveSidePanelExplicitOperation(
 
 /**
  * Starts pending readiness for one exact explicit reservation.
+ *
  * @param windowId - The reservation's panel window.
  * @param reservation - The exact explicit operation.
  */
@@ -491,6 +532,7 @@ export async function prepareSidePanelExplicitOperation(
 
 /**
  * Cancels one exact explicit reservation.
+ *
  * @param windowId - The reservation's panel window.
  * @param reservation - The exact explicit operation.
  * @param resynchronize - Whether a reserved live target must be restored.
@@ -506,6 +548,7 @@ export function cancelSidePanelExplicitOperation(
 /**
  * Captures one action-time tab in its opaque per-window manager without
  * acquiring a URL or changing visible panel state.
+ *
  * @param windowId - The live panel window issuing the command.
  * @param tabId - The tab active at the trusted request boundary.
  */
@@ -518,6 +561,7 @@ export function reserveSidePanelFollowActivation(
 
 /**
  * Captures one live window's manager authority before an asynchronous active-tab read.
+ *
  * @param windowId - The panel window whose authority is captured.
  */
 export function captureSidePanelFollowAuthority(
@@ -529,6 +573,7 @@ export function captureSidePanelFollowAuthority(
 /**
  * Captures an action-time tab only when its preceding asynchronous read did not
  * cross a newer trusted manager boundary.
+ *
  * @param authority - The authority captured before the active-tab read.
  * @param tabId - The tab returned by that read.
  */
@@ -541,6 +586,7 @@ export function reserveSidePanelFollowActivationIfCurrent(
 
 /**
  * Cancels one exact queued follow capture after its setting transaction fails.
+ *
  * @param reservation - The opaque capture to cancel.
  */
 export function cancelSidePanelFollowActivation(
@@ -552,6 +598,7 @@ export function cancelSidePanelFollowActivation(
 /**
  * Continues one captured activation after consent is persisted and reports
  * whether a newer real activation or explicit/manual operation won instead.
+ *
  * @param reservation - The exact opaque capture to continue.
  * @param readUrl - Lazy ownership-checked URL acquisition.
  */
@@ -564,6 +611,7 @@ export async function continueSidePanelFollowActivation(
 
 /**
  * Runs one manual check through the shared per-window owner.
+ *
  * @param windowId - The live panel window issuing the command.
  * @param tabId - The tab active at the trusted request boundary.
  * @param readUrl - Lazy URL acquisition authorized by the manual action.
@@ -578,6 +626,7 @@ export async function restoreOrCheckSidePanelTab(
 
 /**
  * Synchronizes one live window as the effect of a serialized follow setting.
+ *
  * @param windowId - The live panel window to synchronize.
  * @param tabId - The tab active in that window.
  * @param readUrl - Lazy ownership-checked URL acquisition.
@@ -593,6 +642,7 @@ export async function synchronizeSidePanelFollowSetting(
 /**
  * Applies one queued setting effect only while its request-time manager
  * authority remains current.
+ *
  * @param authority - The opaque request-time manager authority.
  * @param tabId - The active tab to synchronize.
  * @param readUrl - Lazy ownership-checked URL acquisition.
@@ -614,6 +664,7 @@ export async function disableAutomaticSidePanelFollow(): Promise<void> {
 
 /**
  * Displays one already known discussion in one window's side panel.
+ *
  * @param options - The window, tab, item, source page, and optional reservation.
  */
 export async function selectSidePanelDiscussion(
@@ -653,6 +704,7 @@ export async function normalizeSidePanelContent(): Promise<void> {
 /**
  * Initializes a newly contextualized panel window and returns the exact
  * projection stamp that may become framing-ready.
+ *
  * @param windowId - The browser window whose panel connected.
  */
 export async function connectSidePanelWindow(
@@ -663,6 +715,7 @@ export async function connectSidePanelWindow(
 
 /**
  * Cancels unfinished work after a window loses its last live panel port.
+ *
  * @param windowId - The disconnected browser window.
  */
 export async function disconnectSidePanelWindow(windowId: number): Promise<void> {
@@ -671,6 +724,7 @@ export async function disconnectSidePanelWindow(windowId: number): Promise<void>
 
 /**
  * Synchronizes one newly active tab when its window has a live panel.
+ *
  * @param tabId - The newly active browser tab.
  * @param windowId - The browser window that owns the tab.
  */
@@ -683,6 +737,7 @@ export async function activateSidePanelTab(
 
 /**
  * Routes one Chrome activation event through the live-window gate.
+ *
  * @param activeInfo - The activated tab and its browser window.
  */
 export async function handleSidePanelTabActivated(
@@ -693,6 +748,7 @@ export async function handleSidePanelTabActivated(
 
 /**
  * Routes URL and completion updates without acquiring an unchecked tab URL.
+ *
  * @param tabId - The updated browser tab.
  * @param windowId - The tab's current browser window.
  * @param active - Whether Chrome reports the tab active.
@@ -710,6 +766,7 @@ export async function handleSidePanelTabUpdated(
 /**
  * Removes one closed, replaced, or detached tab through the process-wide
  * association queue.
+ *
  * @param tabId - The invalid browser tab.
  * @param windowId - Its known former owner when Chrome reports one.
  */
@@ -719,6 +776,7 @@ export async function forgetSidePanelTab(tabId: number, windowId?: number): Prom
 
 /**
  * Cleans up a replaced tab before synchronizing its active successor.
+ *
  * @param addedTabId - The replacement browser tab.
  * @param removedTabId - The invalidated prior browser tab.
  */
@@ -731,6 +789,7 @@ export async function handleSidePanelTabReplaced(
 
 /**
  * Validates a moved tab's destination before synchronizing it when active.
+ *
  * @param tabId - The attached browser tab.
  * @param attachInfo - The destination window reported by Chrome.
  */
@@ -743,6 +802,7 @@ export async function handleSidePanelTabAttached(
 
 /**
  * Restores one live window after an explicit operation cancels.
+ *
  * @param reservation - The manager-owned recovery and its browser window.
  */
 export async function resynchronizeSidePanelWindow(
@@ -753,6 +813,7 @@ export async function resynchronizeSidePanelWindow(
 
 /**
  * Discards one closed window's selection and its in-flight work.
+ *
  * @param windowId - The browser window that was closed.
  */
 export async function forgetSidePanelWindow(windowId: number): Promise<void> {

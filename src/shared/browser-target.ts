@@ -41,11 +41,12 @@ interface FirefoxSidebarChrome {
  * Opens the discussion surface synchronously inside the current user gesture.
  *
  * @param tabId Chromium tab whose window receives the side panel.
+ *
  * @returns Browser promise for the panel or sidebar open operation.
  */
 export function openDiscussionSurface(tabId: number): Promise<void> {
     if (USES_FIREFOX_SIDEBAR) {
-        const sidebarAction = (chrome as typeof chrome & FirefoxSidebarChrome).sidebarAction;
+        const { sidebarAction } = (chrome as typeof chrome & FirefoxSidebarChrome);
         if (sidebarAction === undefined) {
             return Promise.reject(new Error('Firefox Sidebar API is unavailable'));
         }

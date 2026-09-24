@@ -1,4 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import {
     getActiveTab,
@@ -18,6 +20,7 @@ const WINDOW_ID = 3;
 
 /**
  * Installs record-shaped Chrome local/session storage and tab-query fakes.
+ *
  * @returns Observable local/session records and Chrome method mocks.
  */
 function installChrome(): {
@@ -43,9 +46,9 @@ function installChrome(): {
                 set: localSet,
             },
             session: {
-                get: vi.fn(async (key: string | null) => key === null
+                get: vi.fn(async (key: string | null) => (key === null
                     ? { ...session }
-                    : { [key]: session[key] }),
+                    : { [key]: session[key] })),
                 set: sessionSet,
                 remove: vi.fn(async (key: string | string[]) => {
                     for (const entry of Array.isArray(key) ? key : [key]) {
@@ -56,7 +59,9 @@ function installChrome(): {
         },
         tabs: { query },
     });
-    return { local, session, localSet, sessionSet, query };
+    return {
+        local, session, localSet, sessionSet, query,
+    };
 }
 
 afterEach(() => {
@@ -68,15 +73,15 @@ describe('side-panel Chrome adapters', () => {
         const { local, localSet } = installChrome();
 
         await expect(getSidePanelFollowEnabled()).resolves.toBe(false);
-        local['side_panel_follow'] = 'yes';
+        local.side_panel_follow = 'yes';
         await expect(getSidePanelFollowEnabled()).resolves.toBe(false);
-        local['side_panel_follow'] = true;
+        local.side_panel_follow = true;
         await expect(getSidePanelFollowEnabled()).resolves.toBe(true);
-        local['automatic_availability'] = true;
+        local.automatic_availability = true;
         await setSidePanelFollowEnabled(false);
 
         expect(localSet).toHaveBeenCalledExactlyOnceWith({ side_panel_follow: false });
-        expect(local['automatic_availability']).toBe(true);
+        expect(local.automatic_availability).toBe(true);
     });
 
     it('queries only the active tab in the requested window', async () => {

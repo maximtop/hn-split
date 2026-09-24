@@ -1,7 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import { discussionUrl, isHnUrl, lookupHnDiscussions } from '../src/domain/hn';
 import { buildArticleCandidates } from '../src/domain/url';
+
 import type { ArticleCandidate } from '../src/domain/url';
 
 const candidate = (url: string, identity: string): ArticleCandidate => ({
@@ -102,9 +105,15 @@ describe('lookupHnDiscussions', () => {
 
     it('uses points, time, and ID as stable ranking tie-breakers', async () => {
         const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse([
-            { objectID: '8', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30 },
-            { objectID: '9', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30 },
-            { objectID: '7', url: 'https://example.com/story', num_comments: 4, points: 30, created_at_i: 10 },
+            {
+                objectID: '8', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30,
+            },
+            {
+                objectID: '9', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30,
+            },
+            {
+                objectID: '7', url: 'https://example.com/story', num_comments: 4, points: 30, created_at_i: 10,
+            },
         ]));
 
         const result = await lookupHnDiscussions([

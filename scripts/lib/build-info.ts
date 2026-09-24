@@ -26,6 +26,7 @@ export interface HeadCommit {
  *
  * @param rootDirectory Repository root.
  * @param args Git arguments after the repository selector.
+ *
  * @returns Trimmed command output.
  */
 function git(rootDirectory: string, args: string[]): string {
@@ -37,6 +38,7 @@ function git(rootDirectory: string, args: string[]): string {
  * that packaging injects into every generated manifest.
  *
  * @param rootDirectory Repository root containing package.json.
+ *
  * @returns The validated version string.
  */
 export function readPackageVersion(rootDirectory: string): string {
@@ -54,6 +56,7 @@ export function readPackageVersion(rootDirectory: string): string {
  * Reads the commit the working tree is checked out at.
  *
  * @param rootDirectory Repository root.
+ *
  * @returns Commit hash and committer timestamp.
  */
 export function readHeadCommit(rootDirectory: string): HeadCommit {
@@ -70,6 +73,7 @@ export function readHeadCommit(rootDirectory: string): HeadCommit {
  * order never depends on git internals.
  *
  * @param rootDirectory Repository root.
+ *
  * @returns Repository-relative paths of every tracked file.
  */
 export function listTrackedFiles(rootDirectory: string): string[] {
@@ -86,6 +90,7 @@ export function listTrackedFiles(rootDirectory: string): string[] {
  * source archive disagree with the recorded commit.
  *
  * @param rootDirectory Repository root.
+ *
  * @returns True when a tracked file is modified.
  */
 export function isWorktreeDirty(rootDirectory: string): boolean {

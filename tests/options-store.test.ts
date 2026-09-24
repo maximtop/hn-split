@@ -1,6 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { OptionsStore } from '../src/options/options-store';
+
 import type { SettingStatusCopy } from '../src/options/options-store';
 import type { BooleanSettingDependencies } from '../src/options/setting-client';
 

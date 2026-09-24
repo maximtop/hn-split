@@ -1,4 +1,5 @@
 import { DIAGNOSTIC_FORMAT_VERSION } from './diagnostics';
+
 import type { DiagnosticBuffer } from './diagnostics';
 
 /**
@@ -9,6 +10,7 @@ export interface DiagnosticExport {
      * Deterministic UTC filename identifying export time and extension version.
      */
     filename: string;
+
     /**
      * Versioned JSON-lines text with one metadata header followed by entries.
      */
@@ -17,6 +19,7 @@ export interface DiagnosticExport {
 
 /**
  * Formats a validated snapshot without URLs, environment fingerprints or settings.
+ *
  * @param buffer - Snapshot returned by the background-owned collector.
  * @param version - Version from the extension's own generated manifest.
  * @param exportedAt - UTC export time, supplied explicitly for reproducible formatting.
@@ -27,6 +30,6 @@ export function formatDiagnosticExport(buffer: DiagnosticBuffer, version: string
     const header = { formatVersion: DIAGNOSTIC_FORMAT_VERSION, extensionVersion: version, exportedAt: timestamp };
     return {
         filename: `${stamp}_hn_split_v${version}.txt`,
-        text: [JSON.stringify(header), ...buffer.entries.map((entry) => JSON.stringify(entry))].join('\n') + '\n',
+        text: `${[JSON.stringify(header), ...buffer.entries.map((entry) => JSON.stringify(entry))].join('\n')}\n`,
     };
 }

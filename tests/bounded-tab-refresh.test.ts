@@ -1,6 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { refreshTabsBounded } from '../src/browser/bounded-tab-refresh';
+
 import type { TabRefreshTarget } from '../src/browser/bounded-tab-refresh';
 
 const targets = (count: number): TabRefreshTarget[] => Array.from(

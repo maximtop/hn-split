@@ -1,6 +1,8 @@
 import { BACKGROUND_REQUEST_TYPE } from '../shared/messages';
-import type { BackgroundRequest } from '../shared/messages';
+
 import { OptionsStore } from './options-store';
+
+import type { BackgroundRequest } from '../shared/messages';
 
 /**
  * Sends one validated options-page request to the background worker.
@@ -15,10 +17,12 @@ export interface OptionsStores {
      * Owns the automatic toolbar-badge preference.
      */
     availability: OptionsStore;
+
     /**
      * Owns the explicit Hacker News article-click behavior.
      */
     articleClick: OptionsStore;
+
     /**
      * Owns automatic active-tab following for an already-open side panel.
      */
@@ -27,6 +31,7 @@ export interface OptionsStores {
 
 /**
  * Creates the production options stores with their exact background protocol routes.
+ *
  * @param sendMessage - Runtime transport used for every setting read and mutation.
  */
 export function createOptionsStores(sendMessage: OptionsMessageSender): OptionsStores {

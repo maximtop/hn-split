@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 // Node 24 strips types natively, so the plain-node script consumes the same
 // registry and store catalog as the application code and tests.
 import { BASE_LOCALE, LOCALE_REGISTRY, SHIPPED_LOCALES } from '../src/shared/locales.ts';
+
 import { collectListingIssues, STORE_CATALOG, STORE_IDS } from './lib/store-listings.ts';
 
 const listingsDirectory = resolve(import.meta.dirname, '../assets/store-listings');

@@ -70,10 +70,12 @@ export interface ArticleCandidate {
      * Contains the sanitized public URL sent to Algolia.
      */
     url: string;
+
     /**
      * Contains the normalized URL identity used for exact matching.
      */
     identity: string;
+
     /**
      * Identifies whether the page or canonical link produced the candidate.
      */
@@ -82,6 +84,7 @@ export interface ArticleCandidate {
 
 /**
  * Determines whether an IPv4 literal belongs to non-public or reserved space.
+ *
  * @param hostname - The IPv4 hostname or address literal to inspect.
  */
 function isNonPublicIpv4(hostname: string): boolean {
@@ -115,6 +118,7 @@ function isNonPublicIpv4(hostname: string): boolean {
 
 /**
  * Parses a bracketed IPv6 hostname into eight numeric words.
+ *
  * @param hostname - The bracketed IPv6 hostname to parse.
  */
 function parseIpv6(hostname: string): number[] | null {
@@ -146,6 +150,7 @@ function parseIpv6(hostname: string): number[] | null {
 
 /**
  * Converts two IPv6 words into their embedded IPv4 dotted representation.
+ *
  * @param high - The high-order 16-bit IPv6 word.
  * @param low - The low-order 16-bit IPv6 word.
  */
@@ -155,6 +160,7 @@ function embeddedIpv4(high: number, low: number): string {
 
 /**
  * Extracts an IPv4-mapped address from IPv6 words when present.
+ *
  * @param words - The eight parsed 16-bit IPv6 words.
  */
 function mappedIpv4(words: number[]): string | null {
@@ -171,6 +177,7 @@ function mappedIpv4(words: number[]): string | null {
 
 /**
  * Extracts the embedded IPv4 address from a 6to4 address when present.
+ *
  * @param words - The eight parsed 16-bit IPv6 words.
  */
 function sixToFourIpv4(words: number[]): string | null {
@@ -184,6 +191,7 @@ function sixToFourIpv4(words: number[]): string | null {
 
 /**
  * Determines whether an IPv6 literal is globally routable public space.
+ *
  * @param hostname - The bracketed IPv6 hostname to inspect.
  */
 function isPublicIpv6(hostname: string): boolean {
@@ -218,6 +226,7 @@ function isPublicIpv6(hostname: string): boolean {
 
 /**
  * Determines whether a hostname belongs to an IANA special-use namespace.
+ *
  * @param hostname - The normalized lowercase hostname to inspect.
  */
 function isSpecialUseHostname(hostname: string): boolean {
@@ -228,6 +237,7 @@ function isSpecialUseHostname(hostname: string): boolean {
 
 /**
  * Determines whether a hostname is local, reserved, special-use, or lacks an ICANN suffix.
+ *
  * @param hostname - The normalized hostname to inspect.
  */
 function isNonPublicHostname(hostname: string): boolean {
@@ -249,6 +259,7 @@ function isNonPublicHostname(hostname: string): boolean {
 
 /**
  * Determines whether a URL query carries recognizable credential material.
+ *
  * @param url - The parsed URL whose query keys are inspected.
  */
 function hasCredentialQueryParams(url: URL): boolean {
@@ -266,6 +277,7 @@ function hasCredentialQueryParams(url: URL): boolean {
 /**
  * Parses only credential-free public HTTP or HTTPS URLs, failing closed on
  * URLs whose query carries recognizable secrets.
+ *
  * @param value - The untrusted URL value to parse.
  * @param base - The optional public base URL for relative resolution.
  */
@@ -290,6 +302,7 @@ function parseEligibleUrl(value: string, base?: string): URL | null {
  * This is deliberately weaker than article eligibility: a user who asks to open
  * an intranet page beside its discussion still gets the page, and the lookup
  * separately reports that such a URL is not eligible for a public search.
+ *
  * @param value - The untrusted URL value to inspect.
  */
 export function isWebUrl(value: string): boolean {
@@ -304,6 +317,7 @@ export function isWebUrl(value: string): boolean {
  * Removes fragments and recognized tracking parameters from an eligible URL,
  * then reserializes the query so candidate and Algolia-hit identities use one
  * canonical urlencoded form regardless of the input's percent-encoding.
+ *
  * @param value - The eligible URL to sanitize.
  */
 function sanitizeParsedUrl(value: URL): URL {
@@ -322,6 +336,7 @@ function sanitizeParsedUrl(value: URL): URL {
 
 /**
  * Produces the sanitized public URL allowed to leave the extension.
+ *
  * @param value - The untrusted URL value to sanitize.
  * @param base - The optional public base URL for relative resolution.
  */
@@ -332,6 +347,7 @@ export function sanitizeArticleUrl(value: string, base?: string): string | null 
 
 /**
  * Produces a stable exact-match identity for an eligible article URL.
+ *
  * @param value - The eligible article URL to normalize.
  */
 export function normalizeArticleUrl(value: string): string | null {
@@ -353,6 +369,7 @@ export function normalizeArticleUrl(value: string): string | null {
 /**
  * Determines whether a value is already the conservative normalized identity
  * produced by this module for an eligible public article.
+ *
  * @param value - The untrusted identity value to validate.
  */
 export function isSanitizedArticleIdentity(value: string): boolean {
@@ -364,11 +381,12 @@ export function isSanitizedArticleIdentity(value: string): boolean {
 
 /**
  * Builds deduplicated canonical and page candidates in preference order.
+ *
  * @param pageUrl - The active page URL.
  * @param canonicalHref - The document canonical URL when one is available.
  */
 export function buildArticleCandidates(pageUrl: string, canonicalHref?: string | null): ArticleCandidate[] {
-    const rawCandidates: Array<{ source: CandidateSource; url: URL | null }> = [];
+    const rawCandidates: { source: CandidateSource; url: URL | null }[] = [];
     if (canonicalHref !== undefined && canonicalHref !== null && canonicalHref.trim() !== '') {
         rawCandidates.push({
             source: ARTICLE_CANDIDATE_SOURCE.CANONICAL,

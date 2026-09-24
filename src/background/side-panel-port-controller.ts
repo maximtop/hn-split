@@ -1,5 +1,4 @@
-import type { SidePanelFraming } from './side-panel-framing';
-import type { SidePanelWindowRegistry } from '../browser/side-panel-window-registry';
+import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
 import {
     SIDE_PANEL_CONTEXT,
     SIDE_PANEL_PORT,
@@ -7,7 +6,9 @@ import {
     SIDE_PANEL_RESET,
     isSidePanelPortMessage,
 } from '../shared/messages';
-import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
+
+import type { SidePanelFraming } from './side-panel-framing';
+import type { SidePanelWindowRegistry } from '../browser/side-panel-window-registry';
 import type { FollowWarningSink } from '../shared/logger';
 import type { SidePanelReadyStamp } from '../shared/side-panel-projection';
 
@@ -22,28 +23,36 @@ export interface SidePanelPortControllerDependencies {
      * Owns the ref-counted Hacker News framing exception.
      */
     framing: Pick<SidePanelFraming, 'acquire' | 'release'>;
+
     /**
      * Contains the browser-issued identifier of this extension.
      */
     sidePanelExtensionId: string;
+
     /**
      * Contains the exact browser-issued URL of the trusted side-panel document.
      */
     sidePanelDocumentUrl: string;
+
     /**
      * Tracks every validated panel port by browser window.
      */
     windows: SidePanelWindowRegistry;
+
     /**
      * Synchronizes the tab active in one framed panel window.
+     *
      * @param windowId - The browser window to synchronize.
      */
     connectWindow(windowId: number): Promise<SidePanelReadyStamp>;
+
     /**
      * Cancels unfinished panel work after one window loses its last port.
+     *
      * @param windowId - The disconnected browser window.
      */
     disconnectWindow(windowId: number): Promise<void>;
+
     /**
      * Reports one allow-listed lifecycle failure without page data.
      */
@@ -53,6 +62,7 @@ export interface SidePanelPortControllerDependencies {
 /**
  * Determines whether an initialization failure represents ordinary newest-wins
  * cancellation rather than an operational failure.
+ *
  * @param value - The caught initialization failure.
  */
 function isAbortError(value: unknown): boolean {
@@ -74,12 +84,14 @@ export class SidePanelPortController {
 
     /**
      * Creates the port controller.
+     *
      * @param dependencies - Framing, registry, synchronization, and warning boundaries.
      */
     constructor(private readonly dependencies: SidePanelPortControllerDependencies) {}
 
     /**
      * Accepts one named side-panel port and waits for its first valid context.
+     *
      * @param port - The Chrome runtime port opened by the panel document.
      */
     accept(port: chrome.runtime.Port): void {
@@ -143,6 +155,7 @@ export class SidePanelPortController {
      * Retries one failed initial synchronization after an authoritative tab
      * event has itself synchronized successfully. Repeated or unrelated events
      * are ignored instead of polling for an active tab.
+     *
      * @param windowId - The live panel window eligible for recovery.
      */
     recoverWindow(windowId: number): void {
@@ -163,6 +176,7 @@ export class SidePanelPortController {
 
     /**
      * Allocates the next initialization generation for one panel window.
+     *
      * @param windowId - The browser window whose generation advances.
      */
     private nextGeneration(windowId: number): number {
@@ -174,6 +188,7 @@ export class SidePanelPortController {
     /**
      * Clears in-flight and early recovery markers only when they still belong
      * to the specified initialization generation.
+     *
      * @param windowId - The panel window whose markers may be cleared.
      * @param generation - The initialization generation being settled.
      */
@@ -189,6 +204,7 @@ export class SidePanelPortController {
     /**
      * Resets retained UI immediately, waits for framing, then publishes READY
      * only for the newest successfully synchronized active tab.
+     *
      * @param windowId - The live panel window to reinitialize.
      */
     private async reinitialize(windowId: number): Promise<void> {

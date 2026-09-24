@@ -6,15 +6,19 @@ export interface SettingLifecycleDependencies {
      * Reads the authoritative persisted setting.
      */
     getEnabled(): Promise<boolean>;
+
     /**
      * Persists the authoritative setting value.
+     *
      * @param enabled - Whether the setting should be enabled.
      */
     setEnabled(enabled: boolean): Promise<void>;
+
     /**
      * Enables the setting's side effects.
      */
     enable(): Promise<void>;
+
     /**
      * Disables the setting's side effects and clears derived state.
      */
@@ -28,6 +32,7 @@ export type SettingOperation = (enabled: boolean) => Promise<void>;
 
 /**
  * Creates a queue that serializes setting changes in request order.
+ *
  * @param apply - The setting operation to serialize.
  */
 export function createSettingQueue(
@@ -46,6 +51,7 @@ export function createSettingQueue(
 
 /**
  * Applies one setting transaction and independently restores state after failure.
+ *
  * @param enabled - Whether the setting should be enabled.
  * @param dependencies - The storage and effect operations used by the transaction.
  */

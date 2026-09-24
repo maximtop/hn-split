@@ -26,6 +26,7 @@ export interface SidePanelReadyStamp {
      * Identifies the authoritative Chrome tab.
      */
     tabId: number;
+
     /**
      * Identifies the synchronized projection revision.
      */
@@ -42,6 +43,7 @@ export const sidePanelReadyStampSchema = v.strictObject({
 
 /**
  * Determines whether an unknown value is a strict side-panel projection.
+ *
  * @param value - The unknown storage value to validate.
  */
 export function isSidePanelProjection(value: unknown): value is SidePanelProjection {
@@ -50,6 +52,7 @@ export function isSidePanelProjection(value: unknown): value is SidePanelProject
 
 /**
  * Determines whether framing readiness belongs to the exact local projection.
+ *
  * @param projection - The locally observed authoritative projection.
  * @param stamp - The framing-ready stamp received from the background worker.
  */

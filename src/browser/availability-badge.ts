@@ -1,7 +1,8 @@
 import { HN_LOOKUP_STATUS } from '../domain/hn';
-import type { HnLookupResult } from '../domain/hn';
 import { EXTENSION_BRAND } from '../shared/brand';
 import { t } from '../shared/i18n';
+
+import type { HnLookupResult } from '../domain/hn';
 
 const HN_ORANGE = '#ff6600';
 const MAX_BADGE_COUNT = 999;
@@ -15,10 +16,12 @@ export interface AvailabilityBadge {
      * Contains the compact badge text.
      */
     text: string;
+
     /**
      * Contains the localized browser-action tooltip.
      */
     title: string;
+
     /**
      * Contains the optional badge background color.
      */
@@ -35,6 +38,7 @@ export const EMPTY_AVAILABILITY_BADGE: AvailabilityBadge = {
 
 /**
  * Maps a validated lookup result to localized browser-action badge state.
+ *
  * @param result - The validated Hacker News lookup result to represent.
  */
 export function badgeForLookupResult(result: HnLookupResult): AvailabilityBadge {
@@ -42,7 +46,7 @@ export function badgeForLookupResult(result: HnLookupResult): AvailabilityBadge 
         return EMPTY_AVAILABILITY_BADGE;
     }
 
-    const comments = result.primary.comments;
+    const { comments } = result.primary;
     if (comments === 0) {
         return {
             text: GENERIC_BADGE_TEXT,

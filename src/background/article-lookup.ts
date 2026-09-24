@@ -1,8 +1,10 @@
 import { lookupWithCache } from '../browser/lookup-cache';
 import { lookupHnDiscussions } from '../domain/hn';
-import type { HnLookupResult } from '../domain/hn';
 import { buildArticleCandidates } from '../domain/url';
+
 import { cacheStorage } from './chrome-adapters';
+
+import type { HnLookupResult } from '../domain/hn';
 
 /**
  * Contains a panel lookup outcome and its sanitized reusable identity.
@@ -12,6 +14,7 @@ export interface PanelLookupResult {
      * Contains the verified Hacker News lookup outcome.
      */
     result: HnLookupResult;
+
     /**
      * Contains the sanitized primary article identity when one is eligible.
      */
@@ -20,6 +23,7 @@ export interface PanelLookupResult {
 
 /**
  * Resolves one page context through the session-only lookup cache.
+ *
  * @param pageUrl - The active page URL to resolve.
  * @param canonicalHref - The page canonical URL when one is available.
  * @param signal - The optional abort signal that cancels a superseded lookup.
@@ -36,6 +40,7 @@ export async function lookupArticle(pageUrl: string, canonicalHref: string | nul
 /**
  * Resolves one side-panel page through the shared session lookup cache and
  * returns the already-sanitized identity used to construct that lookup.
+ *
  * @param pageUrl - The explicitly consented or opted-in page URL to resolve.
  * @param signal - The optional signal that cancels a superseded lookup.
  */

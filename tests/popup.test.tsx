@@ -1,9 +1,12 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { App } from '../src/popup/popup-app';
+
 import type { BackgroundResponse } from '../src/shared/messages';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -186,8 +189,12 @@ describe('App discussion opens', () => {
             result: {
                 status: 'found',
                 primary: {
-                    id: '0', title: 'Invalid', articleUrl: 'https://example.com/story',
-                    comments: 1, points: 1, createdAt: 1,
+                    id: '0',
+                    title: 'Invalid',
+                    articleUrl: 'https://example.com/story',
+                    comments: 1,
+                    points: 1,
+                    createdAt: 1,
                 },
                 alternatives: [],
             },

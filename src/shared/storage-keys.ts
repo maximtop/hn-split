@@ -19,6 +19,7 @@ export const SESSION_STORAGE_KEY_PREFIX = {
 
 /**
  * Builds the session-storage key holding one tab's reusable panel association.
+ *
  * @param tabId - The Chrome tab whose association the key stores.
  */
 export function sidePanelAssociationKey(tabId: number): string {
@@ -27,6 +28,7 @@ export function sidePanelAssociationKey(tabId: number): string {
 
 /**
  * Reads a safe tab identifier out of one association key.
+ *
  * @param key - The session-storage key to inspect.
  */
 export function sidePanelAssociationTabId(key: string): number | null {
@@ -43,6 +45,7 @@ export function sidePanelAssociationTabId(key: string): number | null {
 
 /**
  * Builds the session-storage key holding one window's side panel selection.
+ *
  * @param windowId - The browser window whose panel selection the key stores.
  */
 export function sidePanelContentKey(windowId: number): string {
@@ -51,6 +54,7 @@ export function sidePanelContentKey(windowId: number): string {
 
 /**
  * Reads the window identifier back out of one side panel selection key.
+ *
  * @param key - The session-storage key to inspect.
  */
 export function sidePanelContentWindowId(key: string): number | null {

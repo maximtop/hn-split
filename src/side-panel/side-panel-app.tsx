@@ -1,4 +1,3 @@
-import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import {
     Alert,
     Anchor,
@@ -8,11 +7,13 @@ import {
     Stack,
     Text,
 } from '@mantine/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+    useCallback, useEffect, useRef, useState,
+} from 'react';
 
 import { HN_LOOKUP_STATUS, HN_ORIGIN, discussionUrl } from '../domain/hn';
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { t } from '../shared/i18n';
-import type { MessageKey } from '../shared/i18n';
 import {
     FOLLOW_DIAGNOSTIC_CODE,
     FOLLOW_DIAGNOSTIC_EVENT,
@@ -34,24 +35,27 @@ import {
     isSidePanelPortMessage,
 } from '../shared/messages';
 import { SIDE_PANEL_CONTENT_KIND } from '../shared/side-panel-content';
-import type { SidePanelContent, SidePanelUnavailableReason } from '../shared/side-panel-content';
 import {
     isSidePanelProjection,
     matchesReadyStamp,
 } from '../shared/side-panel-projection';
-import type {
-    SidePanelProjection,
-    SidePanelReadyStamp,
-} from '../shared/side-panel-projection';
 import { sidePanelContentKey } from '../shared/storage-keys';
 import { cssVariablesResolver, theme } from '../shared/theme';
+
 import {
     EMPTY_RETAINED_DISCUSSION_FRAMES,
     activateDiscussionFrame,
     discardDiscussionFramesForTab,
     discussionFrameKey,
 } from './retained-discussion-frames';
+
 import type { RetainedDiscussionFrameState } from './retained-discussion-frames';
+import type { MessageKey } from '../shared/i18n';
+import type { SidePanelContent, SidePanelUnavailableReason } from '../shared/side-panel-content';
+import type {
+    SidePanelProjection,
+    SidePanelReadyStamp,
+} from '../shared/side-panel-projection';
 
 const STATUS_ELEMENT_ID = 'side-panel-status';
 
@@ -73,6 +77,7 @@ interface SidePanelTarget {
      * Identifies the browser tab that must own the next visible projection.
      */
     tabId: number;
+
     /**
      * Sets the oldest projection revision allowed for the reserved tab.
      */
@@ -82,12 +87,12 @@ interface SidePanelTarget {
 /**
  * Names the trusted manual commands exposed by the side panel.
  */
-type SidePanelActionType =
-    | typeof BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB
+type SidePanelActionType = | typeof BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB
     | typeof BACKGROUND_REQUEST_TYPE.ENABLE_SIDE_PANEL_FOLLOW;
 
 /**
  * Resolves the status line shown while no discussion frame can be displayed.
+ *
  * @param content - The current authoritative panel content.
  */
 function statusMessage(content: SidePanelContent): string | null {
@@ -105,6 +110,7 @@ function statusMessage(content: SidePanelContent): string | null {
 
 /**
  * Determines whether one projection satisfies the latest reserved panel tab.
+ *
  * @param candidate - The projection being considered for display.
  * @param target - The reserved tab and minimum revision, when present.
  */
@@ -121,6 +127,7 @@ function projectionMatchesTarget(
 
 /**
  * Resolves the sole frame key authorized by current framing and target state.
+ *
  * @param candidate - The authoritative projection being considered.
  * @param framingReady - Whether the current framing session is ready.
  * @param target - The latest reserved tab and revision boundary.
@@ -234,6 +241,7 @@ export function SidePanelApp(): React.JSX.Element {
 
         /**
          * Applies a projection written directly to this window's session key.
+         *
          * @param changes - The session-storage changes delivered by Chrome.
          */
         function onChanged(changes: Record<string, chrome.storage.StorageChange>): void {
@@ -336,6 +344,7 @@ export function SidePanelApp(): React.JSX.Element {
 
         /**
          * Discards local framing state and schedules a replacement port.
+         *
          * @param port - The disconnected port to retire.
          */
         function handleDisconnect(port: chrome.runtime.Port): void {
@@ -353,6 +362,7 @@ export function SidePanelApp(): React.JSX.Element {
 
         /**
          * Retires a port after a send failure so no framing owner is orphaned.
+         *
          * @param port - The port whose transport failed.
          */
         function disconnectAfterSendFailure(port: chrome.runtime.Port): void {
@@ -369,6 +379,7 @@ export function SidePanelApp(): React.JSX.Element {
 
         /**
          * Sends one keepalive over the current port or retires that port.
+         *
          * @param port - The port whose worker lifetime is being extended.
          */
         function keepAlive(port: chrome.runtime.Port): void {
@@ -388,6 +399,7 @@ export function SidePanelApp(): React.JSX.Element {
 
         /**
          * Applies one strict lifecycle message from the current background port.
+         *
          * @param port - The port that delivered the message.
          * @param value - The unknown runtime value to validate.
          */
@@ -587,70 +599,70 @@ export function SidePanelApp(): React.JSX.Element {
                     {status === null
                         ? null
                         : (
-                                <Stack gap="xs" p="md">
-                                    <Text c="dimmed" size="sm">{status}</Text>
-                                </Stack>
-                            )}
+                            <Stack gap="xs" p="md">
+                                <Text c="dimmed" size="sm">{status}</Text>
+                            </Stack>
+                        )}
                 </Box>
                 {visibleContent?.kind === SIDE_PANEL_CONTENT_KIND.MANUAL_REQUIRED
                     ? (
-                            <Stack gap="xs" p="md">
-                                <Button
-                                    aria-describedby={STATUS_ELEMENT_ID}
-                                    disabled={busy}
-                                    fullWidth
-                                    onClick={() => void runPanelAction(
-                                        BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB,
-                                    )}
-                                >
-                                    {t('side_panel_check_this_tab')}
-                                </Button>
-                                <Button
-                                    aria-describedby={STATUS_ELEMENT_ID}
-                                    disabled={busy}
-                                    fullWidth
-                                    variant="default"
-                                    onClick={() => void runPanelAction(
-                                        BACKGROUND_REQUEST_TYPE.ENABLE_SIDE_PANEL_FOLLOW,
-                                    )}
-                                >
-                                    {t('side_panel_follow_tabs_automatically')}
-                                </Button>
-                            </Stack>
-                        )
+                        <Stack gap="xs" p="md">
+                            <Button
+                                aria-describedby={STATUS_ELEMENT_ID}
+                                disabled={busy}
+                                fullWidth
+                                onClick={() => void runPanelAction(
+                                    BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB,
+                                )}
+                            >
+                                {t('side_panel_check_this_tab')}
+                            </Button>
+                            <Button
+                                aria-describedby={STATUS_ELEMENT_ID}
+                                disabled={busy}
+                                fullWidth
+                                variant="default"
+                                onClick={() => void runPanelAction(
+                                    BACKGROUND_REQUEST_TYPE.ENABLE_SIDE_PANEL_FOLLOW,
+                                )}
+                            >
+                                {t('side_panel_follow_tabs_automatically')}
+                            </Button>
+                        </Stack>
+                    )
                     : null}
                 {visibleContent?.kind === SIDE_PANEL_CONTENT_KIND.UNAVAILABLE
                     && visibleContent.reason === HN_LOOKUP_STATUS.ERROR
                     ? (
-                            <Box p="md">
-                                <Button
-                                    aria-describedby={STATUS_ELEMENT_ID}
-                                    disabled={busy}
-                                    fullWidth
-                                    onClick={() => void runPanelAction(
-                                        BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB,
-                                    )}
-                                >
-                                    {t('side_panel_retry')}
-                                </Button>
-                            </Box>
-                        )
+                        <Box p="md">
+                            <Button
+                                aria-describedby={STATUS_ELEMENT_ID}
+                                disabled={busy}
+                                fullWidth
+                                onClick={() => void runPanelAction(
+                                    BACKGROUND_REQUEST_TYPE.CHECK_ACTIVE_SIDE_PANEL_TAB,
+                                )}
+                            >
+                                {t('side_panel_retry')}
+                            </Button>
+                        </Box>
+                    )
                     : null}
                 {status === null
                     ? null
                     : (
-                            <Box px="md" pb="md">
-                                <Anchor
-                                    c="brand.7"
-                                    href={HN_ORIGIN}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    size="sm"
-                                >
-                                    {t('side_panel_open_on_hn')}
-                                </Anchor>
-                            </Box>
-                        )}
+                        <Box px="md" pb="md">
+                            <Anchor
+                                c="brand.7"
+                                href={HN_ORIGIN}
+                                target="_blank"
+                                rel="noreferrer"
+                                size="sm"
+                            >
+                                {t('side_panel_open_on_hn')}
+                            </Anchor>
+                        </Box>
+                    )}
                 <Box className="discussion-frame-stack">
                     {frameState.frames.map((frame) => {
                         const active = frame.key === activeFrameKey;
@@ -671,10 +683,10 @@ export function SidePanelApp(): React.JSX.Element {
                 {actionError === null
                     ? null
                     : (
-                            <Alert color="red" m="md" role="alert">
-                                {actionError}
-                            </Alert>
-                        )}
+                        <Alert color="red" m="md" role="alert">
+                            {actionError}
+                        </Alert>
+                    )}
             </Stack>
         </MantineProvider>
     );

@@ -1,15 +1,17 @@
-import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { makeAutoObservable, runInAction } from 'mobx';
 
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
-import type { MessageKey } from '../shared/i18n';
 import { logWarning } from '../shared/logger';
+
 import {
     readBooleanSetting,
     updateBooleanSetting,
 } from './setting-client';
+
 import type { BooleanSettingDependencies } from './setting-client';
+import type { MessageKey } from '../shared/i18n';
 
 /**
  * Names the localized confirmation copy shown after a successful mutation.
@@ -19,6 +21,7 @@ export interface SettingStatusCopy {
      * Contains the locale key confirming the setting was enabled.
      */
     enabledKey: MessageKey;
+
     /**
      * Contains the locale key confirming the setting was disabled.
      */
@@ -31,11 +34,14 @@ export interface SettingStatusCopy {
  */
 export class OptionsStore {
     enabled = false;
+
     busy = true;
+
     message = '';
 
     /**
      * Creates an observable options store.
+     *
      * @param dependencies - The background messaging operations used for setting reads and writes.
      * @param copy - The localized confirmation copy for this setting.
      */
@@ -71,6 +77,7 @@ export class OptionsStore {
 
     /**
      * Applies a setting mutation and resynchronizes after any rejected response.
+     *
      * @param nextEnabled - Whether the setting should be enabled.
      */
     async changeEnabled(nextEnabled: boolean): Promise<void> {

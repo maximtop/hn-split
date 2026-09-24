@@ -1,4 +1,5 @@
 import { ARTICLE_CLICK_MESSAGE_TYPE } from '../shared/content-scripts';
+
 import { detectArticleClick } from './article-click';
 
 // Bubble phase, and no preventDefault: page handlers run first and their
