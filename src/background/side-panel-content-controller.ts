@@ -449,7 +449,7 @@ const panelContent = new SidePanelContentRouter({
         });
     },
     // The lifecycle controller below depends on this router, so this hook reaches it through the hoisted function.
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define -- mutual dependency with the controller
     resynchronize: async (reservation) => resynchronizeSidePanelWindow(reservation),
     warn: logFollowWarning,
 });

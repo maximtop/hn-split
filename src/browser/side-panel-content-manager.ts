@@ -1367,8 +1367,7 @@ export class SidePanelContentManager {
             return;
         }
         const intent = this.beginRequest('explicit', controller.tabId, controller);
-        // Controllers are the manager's mutable per-operation state.
-        // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign -- the controller is the manager's mutable per-operation state
         controller.intent = intent;
         controller.resolveStarted(intent);
     }
@@ -1527,7 +1526,7 @@ export class SidePanelContentManager {
         if (controller.readinessSettled) {
             return;
         }
-        // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign -- the controller is the manager's mutable per-operation state
         controller.readinessSettled = true;
         controller.resolveReadiness(projection);
     }
@@ -1545,7 +1544,7 @@ export class SidePanelContentManager {
         if (controller.settled) {
             return;
         }
-        // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign -- the controller is the manager's mutable per-operation state
         controller.settled = true;
         if (this.explicitOperations.get(controller.tabId) === controller) {
             this.explicitOperations.delete(controller.tabId);
@@ -1830,7 +1829,7 @@ export class SidePanelContentManager {
         const revision = intent.hasPublished
             ? this.reserveProjectionRevision()
             : intent.firstProjectionRevision;
-        // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line no-param-reassign -- the intent is the manager's mutable per-operation state
         intent.hasPublished = true;
         const operation = this.projectionQueue.catch(() => undefined).then(async () => {
             if (!this.isCurrent(intent)) {

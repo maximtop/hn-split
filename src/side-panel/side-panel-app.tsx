@@ -343,8 +343,7 @@ export function SidePanelApp(): React.JSX.Element {
             }
             reconnectTimer = window.setTimeout(() => {
                 reconnectTimer = null;
-                // connectPort and scheduleReconnect call each other, so one must come first.
-                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define -- mutual recursion with connectPort
                 connectPort();
             }, SIDE_PANEL_RECONNECT_DELAY_MS);
         }
