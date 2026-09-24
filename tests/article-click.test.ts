@@ -42,7 +42,8 @@ function renderStoryRow({
                 <td class="title"><span class="rank">1.</span></td>
                 <td class="title">
                     <span class="titleline"><a href="${href}">Story title</a>
-                        <span class="sitebit comhead"> (<a href="from?site=article.example.com"><span class="sitestr">article.example.com</span></a>)</span>
+                        <span class="sitebit comhead"> (<a href="from?site=article.example.com"><span
+                            class="sitestr">article.example.com</span></a>)</span>
                     </span>
                 </td>
             </tr>

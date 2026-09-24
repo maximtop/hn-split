@@ -23,7 +23,8 @@ it('rebuilds Chrome, preserves siblings and propagates command failures', async 
         await symlink(resolve(ROOT, 'node_modules'), resolve(workspace, 'node_modules'));
         const output = resolveBuildPath(workspace, 'chrome');
         await run('make', ['build'], { cwd: workspace });
-        const manifest = JSON.parse(await readFile(resolve(output, 'manifest.json'), 'utf8')) as chrome.runtime.ManifestV3;
+        const manifestText = await readFile(resolve(output, 'manifest.json'), 'utf8');
+        const manifest = JSON.parse(manifestText) as chrome.runtime.ManifestV3;
         expect(manifest.manifest_version).toBe(3);
         expect(manifest.background?.service_worker).toBeDefined();
         await expect(stat(resolve(output, manifest.background!.service_worker))).resolves.toBeDefined();

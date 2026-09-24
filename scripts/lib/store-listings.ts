@@ -234,7 +234,8 @@ export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     chrome: {
         name: 'Chrome Web Store',
         checked: '2026-08-09',
-        source: 'developer.chrome.com/docs/extensions/reference/api/i18n (55 listing codes), Chromium locale normalization, and docs/webstore/cws-dashboard-listing',
+        source: 'developer.chrome.com/docs/extensions/reference/api/i18n (55 listing codes), Chromium locale '
+            + 'normalization, and docs/webstore/cws-dashboard-listing',
         // The package includes both runtime `nb` and the Web Store `no` alias.
         locales: buildLocaleMap({ nb: 'no' }),
         unsupportedFallback: null,
@@ -242,14 +243,16 @@ export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     edge: {
         name: 'Microsoft Edge Add-ons',
         checked: '2026-08-09',
-        source: 'learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension (listing languages added in Partner Center; description required per language)',
+        source: 'learn.microsoft.com/en-us/microsoft-edge/extensions/publish/publish-extension (listing languages '
+            + 'added in Partner Center; description required per language)',
         locales: buildLocaleMap({}),
         unsupportedFallback: null,
     },
     amo: {
         name: 'Firefox Add-ons (AMO)',
         checked: '2026-09-21',
-        source: 'github.com/mozilla/addons-server src/olympia/core/languages.py (PROD_LANGUAGES); production metadata API',
+        source: 'github.com/mozilla/addons-server src/olympia/core/languages.py (PROD_LANGUAGES); production '
+            + 'metadata API',
         // Production accepts only PROD_LANGUAGES, not the broader development
         // AMO_LANGUAGES inventory. Unsupported audiences use the default listing.
         locales: buildLocaleMap({
@@ -268,7 +271,8 @@ export const STORE_CATALOG: Readonly<Record<StoreId, StoreDescriptor>> = {
     appStore: {
         name: 'App Store (Safari)',
         checked: '2026-08-09',
-        source: 'developer.apple.com/help/app-store-connect/reference/app-store-localizations (50 localizations) and App Store Connect API locale shortcodes',
+        source: 'developer.apple.com/help/app-store-connect/reference/app-store-localizations (50 localizations) and '
+            + 'App Store Connect API locale shortcodes',
         // Bulgarian, Persian, Filipino, and Serbian have no App Store
         // localization; those audiences see the primary en-US product page.
         locales: buildLocaleMap({
@@ -363,7 +367,10 @@ export function collectListingIssues(content: ListingContent, base: ListingConte
         return issues;
     }
     if (description.bullets.length !== base.description.bullets.length) {
-        issues.push(`description.bullets must keep the ${base.description.bullets.length} reviewed English bullets, found ${description.bullets.length}`);
+        issues.push(
+            `description.bullets must keep the ${base.description.bullets.length} reviewed English bullets, found `
+            + `${description.bullets.length}`,
+        );
     }
     if (!description.intro.includes(EXTENSION_BRAND)) {
         issues.push(`description.intro must keep the untranslated brand string "${EXTENSION_BRAND}"`);
@@ -376,13 +383,21 @@ export function collectListingIssues(content: ListingContent, base: ListingConte
 
     const assembled = assembleDescription(description);
     if (assembled.length < EDGE_DESCRIPTION_MIN) {
-        issues.push(`assembled description is ${assembled.length} characters, under the Edge minimum of ${EDGE_DESCRIPTION_MIN}`);
+        issues.push(
+            `assembled description is ${assembled.length} characters, under the Edge minimum of `
+            + `${EDGE_DESCRIPTION_MIN}`,
+        );
     }
     if (assembled.length > APP_STORE_DESCRIPTION_LIMIT) {
-        issues.push(`assembled description is ${assembled.length} characters, over the App Store limit of ${APP_STORE_DESCRIPTION_LIMIT}`);
+        issues.push(
+            `assembled description is ${assembled.length} characters, over the App Store limit of `
+            + `${APP_STORE_DESCRIPTION_LIMIT}`,
+        );
     }
     if (assembled.length > EDGE_DESCRIPTION_MAX) {
-        issues.push(`assembled description is ${assembled.length} characters, over the Edge limit of ${EDGE_DESCRIPTION_MAX}`);
+        issues.push(
+            `assembled description is ${assembled.length} characters, over the Edge limit of ${EDGE_DESCRIPTION_MAX}`,
+        );
     }
 
     const baseVersions = Object.keys(base.releaseNotes).sort();
@@ -394,7 +409,10 @@ export function collectListingIssues(content: ListingContent, base: ListingConte
         if (!nonEmpty(notes)) {
             issues.push(`releaseNotes ${version} must be a non-empty string`);
         } else if (notes.length > APP_STORE_WHATS_NEW_LIMIT) {
-            issues.push(`releaseNotes ${version} is ${notes.length} characters, over the App Store What's New limit of ${APP_STORE_WHATS_NEW_LIMIT}`);
+            issues.push(
+                `releaseNotes ${version} is ${notes.length} characters, over the App Store What's New limit of `
+                + `${APP_STORE_WHATS_NEW_LIMIT}`,
+            );
         }
     }
 
@@ -407,10 +425,16 @@ export function collectListingIssues(content: ListingContent, base: ListingConte
                 return;
             }
             if (caption.heading.length > CAPTION_HEADING_LIMIT) {
-                issues.push(`captions[${index}].heading is ${caption.heading.length} characters, over the layout budget of ${CAPTION_HEADING_LIMIT}`);
+                issues.push(
+                    `captions[${index}].heading is ${caption.heading.length} characters, over the layout budget of `
+                    + `${CAPTION_HEADING_LIMIT}`,
+                );
             }
             if (caption.sub.length > CAPTION_SUB_LIMIT) {
-                issues.push(`captions[${index}].sub is ${caption.sub.length} characters, over the layout budget of ${CAPTION_SUB_LIMIT}`);
+                issues.push(
+                    `captions[${index}].sub is ${caption.sub.length} characters, over the layout budget of `
+                    + `${CAPTION_SUB_LIMIT}`,
+                );
             }
         });
     }
@@ -419,11 +443,16 @@ export function collectListingIssues(content: ListingContent, base: ListingConte
         issues.push('searchTerms must be a non-empty list of non-empty strings');
     } else {
         if (searchTerms.length > EDGE_SEARCH_TERM_MAX_COUNT) {
-            issues.push(`searchTerms has ${searchTerms.length} terms, over the Edge limit of ${EDGE_SEARCH_TERM_MAX_COUNT}`);
+            issues.push(
+                `searchTerms has ${searchTerms.length} terms, over the Edge limit of ${EDGE_SEARCH_TERM_MAX_COUNT}`,
+            );
         }
         for (const term of searchTerms) {
             if (term.length > EDGE_SEARCH_TERM_MAX_LENGTH) {
-                issues.push(`search term "${term}" is ${term.length} characters, over the Edge limit of ${EDGE_SEARCH_TERM_MAX_LENGTH}`);
+                issues.push(
+                    `search term "${term}" is ${term.length} characters, over the Edge limit of `
+                    + `${EDGE_SEARCH_TERM_MAX_LENGTH}`,
+                );
             }
         }
         const words = countSearchTermWords(searchTerms);
@@ -435,7 +464,10 @@ export function collectListingIssues(content: ListingContent, base: ListingConte
     if (!nonEmpty(appStoreKeywords)) {
         issues.push('appStoreKeywords must be a non-empty string');
     } else if (appStoreKeywords.length > APP_STORE_KEYWORDS_LIMIT) {
-        issues.push(`appStoreKeywords is ${appStoreKeywords.length} characters, over the App Store limit of ${APP_STORE_KEYWORDS_LIMIT}`);
+        issues.push(
+            `appStoreKeywords is ${appStoreKeywords.length} characters, over the App Store limit of `
+            + `${APP_STORE_KEYWORDS_LIMIT}`,
+        );
     }
 
     return issues;

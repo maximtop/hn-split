@@ -45,7 +45,10 @@ export class DiagnosticLog {
      */
     constructor(
         private readonly storage: DiagnosticStorage,
-        private readonly limits = { entries: DIAGNOSTIC_LIMIT.ENTRIES as number, bytes: DIAGNOSTIC_LIMIT.BYTES as number },
+        private readonly limits = {
+            entries: DIAGNOSTIC_LIMIT.ENTRIES as number,
+            bytes: DIAGNOSTIC_LIMIT.BYTES as number,
+        },
     ) {}
 
     /**

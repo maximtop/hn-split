@@ -13,7 +13,10 @@ import type { DiagnosticResponse } from '../shared/diagnostic-protocol';
  * @param log - Single background-owned collector.
  * @param runtime - Extension identity used to authenticate exact document URLs.
  */
-export function createDiagnosticHandler(log: DiagnosticLog, runtime: Pick<typeof chrome.runtime, 'id' | 'getURL'>): (message: unknown, sender: chrome.runtime.MessageSender) => Promise<DiagnosticResponse> | null {
+export function createDiagnosticHandler(
+    log: DiagnosticLog,
+    runtime: Pick<typeof chrome.runtime, 'id' | 'getURL'>,
+): (message: unknown, sender: chrome.runtime.MessageSender) => Promise<DiagnosticResponse> | null {
     const sources = new Map([
         [runtime.getURL('popup.html'), DIAGNOSTIC_SOURCE.POPUP],
         [runtime.getURL('options.html'), DIAGNOSTIC_SOURCE.OPTIONS],

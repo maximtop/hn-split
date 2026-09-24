@@ -5,7 +5,33 @@
 
 // `discussion` is deliberately absent: it is also a CSS class name in the popup
 // markup, where a literal is the only way to write it.
-const CONTROL_VALUE_PATTERN = '^(found|not_found|restricted|error|invalid_response|lookup_failed|lookup|open_discussion|open_discussion_for_click|get_availability_setting|set_availability_setting|get_article_click_setting|set_article_click_setting|adjacent_tab|reused_tab|split_view|canonical|page|pending|unavailable|open_in_split_link|automatic_availability|article_click_discussion|discussion_tab:)$';
+const CONTROL_VALUES = [
+    'found',
+    'not_found',
+    'restricted',
+    'error',
+    'invalid_response',
+    'lookup_failed',
+    'lookup',
+    'open_discussion',
+    'open_discussion_for_click',
+    'get_availability_setting',
+    'set_availability_setting',
+    'get_article_click_setting',
+    'set_article_click_setting',
+    'adjacent_tab',
+    'reused_tab',
+    'split_view',
+    'canonical',
+    'page',
+    'pending',
+    'unavailable',
+    'open_in_split_link',
+    'automatic_availability',
+    'article_click_discussion',
+    'discussion_tab:',
+];
+const CONTROL_VALUE_PATTERN = `^(${CONTROL_VALUES.join('|')})$`;
 
 /**
  * Builds a rule that reports every node matched by one selector.

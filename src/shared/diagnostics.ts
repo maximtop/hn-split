@@ -102,7 +102,11 @@ function categorizeError(error: Error): (typeof DIAGNOSTIC_ERROR)[keyof typeof D
  * @param message - Message that must belong to the application event catalog.
  * @param values - Console arguments; arbitrary objects and raw errors are never retained.
  */
-export function normalizeDiagnostic(level: DiagnosticEvent['level'], message: string, values: unknown[]): DiagnosticEvent | null {
+export function normalizeDiagnostic(
+    level: DiagnosticEvent['level'],
+    message: string,
+    values: unknown[],
+): DiagnosticEvent | null {
     const details: DiagnosticEvent['details'] = {};
     for (const value of values) {
         if (value instanceof Error) {

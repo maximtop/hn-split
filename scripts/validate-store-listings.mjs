@@ -53,12 +53,15 @@ for (const storeId of STORE_IDS) {
     } else {
         const unsupported = registered.filter((code) => store.locales[code] === null);
         if (unsupported.length > 0 && store.unsupportedFallback === null) {
-            problems.push(`${storeId}: unsupported locales [${unsupported.join(', ')}] need an explicit fallback listing`);
+            problems.push(
+                `${storeId}: unsupported locales [${unsupported.join(', ')}] need an explicit fallback listing`,
+            );
         }
         const supportedCount = registered.length - unsupported.length;
         storeSummaries.push(unsupported.length === 0
             ? `${storeId} ${supportedCount}/${registered.length}`
-            : `${storeId} ${supportedCount}/${registered.length} (${unsupported.join(', ')} → ${store.unsupportedFallback})`);
+            : `${storeId} ${supportedCount}/${registered.length} `
+                + `(${unsupported.join(', ')} → ${store.unsupportedFallback})`);
     }
 }
 

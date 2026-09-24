@@ -301,7 +301,8 @@ export async function installPerArticleLookupFixtures(
         // embeddable so panel behavior remains deterministic in CI.
         await route.fulfill({
             contentType: 'text/html',
-            body: '<!doctype html><title>Fixture discussion</title><main style="height:4000px"><h1>Fixture discussion</h1></main>',
+            body: '<!doctype html><title>Fixture discussion</title>'
+                + '<main style="height:4000px"><h1>Fixture discussion</h1></main>',
         });
     });
     return { algoliaRequests, discussionFrameRequests };

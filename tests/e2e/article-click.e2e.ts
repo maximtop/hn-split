@@ -34,7 +34,8 @@ function storyRow(story: { id: string; path: string; title: string }): string {
             <td class="title"><span class="rank">1.</span></td>
             <td class="title">
                 <span class="titleline"><a href="${ARTICLE_ORIGIN}${story.path}">${story.title}</a>
-                    <span class="sitebit comhead"> (<a href="from?site=article.hn-split.example.com"><span class="sitestr">article.hn-split.example.com</span></a>)</span>
+                    <span class="sitebit comhead"> (<a href="from?site=article.hn-split.example.com"><span
+                        class="sitestr">article.hn-split.example.com</span></a>)</span>
                 </span>
             </td>
         </tr>
@@ -60,7 +61,8 @@ async function installArticleClickFixtures(context: BrowserContext): Promise<voi
         }
         await route.fulfill({
             contentType: 'text/html',
-            body: `<!doctype html><title>Fixture Hacker News</title><table>${storyRow(STORY_ONE)}${storyRow(STORY_TWO)}</table>`,
+            body: '<!doctype html><title>Fixture Hacker News</title>'
+                + `<table>${storyRow(STORY_ONE)}${storyRow(STORY_TWO)}</table>`,
         });
     });
     await context.route(`${ARTICLE_ORIGIN}/**`, async (route) => {

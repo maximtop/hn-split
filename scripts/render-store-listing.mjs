@@ -16,7 +16,10 @@ if (!STORE_IDS.includes(storeId) || !SHIPPED_LOCALES.includes(locale)) {
 const store = STORE_CATALOG[storeId];
 const storeLocale = store.locales[locale];
 if (storeLocale === null) {
-    console.log(`${store.name} has no ${locale} listing; that audience sees the ${store.unsupportedFallback} listing (checked ${store.checked}).`);
+    console.log(
+        `${store.name} has no ${locale} listing; that audience sees the ${store.unsupportedFallback} listing `
+        + `(checked ${store.checked}).`,
+    );
     process.exit(0);
 }
 
@@ -36,7 +39,10 @@ function printField(label, value) {
 console.log(`# ${store.name} — ${storeLocale} (from ${locale}${listing.reviewed ? '' : ', release review pending'})\n`);
 printField('Name (from manifest; read-only)', EXTENSION_BRAND);
 printField('Summary / short description (from manifest; read-only)', messages.extension_description.message);
-printField(storeId === 'chrome' ? 'Detailed description (paste into dashboard)' : 'Description', assembleStoreDescription(storeId, listing.description));
+printField(
+    storeId === 'chrome' ? 'Detailed description (paste into dashboard)' : 'Description',
+    assembleStoreDescription(storeId, listing.description),
+);
 if (storeId !== 'chrome' && storeId !== 'amo') {
     for (const [version, notes] of Object.entries(listing.releaseNotes)) {
         printField(`Release notes ${version}`, notes);

@@ -171,7 +171,10 @@ async function capturePopup(extension, { colorScheme }) {
     await page.getByRole('button', {
         name: labelPattern(messages.open_primary_discussion.message, baseMessages.open_primary_discussion.message),
     }).first().waitFor();
-    if (!isBaseLocale && await page.getByRole('button', { name: messages.open_primary_discussion.message }).count() === 0) {
+    if (
+        !isBaseLocale
+        && await page.getByRole('button', { name: messages.open_primary_discussion.message }).count() === 0
+    ) {
         console.warn(`the platform ignored --lang=${locale}; the UI capture stays English under ${locale} captions`);
     }
     const capture = await page.locator('body').screenshot();

@@ -62,7 +62,9 @@ const sendRuntime: DiagnosticTransport = async (request) => {
  * @param props.send - Runtime transport for the options document.
  * @param props.download - Explicit local file-saving callback.
  */
-export function DiagnosticsSection({ send = sendRuntime, download = downloadDiagnostics }: DiagnosticsSectionProps): React.JSX.Element {
+export function DiagnosticsSection(
+    { send = sendRuntime, download = downloadDiagnostics }: DiagnosticsSectionProps,
+): React.JSX.Element {
     const [count, setCount] = useState<number | null>(null);
     const [busy, setBusy] = useState(false);
     const [feedback, setFeedback] = useState<MessageKey | null>(null);

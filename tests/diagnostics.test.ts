@@ -53,17 +53,27 @@ describe('diagnostic privacy boundary', () => {
         error.name = secret;
         const result = normalizeDiagnostic(DIAGNOSTIC_LEVEL.WARNING, DIAGNOSTIC_EVENT.POPUP_LOOKUP_FAILED, [
             {
-                tabId: 2, windowId: 3, url: secret, cookie: secret, title: secret, content: secret, candidates: [secret], headers: secret,
+                tabId: 2,
+                windowId: 3,
+                url: secret,
+                cookie: secret,
+                title: secret,
+                content: secret,
+                candidates: [secret],
+                headers: secret,
             },
             error,
         ]);
         expect(result?.details).toEqual({ tabId: 2, windowId: 3, errorCategory: DIAGNOSTIC_ERROR.TYPE });
         expect(JSON.stringify(result)).not.toContain(secret);
         expect(normalizeDiagnostic(DIAGNOSTIC_LEVEL.WARNING, secret, [error])).toBeNull();
-        expect(normalizeDiagnostic(DIAGNOSTIC_LEVEL.INFO, event.message, [{ tabId: secret, revision: Infinity }])?.details).toEqual({});
+        expect(
+            normalizeDiagnostic(DIAGNOSTIC_LEVEL.INFO, event.message, [{ tabId: secret, revision: Infinity }])?.details,
+        ).toEqual({});
     });
 
-    it('keeps console output and feeds all existing logger entry points without content-script collection', async () => {
+    it('keeps console output and feeds all existing logger entry points '
+        + 'without content-script collection', async () => {
         const info = vi.spyOn(console, 'info').mockImplementation(() => undefined);
         const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
         const sink = vi.fn(async () => undefined);
@@ -105,9 +115,13 @@ describe('background session collector', () => {
     it('serializes concurrent appends without losing entries and restores across worker instances', async () => {
         const storage = memoryStorage();
         const log = new DiagnosticLog(storage);
-        await Promise.all(Array.from({ length: 30 }, (_, tabId) => log.append({ ...event, details: { tabId } }, DIAGNOSTIC_SOURCE.BACKGROUND)));
+        await Promise.all(Array.from(
+            { length: 30 },
+            (_, tabId) => log.append({ ...event, details: { tabId } }, DIAGNOSTIC_SOURCE.BACKGROUND),
+        ));
         const restored = new DiagnosticLog(storage);
-        expect((await restored.snapshot()).entries.map((entry) => entry.details.tabId)).toEqual(Array.from({ length: 30 }, (_, i) => i));
+        expect((await restored.snapshot()).entries.map((entry) => entry.details.tabId))
+            .toEqual(Array.from({ length: 30 }, (_, i) => i));
         expect((await new DiagnosticLog(memoryStorage()).snapshot()).entries).toEqual([]);
     });
 
@@ -125,7 +139,10 @@ describe('background session collector', () => {
     it('independently applies serialized byte eviction', async () => {
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2026-09-20T12:34:56Z'));
-        const sample = { ...empty(), entries: [{ ...event, source: DIAGNOSTIC_SOURCE.BACKGROUND, timestamp: new Date().toISOString() }] };
+        const sample = {
+            ...empty(),
+            entries: [{ ...event, source: DIAGNOSTIC_SOURCE.BACKGROUND, timestamp: new Date().toISOString() }],
+        };
         const cap = diagnosticBytes(sample);
         const log = new DiagnosticLog(memoryStorage(), { entries: 10, bytes: cap });
         await log.append(event, DIAGNOSTIC_SOURCE.BACKGROUND);
@@ -143,7 +160,10 @@ describe('background session collector', () => {
         });
         vi.spyOn(storage, 'read').mockReturnValueOnce(blocked);
         const log = new DiagnosticLog(storage, { entries: 1, bytes: DIAGNOSTIC_LIMIT.BYTES });
-        const pending = Array.from({ length: DIAGNOSTIC_LIMIT.PENDING }, () => log.append(event, DIAGNOSTIC_SOURCE.BACKGROUND));
+        const pending = Array.from(
+            { length: DIAGNOSTIC_LIMIT.PENDING },
+            () => log.append(event, DIAGNOSTIC_SOURCE.BACKGROUND),
+        );
         await expect(log.append(event, DIAGNOSTIC_SOURCE.BACKGROUND)).rejects.toThrow('Diagnostic queue full');
         release(undefined);
         await Promise.all(pending);
@@ -199,7 +219,8 @@ describe('runtime ownership and export', () => {
     const runtime = { id: 'extension-id', getURL: (path: string) => `chrome-extension://extension-id/${path}` };
     const sender = (path: string): chrome.runtime.MessageSender => ({ id: runtime.id, url: runtime.getURL(path) });
 
-    it('collects UI contexts through the facade into one background writer and exports a safe versioned snapshot', async () => {
+    it('collects UI contexts through the facade into one background writer '
+        + 'and exports a safe versioned snapshot', async () => {
         vi.spyOn(console, 'info').mockImplementation(() => undefined);
         vi.useFakeTimers();
         vi.setSystemTime(new Date('2026-09-20T12:34:56Z'));
@@ -221,7 +242,11 @@ describe('runtime ownership and export', () => {
         const file = formatDiagnosticExport(response.buffer, '0.1.2', new Date());
         expect(file.filename).toBe('20260920_123456_hn_split_v0.1.2.txt');
         const lines = file.text.trim().split('\n').map((line) => JSON.parse(line));
-        expect(lines[0]).toEqual({ formatVersion: DIAGNOSTIC_FORMAT_VERSION, extensionVersion: '0.1.2', exportedAt: new Date().toISOString() });
+        expect(lines[0]).toEqual({
+            formatVersion: DIAGNOSTIC_FORMAT_VERSION,
+            extensionVersion: '0.1.2',
+            exportedAt: new Date().toISOString(),
+        });
         expect(lines.slice(1)).toEqual(response.buffer.entries);
         expect(file.text).not.toContain('secret');
         expect(await handle({ type: DIAGNOSTIC_REQUEST.CLEAR }, sender('options.html'))).toEqual({ ok: true });

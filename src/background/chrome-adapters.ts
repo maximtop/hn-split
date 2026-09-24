@@ -301,7 +301,10 @@ export const contextMenuRegistry: OpenInSplitMenuRegistry = {
             chrome.contextMenus.create({
                 id: properties.id,
                 title: properties.title,
-                contexts: properties.contexts as [chrome.contextMenus.ContextType, ...chrome.contextMenus.ContextType[]],
+                contexts: properties.contexts as [
+                    chrome.contextMenus.ContextType,
+                    ...chrome.contextMenus.ContextType[],
+                ],
                 targetUrlPatterns: [...properties.targetUrlPatterns],
             }, () => {
                 const failure = chrome.runtime.lastError;
