@@ -1,4 +1,10 @@
+/**
+ * @file Caches Hacker News lookup results in session storage under versioned keys, with separate lifetimes for found
+ * and not-found results and cleanup of entries from every cache version.
+ */
+
 import { HN_LOOKUP_STATUS, isHnLookupResult } from '../domain/hn';
+
 import type { HnLookupResult } from '../domain/hn';
 import type { ArticleCandidate } from '../domain/url';
 
@@ -11,6 +17,18 @@ const CACHE_KEY_FAMILY_PREFIX = 'hn_lookup_';
 const CACHE_KEY_PREFIX = `${CACHE_KEY_FAMILY_PREFIX}v${CACHE_VERSION}:`;
 
 /**
+ * Chooses how long a lookup result stays cached; errors are not cached.
+ *
+ * @param result - The completed lookup result.
+ */
+function resultTtl(result: HnLookupResult): number | null {
+    if (result.status === HN_LOOKUP_STATUS.FOUND) {
+        return POSITIVE_TTL_MS;
+    }
+    return result.status === HN_LOOKUP_STATUS.NOT_FOUND ? NEGATIVE_TTL_MS : null;
+}
+
+/**
  * Describes one validated session-cache record.
  */
 interface CacheRecord {
@@ -18,6 +36,7 @@ interface CacheRecord {
      * Contains the expiration time as Unix milliseconds.
      */
     expiresAt: number;
+
     /**
      * Contains the validated lookup result.
      */
@@ -30,17 +49,22 @@ interface CacheRecord {
 export interface CacheStorage {
     /**
      * Reads one unknown cache value.
+     *
      * @param key - The versioned lookup-cache key to read.
      */
     get(key: string): Promise<unknown>;
+
     /**
      * Writes one validated cache record.
+     *
      * @param key - The versioned lookup-cache key to write.
      * @param value - The validated lookup-cache record to persist.
      */
     set(key: string, value: CacheRecord): Promise<void>;
+
     /**
      * Removes one cache entry.
+     *
      * @param key - The versioned lookup-cache key to remove.
      */
     remove(key: string): Promise<void>;
@@ -48,6 +72,7 @@ export interface CacheStorage {
 
 /**
  * Builds a versioned cache key from normalized article identities.
+ *
  * @param candidates - The normalized article candidates used for the cache key.
  */
 function cacheKey(candidates: ArticleCandidate[]): string {
@@ -62,8 +87,10 @@ export interface CacheCollectionStorage {
      * Reads every session-storage entry.
      */
     getAll(): Promise<Record<string, unknown>>;
+
     /**
      * Removes only the provided session-storage keys.
+     *
      * @param keys - The lookup-cache keys to remove from session storage.
      */
     remove(keys: string[]): Promise<void>;
@@ -71,6 +98,7 @@ export interface CacheCollectionStorage {
 
 /**
  * Removes HN lookup entries of every cache version from session storage.
+ *
  * @param storage - The session-storage adapter that owns lookup cache records.
  */
 export async function clearLookupCacheEntries(storage: CacheCollectionStorage): Promise<void> {
@@ -83,6 +111,7 @@ export async function clearLookupCacheEntries(storage: CacheCollectionStorage): 
 
 /**
  * Determines whether an unknown value is a non-null object record.
+ *
  * @param value - The unknown cache value to inspect.
  */
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -91,6 +120,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * Determines whether an unknown value is a valid lookup-cache record.
+ *
  * @param value - The unknown cache value to validate.
  */
 function isCacheRecord(value: unknown): value is CacheRecord {
@@ -105,6 +135,7 @@ function isCacheRecord(value: unknown): value is CacheRecord {
 
 /**
  * Returns a fresh cached lookup or performs and conditionally caches a new lookup.
+ *
  * @param candidates - The normalized article candidates used for the lookup.
  * @param storage - The session-storage adapter that owns lookup cache records.
  * @param lookup - The lookup operation to run after a cache miss.
@@ -135,9 +166,7 @@ export async function lookupWithCache(
     }
 
     const result = await lookup();
-    const ttl = result.status === HN_LOOKUP_STATUS.FOUND
-        ? POSITIVE_TTL_MS
-        : result.status === HN_LOOKUP_STATUS.NOT_FOUND ? NEGATIVE_TTL_MS : null;
+    const ttl = resultTtl(result);
     if (ttl !== null) {
         try {
             await storage.set(key, {

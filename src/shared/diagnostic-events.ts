@@ -1,4 +1,9 @@
 /**
+ * @file Defines the closed set of diagnostic messages and machine-readable codes the extension may record in
+ * its session log, and the mapping from side-panel failure codes to their messages.
+ */
+
+/**
  * Provides the closed set of privacy-safe side-panel diagnostic messages.
  */
 export const FOLLOW_DIAGNOSTIC_EVENT = {
@@ -54,14 +59,17 @@ export interface FollowDiagnosticDetails {
      * Contains the stable allow-listed failure code.
      */
     code: FollowDiagnosticCode;
+
     /**
      * Identifies the affected tab when known.
      */
     tabId?: number;
+
     /**
      * Identifies a related tab for lifecycle operations when known.
      */
     relatedTabId?: number;
+
     /**
      * Identifies the affected browser window when known.
      */

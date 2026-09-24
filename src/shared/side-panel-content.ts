@@ -1,6 +1,12 @@
+/**
+ * @file Defines the states the side panel can display and their validation schemas, and converts a finished
+ * Hacker News lookup into the state the side panel should show.
+ */
+
 import * as v from 'valibot';
 
 import { HN_LOOKUP_STATUS, isValidItemId } from '../domain/hn';
+
 import type { HnLookupResult } from '../domain/hn';
 
 /**
@@ -69,6 +75,7 @@ export type SidePanelContent = v.InferOutput<typeof sidePanelContentSchema>;
 
 /**
  * Determines whether an unknown runtime value is valid side panel content.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isSidePanelContent(value: unknown): value is SidePanelContent {
@@ -80,6 +87,7 @@ export function isSidePanelContent(value: unknown): value is SidePanelContent {
  * classified lookup failures collapse into a single unavailable reason, because
  * the distinction between a malformed response and a failed request is a
  * diagnostic detail rather than something the reader can act on.
+ *
  * @param result - The finished Hacker News lookup result to convert.
  * @param tabId - The authoritative tab that owns the outcome.
  */

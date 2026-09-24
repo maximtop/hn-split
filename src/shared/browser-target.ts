@@ -1,16 +1,21 @@
 /**
+ * @file Resolves which browser package the bundle targets and provides the helper that opens the discussion
+ * surface for that target: the Chromium side panel or the Firefox sidebar.
+ */
+
+/**
  * Browser packages produced by the release build.
  */
 export type BrowserTarget = 'chrome' | 'edge' | 'firefox';
 
-declare const __TARGET_BROWSER__: BrowserTarget;
+declare const BUILD_TARGET_BROWSER: BrowserTarget;
 
 /**
  * Browser selected by the bundle, with Chrome as the unit-test default.
  */
-export const CURRENT_BROWSER: BrowserTarget = typeof __TARGET_BROWSER__ === 'undefined'
+export const CURRENT_BROWSER: BrowserTarget = typeof BUILD_TARGET_BROWSER === 'undefined'
     ? 'chrome'
-    : __TARGET_BROWSER__;
+    : BUILD_TARGET_BROWSER;
 
 /**
  * Whether the current package uses Firefox Sidebar instead of Chromium Side Panel.
@@ -41,11 +46,12 @@ interface FirefoxSidebarChrome {
  * Opens the discussion surface synchronously inside the current user gesture.
  *
  * @param tabId Chromium tab whose window receives the side panel.
+ *
  * @returns Browser promise for the panel or sidebar open operation.
  */
 export function openDiscussionSurface(tabId: number): Promise<void> {
     if (USES_FIREFOX_SIDEBAR) {
-        const sidebarAction = (chrome as typeof chrome & FirefoxSidebarChrome).sidebarAction;
+        const { sidebarAction } = (chrome as typeof chrome & FirefoxSidebarChrome);
         if (sidebarAction === undefined) {
             return Promise.reject(new Error('Firefox Sidebar API is unavailable'));
         }

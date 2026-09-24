@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { execFile } from 'node:child_process';
-import { cp, mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile } from 'node:fs/promises';
+import {
+    cp, mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { delimiter, resolve } from 'node:path';
 import { promisify } from 'node:util';
@@ -21,7 +23,8 @@ it('rebuilds Chrome, preserves siblings and propagates command failures', async 
         await symlink(resolve(ROOT, 'node_modules'), resolve(workspace, 'node_modules'));
         const output = resolveBuildPath(workspace, 'chrome');
         await run('make', ['build'], { cwd: workspace });
-        const manifest = JSON.parse(await readFile(resolve(output, 'manifest.json'), 'utf8')) as chrome.runtime.ManifestV3;
+        const manifestText = await readFile(resolve(output, 'manifest.json'), 'utf8');
+        const manifest = JSON.parse(manifestText) as chrome.runtime.ManifestV3;
         expect(manifest.manifest_version).toBe(3);
         expect(manifest.background?.service_worker).toBeDefined();
         await expect(stat(resolve(output, manifest.background!.service_worker))).resolves.toBeDefined();

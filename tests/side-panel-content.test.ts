@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import { HN_LOOKUP_ERROR_REASON, HN_LOOKUP_STATUS } from '../src/domain/hn';
-import type { HnLookupResult } from '../src/domain/hn';
 import {
     SIDE_PANEL_CONTENT_KIND,
     contentForLookupResult,
     isSidePanelContent,
 } from '../src/shared/side-panel-content';
+
+import type { HnLookupResult } from '../src/domain/hn';
 
 const ITEM_ID = '424242';
 const TAB_ID = 7;

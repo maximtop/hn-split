@@ -1,10 +1,16 @@
+/**
+ * @file Keeps the bounded diagnostic log in worker session storage, serializing appends, snapshots and clears and
+ * dropping the oldest entries once the entry or byte cap is exceeded.
+ */
+
 import * as v from 'valibot';
 
 import {
     DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LIMIT, diagnosticBufferSchema, diagnosticBytes,
 } from '../shared/diagnostics';
-import type { DiagnosticBuffer, DiagnosticEntry, DiagnosticEvent } from '../shared/diagnostics';
 import { reportDiagnosticFailure } from '../shared/logger';
+
+import type { DiagnosticBuffer, DiagnosticEntry, DiagnosticEvent } from '../shared/diagnostics';
 
 /**
  * Isolates the worker-owned session storage record.
@@ -14,11 +20,14 @@ export interface DiagnosticStorage {
      * Reads the diagnostic envelope, never other session values.
      */
     read: () => Promise<unknown>;
+
     /**
      * Replaces the retained diagnostic envelope.
+     *
      * @param buffer - Validated and bounded session log.
      */
     write: (buffer: DiagnosticBuffer) => Promise<void>;
+
     /**
      * Removes only the diagnostic record.
      */
@@ -30,20 +39,26 @@ export interface DiagnosticStorage {
  */
 export class DiagnosticLog {
     private queue: Promise<unknown> = Promise.resolve();
+
     private pending = 0;
 
     /**
      * Creates a collector with independent retention caps.
+     *
      * @param storage - Session storage used across worker instances.
      * @param limits - Retention caps; smaller values support bounded deployments and tests.
      */
     constructor(
         private readonly storage: DiagnosticStorage,
-        private readonly limits = { entries: DIAGNOSTIC_LIMIT.ENTRIES as number, bytes: DIAGNOSTIC_LIMIT.BYTES as number },
+        private readonly limits = {
+            entries: DIAGNOSTIC_LIMIT.ENTRIES as number,
+            bytes: DIAGNOSTIC_LIMIT.BYTES as number,
+        },
     ) {}
 
     /**
      * Appends a normalized event in receipt order without retaining caller-owned objects.
+     *
      * @param event - Validated scalar-only diagnostic event.
      * @param source - Context established by the background transport.
      */
@@ -51,7 +66,9 @@ export class DiagnosticLog {
         if (this.pending >= DIAGNOSTIC_LIMIT.PENDING) {
             return Promise.reject(new Error('Diagnostic queue full'));
         }
-        const entry: DiagnosticEntry = { ...event, details: { ...event.details }, source, timestamp: new Date().toISOString() };
+        const entry: DiagnosticEntry = {
+            ...event, details: { ...event.details }, source, timestamp: new Date().toISOString(),
+        };
         return this.enqueue(async () => {
             const buffer = await this.read();
             buffer.entries.push(entry);
@@ -98,6 +115,7 @@ export class DiagnosticLog {
 
     /**
      * Keeps later operations runnable after a rejected storage operation.
+     *
      * @param operation - Storage operation reserved in invocation order.
      */
     private enqueue<T>(operation: () => Promise<T>): Promise<T> {

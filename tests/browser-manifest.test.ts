@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -46,7 +47,7 @@ describe('buildManifest', () => {
 
         for (const target of BUILD_TARGETS) {
             const manifest = buildManifest(base, target, '9.8.7');
-            expect(manifest['version']).toBe('9.8.7');
+            expect(manifest.version).toBe('9.8.7');
         }
         expect(base).not.toHaveProperty('version');
     });
@@ -74,22 +75,22 @@ describe('buildManifest', () => {
 
     it('rewrites the firefox manifest for event pages and drops Chrome-only keys', async () => {
         const base = await readBaseManifest();
-        const baseBackground = base['background'] as { service_worker: string };
-        const basePermissions = base['permissions'] as string[];
+        const baseBackground = base.background as { service_worker: string };
+        const basePermissions = base.permissions as string[];
 
         const manifest = buildManifest(base, 'firefox', '1.0.0');
 
-        expect(manifest['background']).toEqual({ scripts: [baseBackground.service_worker] });
+        expect(manifest.background).toEqual({ scripts: [baseBackground.service_worker] });
         expect(manifest).not.toHaveProperty('minimum_chrome_version');
         expect(manifest).not.toHaveProperty('side_panel');
         expect(manifest).toHaveProperty('sidebar_action.default_panel', 'side-panel.html');
-        expect(manifest['permissions']).toEqual(basePermissions.filter((permission) => permission !== 'sidePanel'));
+        expect(manifest.permissions).toEqual(basePermissions.filter((permission) => permission !== 'sidePanel'));
         expect(manifest).not.toHaveProperty('options_page');
-        expect(manifest['options_ui']).toEqual({
-            page: base['options_page'],
+        expect(manifest.options_ui).toEqual({
+            page: base.options_page,
             open_in_tab: true,
         });
-        expect(manifest['browser_specific_settings']).toEqual({
+        expect(manifest.browser_specific_settings).toEqual({
             gecko: {
                 id: FIREFOX_GECKO_ID,
                 strict_min_version: '140.0',

@@ -1,12 +1,15 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import {
     SidePanelLifecycleController,
 } from '../src/background/side-panel-content-controller';
+import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
+
 import type {
     SidePanelLifecycleControllerDependencies,
 } from '../src/background/side-panel-content-controller';
-import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
 import type { SidePanelProjection } from '../src/shared/side-panel-projection';
 
 const WINDOW_ID = 3;
@@ -33,6 +36,9 @@ function deferred<Value>(): Deferred<Value> {
 
 /**
  * Builds one strict terminal projection.
+ *
+ * @param tabId - The tab that owns the projection.
+ * @param revision - The projection revision.
  */
 function projection(tabId = TAB_ID, revision = 2): SidePanelProjection {
     return {
@@ -47,6 +53,8 @@ function projection(tabId = TAB_ID, revision = 2): SidePanelProjection {
 
 /**
  * Builds an observable lifecycle dependency harness.
+ *
+ * @param live - Whether the window registry reports the window as live.
  */
 function dependencies(live = true): SidePanelLifecycleControllerDependencies {
     return {

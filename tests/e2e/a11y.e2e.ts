@@ -1,6 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import type { Page } from '@playwright/test';
 
 import arMessages from '../../public/_locales/ar/messages.json' with { type: 'json' };
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
@@ -9,6 +8,7 @@ import ruMessages from '../../public/_locales/ru/messages.json' with { type: 'js
 import zhCnMessages from '../../public/_locales/zh_CN/messages.json' with { type: 'json' };
 import { HN_LOOKUP_STATUS } from '../../src/domain/hn';
 import { sidePanelContentKey } from '../../src/shared/storage-keys';
+
 import {
     ARTICLE_ORIGIN,
     installLookupFixtures,
@@ -16,7 +16,9 @@ import {
     openExtensionPage,
     shimPopupBrowserCalls,
 } from './extension-context';
+
 import type { AlgoliaHitFixture, ExtensionContext } from './extension-context';
+import type { Page } from '@playwright/test';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const BLOCKING_IMPACTS = new Set(['critical', 'serious']);
@@ -122,6 +124,7 @@ const REPRESENTATIVE_LOCALIZED_LAYOUTS = [
  * the scanned tab. The background worker treats that like any tab switch and
  * re-synchronizes the side panel projection afterwards, so nothing may write
  * the projection directly while that work can still be in flight.
+ *
  * @param page - The extension page to scan.
  * @param label - The label used in the assertion and advisory output.
  */
@@ -187,6 +190,7 @@ async function launchEnglishFixture(): Promise<ExtensionContext> {
 
 /**
  * Opens the panel and waits for its framed manual-required state.
+ *
  * @param extension - The launched extension context.
  * @param colorScheme - The emulated browser color scheme.
  * @param checkName - The locale-owned one-shot button name.
@@ -212,6 +216,7 @@ async function openManualPanel(
  * re-synchronization still in flight would otherwise republish the projection
  * with the same or a higher revision and the panel, which keeps the newest
  * revision, would never render the error.
+ *
  * @param extension - The launched extension context.
  */
 async function publishRecoverablePanelError(extension: ExtensionContext): Promise<void> {

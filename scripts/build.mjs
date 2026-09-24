@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 
-import { BUILD_CHANNELS } from './lib/build-paths.ts';
 import { parseBuildTarget } from './lib/browser-manifest.ts';
+import { BUILD_CHANNELS } from './lib/build-paths.ts';
 
 const args = process.argv.slice(2);
 const browsers = args.filter((argument) => argument !== '--watch');

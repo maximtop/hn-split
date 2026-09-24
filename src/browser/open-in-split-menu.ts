@@ -1,3 +1,8 @@
+/**
+ * @file Publishes the "Open in Split" context-menu item for links by rebuilding it from scratch on every worker
+ * start.
+ */
+
 import { HTTP_LINK_TARGET_PATTERNS, LINK_MENU_CONTEXT, OPEN_IN_SPLIT_MENU } from '../shared/context-menus';
 import { t } from '../shared/i18n';
 
@@ -9,14 +14,17 @@ export interface OpenInSplitMenuProperties {
      * Identifies the menu item for the click listener.
      */
     id: string;
+
     /**
      * Contains the localized menu label the user reads.
      */
     title: string;
+
     /**
      * Limits the item to the right-click contexts it belongs in.
      */
     contexts: string[];
+
     /**
      * Limits the item to the link targets it can act on.
      */
@@ -31,8 +39,10 @@ export interface OpenInSplitMenuRegistry {
      * Removes every menu item this extension owns.
      */
     removeAll(): Promise<void>;
+
     /**
      * Creates one menu item.
+     *
      * @param properties - The menu item to create.
      */
     create(properties: OpenInSplitMenuProperties): Promise<void>;
@@ -46,6 +56,7 @@ export interface OpenInSplitMenuRegistry {
  * it rejects a second item with the same identifier. Clearing first therefore
  * makes this safe to run unconditionally on every worker start, which is how
  * the registration converges in all of those cases.
+ *
  * @param registry - The menu operations to converge.
  */
 export async function ensureOpenInSplitMenu(registry: OpenInSplitMenuRegistry): Promise<void> {

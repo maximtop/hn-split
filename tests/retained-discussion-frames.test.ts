@@ -7,6 +7,7 @@ import {
     discardDiscussionFramesForTab,
     discussionFrameKey,
 } from '../src/side-panel/retained-discussion-frames';
+
 import type {
     DiscussionFrameSelection,
     RetainedDiscussionFrameState,

@@ -1,7 +1,9 @@
 import { expect, test } from '@playwright/test';
 
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
+
 import { ARTICLE_ORIGIN, launchExtensionContext, openExtensionPage } from './extension-context';
+
 import type { ExtensionContext } from './extension-context';
 
 const ARTICLE_URL = `${ARTICLE_ORIGIN}/story`;

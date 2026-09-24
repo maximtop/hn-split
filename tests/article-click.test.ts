@@ -1,6 +1,9 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import {
+    afterEach, describe, expect, it,
+} from 'vitest';
 
 import { detectArticleClick } from '../src/content/article-click';
+
 import type { ArticleClickEventLike } from '../src/content/article-click';
 
 const STORY_ID = '424242';
@@ -15,6 +18,13 @@ interface StoryRowOptions {
 /**
  * Renders one realistic Hacker News listing row: the story anchor inside
  * `.titleline`, the nested `from?site=` chip, and the subtext comments link.
+ *
+ * @param root0 - Optional overrides for the row markup.
+ * @param root0.rowId - The `id` attribute of the row, or `null` to omit it.
+ * @param root0.href - The URL of the story anchor.
+ * @param root0.rowClass - The `class` attribute of the row.
+ *
+ * @throws When the fixture markup lacks an expected element.
  */
 function renderStoryRow({
     rowId = STORY_ID,
@@ -34,7 +44,8 @@ function renderStoryRow({
                 <td class="title"><span class="rank">1.</span></td>
                 <td class="title">
                     <span class="titleline"><a href="${href}">Story title</a>
-                        <span class="sitebit comhead"> (<a href="from?site=article.example.com"><span class="sitestr">article.example.com</span></a>)</span>
+                        <span class="sitebit comhead"> (<a href="from?site=article.example.com"><span
+                            class="sitestr">article.example.com</span></a>)</span>
                     </span>
                 </td>
             </tr>
@@ -51,12 +62,17 @@ function renderStoryRow({
     if (storyAnchor === null || siteAnchor === null || commentsAnchor === null || rankCell === null) {
         throw new Error('Fixture markup is missing an expected element');
     }
-    return { storyAnchor, siteAnchor, commentsAnchor, rankCell };
+    return {
+        storyAnchor, siteAnchor, commentsAnchor, rankCell,
+    };
 }
 
 /**
  * Fabricates the click-event fields; jsdom keeps `isTrusted` read-only on real
  * events, so the pure detector receives plain objects instead.
+ *
+ * @param target - The value reported as the event target.
+ * @param overrides - Event fields that replace the primary-click defaults.
  */
 function clickEvent(target: unknown, overrides: Partial<ArticleClickEventLike> = {}): ArticleClickEventLike {
     return {
@@ -110,7 +126,7 @@ describe('detectArticleClick', () => {
         { name: 'alt click', overrides: { altKey: true } },
         { name: 'canceled click', overrides: { defaultPrevented: true } },
         { name: 'synthetic click', overrides: { isTrusted: false } },
-    ] satisfies Array<{ name: string; overrides: Partial<ArticleClickEventLike> }>)(
+    ] satisfies { name: string; overrides: Partial<ArticleClickEventLike> }[])(
         'ignores a $name on a story link',
         ({ overrides }) => {
             const { storyAnchor } = renderStoryRow();
@@ -157,6 +173,7 @@ describe('detectArticleClick', () => {
         expect(detectArticleClick(clickEvent(storyAnchor), pageOrigin())).toBeNull();
     });
 
+    // eslint-disable-next-line no-script-url -- the fixture is a script URL that must be rejected
     it.each(['mailto:someone@example.com', 'javascript:void(0)'])(
         'ignores non-HTTP(S) story links (%s)',
         (href) => {

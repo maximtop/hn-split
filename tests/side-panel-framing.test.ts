@@ -1,6 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { SIDE_PANEL_FRAMING_RULE_ID, SidePanelFraming, framingRule } from '../src/background/side-panel-framing';
+
 import type { FramingRuleClient } from '../src/background/side-panel-framing';
 
 function client(): FramingRuleClient {

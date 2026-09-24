@@ -44,7 +44,6 @@
     "@playwright/test": "1.62.1",
     "@rspack/cli": "2.1.7",
     "@rspack/core": "2.1.7",
-    "@stylistic/eslint-plugin": "5.10.0",
     "@types/adm-zip": "^0.5.8",
     "@types/chrome": "0.2.5",
     "@types/node": "25.5.0",
@@ -52,15 +51,15 @@
     "@types/react-dom": "19.2.3",
     "@vitest/coverage-v8": "4.1.10",
     "adm-zip": "^0.6.0",
-    "eslint": "10.8.0",
-    "eslint-plugin-jsdoc": "63.3.3",
-    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint": "10.11.0",
+    "eslint-config-airbnb-extended": "3.2.0",
+    "eslint-plugin-jsdoc": "64.5.4",
     "fflate": "0.8.3",
-    "globals": "17.4.0",
+    "globals": "17.12.0",
     "jsdom": "30.0.1",
     "tsx": "^4.23.13",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.65.0",
+    "typescript-eslint": "8.70.1",
     "vitest": "4.1.10"
   }
 }

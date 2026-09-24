@@ -1,4 +1,8 @@
 /**
+ * @file Defines the browser build targets and generates each target's manifest from the shared base manifest.
+ */
+
+/**
  * Store packaging targets. Chrome and Edge use the Chromium side panel;
  * Firefox maps the same panel document to Firefox Sidebar.
  */
@@ -118,7 +122,10 @@ interface ExtensionManifest {
  *
  * @param value Raw environment value; `undefined` or empty selects the
  * default Chrome target.
+ *
  * @returns The validated build target.
+ *
+ * @throws When the value names no known build target.
  */
 export function parseBuildTarget(value: string | undefined): BuildTarget {
     if (value === undefined || value === '') {
@@ -138,13 +145,18 @@ export function parseBuildTarget(value: string | undefined): BuildTarget {
  * Sidebar, requires `options_ui`, and needs `browser_specific_settings.gecko`, including the
  * AMO disclosure for the URL candidates sent to the lookup API.
  *
- * @param manifest Cloned manifest mutated in place.
+ * @param source Chrome-shaped manifest; never mutated.
+ *
+ * @returns A new manifest for Firefox.
+ *
+ * @throws When the base manifest declares no background service worker.
  */
-function applyFirefoxTransform(manifest: ExtensionManifest): void {
-    const serviceWorker = manifest.background?.service_worker;
+function applyFirefoxTransform(source: ExtensionManifest): ExtensionManifest {
+    const serviceWorker = source.background?.service_worker;
     if (typeof serviceWorker !== 'string') {
         throw new Error('The base manifest must declare background.service_worker.');
     }
+    const manifest = { ...source };
     delete manifest.minimum_chrome_version;
     manifest.background = { scripts: [serviceWorker] };
     if (manifest.permissions !== undefined) {
@@ -178,6 +190,7 @@ function applyFirefoxTransform(manifest: ExtensionManifest): void {
             },
         },
     };
+    return manifest;
 }
 
 /**
@@ -189,7 +202,10 @@ function applyFirefoxTransform(manifest: ExtensionManifest): void {
  * @param base Parsed public/manifest.json content; never mutated.
  * @param target Browser target to generate for.
  * @param version Version taken from package.json.
+ *
  * @returns A new manifest object ready for serialization.
+ *
+ * @throws When the version is not three dot-separated integers or the Firefox transform rejects the base manifest.
  */
 export function buildManifest(
     base: Record<string, unknown>,
@@ -199,12 +215,8 @@ export function buildManifest(
     if (!EXTENSION_VERSION_PATTERN.test(version)) {
         throw new Error(`Version "${version}" must be three dot-separated integers.`);
     }
-    const manifest = structuredClone(base) as ExtensionManifest;
-    manifest.version = version;
-    if (target === 'firefox') {
-        applyFirefoxTransform(manifest);
-    }
-    return manifest;
+    const manifest = { ...(structuredClone(base) as ExtensionManifest), version };
+    return target === 'firefox' ? applyFirefoxTransform(manifest) : manifest;
 }
 
 /**
@@ -212,6 +224,7 @@ export function buildManifest(
  * manifests stay byte-stable across builds.
  *
  * @param manifest Manifest object to serialize.
+ *
  * @returns Two-space-indented JSON with a trailing newline.
  */
 export function serializeManifest(manifest: Record<string, unknown>): string {

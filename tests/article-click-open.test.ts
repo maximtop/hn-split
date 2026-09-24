@@ -1,13 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { respondToArticleClick } from '../src/browser/article-click-open';
+import { FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/logger';
+import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
+
 import type { ArticleClickOpenDependencies } from '../src/browser/article-click-open';
 import type {
     ExpectedNavigationReservation,
     ExplicitOperationReservation,
 } from '../src/browser/side-panel-content-manager';
-import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
-import { FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/logger';
 
 const HN_ORIGIN = 'https://news.ycombinator.com';
 const ITEM_ID = '424242';
@@ -44,7 +47,9 @@ function dependencies(cached: boolean | undefined, stored = true): ArticleClickO
 }
 
 async function settle(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+    });
 }
 
 describe('respondToArticleClick', () => {

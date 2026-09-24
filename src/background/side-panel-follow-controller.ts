@@ -1,12 +1,14 @@
+/**
+ * @file Owns the side-panel-follow setting. Applies enable and disable transactions in FIFO order, synchronizes
+ * every live panel window with its active tab when following is enabled, and serves the panel's manual active-tab
+ * check and one-click enable commands.
+ */
+
 import { applySettingTransaction } from '../browser/setting-lifecycle';
 import {
     SIDE_PANEL_FOLLOW_CONTINUATION_KIND,
 } from '../browser/side-panel-content-manager';
-import type {
-    SidePanelFollowActivationReservation,
-    SidePanelFollowAuthorityReservation,
-} from '../browser/side-panel-content-router';
-import type { SidePanelContent } from '../shared/side-panel-content';
+
 import {
     getActiveTab,
     getBrowserTab,
@@ -23,6 +25,12 @@ import {
     sidePanelWindows,
     synchronizeSidePanelFollowSettingWithStatus,
 } from './side-panel-content-controller';
+
+import type {
+    SidePanelFollowActivationReservation,
+    SidePanelFollowAuthorityReservation,
+} from '../browser/side-panel-content-router';
+import type { SidePanelContent } from '../shared/side-panel-content';
 
 const ACTIVE_TAB_UNAVAILABLE_MESSAGE = 'Active side panel tab is unavailable';
 const PANEL_WINDOW_DISCONNECTED_MESSAGE = 'Side panel window is not connected';
@@ -42,6 +50,7 @@ interface FollowActivationInitiatingBoundary {
      * Identifies a successfully reserved action-time activation.
      */
     kind: typeof FOLLOW_INITIATING_BOUNDARY_KIND.ACTIVATION;
+
     /**
      * Contains the exact manager reservation to continue after persistence.
      */
@@ -56,10 +65,12 @@ interface FollowAuthorityInitiatingBoundary {
      * Identifies an authority crossing that must be classified after persistence.
      */
     kind: typeof FOLLOW_INITIATING_BOUNDARY_KIND.AUTHORITY;
+
     /**
      * Contains the authority captured before the trusted active-tab read.
      */
     authority: SidePanelFollowAuthorityReservation;
+
     /**
      * Contains the tab returned by that crossed active-tab read.
      */
@@ -69,8 +80,7 @@ interface FollowAuthorityInitiatingBoundary {
 /**
  * Describes the initiating window's exact pre-queue authority boundary.
  */
-type FollowInitiatingBoundary =
-    | FollowActivationInitiatingBoundary
+type FollowInitiatingBoundary = | FollowActivationInitiatingBoundary
     | FollowAuthorityInitiatingBoundary;
 
 /**
@@ -82,10 +92,12 @@ interface FollowSettingChange {
      * Contains the requested persistent preference value.
      */
     enabled: boolean;
+
     /**
      * Contains the action-time boundary for a one-click enable command.
      */
     initiatingBoundary: FollowInitiatingBoundary | null;
+
     /**
      * Captures each live manager's authority before this change enters the queue.
      */
@@ -96,6 +108,7 @@ let followQueue: Promise<void> = Promise.resolve();
 
 /**
  * Returns a valid tab identifier owned by the expected browser window.
+ *
  * @param tab - The browser tab read at a trusted boundary.
  * @param windowId - The expected owning window.
  */
@@ -113,6 +126,7 @@ function ownedTabId(tab: chrome.tabs.Tab | null, windowId: number): number | nul
 /**
  * Reads a tab URL only when a consented manager invokes the lazy callback and
  * the captured tab still belongs to the expected window.
+ *
  * @param windowId - The expected owning window.
  * @param tabId - The captured browser tab.
  */
@@ -127,6 +141,7 @@ async function readCurrentTabUrl(
 /**
  * Waits for every live-window effect before allowing a failed transaction to
  * roll back, preventing late sibling work from publishing after rollback.
+ *
  * @param operations - The live-window effects started by one transaction.
  */
 async function settleLiveWindowOperations(operations: Promise<void>[]): Promise<void> {
@@ -145,25 +160,27 @@ async function settleLiveWindowOperations(operations: Promise<void>[]): Promise<
 /**
  * Synchronizes the genuinely current tab for one still-live panel window as a
  * serialized setting effect.
+ *
  * @param initialAuthority - The request-time authority for the live panel window.
  */
 async function synchronizeActiveSidePanelTab(
     initialAuthority: SidePanelFollowAuthorityReservation,
 ): Promise<SidePanelContent | null> {
     let authority = initialAuthority;
-    while (sidePanelWindows.has(authority.windowId)) {
-        const tab = await getActiveTab(authority.windowId);
-        if (!sidePanelWindows.has(authority.windowId)) {
+    const { windowId } = initialAuthority;
+    while (sidePanelWindows.has(windowId)) {
+        const tab = await getActiveTab(windowId);
+        if (!sidePanelWindows.has(windowId)) {
             return null;
         }
-        const tabId = ownedTabId(tab, authority.windowId);
+        const tabId = ownedTabId(tab, windowId);
         if (tabId === null) {
             return null;
         }
         const result = await synchronizeSidePanelFollowSettingWithStatus(
             authority,
             tabId,
-            async () => readCurrentTabUrl(authority.windowId, tabId),
+            async () => readCurrentTabUrl(windowId, tabId),
         );
         if (result.kind === SIDE_PANEL_FOLLOW_CONTINUATION_KIND.CONTINUED) {
             return result.projection.content;
@@ -171,7 +188,7 @@ async function synchronizeActiveSidePanelTab(
         if (result.kind === SIDE_PANEL_FOLLOW_CONTINUATION_KIND.SUPERSEDED) {
             return result.projection?.content ?? null;
         }
-        authority = captureSidePanelFollowAuthority(authority.windowId);
+        authority = captureSidePanelFollowAuthority(windowId);
     }
     return null;
 }
@@ -179,6 +196,7 @@ async function synchronizeActiveSidePanelTab(
 /**
  * Continues only the exact captured activation, yielding to a newer explicit
  * or manual operation and retrying only after a genuine tab activation.
+ *
  * @param reservation - The captured window, tab, and manager token.
  */
 async function continueCapturedFollowActivation(
@@ -222,6 +240,7 @@ async function continueCapturedFollowActivation(
  * Classifies an action-time read crossed by newer manager authority. A genuine
  * tab activation falls forward to the current tab, while explicit or manual
  * authority yields its projection without reserving over it.
+ *
  * @param boundary - The stale authority and tab observed by the trusted read.
  */
 async function continueCrossedFollowAuthority(
@@ -246,6 +265,7 @@ async function continueCrossedFollowAuthority(
 /**
  * Continues the initiating window according to the exact authority boundary
  * captured before it entered the serialized setting queue.
+ *
  * @param boundary - The reserved activation or crossed manager authority.
  */
 async function continueInitiatingBoundary(
@@ -258,6 +278,7 @@ async function continueInitiatingBoundary(
 
 /**
  * Returns the browser window owned by one initiating boundary.
+ *
  * @param boundary - The reserved activation or crossed manager authority.
  */
 function initiatingWindowId(boundary: FollowInitiatingBoundary): number {
@@ -269,6 +290,7 @@ function initiatingWindowId(boundary: FollowInitiatingBoundary): number {
 /**
  * Applies one setting transaction in FIFO order and returns the initiating
  * panel's resulting content when the mutation came from a one-click command.
+ *
  * @param change - The requested preference and optional action-time capture.
  */
 function enqueueFollowChange(
@@ -306,6 +328,7 @@ function enqueueFollowChange(
 
 /**
  * Applies one serialized persistent side-panel-follow setting transaction.
+ *
  * @param enabled - Whether live panels may follow active tabs automatically.
  */
 export async function setSidePanelFollowSetting(enabled: boolean): Promise<boolean> {
@@ -319,6 +342,7 @@ export async function setSidePanelFollowSetting(enabled: boolean): Promise<boole
 /**
  * Performs one manual check of the tab active at trusted background handling
  * time without reading or changing any automatic preference.
+ *
  * @param windowId - The live panel window issuing the command.
  */
 export async function checkActiveSidePanelTab(windowId: number): Promise<SidePanelContent> {
@@ -338,20 +362,20 @@ export async function checkActiveSidePanelTab(windowId: number): Promise<SidePan
                 tabId,
                 async () => readCurrentTabUrl(windowId, tabId),
             );
-            if (result.kind === SIDE_PANEL_FOLLOW_CONTINUATION_KIND.ACTIVE_TAB_CHANGED) {
-                continue;
+            if (result.kind !== SIDE_PANEL_FOLLOW_CONTINUATION_KIND.ACTIVE_TAB_CHANGED) {
+                if (result.projection === null) {
+                    throw new Error(FOLLOW_SYNCHRONIZATION_FAILED_MESSAGE);
+                }
+                return result.projection.content;
             }
-            if (result.projection === null) {
-                throw new Error(FOLLOW_SYNCHRONIZATION_FAILED_MESSAGE);
-            }
-            return result.projection.content;
+        } else {
+            const projection = await restoreOrCheckSidePanelTab(
+                windowId,
+                tabId,
+                async () => readCurrentTabUrl(windowId, tabId),
+            );
+            return projection.content;
         }
-        const projection = await restoreOrCheckSidePanelTab(
-            windowId,
-            tabId,
-            async () => readCurrentTabUrl(windowId, tabId),
-        );
-        return projection.content;
     }
     throw new Error(PANEL_WINDOW_DISCONNECTED_MESSAGE);
 }
@@ -359,6 +383,7 @@ export async function checkActiveSidePanelTab(windowId: number): Promise<SidePan
 /**
  * Captures the trusted active tab before the setting queue, enables following,
  * and synchronizes that exact capture as one command.
+ *
  * @param windowId - The live panel window issuing the command.
  */
 export async function enableSidePanelFollow(windowId: number): Promise<SidePanelContent> {
@@ -376,14 +401,14 @@ export async function enableSidePanelFollow(windowId: number): Promise<SidePanel
         const reservation = reserveSidePanelFollowActivationIfCurrent(authority, tabId);
         initiatingBoundary = reservation === null
             ? {
-                    kind: FOLLOW_INITIATING_BOUNDARY_KIND.AUTHORITY,
-                    authority,
-                    tabId,
-                }
+                kind: FOLLOW_INITIATING_BOUNDARY_KIND.AUTHORITY,
+                authority,
+                tabId,
+            }
             : {
-                    kind: FOLLOW_INITIATING_BOUNDARY_KIND.ACTIVATION,
-                    reservation,
-                };
+                kind: FOLLOW_INITIATING_BOUNDARY_KIND.ACTIVATION,
+                reservation,
+            };
     }
     if (initiatingBoundary === null) {
         throw new Error(PANEL_WINDOW_DISCONNECTED_MESSAGE);

@@ -1,6 +1,13 @@
+/**
+ * @file Hacker News domain model. Defines the discussion and lookup-result schemas and types, looks up and ranks
+ * discussions for article candidates through the Algolia search API with a timeout and caller cancellation, and
+ * provides the Hacker News origin, URL and item identifier helpers.
+ */
+
 import * as v from 'valibot';
 
 import { normalizeArticleUrl, sanitizeArticleUrl } from './url';
+
 import type { ArticleCandidate } from './url';
 
 const ALGOLIA_ENDPOINT = 'https://hn.algolia.com/api/v1/search';
@@ -25,6 +32,10 @@ export const HN_LOOKUP_ERROR_REASON = {
     LOOKUP_FAILED: 'lookup_failed',
 } as const;
 
+/**
+ * Marks a search response that arrived but is not valid JSON of the expected shape, so the lookup reports an
+ * invalid response instead of a generic lookup failure.
+ */
 class InvalidAlgoliaResponseError extends TypeError {}
 
 const positiveItemIdSchema = v.pipe(
@@ -97,10 +108,14 @@ const algoliaResponseSchema = v.object({
     hits: v.array(algoliaHitSchema),
 });
 
+/**
+ * Describes one validated story hit returned by the Algolia search API.
+ */
 type AlgoliaHit = v.InferOutput<typeof algoliaHitSchema>;
 
 /**
  * Determines whether an unknown value is a validated discussion.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isHnDiscussion(value: unknown): value is HnDiscussion {
@@ -109,6 +124,7 @@ export function isHnDiscussion(value: unknown): value is HnDiscussion {
 
 /**
  * Determines whether an unknown value is a validated lookup result.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isHnLookupResult(value: unknown): value is HnLookupResult {
@@ -117,6 +133,7 @@ export function isHnLookupResult(value: unknown): value is HnLookupResult {
 
 /**
  * Orders discussions by engagement, recency, and stable item identifier.
+ *
  * @param left - The first discussion to compare.
  * @param right - The second discussion to compare.
  */
@@ -129,7 +146,10 @@ function compareDiscussions(left: HnDiscussion, right: HnDiscussion): number {
 
 /**
  * Builds a privacy-sanitized exact-URL Algolia search request.
+ *
  * @param candidate - The eligible article candidate to query.
+ *
+ * @throws When the candidate URL fails sanitization and so must not leave the extension.
  */
 function buildSearchUrl(candidate: ArticleCandidate): string {
     const sanitizedCandidateUrl = sanitizeArticleUrl(candidate.url);
@@ -146,6 +166,7 @@ function buildSearchUrl(candidate: ArticleCandidate): string {
 
 /**
  * Fetches and validates all Algolia hits for one article candidate.
+ *
  * @param candidate - The eligible article candidate to query.
  * @param fetchFn - The fetch implementation used for Algolia requests.
  * @param signal - The abort signal that cancels the request.
@@ -180,6 +201,7 @@ async function fetchHits(
 
 /**
  * Converts a validated Algolia hit into extension discussion data.
+ *
  * @param hit - The validated Algolia hit to convert.
  */
 function toDiscussion(hit: AlgoliaHit): HnDiscussion {
@@ -195,6 +217,7 @@ function toDiscussion(hit: AlgoliaHit): HnDiscussion {
 
 /**
  * Looks up and ranks Hacker News discussions for eligible article candidates.
+ *
  * @param candidates - The eligible article candidates to query in preference order.
  * @param fetchFn - The fetch implementation used for Algolia requests.
  * @param signal - The optional caller signal that cancels the whole lookup early.
@@ -220,7 +243,7 @@ export async function lookupHnDiscussions(
     const timeout = setTimeout(() => {
         controller.abort();
     }, LOOKUP_TIMEOUT_MS);
-    let results: Array<PromiseSettledResult<AlgoliaHit[]>>;
+    let results: PromiseSettledResult<AlgoliaHit[]>[];
     try {
         results = await Promise.allSettled(
             candidates.map(async (candidate) => fetchHits(candidate, fetchFn, controller.signal)),
@@ -242,18 +265,16 @@ export async function lookupHnDiscussions(
             } else {
                 lookupFailure = true;
             }
-            continue;
-        }
-
-        for (const hit of result.value) {
-            const identity = normalizeArticleUrl(hit.url);
-            if (identity === null || !identities.has(identity)) {
-                continue;
-            }
-            const discussion = toDiscussion(hit);
-            const existing = discussions.get(discussion.id);
-            if (existing === undefined || compareDiscussions(discussion, existing) < 0) {
-                discussions.set(discussion.id, discussion);
+        } else {
+            for (const hit of result.value) {
+                const identity = normalizeArticleUrl(hit.url);
+                if (identity !== null && identities.has(identity)) {
+                    const discussion = toDiscussion(hit);
+                    const existing = discussions.get(discussion.id);
+                    if (existing === undefined || compareDiscussions(discussion, existing) < 0) {
+                        discussions.set(discussion.id, discussion);
+                    }
+                }
             }
         }
     }
@@ -284,6 +305,7 @@ export async function lookupHnDiscussions(
 
 /**
  * Determines whether a string is a positive safe Hacker News item identifier.
+ *
  * @param itemId - The candidate Hacker News item identifier.
  */
 export function isValidItemId(itemId: string): boolean {
@@ -297,6 +319,7 @@ export const HN_ORIGIN = 'https://news.ycombinator.com';
 
 /**
  * Determines whether a URL belongs to the Hacker News web origin.
+ *
  * @param url - The untrusted URL value to inspect.
  */
 export function isHnUrl(url: string): boolean {
@@ -309,7 +332,10 @@ export function isHnUrl(url: string): boolean {
 
 /**
  * Builds the canonical Hacker News discussion URL for a validated item.
+ *
  * @param itemId - The validated Hacker News item identifier.
+ *
+ * @throws When the item identifier is not a positive safe integer string.
  */
 export function discussionUrl(itemId: string): string {
     if (!isValidItemId(itemId)) {

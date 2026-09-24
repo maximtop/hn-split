@@ -1,3 +1,7 @@
+/**
+ * @file Resolves the output directory of one browser build for the dev and release channels.
+ */
+
 import { resolve } from 'node:path';
 
 import { parseBuildTarget } from './browser-manifest.ts';
@@ -13,7 +17,10 @@ export const BUILD_CHANNELS = { DEV: 'dev', RELEASE: 'release' } as const;
  * @param root Repository root directory.
  * @param target Browser name, defaulting to Chrome.
  * @param channel Development output or store release output.
+ *
  * @returns Absolute unpacked extension directory.
+ *
+ * @throws When the channel is neither dev nor release, or the target is unknown.
  */
 export function resolveBuildPath(
     root: string,

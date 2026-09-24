@@ -12,6 +12,7 @@ import {
     LOCALE_REGISTRY,
     SHIPPED_LOCALES,
 } from '../src/shared/locales.ts';
+
 import { MANIFEST_DESCRIPTION_LIMIT } from './lib/store-listings.ts';
 
 const EXPECTED_LOCALE_COUNT = 40;

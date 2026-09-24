@@ -1,11 +1,18 @@
+/**
+ * @file Owns the automatic-availability setting in the background worker. Applies setting changes as serialized
+ * transactions that refresh or clear the badges of open tabs, and updates or forgets per-tab badge state as tabs
+ * navigate or close.
+ */
+
 import { AutomaticAvailabilityUpdater } from '../browser/automatic-availability';
+import { refreshTabsBounded } from '../browser/bounded-tab-refresh';
+import { clearLookupCacheEntries } from '../browser/lookup-cache';
 import {
     applySettingTransaction,
     createSettingQueue,
 } from '../browser/setting-lifecycle';
-import { refreshTabsBounded } from '../browser/bounded-tab-refresh';
-import { clearLookupCacheEntries } from '../browser/lookup-cache';
 import { sanitizeArticleUrl } from '../domain/url';
+
 import { lookupArticle } from './article-lookup';
 import {
     applyAvailabilityBadge,
@@ -55,7 +62,7 @@ async function updateExistingTabs(): Promise<void> {
  */
 async function disableAutomaticAvailability(): Promise<void> {
     const openTabs = await chrome.tabs.query({});
-    await automaticAvailability.disable(openTabs.flatMap(({ id }) => id === undefined ? [] : [id]));
+    await automaticAvailability.disable(openTabs.flatMap(({ id }) => (id === undefined ? [] : [id])));
     await clearLookupCacheEntries(cacheCollectionStorage);
 }
 
@@ -70,6 +77,7 @@ const applyAutomaticAvailabilityChange = createSettingQueue(async (enabled) => {
 
 /**
  * Applies one serialized automatic-availability setting transaction.
+ *
  * @param enabled - Whether automatic availability should be enabled.
  */
 export async function setAutomaticAvailability(enabled: boolean): Promise<boolean> {
@@ -80,6 +88,7 @@ export async function setAutomaticAvailability(enabled: boolean): Promise<boolea
 /**
  * Updates automatic availability for one navigated tab, acquiring its current
  * URL only after the persisted opt-in setting is confirmed enabled.
+ *
  * @param tabId - The navigated browser tab identifier.
  */
 export function updateAutomaticAvailability(tabId: number): Promise<void> {
@@ -89,6 +98,7 @@ export function updateAutomaticAvailability(tabId: number): Promise<void> {
 /**
  * Determines whether tab-update metadata reports navigation without reading
  * the possibly sensitive URL value included in the event.
+ *
  * @param changeInfo - The tab-update metadata to classify.
  */
 export function reportsAutomaticAvailabilityNavigation(changeInfo: chrome.tabs.OnUpdatedInfo): boolean {
@@ -97,6 +107,7 @@ export function reportsAutomaticAvailabilityNavigation(changeInfo: chrome.tabs.O
 
 /**
  * Invalidates automatic-availability work for a removed tab.
+ *
  * @param tabId - The removed browser tab identifier.
  */
 export function forgetAutomaticAvailabilityTab(tabId: number): void {

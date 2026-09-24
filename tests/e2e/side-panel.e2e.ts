@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import type { Page } from '@playwright/test';
 
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { discussionUrl } from '../../src/domain/hn';
@@ -10,13 +9,16 @@ import {
 import {
     STORAGE_KEY,
 } from '../../src/shared/storage-keys';
+
 import {
     ARTICLE_ORIGIN,
     installPerArticleLookupFixtures,
     launchExtensionContext,
     openExtensionPage,
 } from './extension-context';
+
 import type { ExtensionContext } from './extension-context';
+import type { Page } from '@playwright/test';
 
 const ITEM_ID = '424242';
 const ITEM_A = '424243';
@@ -31,6 +33,7 @@ interface BrowserTabIdentity {
      * Identifies the Chrome tab.
      */
     tabId: number;
+
     /**
      * Identifies the Chrome window that owns the tab.
      */
@@ -39,6 +42,7 @@ interface BrowserTabIdentity {
 
 /**
  * Resolves one exact fixture page to its Chrome tab and window identifiers.
+ *
  * @param extension - The launched extension context.
  * @param url - The exact fixture page URL.
  */
@@ -58,6 +62,7 @@ async function browserTabIdentity(
 /**
  * Selects a discussion through the manager-owned public protocol only after
  * the panel has completed its initial framing handshake.
+ *
  * @param panel - The connected extension panel test page.
  * @param identity - The real article tab and window that own the discussion.
  * @param itemId - The concrete Hacker News item to display.
@@ -86,6 +91,7 @@ async function selectPanelDiscussion(
 /**
  * Enables the independent follow preference directly for a deterministic
  * activation-driven E2E scenario.
+ *
  * @param extension - The launched extension context.
  */
 async function enableFollowFixture(extension: ExtensionContext): Promise<void> {
@@ -96,6 +102,7 @@ async function enableFollowFixture(extension: ExtensionContext): Promise<void> {
 
 /**
  * Waits for one visible discussion frame and its deterministic document body.
+ *
  * @param panel - The connected panel test page.
  * @param itemId - The expected concrete Hacker News item.
  */

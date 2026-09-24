@@ -6,10 +6,10 @@
 // fflate stores zip timestamps as local time, so the process timezone must
 // be pinned before any timestamp conversion. Imports are safe to hoist above
 // this line because none of them read the clock at load time.
-process.env.TZ = 'UTC';
-
 import { spawnSync } from 'node:child_process';
-import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import {
+    mkdir, readdir, readFile, rm, writeFile,
+} from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 import {
@@ -17,10 +17,13 @@ import {
     CHROME_PACKAGED_LOCALES,
     SHIPPED_LOCALES,
 } from '../src/shared/locales.ts';
-import { BUILD_CHANNELS, resolveBuildPath } from './lib/build-paths.ts';
+
 import { BUILD_TARGETS, parseBuildTarget } from './lib/browser-manifest.ts';
 import { readHeadCommit } from './lib/build-info.ts';
+import { BUILD_CHANNELS, resolveBuildPath } from './lib/build-paths.ts';
 import { collectDirectoryEntries, createDeterministicZip } from './lib/deterministic-zip.ts';
+
+process.env.TZ = 'UTC';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const RELEASE_DIR = resolve(ROOT, 'build/release');

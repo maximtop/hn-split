@@ -1,9 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import {
     readBooleanSetting,
     updateBooleanSetting,
 } from '../src/options/setting-client';
+
 import type { BooleanSettingDependencies } from '../src/options/setting-client';
 
 /**

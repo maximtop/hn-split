@@ -1,4 +1,8 @@
-import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
+/**
+ * @file Renders the browser-action popup: it looks up Hacker News discussions for the active tab through the
+ * background worker and opens the chosen one in the discussion surface or the side panel.
+ */
+
 import {
     Alert,
     Box,
@@ -13,24 +17,26 @@ import {
 import { useEffect, useState } from 'react';
 
 import { HN_LOOKUP_STATUS } from '../domain/hn';
-import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import { readPageContext } from '../page/context';
+import { openDiscussionSurface, USES_FIREFOX_SIDEBAR } from '../shared/browser-target';
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { UserFacingError, messageKeyForBackgroundError, userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
-import { openDiscussionSurface, USES_FIREFOX_SIDEBAR } from '../shared/browser-target';
 import {
     FOLLOW_DIAGNOSTIC_CODE,
     FOLLOW_DIAGNOSTIC_EVENT,
     logDiagnosticWarning,
     logWarning,
 } from '../shared/logger';
-import { cssVariablesResolver, theme } from '../shared/theme';
 import {
     BACKGROUND_REQUEST_TYPE,
     isLookupResponse,
     isOpenDiscussionResponse,
     isSidePanelContentResponse,
 } from '../shared/messages';
+import { cssVariablesResolver, theme } from '../shared/theme';
+
+import type { HnDiscussion, HnLookupResult } from '../domain/hn';
 import type { LookupRequest, OpenDiscussionRequest, SidePanelSelectRequest } from '../shared/messages';
 
 /**
@@ -41,26 +47,32 @@ interface PopupState {
      * Identifies the article tab whose discussion will be opened.
      */
     articleTabId: number | null;
+
     /**
      * Identifies the browser window that owns the article tab and side panel.
      */
     articleWindowId: number | null;
+
     /**
      * Contains the inspected page URL that originated every selected result.
      */
     articleSourceUrl: string | null;
+
     /**
      * Contains the validated Hacker News lookup result.
      */
     result: HnLookupResult | null;
+
     /**
      * Contains the current user-facing error message.
      */
     error: string | null;
+
     /**
      * Indicates whether the initial lookup is still running.
      */
     loading: boolean;
+
     /**
      * Identifies the discussion currently being opened.
      */
@@ -75,14 +87,17 @@ interface DiscussionButtonProps {
      * Contains the discussion metadata shown to the user.
      */
     discussion: HnDiscussion;
+
     /**
      * Indicates whether this is the primary ranked discussion.
      */
     primary: boolean;
+
     /**
      * Disables the action while another discussion is opening.
      */
     opening: boolean;
+
     /**
      * Opens the selected Hacker News discussion.
      */
@@ -101,6 +116,7 @@ const initialState: PopupState = {
 
 /**
  * Sends a typed request to the extension background worker.
+ *
  * @param request - The typed background request to send.
  */
 async function sendMessage(
@@ -111,6 +127,7 @@ async function sendMessage(
 
 /**
  * Renders one primary or alternative Hacker News discussion action.
+ *
  * @param props - The discussion and interaction state to render.
  */
 function DiscussionButton(props: DiscussionButtonProps): React.JSX.Element {
@@ -320,7 +337,9 @@ export function App(): React.JSX.Element {
                                 discussion={found.primary}
                                 opening={state.openingId !== null}
                                 primary
-                                onOpen={() => { void open(found.primary.id); }}
+                                onOpen={() => {
+                                    void open(found.primary.id);
+                                }}
                             />
                             {found.alternatives.map((discussion) => (
                                 <DiscussionButton
@@ -328,7 +347,9 @@ export function App(): React.JSX.Element {
                                     key={discussion.id}
                                     opening={state.openingId !== null}
                                     primary={false}
-                                    onOpen={() => { void open(discussion.id); }}
+                                    onOpen={() => {
+                                        void open(discussion.id);
+                                    }}
                                 />
                             ))}
                             {/* The default variant keeps WCAG AA contrast in
@@ -337,7 +358,9 @@ export function App(): React.JSX.Element {
                             <Button
                                 variant="default"
                                 size="compact-sm"
-                                onClick={() => { openInSidePanel(found.primary); }}
+                                onClick={() => {
+                                    openInSidePanel(found.primary);
+                                }}
                             >
                                 {t('open_in_side_panel')}
                             </Button>
@@ -354,7 +377,9 @@ export function App(): React.JSX.Element {
                             variant="subtle"
                             size="compact-sm"
                             px={0}
-                            onClick={() => { void chrome.runtime.openOptionsPage(); }}
+                            onClick={() => {
+                                void chrome.runtime.openOptionsPage();
+                            }}
                         >
                             {t('availability_settings')}
                         </Button>

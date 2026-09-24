@@ -1,9 +1,15 @@
-import { installDiagnosticTransport } from '../shared/diagnostic-protocol';
+/**
+ * @file Entry point of the browser-action popup: installs the diagnostic transport, applies the document locale
+ * and mounts the popup app.
+ */
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import { App } from './popup-app';
+import { installDiagnosticTransport } from '../shared/diagnostic-protocol';
 import { applyDocumentLocale, t } from '../shared/i18n';
+
+import { App } from './popup-app';
 import '@mantine/core/styles.css';
 import './styles.css';
 

@@ -1,3 +1,9 @@
+/**
+ * @file Manages the dynamic rule that removes the framing-prevention response headers from Hacker News sub-frames,
+ * so the discussion can render in the side panel. The rule is held per open panel and every change is queued, so
+ * the installed state converges on the last request.
+ */
+
 import { HN_ORIGIN } from '../domain/hn';
 
 /**
@@ -13,10 +19,20 @@ export const SIDE_PANEL_FRAMING_RULE_ID = 1;
 export interface FramingRuleClient {
     /**
      * Atomically removes and adds dynamic rules.
+     *
      * @param options - The rule identifiers to remove and the rules to add.
+     * @param options.removeRuleIds - Identifiers of the dynamic rules to remove.
+     * @param options.addRules - Rules to add after the removal.
      */
     updateDynamicRules(options: {
+        /**
+         * Lists the identifiers of the dynamic rules to remove.
+         */
         removeRuleIds: number[];
+
+        /**
+         * Lists the rules to add after the removal.
+         */
         addRules?: chrome.declarativeNetRequest.Rule[];
     }): Promise<void>;
 }
@@ -75,6 +91,7 @@ export class SidePanelFraming {
 
     /**
      * Creates the framing owner with no exception installed.
+     *
      * @param rules - The dynamic-rule client used to install the exception.
      */
     constructor(rules: FramingRuleClient) {

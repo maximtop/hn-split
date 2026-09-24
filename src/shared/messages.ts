@@ -1,10 +1,18 @@
+/**
+ * @file Defines the runtime message protocol between the UI surfaces, the content script, and the background
+ * worker: request and response types, side-panel port messages, their valibot schemas, and the type
+ * guards that validate incoming values.
+ */
+
 import * as v from 'valibot';
 
 import { hnLookupResultSchema } from '../domain/hn';
-import type { HnLookupResult } from '../domain/hn';
 import { isWebUrl } from '../domain/url';
+
 import { ARTICLE_CLICK_MESSAGE_TYPE } from './content-scripts';
 import { sidePanelContentSchema } from './side-panel-content';
+
+import type { HnLookupResult } from '../domain/hn';
 
 /**
  * Names every request accepted by the background worker.
@@ -311,11 +319,10 @@ export type BackgroundErrorResponse = v.InferOutput<typeof errorResponseSchema>;
 /**
  * Represents every response returned by the background worker.
  */
-export type BackgroundResponse =
-    | {
-        ok: true;
-        result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult | SidePanelContentResult;
-    }
+export type BackgroundResponse = | {
+    ok: true;
+    result: HnLookupResult | OpenDiscussionResult | AvailabilitySettingResult | SidePanelContentResult;
+}
     | BackgroundErrorResponse;
 
 const sidePanelContentResponseSchema = v.union([
@@ -325,6 +332,7 @@ const sidePanelContentResponseSchema = v.union([
 
 /**
  * Determines whether a runtime value carries the side panel content.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isSidePanelContentResponse(
@@ -350,6 +358,7 @@ const openDiscussionResponseSchema = v.union([
 
 /**
  * Determines whether a runtime value confirms an availability setting update.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isAvailabilitySettingResponse(
@@ -360,6 +369,7 @@ export function isAvailabilitySettingResponse(
 
 /**
  * Determines whether a runtime value contains the authoritative availability setting.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isAvailabilitySettingReadResponse(
@@ -370,6 +380,7 @@ export function isAvailabilitySettingReadResponse(
 
 /**
  * Reads a validated background error code from an unknown response.
+ *
  * @param value - The unknown background response to inspect.
  */
 export function readBackgroundError(value: unknown): BackgroundErrorCode | null {
@@ -379,6 +390,7 @@ export function readBackgroundError(value: unknown): BackgroundErrorCode | null 
 
 /**
  * Determines whether a runtime value is a lookup response or background error.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isLookupResponse(
@@ -389,6 +401,7 @@ export function isLookupResponse(
 
 /**
  * Determines whether a runtime value is an opening response or background error.
+ *
  * @param value - The unknown runtime value to validate.
  */
 export function isOpenDiscussionResponse(
@@ -399,6 +412,7 @@ export function isOpenDiscussionResponse(
 
 /**
  * Determines whether an unknown runtime message is an accepted background request.
+ *
  * @param value - The unknown runtime message to validate.
  */
 export function isBackgroundRequest(value: unknown): value is BackgroundRequest {
@@ -435,6 +449,7 @@ export type SidePanelPortMessage = v.InferOutput<typeof sidePanelPortMessageSche
 
 /**
  * Determines whether an unknown value is a strict side-panel port message.
+ *
  * @param value - The unknown port message to validate.
  */
 export function isSidePanelPortMessage(value: unknown): value is SidePanelPortMessage {
@@ -458,6 +473,7 @@ export type ArticleClickMessage = v.InferOutput<typeof articleClickMessageSchema
 /**
  * Determines whether an unknown runtime message reports a story-link click
  * from the Hacker News content script.
+ *
  * @param value - The unknown runtime message to validate.
  */
 export function isArticleClickMessage(value: unknown): value is ArticleClickMessage {

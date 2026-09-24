@@ -1,3 +1,7 @@
+/**
+ * @file Reads the package version and the HEAD commit from the working tree for release packaging.
+ */
+
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -26,6 +30,7 @@ export interface HeadCommit {
  *
  * @param rootDirectory Repository root.
  * @param args Git arguments after the repository selector.
+ *
  * @returns Trimmed command output.
  */
 function git(rootDirectory: string, args: string[]): string {
@@ -37,7 +42,10 @@ function git(rootDirectory: string, args: string[]): string {
  * that packaging injects into every generated manifest.
  *
  * @param rootDirectory Repository root containing package.json.
+ *
  * @returns The validated version string.
+ *
+ * @throws When package.json declares no version of three dot-separated integers.
  */
 export function readPackageVersion(rootDirectory: string): string {
     const packageJson = JSON.parse(
@@ -54,7 +62,10 @@ export function readPackageVersion(rootDirectory: string): string {
  * Reads the commit the working tree is checked out at.
  *
  * @param rootDirectory Repository root.
+ *
  * @returns Commit hash and committer timestamp.
+ *
+ * @throws When git reports no valid committer timestamp for HEAD.
  */
 export function readHeadCommit(rootDirectory: string): HeadCommit {
     const sha = git(rootDirectory, ['rev-parse', 'HEAD']);
@@ -70,6 +81,7 @@ export function readHeadCommit(rootDirectory: string): HeadCommit {
  * order never depends on git internals.
  *
  * @param rootDirectory Repository root.
+ *
  * @returns Repository-relative paths of every tracked file.
  */
 export function listTrackedFiles(rootDirectory: string): string[] {
@@ -86,6 +98,7 @@ export function listTrackedFiles(rootDirectory: string): string[] {
  * source archive disagree with the recorded commit.
  *
  * @param rootDirectory Repository root.
+ *
  * @returns True when a tracked file is modified.
  */
 export function isWorktreeDirty(rootDirectory: string): boolean {

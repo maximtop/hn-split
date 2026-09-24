@@ -19,6 +19,7 @@ const EXPECTED_DESCRIPTION_BULLET_COUNT = 9;
 
 /**
  * Reads one locale's listing file from the repository.
+ *
  * @param locale - Registry code whose listing file is read.
  */
 function readListing(locale: string): ListingContent {

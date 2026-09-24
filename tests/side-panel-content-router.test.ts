@@ -1,22 +1,25 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
-import type { PanelLookupResult } from '../src/background/article-lookup';
 import {
     SidePanelLifecycleController,
 } from '../src/background/side-panel-content-controller';
-import type { SidePanelAssociationMutation } from '../src/browser/side-panel-association-store';
 import { SidePanelContentRouter } from '../src/browser/side-panel-content-router';
-import type {
-    SidePanelContentRouterDependencies,
-    SidePanelWindowProjection,
-} from '../src/browser/side-panel-content-router';
 import { HN_LOOKUP_STATUS } from '../src/domain/hn';
 import { normalizeArticleUrl } from '../src/domain/url';
 import {
     SIDE_PANEL_ASSOCIATION_ORIGIN,
 } from '../src/shared/side-panel-association';
-import type { SidePanelAssociation } from '../src/shared/side-panel-association';
 import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
+
+import type { PanelLookupResult } from '../src/background/article-lookup';
+import type { SidePanelAssociationMutation } from '../src/browser/side-panel-association-store';
+import type {
+    SidePanelContentRouterDependencies,
+    SidePanelWindowProjection,
+} from '../src/browser/side-panel-content-router';
+import type { SidePanelAssociation } from '../src/shared/side-panel-association';
 import type { SidePanelContent } from '../src/shared/side-panel-content';
 import type { SidePanelProjection } from '../src/shared/side-panel-projection';
 
@@ -53,6 +56,8 @@ function deferred<Value>(): Deferred<Value> {
 
 /**
  * Builds one found lookup result for a URL.
+ *
+ * @param url - The article URL the result is built for.
  */
 function foundPanelResult(url: string): PanelLookupResult {
     const other = url === OTHER_LINK_URL;
@@ -75,6 +80,9 @@ function foundPanelResult(url: string): PanelLookupResult {
 
 /**
  * Builds strict tab-aware panel content.
+ *
+ * @param tabId - The tab that owns the content.
+ * @param itemId - The Hacker News item shown for the tab.
  */
 function discussionContent(tabId: number, itemId: string): SidePanelContent {
     return { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId, itemId };
@@ -82,6 +90,8 @@ function discussionContent(tabId: number, itemId: string): SidePanelContent {
 
 /**
  * Builds router dependencies backed by in-memory projection and association stores.
+ *
+ * @param initial - The window projections stored before the test starts.
  */
 function dependencies(initial: SidePanelWindowProjection[] = []): RouterHarness {
     const projections = new Map(initial.map(({ windowId, projection }) => [windowId, projection]));
@@ -123,9 +133,9 @@ function dependencies(initial: SidePanelWindowProjection[] = []): RouterHarness 
             .map(([windowId, projection]) => ({ windowId, projection }))),
         isFollowEnabled: vi.fn(async () => true),
         lookup: vi.fn(async (url: string) => foundPanelResult(url)),
-        getTabWindow: vi.fn(async (tabId: number) => tabId === OTHER_TAB_ID
+        getTabWindow: vi.fn(async (tabId: number) => (tabId === OTHER_TAB_ID
             ? OTHER_WINDOW_ID
-            : WINDOW_ID),
+            : WINDOW_ID)),
         normalizeArticleUrl: vi.fn(normalizeArticleUrl),
         openSidePanel: vi.fn(async () => undefined),
         navigate: vi.fn(async () => undefined),

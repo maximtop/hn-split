@@ -1,24 +1,30 @@
+import { MantineProvider } from '@mantine/core';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { MantineProvider } from '@mantine/core';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json';
 import { DiagnosticsSection, downloadDiagnostics } from '../src/options/diagnostics-section';
-import { DIAGNOSTIC_REQUEST } from '../src/shared/diagnostic-protocol';
-import type { DiagnosticTransport } from '../src/shared/diagnostic-protocol';
-import { DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_SOURCE } from '../src/shared/diagnostics';
 import { DIAGNOSTIC_EVENT } from '../src/shared/diagnostic-events';
-import type { DiagnosticExport } from '../src/shared/diagnostic-export';
+import { DIAGNOSTIC_REQUEST } from '../src/shared/diagnostic-protocol';
+import { DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_SOURCE } from '../src/shared/diagnostics';
 import { theme } from '../src/shared/theme';
+
+import type { DiagnosticExport } from '../src/shared/diagnostic-export';
+import type { DiagnosticTransport } from '../src/shared/diagnostic-protocol';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 const empty = { formatVersion: DIAGNOSTIC_FORMAT_VERSION, entries: [] };
 const entry = {
-    level: DIAGNOSTIC_LEVEL.INFO, source: DIAGNOSTIC_SOURCE.OPTIONS,
-    message: DIAGNOSTIC_EVENT.FRAMING_READY, details: { tabId: 1 }, timestamp: '2026-09-20T12:34:56.000Z',
+    level: DIAGNOSTIC_LEVEL.INFO,
+    source: DIAGNOSTIC_SOURCE.OPTIONS,
+    message: DIAGNOSTIC_EVENT.FRAMING_READY,
+    details: { tabId: 1 },
+    timestamp: '2026-09-20T12:34:56.000Z',
 };
-const unmounts: Array<() => void> = [];
+const unmounts: (() => void)[] = [];
 
 async function render(send: DiagnosticTransport, download = vi.fn()) {
     vi.stubGlobal('chrome', { runtime: { getManifest: () => ({ version: '0.1.2' }) } });
@@ -30,7 +36,9 @@ async function render(send: DiagnosticTransport, download = vi.fn()) {
         container.remove();
     });
     await act(async () => {
-        root.render(<MantineProvider theme={theme}><DiagnosticsSection send={send} download={download} /></MantineProvider>);
+        root.render(
+            <MantineProvider theme={theme}><DiagnosticsSection send={send} download={download} /></MantineProvider>,
+        );
     });
     return { container, download };
 }
@@ -60,9 +68,13 @@ describe('diagnostics controls', () => {
         expect(send).toHaveBeenLastCalledWith({ type: DIAGNOSTIC_REQUEST.SNAPSHOT });
         expect(download).toHaveBeenCalledTimes(1);
         const file = download.mock.calls[0]?.[0] as { text: string; filename: string };
-        expect(JSON.parse(file.text)).toMatchObject({ formatVersion: DIAGNOSTIC_FORMAT_VERSION, extensionVersion: '0.1.2' });
+        expect(JSON.parse(file.text)).toMatchObject({
+            formatVersion: DIAGNOSTIC_FORMAT_VERSION,
+            extensionVersion: '0.1.2',
+        });
         expect(file.filename).toMatch(/^\d{8}_\d{6}_hn_split_v0\.1\.2\.txt$/);
-        expect(container.querySelector('[role="status"]')?.textContent).toContain(enMessages.diagnostics_exported.message);
+        expect(container.querySelector('[role="status"]')?.textContent)
+            .toContain(enMessages.diagnostics_exported.message);
     });
 
     it('exports the latest snapshot and clears only after an explicit click', async () => {
@@ -74,7 +86,8 @@ describe('diagnostics controls', () => {
         expect(JSON.parse(file.text.trim().split('\n')[1]!)).toEqual(entry);
         await click(container, enMessages.diagnostics_clear.message);
         expect(send).toHaveBeenLastCalledWith({ type: DIAGNOSTIC_REQUEST.CLEAR });
-        expect(container.querySelector('[role="status"]')?.textContent).toContain(enMessages.diagnostics_cleared.message);
+        expect(container.querySelector('[role="status"]')?.textContent)
+            .toContain(enMessages.diagnostics_cleared.message);
         expect(container.textContent).toContain(enMessages.diagnostics_empty.message);
     });
 
@@ -85,11 +98,13 @@ describe('diagnostics controls', () => {
     ])('shows stable failure feedback and does not download an invalid snapshot', async (response) => {
         const send = vi.fn(async () => response);
         const { container, download } = await render(send);
-        expect(container.querySelector('[role="status"]')?.textContent).toContain(enMessages.diagnostics_failure.message);
+        expect(container.querySelector('[role="status"]')?.textContent)
+            .toContain(enMessages.diagnostics_failure.message);
         await click(container, enMessages.diagnostics_export.message);
         expect(download).not.toHaveBeenCalled();
         expect(container.textContent).not.toContain('PRIVATE_PAGE_PAYLOAD');
-        expect(container.querySelector('[role="status"]')?.textContent).toContain(enMessages.diagnostics_failure.message);
+        expect(container.querySelector('[role="status"]')?.textContent)
+            .toContain(enMessages.diagnostics_failure.message);
     });
 
     it('recovers from runtime rejection and a failed download', async () => {
@@ -136,14 +151,15 @@ describe('local Blob download', () => {
         const create = vi.fn<(blob: Blob) => string>().mockReturnValue('blob:local-support');
         const revoke = vi.fn();
         vi.stubGlobal('URL', { createObjectURL: create, revokeObjectURL: revoke });
-        const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
-            expect(this.download).toBe('support.txt');
-            expect(this.href).toBe('blob:local-support');
-            expect(this.isConnected).toBe(true);
-        });
+        const anchorClick = vi.spyOn(HTMLAnchorElement.prototype, 'click')
+            .mockImplementation(function recordClick(this: HTMLAnchorElement) {
+                expect(this.download).toBe('support.txt');
+                expect(this.href).toBe('blob:local-support');
+                expect(this.isConnected).toBe(true);
+            });
         const open = vi.spyOn(window, 'open');
         downloadDiagnostics({ filename: 'support.txt', text: 'safe diagnostic text' });
-        expect(click).toHaveBeenCalledTimes(1);
+        expect(anchorClick).toHaveBeenCalledTimes(1);
         expect(create.mock.calls[0]?.[0]).toBeInstanceOf(Blob);
         expect(open).not.toHaveBeenCalled();
         expect(document.querySelector('a[download]')).toBeNull();

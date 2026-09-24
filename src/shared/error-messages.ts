@@ -1,6 +1,12 @@
+/**
+ * @file Maps stable background error codes to locale message keys and turns thrown values into user-facing
+ * text without exposing raw diagnostic text.
+ */
+
 import { t } from './i18n';
-import type { MessageKey } from './i18n';
 import { BACKGROUND_ERROR_CODE } from './messages';
+
+import type { MessageKey } from './i18n';
 import type { BackgroundErrorCode } from './messages';
 
 const ERROR_MESSAGE_KEY: Record<BackgroundErrorCode, MessageKey> = {
@@ -19,6 +25,7 @@ export class UserFacingError extends Error {}
 
 /**
  * Resolves the locale key describing one stable background failure code.
+ *
  * @param code - The stable background error code to describe.
  */
 export function messageKeyForBackgroundError(code: BackgroundErrorCode): MessageKey {
@@ -28,6 +35,7 @@ export function messageKeyForBackgroundError(code: BackgroundErrorCode): Message
 /**
  * Produces user-facing copy for an unknown thrown value without leaking raw
  * diagnostic text into the UI.
+ *
  * @param error - The unknown thrown value to describe.
  * @param fallbackKey - The locale key used for non-user-facing errors.
  */

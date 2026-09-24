@@ -1,11 +1,13 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    beforeAll, beforeEach, describe, expect, it, vi,
+} from 'vitest';
 
 const mocks = vi.hoisted(() => {
     /**
      * Creates an observable Chrome event boundary.
      */
     function event() {
-        const listeners: Array<(...arguments_: never[]) => unknown> = [];
+        const listeners: ((...arguments_: never[]) => unknown)[] = [];
         return {
             addListener: vi.fn((listener: (...arguments_: never[]) => unknown) => {
                 listeners.push(listener);
@@ -74,20 +76,16 @@ vi.mock('../src/background/side-panel-content-controller', () => ({
 }));
 
 vi.mock('../src/background/side-panel-framing', () => ({
-    SidePanelFraming: class {
-        /** Clears any stale framing rule. */
-        async reset(): Promise<void> {
-            await Promise.resolve();
-        }
-    },
+    // Constructor doubles: vitest needs `function` here, and using `this` keeps prefer-arrow-callback from removing it.
+    SidePanelFraming: vi.fn(function SidePanelFramingDouble(this: { reset: () => Promise<void> }) {
+        this.reset = vi.fn(async () => undefined);
+    }),
 }));
 
 vi.mock('../src/background/side-panel-port-controller', () => ({
-    SidePanelPortController: class {
-        readonly accept = mocks.acceptPort;
-
-        readonly recoverWindow = mocks.recoverWindow;
-    },
+    SidePanelPortController: vi.fn(function SidePanelPortControllerDouble(this: object) {
+        Object.assign(this, { accept: mocks.acceptPort, recoverWindow: mocks.recoverWindow });
+    }),
 }));
 
 vi.mock('../src/shared/logger', () => ({

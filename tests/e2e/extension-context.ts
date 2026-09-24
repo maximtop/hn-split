@@ -1,6 +1,3 @@
-import { resolveBuildPath } from '../../scripts/lib/build-paths.ts';
-import { chromium } from '@playwright/test';
-import type { BrowserContext, Page, Worker } from '@playwright/test';
 import {
     cp,
     mkdtemp,
@@ -12,6 +9,12 @@ import {
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 
+import { chromium } from '@playwright/test';
+
+import { resolveBuildPath } from '../../scripts/lib/build-paths.ts';
+
+import type { BrowserContext, Page, Worker } from '@playwright/test';
+
 export const ARTICLE_ORIGIN = 'https://article.hn-split.example.com';
 
 /**
@@ -22,14 +25,17 @@ export interface ExtensionContext {
      * The persistent browser context with the unpacked extension loaded.
      */
     context: BrowserContext;
+
     /**
      * The extension background service worker.
      */
     worker: Worker;
+
     /**
      * The extension identifier resolved from the service worker URL.
      */
     extensionId: string;
+
     /**
      * Closes the context and removes its temporary user-data directory.
      */
@@ -69,6 +75,7 @@ export interface PerArticleLookupCapture {
      * Records the exact Algolia request URLs observed by the fixture.
      */
     algoliaRequests: string[];
+
     /**
      * Records the exact Hacker News sub-frame request URLs observed by the fixture.
      */
@@ -83,6 +90,7 @@ export interface PerArticleLookupCapture {
  * rather than Playwright's `locale`, `--lang`, or Unix locale environment variables.
  * Making the requested catalog the sole default keeps
  * `chrome.i18n.getMessage` real for local cross-platform coverage.
+ *
  * @param sourceDirectory - The ordinary unpacked extension build to copy.
  * @param catalogLocale - The Chrome `_locales` code to select.
  */
@@ -116,6 +124,7 @@ async function createLocalizedExtensionCopy(
 
 /**
  * Launches a fresh persistent Chromium context with the extension from the canonical Chrome build directory.
+ *
  * @param options - Optional packaged catalog fixture configuration.
  */
 export async function launchExtensionContext(
@@ -143,11 +152,11 @@ export async function launchExtensionContext(
     // the explicit context locale below keeps both processes on the same catalog.
     const browserEnvironment = options.catalogLocale !== undefined && process.platform === 'linux'
         ? {
-                ...process.env,
-                LANG: 'C.UTF-8',
-                LANGUAGE: options.catalogLocale.replaceAll('-', '_'),
-                LC_ALL: 'C.UTF-8',
-            }
+            ...process.env,
+            LANG: 'C.UTF-8',
+            LANGUAGE: options.catalogLocale.replaceAll('-', '_'),
+            LC_ALL: 'C.UTF-8',
+        }
         : undefined;
     let context: BrowserContext;
     try {
@@ -213,8 +222,10 @@ export async function launchExtensionContext(
  * Serves deterministic article pages and Algolia responses. Each hit echoes
  * the searched query as its URL, so exact-identity verification always
  * succeeds against the fixture.
+ *
  * @param context - The extension browser context to install routes into.
  * @param options - The Algolia hits returned for every search.
+ * @param options.hits - The Algolia hit fixtures returned for every search.
  */
 export async function installLookupFixtures(
     context: BrowserContext,
@@ -238,6 +249,7 @@ export async function installLookupFixtures(
 /**
  * Serves exact per-path lookup outcomes and captures every external surface
  * used by the side-panel synchronization flow.
+ *
  * @param context - The extension browser context to install routes into.
  * @param discussions - Article pathnames mapped to a discussion item or null.
  */
@@ -272,13 +284,13 @@ export async function installPerArticleLookupFixtures(
                 hits: itemId === null || query === null
                     ? []
                     : [{
-                            objectID: itemId,
-                            title: 'Fixture discussion',
-                            url: query,
-                            num_comments: 10,
-                            points: 20,
-                            created_at_i: 1,
-                        }],
+                        objectID: itemId,
+                        title: 'Fixture discussion',
+                        url: query,
+                        num_comments: 10,
+                        points: 20,
+                        created_at_i: 1,
+                    }],
             },
         });
     });
@@ -289,7 +301,8 @@ export async function installPerArticleLookupFixtures(
         // embeddable so panel behavior remains deterministic in CI.
         await route.fulfill({
             contentType: 'text/html',
-            body: '<!doctype html><title>Fixture discussion</title><main style="height:4000px"><h1>Fixture discussion</h1></main>',
+            body: '<!doctype html><title>Fixture discussion</title>'
+                + '<main style="height:4000px"><h1>Fixture discussion</h1></main>',
         });
     });
     return { algoliaRequests, discussionFrameRequests };
@@ -301,8 +314,11 @@ export async function installPerArticleLookupFixtures(
  * Chrome refuses to inject scripts into chrome-extension:// pages. Message
  * routing, the background worker, caching, fixtures, and rendering all stay
  * real.
+ *
  * @param page - The not-yet-navigated page that will load popup.html.
  * @param options - The article tab identifier and page URL to report.
+ * @param options.articleTabId - The tab identifier reported as the active tab.
+ * @param options.pageUrl - The page URL reported by the injected page-context script.
  */
 export async function shimPopupBrowserCalls(
     page: Page,
@@ -320,9 +336,12 @@ export async function shimPopupBrowserCalls(
  * Opens one extension page with deterministic media emulation applied before
  * navigation, so Mantine resolves the intended color scheme at first paint
  * and transitions never race assertions.
+ *
  * @param extension - The launched extension context.
  * @param file - The extension page to open.
  * @param options - Color scheme and an optional hook that runs before navigation.
+ * @param options.colorScheme - The emulated color scheme; defaults to `light`.
+ * @param options.beforeNavigate - A hook that receives the page before it navigates.
  */
 export async function openExtensionPage(
     extension: ExtensionContext,

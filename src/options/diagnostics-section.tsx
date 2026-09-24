@@ -1,18 +1,27 @@
+/**
+ * @file Renders the diagnostics section of the options page: session-log status plus explicit export and clear
+ * actions that talk to the background worker through the diagnostic protocol.
+ */
+
+import {
+    Button, Group, Paper, Stack, Text, Title,
+} from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import * as v from 'valibot';
 
-import { DIAGNOSTIC_REQUEST, diagnosticResponseSchema } from '../shared/diagnostic-protocol';
-import type { DiagnosticTransport } from '../shared/diagnostic-protocol';
 import { formatDiagnosticExport } from '../shared/diagnostic-export';
-import type { DiagnosticExport } from '../shared/diagnostic-export';
+import { DIAGNOSTIC_REQUEST, diagnosticResponseSchema } from '../shared/diagnostic-protocol';
 import { t } from '../shared/i18n';
+
+import type { DiagnosticExport } from '../shared/diagnostic-export';
+import type { DiagnosticTransport } from '../shared/diagnostic-protocol';
 import type { MessageKey } from '../shared/i18n';
 
 const DOWNLOAD_URL_LIFETIME_MS = 60_000;
 
 /**
  * Downloads only in response to an explicit export action, without a new tab.
+ *
  * @param file - Validated text and deterministic filename to offer locally.
  */
 export function downloadDiagnostics(file: DiagnosticExport): void {
@@ -39,12 +48,19 @@ export interface DiagnosticsSectionProps {
      * Sends diagnostic requests to the background worker.
      */
     send?: DiagnosticTransport;
+
     /**
      * Saves an explicitly requested local support bundle.
      */
     download?: (file: DiagnosticExport) => void;
 }
 
+/**
+ * Sends a diagnostic request to the background worker through the extension runtime
+ * and resolves with the worker's raw response.
+ *
+ * @param request - The diagnostic request to send.
+ */
 const sendRuntime: DiagnosticTransport = async (request) => {
     const response: unknown = await chrome.runtime.sendMessage(request);
     return response;
@@ -52,17 +68,20 @@ const sendRuntime: DiagnosticTransport = async (request) => {
 
 /**
  * Displays session-log state and explicit export/clear actions with live feedback.
+ *
  * @param props - Runtime and download adapters; the browser owns both in production.
  * @param props.send - Runtime transport for the options document.
  * @param props.download - Explicit local file-saving callback.
  */
-export function DiagnosticsSection({ send = sendRuntime, download = downloadDiagnostics }: DiagnosticsSectionProps): React.JSX.Element {
+export function DiagnosticsSection(
+    { send = sendRuntime, download = downloadDiagnostics }: DiagnosticsSectionProps,
+): React.JSX.Element {
     const [count, setCount] = useState<number | null>(null);
     const [busy, setBusy] = useState(false);
     const [feedback, setFeedback] = useState<MessageKey | null>(null);
     const generation = useRef(0);
     useEffect(() => {
-        const current = generation.current;
+        const { current } = generation;
         let active = true;
         void send({ type: DIAGNOSTIC_REQUEST.SNAPSHOT }).then((raw) => {
             const response = v.parse(diagnosticResponseSchema, raw);
@@ -111,20 +130,29 @@ export function DiagnosticsSection({ send = sendRuntime, download = downloadDiag
         }
     };
 
+    let summary: string | null = null;
+    if (count !== null) {
+        summary = count === 0 ? t('diagnostics_empty') : t('diagnostics_count', { count });
+    } else if (feedback === null) {
+        summary = t('diagnostics_loading');
+    }
+
     return (
         <Paper withBorder radius="lg" p="xl" shadow="sm">
             <Stack gap="sm">
                 <Title order={2} size="h4">{t('diagnostics_title')}</Title>
                 <Text c="dimmed">{t('diagnostics_description')}</Text>
                 <Text role="status" aria-live="polite">
-                    {count === null
-                        ? feedback === null ? t('diagnostics_loading') : null
-                        : count === 0 ? t('diagnostics_empty') : t('diagnostics_count', { count })}
+                    {summary}
                     {feedback === null ? null : ` ${t(feedback)}` }
                 </Text>
                 <Group>
-                    <Button disabled={busy} onClick={() => { void perform(false); }}>{t('diagnostics_export')}</Button>
-                    <Button variant="default" disabled={busy} onClick={() => { void perform(true); }}>{t('diagnostics_clear')}</Button>
+                    <Button disabled={busy} onClick={() => {
+                        void perform(false);
+                    }}>{t('diagnostics_export')}</Button>
+                    <Button variant="default" disabled={busy} onClick={() => {
+                        void perform(true);
+                    }}>{t('diagnostics_clear')}</Button>
                 </Group>
             </Stack>
         </Paper>

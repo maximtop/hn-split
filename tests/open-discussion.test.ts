@@ -1,6 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { DiscussionTabManager } from '../src/browser/open-discussion';
+
 import type { SessionStore, TabClient } from '../src/browser/open-discussion';
 
 const createStore = (initial?: number): SessionStore & { value?: number } => {
@@ -26,8 +29,12 @@ const unexpectedUpdate = (): ReturnType<typeof vi.fn<TabClient['update']>> => vi
 describe('DiscussionTabManager', () => {
     it('opens the first discussion in a normal adjacent tab', async () => {
         const tabs: TabClient = {
-            get: vi.fn(async (id) => ({ id, index: 4, windowId: 2, splitViewId: -1 })),
-            create: vi.fn(async () => ({ id: 91, index: 5, windowId: 2, splitViewId: -1 })),
+            get: vi.fn(async (id) => ({
+                id, index: 4, windowId: 2, splitViewId: -1,
+            })),
+            create: vi.fn(async () => ({
+                id: 91, index: 5, windowId: 2, splitViewId: -1,
+            })),
             update: unexpectedUpdate(),
         };
         const store = createStore();
@@ -50,11 +57,17 @@ describe('DiscussionTabManager', () => {
         const tabs: TabClient = {
             get: vi.fn(async (id) => (
                 id === 40
-                    ? { id, index: 4, windowId: 2, splitViewId: 7 }
-                    : { id, index: 5, windowId: 2, splitViewId: 7 }
+                    ? {
+                        id, index: 4, windowId: 2, splitViewId: 7,
+                    }
+                    : {
+                        id, index: 5, windowId: 2, splitViewId: 7,
+                    }
             )),
             create: vi.fn(),
-            update: vi.fn(async (id) => ({ id, index: 5, windowId: 2, splitViewId: 7 })),
+            update: vi.fn(async (id) => ({
+                id, index: 5, windowId: 2, splitViewId: 7,
+            })),
         };
         const store = createStore(91);
         const manager = new DiscussionTabManager(tabs, store);
@@ -78,7 +91,9 @@ describe('DiscussionTabManager', () => {
             get: vi.fn(async (id) => (
                 id === 40
                     ? { id, index: 4, windowId: 2 }
-                    : { id, index: 5, windowId: 2, url: 'https://news.ycombinator.com/item?id=123' }
+                    : {
+                        id, index: 5, windowId: 2, url: 'https://news.ycombinator.com/item?id=123',
+                    }
             )),
             create: vi.fn(async () => created),
             update: vi.fn(async (id) => ({ id, index: 5, windowId: 2 })),
@@ -88,7 +103,9 @@ describe('DiscussionTabManager', () => {
 
         const first = manager.open(40, '123');
         const second = manager.open(40, '456');
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+        });
         const createsBeforeFirstCompleted = vi.mocked(tabs.create).mock.calls.length;
         resolveCreated?.({ id: 91, index: 5, windowId: 2 });
 
@@ -108,13 +125,17 @@ describe('DiscussionTabManager', () => {
         const tabs: TabClient = {
             get: vi.fn(async (id) => (
                 id === 40
-                    ? { id, index: 4, windowId: 2, splitViewId: -1 }
+                    ? {
+                        id, index: 4, windowId: 2, splitViewId: -1,
+                    }
                     : {
-                            id, index: 5, windowId: 2, splitViewId: -1, url: 'https://news.ycombinator.com/newest',
-                        }
+                        id, index: 5, windowId: 2, splitViewId: -1, url: 'https://news.ycombinator.com/newest',
+                    }
             )),
             create: vi.fn(),
-            update: vi.fn(async (id) => ({ id, index: 5, windowId: 2, splitViewId: -1 })),
+            update: vi.fn(async (id) => ({
+                id, index: 5, windowId: 2, splitViewId: -1,
+            })),
         };
         const store = createStore(91);
         const manager = new DiscussionTabManager(tabs, store);
@@ -133,12 +154,16 @@ describe('DiscussionTabManager', () => {
         const tabs: TabClient = {
             get: vi.fn(async (id) => (
                 id === 40
-                    ? { id, index: 4, windowId: 2, splitViewId: -1 }
+                    ? {
+                        id, index: 4, windowId: 2, splitViewId: -1,
+                    }
                     : {
-                            id, index: 5, windowId: 2, splitViewId: -1, url: 'https://example.com/somewhere-else',
-                        }
+                        id, index: 5, windowId: 2, splitViewId: -1, url: 'https://example.com/somewhere-else',
+                    }
             )),
-            create: vi.fn(async () => ({ id: 92, index: 5, windowId: 2, splitViewId: -1 })),
+            create: vi.fn(async () => ({
+                id: 92, index: 5, windowId: 2, splitViewId: -1,
+            })),
             update: unexpectedUpdate(),
         };
         const store = createStore(91);
@@ -155,13 +180,17 @@ describe('DiscussionTabManager', () => {
         const tabs: TabClient = {
             get: vi.fn(async (id) => (
                 id === 40
-                    ? { id, index: 4, windowId: 2, splitViewId: 7 }
+                    ? {
+                        id, index: 4, windowId: 2, splitViewId: 7,
+                    }
                     : {
-                            id, index: 5, windowId: 2, splitViewId: 7, url: 'https://example.com/article',
-                        }
+                        id, index: 5, windowId: 2, splitViewId: 7, url: 'https://example.com/article',
+                    }
             )),
             create: vi.fn(),
-            update: vi.fn(async (id) => ({ id, index: 5, windowId: 2, splitViewId: 7 })),
+            update: vi.fn(async (id) => ({
+                id, index: 5, windowId: 2, splitViewId: 7,
+            })),
         };
         const store = createStore(91);
         const manager = new DiscussionTabManager(tabs, store);
@@ -182,9 +211,13 @@ describe('DiscussionTabManager', () => {
                 if (id === 91) {
                     throw new Error('No tab with id');
                 }
-                return { id, index: 1, windowId: 2, splitViewId: -1 };
+                return {
+                    id, index: 1, windowId: 2, splitViewId: -1,
+                };
             }),
-            create: vi.fn(async () => ({ id: 92, index: 2, windowId: 2, splitViewId: -1 })),
+            create: vi.fn(async () => ({
+                id: 92, index: 2, windowId: 2, splitViewId: -1,
+            })),
             update: unexpectedUpdate(),
         };
         const store = createStore(91);
@@ -199,8 +232,12 @@ describe('DiscussionTabManager', () => {
 
     it('reports success when the tab opened but remembering the association failed', async () => {
         const tabs: TabClient = {
-            get: vi.fn(async (id) => ({ id, index: 4, windowId: 2, splitViewId: -1 })),
-            create: vi.fn(async () => ({ id: 91, index: 5, windowId: 2, splitViewId: -1 })),
+            get: vi.fn(async (id) => ({
+                id, index: 4, windowId: 2, splitViewId: -1,
+            })),
+            create: vi.fn(async () => ({
+                id: 91, index: 5, windowId: 2, splitViewId: -1,
+            })),
             update: unexpectedUpdate(),
         };
         const store = createStore();
@@ -217,9 +254,13 @@ describe('DiscussionTabManager', () => {
                 if (id === 91) {
                     throw new Error('No tab with id');
                 }
-                return { id, index: 1, windowId: 2, splitViewId: -1 };
+                return {
+                    id, index: 1, windowId: 2, splitViewId: -1,
+                };
             }),
-            create: vi.fn(async () => ({ id: 92, index: 2, windowId: 2, splitViewId: -1 })),
+            create: vi.fn(async () => ({
+                id: 92, index: 2, windowId: 2, splitViewId: -1,
+            })),
             update: unexpectedUpdate(),
         };
         const store = createStore(91);
@@ -236,7 +277,9 @@ describe('DiscussionTabManager', () => {
             get: vi.fn(async (id) => (
                 id === 40
                     ? { id, index: 4, windowId: 2 }
-                    : { id, index: 5, windowId: 2, url: 'https://news.ycombinator.com/item?id=123' }
+                    : {
+                        id, index: 5, windowId: 2, url: 'https://news.ycombinator.com/item?id=123',
+                    }
             )),
             create: vi.fn(),
             update: vi.fn(async () => Promise.reject(updateError)),

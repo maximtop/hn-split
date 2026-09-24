@@ -1,10 +1,12 @@
 import { readFile } from 'node:fs/promises';
+
 import { expect, test } from '@playwright/test';
 
 import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
 import { DIAGNOSTIC_EVENT } from '../../src/shared/diagnostic-events';
 import { DIAGNOSTIC_REQUEST } from '../../src/shared/diagnostic-protocol';
 import { DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_SOURCE } from '../../src/shared/diagnostics';
+
 import { launchExtensionContext, openExtensionPage } from './extension-context';
 
 test('exports the session log as a local file and clears it from Options', async () => {
@@ -36,9 +38,13 @@ test('exports the session log as a local file and clears it from Options', async
         }));
         expect(extension.context.pages()).toHaveLength(pagesBefore);
         await options.getByRole('button', { name: enMessages.diagnostics_clear.message }).click();
-        await expect(options.getByRole('status').filter({ hasText: enMessages.diagnostics_cleared.message })).toBeVisible();
+        await expect(
+            options.getByRole('status').filter({ hasText: enMessages.diagnostics_cleared.message }),
+        ).toBeVisible();
         await options.reload();
-        await expect(options.getByRole('status').filter({ hasText: enMessages.diagnostics_empty.message })).toBeVisible();
+        await expect(
+            options.getByRole('status').filter({ hasText: enMessages.diagnostics_empty.message }),
+        ).toBeVisible();
     } finally {
         await extension.context.close();
     }

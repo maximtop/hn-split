@@ -1,6 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import { refreshTabsBounded } from '../src/browser/bounded-tab-refresh';
+
 import type { TabRefreshTarget } from '../src/browser/bounded-tab-refresh';
 
 const targets = (count: number): TabRefreshTarget[] => Array.from(
@@ -15,7 +18,9 @@ describe('refreshTabsBounded', () => {
         const refresh = vi.fn(async () => {
             active += 1;
             maximumActive = Math.max(maximumActive, active);
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
             active -= 1;
         });
 

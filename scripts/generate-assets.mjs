@@ -1,6 +1,7 @@
-import { resolveBuildPath } from './lib/build-paths.ts';
 import { execFile } from 'node:child_process';
-import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
+import {
+    mkdir, mkdtemp, readFile, rm,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { promisify } from 'node:util';
@@ -11,6 +12,8 @@ import { chromium } from '@playwright/test';
 // helpers instead of duplicating the Algolia and popup shims.
 import { BASE_LOCALE, LOCALE_REGISTRY, SHIPPED_LOCALES } from '../src/shared/locales.ts';
 import { installLookupFixtures, shimPopupBrowserCalls } from '../tests/e2e/extension-context.ts';
+
+import { resolveBuildPath } from './lib/build-paths.ts';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const IDENTITY_DIR = resolve(ROOT, 'assets/identity');
@@ -66,7 +69,9 @@ function labelPattern(localized, base) {
  * the canvas (used for the 128 store icon, which needs 96x96 artwork inside
  * 16px transparent padding per Chrome Web Store guidance).
  */
-async function renderSvg(page, svgPath, { width, height, artWidth = width, artHeight = height, out, transparent = false }) {
+async function renderSvg(page, svgPath, {
+    width, height, artWidth = width, artHeight = height, out, transparent = false,
+}) {
     const svg = await readFile(svgPath, 'base64');
     await page.setViewportSize({ width, height });
     await page.setContent(`<!doctype html><style>
@@ -82,7 +87,9 @@ async function renderSvg(page, svgPath, { width, height, artWidth = width, artHe
  * caption, and a real UI capture (base64 PNG taken at deviceScaleFactor 2,
  * displayed at half size so it stays crisp).
  */
-async function renderStage(page, { heading, sub, capture, displayWidth, layout, dark = false, out }) {
+async function renderStage(page, {
+    heading, sub, capture, displayWidth, layout, dark = false, out,
+}) {
     await page.setViewportSize({ width: 1280, height: 800 });
     const background = dark
         ? 'radial-gradient(120% 130% at 80% -10%, #3A2A1C 0%, #171B24 55%, #10141C 100%)'
@@ -164,7 +171,10 @@ async function capturePopup(extension, { colorScheme }) {
     await page.getByRole('button', {
         name: labelPattern(messages.open_primary_discussion.message, baseMessages.open_primary_discussion.message),
     }).first().waitFor();
-    if (!isBaseLocale && await page.getByRole('button', { name: messages.open_primary_discussion.message }).count() === 0) {
+    if (
+        !isBaseLocale
+        && await page.getByRole('button', { name: messages.open_primary_discussion.message }).count() === 0
+    ) {
         console.warn(`the platform ignored --lang=${locale}; the UI capture stays English under ${locale} captions`);
     }
     const capture = await page.locator('body').screenshot();

@@ -1,4 +1,9 @@
 /**
+ * @file Defines the identifier, context, and URL patterns of the link context-menu item that opens the
+ * discussion for a link in the side panel.
+ */
+
+/**
  * Identifies the "Open in Split" link context-menu item. The identifier is
  * stable so the click listener can tell this item apart from any menu item the
  * extension may add later.

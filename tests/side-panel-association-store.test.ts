@@ -1,17 +1,20 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
 import {
     SidePanelAssociationStore,
 } from '../src/browser/side-panel-association-store';
-import type {
-    SidePanelAssociationStorage,
-} from '../src/browser/side-panel-association-store';
 import {
     SIDE_PANEL_ASSOCIATION_ORIGIN,
 } from '../src/shared/side-panel-association';
-import type { SidePanelAssociation } from '../src/shared/side-panel-association';
 import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
 import { sidePanelAssociationKey } from '../src/shared/storage-keys';
+
+import type {
+    SidePanelAssociationStorage,
+} from '../src/browser/side-panel-association-store';
+import type { SidePanelAssociation } from '../src/shared/side-panel-association';
 
 const TAB_ID = 7;
 const WINDOW_ID = 3;
@@ -25,6 +28,7 @@ interface Deferred<T> {
 
 /**
  * Creates a controllable promise for FIFO storage tests.
+ *
  * @returns The promise and its external settlement functions.
  */
 function deferred<T>(): Deferred<T> {
@@ -39,7 +43,9 @@ function deferred<T>(): Deferred<T> {
 
 /**
  * Creates one valid reusable discussion association.
+ *
  * @param overrides - Fields that distinguish the test association.
+ *
  * @returns A strict session association.
  */
 function discussionAssociation(
@@ -57,6 +63,7 @@ function discussionAssociation(
 
 /**
  * Creates an observable in-memory association storage adapter.
+ *
  * @returns The backing map and mocked storage boundary.
  */
 function memoryStorage(): {
@@ -67,8 +74,12 @@ function memoryStorage(): {
     const storage: SidePanelAssociationStorage = {
         get: vi.fn(async (key) => memory.get(key)),
         getAll: vi.fn(async () => Object.fromEntries(memory)),
-        set: vi.fn(async (key, value) => { memory.set(key, value); }),
-        remove: vi.fn(async (key) => { memory.delete(key); }),
+        set: vi.fn(async (key, value) => {
+            memory.set(key, value);
+        }),
+        remove: vi.fn(async (key) => {
+            memory.delete(key);
+        }),
     };
     return { memory, storage };
 }

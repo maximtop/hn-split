@@ -1,7 +1,13 @@
+/**
+ * @file Defines the session-only association between a browser tab and its reusable side-panel outcome, with
+ * the schema and type guard that validate it when it is restored from storage.
+ */
+
 import * as v from 'valibot';
 
 import { HN_LOOKUP_STATUS, isValidItemId } from '../domain/hn';
 import { isSanitizedArticleIdentity } from '../domain/url';
+
 import {
     SIDE_PANEL_CONTENT_KIND,
     sidePanelTabIdSchema,
@@ -60,6 +66,7 @@ export type SidePanelAssociation = v.InferOutput<typeof sidePanelAssociationSche
 
 /**
  * Determines whether an unknown value is a strict reusable tab association.
+ *
  * @param value - The unknown storage value to validate.
  */
 export function isSidePanelAssociation(value: unknown): value is SidePanelAssociation {

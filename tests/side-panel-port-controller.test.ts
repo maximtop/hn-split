@@ -1,12 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
-import { SidePanelPortController } from '../src/background/side-panel-port-controller';
-import type { SidePanelPortControllerDependencies } from '../src/background/side-panel-port-controller';
 import {
     SIDE_PANEL_FRAMING_RULE_ID,
     SidePanelFraming,
     framingRule,
 } from '../src/background/side-panel-framing';
+import { SidePanelPortController } from '../src/background/side-panel-port-controller';
 import { SidePanelWindowRegistry } from '../src/browser/side-panel-window-registry';
 import {
     SIDE_PANEL_CONTEXT,
@@ -16,6 +17,8 @@ import {
     SIDE_PANEL_RESET,
     isSidePanelPortMessage,
 } from '../src/shared/messages';
+
+import type { SidePanelPortControllerDependencies } from '../src/background/side-panel-port-controller';
 
 const WINDOW_ID = 3;
 const OTHER_WINDOW_ID = 4;
@@ -68,10 +71,12 @@ async function settle(): Promise<void> {
 
 /**
  * Builds an observable Chrome-port double.
+ *
+ * @param options - Overrides for the port name, sender id and sender URL.
  */
 function fakePort(options: Readonly<FakePortOptions> = {}): FakePort {
-    const messageListeners: Array<(message: unknown) => void> = [];
-    const disconnectListeners: Array<() => void> = [];
+    const messageListeners: ((message: unknown) => void)[] = [];
+    const disconnectListeners: (() => void)[] = [];
     const postMessage = vi.fn();
     const senderUrl = options.senderUrl === undefined
         ? SIDE_PANEL_DOCUMENT_URL
@@ -80,9 +85,9 @@ function fakePort(options: Readonly<FakePortOptions> = {}): FakePort {
     const sender = senderUrl === null
         ? undefined
         : {
-                ...(senderId === null ? {} : { id: senderId }),
-                url: senderUrl,
-            };
+            ...(senderId === null ? {} : { id: senderId }),
+            url: senderUrl,
+        };
     const port = {
         name: options.name ?? SIDE_PANEL_PORT,
         ...(sender === undefined ? {} : { sender }),
@@ -123,6 +128,8 @@ function fakePort(options: Readonly<FakePortOptions> = {}): FakePort {
 
 /**
  * Builds one controller dependency harness.
+ *
+ * @param acquire - The behavior of the framing acquire call.
  */
 function dependencies(
     acquire: () => Promise<void> = async () => undefined,

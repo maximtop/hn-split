@@ -1,25 +1,28 @@
-import { describe, expect, it, vi } from 'vitest';
+import {
+    describe, expect, it, vi,
+} from 'vitest';
 
-import type { PanelLookupResult } from '../src/background/article-lookup';
-import type { SidePanelAssociationMutation } from '../src/browser/side-panel-association-store';
 import {
     SidePanelContentManager,
 } from '../src/browser/side-panel-content-manager';
-import type {
-    SidePanelContentDependencies,
-} from '../src/browser/side-panel-content-manager';
 import { HN_LOOKUP_STATUS } from '../src/domain/hn';
 import { normalizeArticleUrl } from '../src/domain/url';
+import { FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/logger';
 import {
     SIDE_PANEL_ASSOCIATION_ORIGIN,
 } from '../src/shared/side-panel-association';
+import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
+
+import type { PanelLookupResult } from '../src/background/article-lookup';
+import type { SidePanelAssociationMutation } from '../src/browser/side-panel-association-store';
+import type {
+    SidePanelContentDependencies,
+} from '../src/browser/side-panel-content-manager';
 import type {
     SidePanelAssociation,
 } from '../src/shared/side-panel-association';
-import { SIDE_PANEL_CONTENT_KIND } from '../src/shared/side-panel-content';
 import type { SidePanelContent } from '../src/shared/side-panel-content';
 import type { SidePanelProjection } from '../src/shared/side-panel-projection';
-import { FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/logger';
 
 const ITEM_ID = '424242';
 const OTHER_ITEM_ID = '515151';
@@ -86,6 +89,9 @@ function deferred<Value>(): Deferred<Value> {
 
 /**
  * Builds one found panel lookup result.
+ *
+ * @param itemId - The Hacker News item identifier of the primary discussion.
+ * @param articleIdentity - The normalized article identity returned with the result.
  */
 function foundPanelResult(
     itemId = ITEM_ID,
@@ -110,6 +116,9 @@ function foundPanelResult(
 
 /**
  * Builds one strict revisioned panel projection.
+ *
+ * @param revision - The projection revision.
+ * @param content - The panel content carried by the projection.
  */
 function projection(revision: number, content: SidePanelContent): SidePanelProjection {
     return { revision, content };
@@ -117,6 +126,9 @@ function projection(revision: number, content: SidePanelContent): SidePanelProje
 
 /**
  * Builds discussion content owned by one tab.
+ *
+ * @param tabId - The tab that owns the content.
+ * @param itemId - The Hacker News item shown for the tab.
  */
 function discussionContent(tabId = TAB_ID, itemId = ITEM_ID): SidePanelContent {
     return { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId, itemId };
@@ -124,6 +136,10 @@ function discussionContent(tabId = TAB_ID, itemId = ITEM_ID): SidePanelContent {
 
 /**
  * Builds a reusable found association.
+ *
+ * @param tabId - The tab that owns the association.
+ * @param windowId - The window that hosts the tab.
+ * @param itemId - The Hacker News item the association points to.
  */
 function discussionAssociation(
     tabId = TAB_ID,
@@ -141,6 +157,8 @@ function discussionAssociation(
 
 /**
  * Creates a process-wide-style per-tab FIFO association fake.
+ *
+ * @param initial - The associations stored before the test starts.
  */
 function associationHarness(initial: SidePanelAssociation[] = []): AssociationHarness {
     const values = new Map(initial.map((association) => [association.tabId, association]));
@@ -195,6 +213,8 @@ function associationHarness(initial: SidePanelAssociation[] = []): AssociationHa
 
 /**
  * Builds observable manager dependencies.
+ *
+ * @param options - Overrides for the stored projection, follow setting, lookup and tab window.
  */
 function dependencies(options: DependencyOptions = {}): DependencyHarness {
     const writes: SidePanelProjection[] = [];
@@ -213,9 +233,9 @@ function dependencies(options: DependencyOptions = {}): DependencyHarness {
             url === OTHER_LINK_URL ? OTHER_ITEM_ID : ITEM_ID,
             url === OTHER_LINK_URL ? OTHER_ARTICLE_IDENTITY : ARTICLE_IDENTITY,
         ))),
-        getTabWindow: vi.fn(async () => options.tabWindow === undefined
+        getTabWindow: vi.fn(async () => (options.tabWindow === undefined
             ? WINDOW_ID
-            : options.tabWindow),
+            : options.tabWindow)),
         normalizeArticleUrl: vi.fn(normalizeArticleUrl),
         openSidePanel: vi.fn(async () => undefined),
         navigate: vi.fn(async () => undefined),

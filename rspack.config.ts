@@ -1,13 +1,20 @@
+/**
+ * @file Rspack production build configuration for the extension. Bundles the background worker, options page, popup,
+ * side panel and article-click content script, generates the HTML pages, and copies the generated manifest, locales
+ * and icons into the output directory of the selected browser target.
+ */
+
 import { resolve } from 'node:path';
 
 import { rspack } from '@rspack/core';
-import type { Configuration } from '@rspack/core';
 
 import { buildManifest, parseBuildTarget, serializeManifest } from './scripts/lib/browser-manifest';
-import { resolveBuildPath } from './scripts/lib/build-paths';
 import { readPackageVersion } from './scripts/lib/build-info';
+import { resolveBuildPath } from './scripts/lib/build-paths';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from './src/shared/content-scripts';
 import { CHROME_PACKAGED_LOCALE_ALIASES, SHIPPED_LOCALES } from './src/shared/locales';
+
+import type { Configuration } from '@rspack/core';
 
 // The manifest references background.js by name, and the dynamic
 // content-script registration references its bundle file the same way, so
@@ -25,17 +32,17 @@ const packagedLocaleAliases: Readonly<Record<string, string>> = buildTarget === 
 const config: Configuration = {
     mode: 'production',
     entry: {
-        'background': resolve(import.meta.dirname, 'src/background.ts'),
-        'options': resolve(import.meta.dirname, 'src/options/main.tsx'),
-        'popup': resolve(import.meta.dirname, 'src/popup/main.tsx'),
+        background: resolve(import.meta.dirname, 'src/background.ts'),
+        options: resolve(import.meta.dirname, 'src/options/main.tsx'),
+        popup: resolve(import.meta.dirname, 'src/popup/main.tsx'),
         'side-panel': resolve(import.meta.dirname, 'src/side-panel/main.tsx'),
         [ARTICLE_CLICK_CONTENT_SCRIPT.ID]: resolve(import.meta.dirname, 'src/content/main.ts'),
     },
     output: {
         path: outputPath,
-        filename: ({ chunk }) => chunk?.name !== undefined && FIXED_FILENAME_CHUNKS.has(chunk.name)
+        filename: ({ chunk }) => (chunk?.name !== undefined && FIXED_FILENAME_CHUNKS.has(chunk.name)
             ? '[name].js'
-            : 'assets/[name]-[contenthash].js',
+            : 'assets/[name]-[contenthash].js'),
         chunkFilename: 'assets/[name]-[contenthash].js',
         cssFilename: 'assets/[name]-[contenthash].css',
         cssChunkFilename: 'assets/[name]-[contenthash].css',
@@ -81,7 +88,7 @@ const config: Configuration = {
     performance: false,
     plugins: [
         new rspack.DefinePlugin({
-            __TARGET_BROWSER__: JSON.stringify(buildTarget),
+            BUILD_TARGET_BROWSER: JSON.stringify(buildTarget),
         }),
         new rspack.HtmlRspackPlugin({
             chunks: ['popup'],

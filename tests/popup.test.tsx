@@ -1,9 +1,12 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { App } from '../src/popup/popup-app';
+
 import type { BackgroundResponse } from '../src/shared/messages';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -43,7 +46,7 @@ function installChrome(sendMessage: ReturnType<typeof vi.fn>): ReturnType<typeof
         tabs: { query: vi.fn(async () => [{ id: 40, windowId: 5 }]) },
         // Models the async boundary that never resumes after opening the side
         // panel tears down the popup. The fixed flow must not depend on it.
-        windows: { getCurrent: vi.fn(() => new Promise(() => undefined)) },
+        windows: { getCurrent: vi.fn(() => new Promise(() => {})) },
         sidePanel: { open: vi.fn(async () => undefined) },
     });
     return openOptionsPage;
@@ -55,7 +58,9 @@ async function renderLoadedApp(): Promise<{ container: HTMLDivElement; unmount: 
     const root = createRoot(container);
     await act(async () => {
         root.render(<App />);
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        await new Promise((resolve) => {
+            setTimeout(resolve, 0);
+        });
     });
     return {
         container,
@@ -95,7 +100,9 @@ describe('App discussion opens', () => {
 
         await act(async () => {
             sidePanelButton?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(calls).toEqual(['select', 'open']);
@@ -120,7 +127,9 @@ describe('App discussion opens', () => {
 
         await act(async () => {
             buttons[0]?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(buttons.every(({ disabled }) => !disabled)).toBe(true);
@@ -140,7 +149,9 @@ describe('App discussion opens', () => {
 
         await act(async () => {
             buttons[0]?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(view.container.querySelector('.status--error')?.textContent)
@@ -149,7 +160,7 @@ describe('App discussion opens', () => {
     });
 
     it('disables every discussion button while an open request is pending', async () => {
-        const pending = new Promise<BackgroundResponse>(() => undefined);
+        const pending = new Promise<BackgroundResponse>(() => {});
         const sendMessage = vi.fn()
             .mockResolvedValueOnce(foundResponse)
             .mockReturnValueOnce(pending);
@@ -186,8 +197,12 @@ describe('App discussion opens', () => {
             result: {
                 status: 'found',
                 primary: {
-                    id: '0', title: 'Invalid', articleUrl: 'https://example.com/story',
-                    comments: 1, points: 1, createdAt: 1,
+                    id: '0',
+                    title: 'Invalid',
+                    articleUrl: 'https://example.com/story',
+                    comments: 1,
+                    points: 1,
+                    createdAt: 1,
                 },
                 alternatives: [],
             },
@@ -212,7 +227,9 @@ describe('App discussion opens', () => {
 
         await act(async () => {
             buttons[0]?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(buttons.every(({ disabled }) => !disabled)).toBe(true);

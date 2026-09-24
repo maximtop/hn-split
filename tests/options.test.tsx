@@ -1,6 +1,8 @@
 import { StrictMode, act } from 'react';
 import { createRoot } from 'react-dom/client';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import {
+    afterEach, describe, expect, it, vi,
+} from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { OptionsApp } from '../src/options/options-app';
@@ -137,15 +139,21 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             availabilitySwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
         await act(async () => {
             articleClickSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
         await act(async () => {
             sidePanelFollowSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(chromeMocks.sendMessage).toHaveBeenCalledWith({
@@ -177,7 +185,9 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             availabilitySwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(availabilitySwitch?.checked).toBe(false);
@@ -185,7 +195,7 @@ describe('OptionsApp', () => {
             type: BACKGROUND_REQUEST_TYPE.SET_AVAILABILITY_SETTING,
             enabled: true,
         });
-        const requestTypes = (chromeMocks.sendMessage.mock.calls as Array<[{ type: string }]>)
+        const requestTypes = (chromeMocks.sendMessage.mock.calls as [{ type: string }][])
             .map(([request]) => request.type);
         expect(requestTypes.filter((type) => type === BACKGROUND_REQUEST_TYPE.GET_AVAILABILITY_SETTING))
             .toHaveLength(2);
@@ -204,7 +214,9 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             articleClickSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(articleClickSwitch?.checked).toBe(false);
@@ -212,7 +224,7 @@ describe('OptionsApp', () => {
             type: BACKGROUND_REQUEST_TYPE.SET_ARTICLE_CLICK_SETTING,
             enabled: true,
         });
-        const requestTypes = (chromeMocks.sendMessage.mock.calls as Array<[{ type: string }]>)
+        const requestTypes = (chromeMocks.sendMessage.mock.calls as [{ type: string }][])
             .map(([request]) => request.type);
         expect(requestTypes.filter((type) => type === BACKGROUND_REQUEST_TYPE.GET_ARTICLE_CLICK_SETTING))
             .toHaveLength(2);
@@ -234,7 +246,9 @@ describe('OptionsApp', () => {
 
         await act(async () => {
             sidePanelFollowSwitch?.click();
-            await new Promise((resolve) => setTimeout(resolve, 0));
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
         });
 
         expect(sidePanelFollowSwitch?.checked).toBe(false);
@@ -242,7 +256,7 @@ describe('OptionsApp', () => {
             type: BACKGROUND_REQUEST_TYPE.SET_SIDE_PANEL_FOLLOW_SETTING,
             enabled: true,
         });
-        const requestTypes = (chromeMocks.sendMessage.mock.calls as Array<[{ type: string }]>)
+        const requestTypes = (chromeMocks.sendMessage.mock.calls as [{ type: string }][])
             .map(([request]) => request.type);
         expect(requestTypes.filter((type) => type === BACKGROUND_REQUEST_TYPE.GET_SIDE_PANEL_FOLLOW_SETTING))
             .toHaveLength(2);

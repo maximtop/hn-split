@@ -1,9 +1,15 @@
+/**
+ * @file Answers a story-link click reported by the Hacker News content script: validates the sender, opens the side
+ * panel within the click's user gesture, and commits the clicked discussion once the setting is confirmed enabled.
+ */
+
+import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
+
 import type {
     ExpectedNavigationReservation,
     ExplicitOperationReservation,
     ShowDiscussionOptions,
 } from './side-panel-content-manager';
-import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
 import type { FollowWarningSink } from '../shared/logger';
 
 /**
@@ -14,10 +20,12 @@ export interface ArticleClickSender {
      * Contains the browser tab the click message came from, when known.
      */
     tabId?: number;
+
     /**
      * Contains the browser window that tab belongs to, when known.
      */
     windowId?: number;
+
     /**
      * Contains the origin of the sending document, when Chrome reports one.
      */
@@ -33,12 +41,15 @@ export interface ArticleClickOpenDependencies {
      * read it from storage.
      */
     cachedEnabled(): boolean | undefined;
+
     /**
      * Reads the authoritative persisted setting.
      */
     readEnabled(): Promise<boolean>;
+
     /**
      * Reserves the source tab's exact article navigation synchronously.
+     *
      * @param tabId - The source Hacker News tab.
      * @param windowId - The source tab's browser window.
      * @param articleUrl - The exact clicked story target.
@@ -48,14 +59,18 @@ export interface ArticleClickOpenDependencies {
         windowId: number,
         articleUrl: string,
     ): ExpectedNavigationReservation;
+
     /**
      * Reserves explicit projection precedence synchronously.
+     *
      * @param tabId - The source Hacker News tab.
      * @param windowId - The source tab's browser window.
      */
     reserveExplicitOperation(tabId: number, windowId: number): ExplicitOperationReservation;
+
     /**
      * Starts pending projection preparation without awaiting storage.
+     *
      * @param reservation - The exact explicit operation to prepare.
      * @param windowId - The reservation's browser window.
      */
@@ -63,8 +78,10 @@ export interface ArticleClickOpenDependencies {
         reservation: ExplicitOperationReservation,
         windowId: number,
     ): Promise<unknown>;
+
     /**
      * Cancels one exact expected navigation.
+     *
      * @param reservation - The expected navigation to cancel.
      * @param windowId - The reservation's browser window.
      */
@@ -72,8 +89,10 @@ export interface ArticleClickOpenDependencies {
         reservation: ExpectedNavigationReservation,
         windowId: number,
     ): void;
+
     /**
      * Cancels one exact explicit operation.
+     *
      * @param reservation - The explicit operation to cancel.
      * @param windowId - The reservation's browser window.
      * @param resynchronize - Whether its reserved target must be restored.
@@ -83,20 +102,37 @@ export interface ArticleClickOpenDependencies {
         windowId: number,
         resynchronize: boolean,
     ): void;
+
     /**
      * Opens the side panel for the clicking tab. Chrome honors the click's
      * user gesture only while the message listener runs synchronously, so the
      * call must be initiated before any await.
+     *
      * @param tabId - The browser tab whose window shows the panel.
      */
     openSidePanel(tabId: number): Promise<void>;
+
     /**
      * Records the clicked discussion with its exact reservation and source URL.
+     *
      * @param options - The explicit discussion selection to commit.
+     * @param options.reservation - The explicit operation reserved when the click arrived.
+     * @param options.windowId - The browser window the reservation belongs to.
      */
     setSelection(
-        options: ShowDiscussionOptions & { reservation: ExplicitOperationReservation; windowId: number },
+        options: ShowDiscussionOptions & {
+            /**
+             * Carries the explicit operation reserved synchronously for this click.
+             */
+            reservation: ExplicitOperationReservation;
+
+            /**
+             * Identifies the browser window that owns the reservation.
+             */
+            windowId: number;
+        },
     ): Promise<void>;
+
     /**
      * Reports a privacy-safe, allow-listed failure without page data.
      */
@@ -111,6 +147,7 @@ export interface ArticleClickSelection {
      * Contains the concrete Hacker News item identifier.
      */
     itemId: string;
+
     /**
      * Contains the exact external article URL being opened.
      */
@@ -126,6 +163,7 @@ export interface ArticleClickSelection {
  * still unknown; the registration itself then acts as the gate (the script
  * only exists while the setting is on), and the selection write stays behind
  * the authoritative storage read.
+ *
  * @param selection - The validated Hacker News item and source article URL.
  * @param sender - The runtime message sender to validate.
  * @param expectedOrigin - The only document origin allowed to report clicks.
