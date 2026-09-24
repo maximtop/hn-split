@@ -1,3 +1,9 @@
+/**
+ * @file Sanitizes and normalizes article URLs before they can leave the extension. Rejects non-public hosts,
+ * credentials and secret-bearing query parameters, strips fragments and tracking parameters, computes the stable
+ * identity used for exact matching, and builds the ordered canonical and page candidates for a lookup.
+ */
+
 import { parse as parseDomain } from 'tldts';
 
 const TRACKING_KEYS = new Set([
@@ -62,6 +68,9 @@ export const ARTICLE_CANDIDATE_SOURCE = {
     PAGE: 'page',
 } as const;
 
+/**
+ * Identifies which source produced an article candidate.
+ */
 export type CandidateSource = typeof ARTICLE_CANDIDATE_SOURCE[keyof typeof ARTICLE_CANDIDATE_SOURCE];
 
 /**

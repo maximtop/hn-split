@@ -1,4 +1,9 @@
 /**
+ * @file Defines the storage keys and session-key prefixes shared by the background worker and the UI, with
+ * helpers that build and parse the per-tab and per-window session keys.
+ */
+
+/**
  * Names persistent and session storage keys owned by the extension.
  */
 export const STORAGE_KEY = {

@@ -1,3 +1,8 @@
+/**
+ * @file Renders the side panel: it tracks the window's projection and the background port lifecycle, and shows the
+ * retained Hacker News discussion frames or a status message with manual actions.
+ */
+
 import {
     Alert,
     Anchor,

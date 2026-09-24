@@ -1,3 +1,9 @@
+/**
+ * @file Owns the newest-wins, consent-gated side-panel projection for one browser window: automatic, manual and
+ * explicit synchronization intents, expected-navigation and follow-activation reservations, and the session
+ * associations that let a tab restore its discussion without reading its URL again.
+ */
+
 import { HN_LOOKUP_ERROR_REASON, HN_LOOKUP_STATUS } from '../domain/hn';
 import { isWebUrl } from '../domain/url';
 import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
@@ -30,6 +36,10 @@ const EXPECTED_NAVIGATION_MATCH = {
     MISMATCHED: 'mismatched',
 } as const;
 
+/**
+ * Names how a reported tab navigation compares with the target the tab was
+ * expected to open: no expectation, the expected target, or an unrelated URL.
+ */
 type ExpectedNavigationMatch = typeof EXPECTED_NAVIGATION_MATCH[
     keyof typeof EXPECTED_NAVIGATION_MATCH
 ];
@@ -441,6 +451,8 @@ function supersededIntentError(): DOMException {
  * Requires a queued projection to have applied while its intent was current.
  *
  * @param value - The nullable queued projection result.
+ *
+ * @throws When the value is null because the intent was superseded before its projection applied.
  */
 function requireApplied(value: SidePanelProjection | null): SidePanelProjection {
     if (value === null) {
@@ -1770,6 +1782,8 @@ export class SidePanelContentManager {
      * Throws the standard abort when one intent has been superseded.
      *
      * @param intent - The intent required to still be current.
+     *
+     * @throws When the intent is no longer the manager's current intent.
      */
     private requireCurrent(intent: SynchronizationIntent): void {
         if (!this.isCurrent(intent)) {

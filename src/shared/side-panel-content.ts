@@ -1,3 +1,8 @@
+/**
+ * @file Defines the states the side panel can display and their validation schemas, and converts a finished
+ * Hacker News lookup into the state the side panel should show.
+ */
+
 import * as v from 'valibot';
 
 import { HN_LOOKUP_STATUS, isValidItemId } from '../domain/hn';

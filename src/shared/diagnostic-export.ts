@@ -1,3 +1,8 @@
+/**
+ * @file Formats a validated diagnostic snapshot as a JSON-lines support file with a deterministic filename,
+ * ready for an explicit download.
+ */
+
 import { DIAGNOSTIC_FORMAT_VERSION } from './diagnostics';
 
 import type { DiagnosticBuffer } from './diagnostics';

@@ -1,3 +1,8 @@
+/**
+ * @file Reads and updates one boolean setting through background messages and turns rejected or invalid
+ * responses into localized user-facing errors.
+ */
+
 import { UserFacingError, messageKeyForBackgroundError } from '../shared/error-messages';
 import { t } from '../shared/i18n';
 import {

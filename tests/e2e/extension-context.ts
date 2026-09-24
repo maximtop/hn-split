@@ -225,7 +225,7 @@ export async function launchExtensionContext(
  *
  * @param context - The extension browser context to install routes into.
  * @param options - The Algolia hits returned for every search.
- * @param options.hits
+ * @param options.hits - The Algolia hit fixtures returned for every search.
  */
 export async function installLookupFixtures(
     context: BrowserContext,
@@ -317,8 +317,8 @@ export async function installPerArticleLookupFixtures(
  *
  * @param page - The not-yet-navigated page that will load popup.html.
  * @param options - The article tab identifier and page URL to report.
- * @param options.articleTabId
- * @param options.pageUrl
+ * @param options.articleTabId - The tab identifier reported as the active tab.
+ * @param options.pageUrl - The page URL reported by the injected page-context script.
  */
 export async function shimPopupBrowserCalls(
     page: Page,
@@ -340,8 +340,8 @@ export async function shimPopupBrowserCalls(
  * @param extension - The launched extension context.
  * @param file - The extension page to open.
  * @param options - Color scheme and an optional hook that runs before navigation.
- * @param options.colorScheme
- * @param options.beforeNavigate
+ * @param options.colorScheme - The emulated color scheme; defaults to `light`.
+ * @param options.beforeNavigate - A hook that receives the page before it navigates.
  */
 export async function openExtensionPage(
     extension: ExtensionContext,

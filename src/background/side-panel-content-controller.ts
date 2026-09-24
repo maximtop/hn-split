@@ -1,3 +1,10 @@
+/**
+ * @file Owns the per-window side panel content in the background worker. Wires the content router to the Chrome
+ * adapters, coordinates active-tab, navigation, replacement, attachment and cleanup events through the lifecycle
+ * controller, and exposes the reservation, selection, follow synchronization and context-menu entry points used
+ * by the other controllers.
+ */
+
 import { ensureOpenInSplitMenu } from '../browser/open-in-split-menu';
 import { SidePanelContentRouter } from '../browser/side-panel-content-router';
 import { SidePanelWindowRegistry } from '../browser/side-panel-window-registry';

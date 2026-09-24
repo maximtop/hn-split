@@ -1,4 +1,9 @@
 /**
+ * @file Pure state transitions for the discussion frames a side panel keeps alive: activation, per-tab replacement,
+ * least-recently-used eviction and per-tab discard.
+ */
+
+/**
  * Limits the number of live Hacker News documents retained by one panel.
  */
 export const MAX_RETAINED_DISCUSSION_FRAMES = 3;

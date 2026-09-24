@@ -1,3 +1,8 @@
+/**
+ * @file Defines the diagnostic session-log data model: size limits, sources, levels, the valibot schemas for
+ * events, entries, and the buffer, and the helpers that reduce console output to allow-listed events.
+ */
+
 import * as v from 'valibot';
 
 import { DIAGNOSTIC_EVENT, FOLLOW_DIAGNOSTIC_CODE } from './diagnostic-events';

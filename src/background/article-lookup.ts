@@ -1,3 +1,8 @@
+/**
+ * @file Resolves Hacker News discussions for a page URL. Builds sanitized article candidates and looks them up
+ * through the session-only lookup cache, for both badge and popup lookups and for the side panel.
+ */
+
 import { lookupWithCache } from '../browser/lookup-cache';
 import { lookupHnDiscussions } from '../domain/hn';
 import { buildArticleCandidates } from '../domain/url';

@@ -1,3 +1,8 @@
+/**
+ * @file Answers a story-link click reported by the Hacker News content script: validates the sender, opens the side
+ * panel within the click's user gesture, and commits the clicked discussion once the setting is confirmed enabled.
+ */
+
 import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
 
 import type {
@@ -111,9 +116,21 @@ export interface ArticleClickOpenDependencies {
      * Records the clicked discussion with its exact reservation and source URL.
      *
      * @param options - The explicit discussion selection to commit.
+     * @param options.reservation - The explicit operation reserved when the click arrived.
+     * @param options.windowId - The browser window the reservation belongs to.
      */
     setSelection(
-        options: ShowDiscussionOptions & { reservation: ExplicitOperationReservation; windowId: number },
+        options: ShowDiscussionOptions & {
+            /**
+             * Carries the explicit operation reserved synchronously for this click.
+             */
+            reservation: ExplicitOperationReservation;
+
+            /**
+             * Identifies the browser window that owns the reservation.
+             */
+            windowId: number;
+        },
     ): Promise<void>;
 
     /**

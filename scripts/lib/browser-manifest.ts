@@ -1,4 +1,8 @@
 /**
+ * @file Defines the browser build targets and generates each target's manifest from the shared base manifest.
+ */
+
+/**
  * Store packaging targets. Chrome and Edge use the Chromium side panel;
  * Firefox maps the same panel document to Firefox Sidebar.
  */
@@ -120,6 +124,8 @@ interface ExtensionManifest {
  * default Chrome target.
  *
  * @returns The validated build target.
+ *
+ * @throws When the value names no known build target.
  */
 export function parseBuildTarget(value: string | undefined): BuildTarget {
     if (value === undefined || value === '') {
@@ -142,6 +148,8 @@ export function parseBuildTarget(value: string | undefined): BuildTarget {
  * @param source Chrome-shaped manifest; never mutated.
  *
  * @returns A new manifest for Firefox.
+ *
+ * @throws When the base manifest declares no background service worker.
  */
 function applyFirefoxTransform(source: ExtensionManifest): ExtensionManifest {
     const serviceWorker = source.background?.service_worker;
@@ -196,6 +204,8 @@ function applyFirefoxTransform(source: ExtensionManifest): ExtensionManifest {
  * @param version Version taken from package.json.
  *
  * @returns A new manifest object ready for serialization.
+ *
+ * @throws When the version is not three dot-separated integers or the Firefox transform rejects the base manifest.
  */
 export function buildManifest(
     base: Record<string, unknown>,

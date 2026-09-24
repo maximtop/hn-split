@@ -1,3 +1,9 @@
+/**
+ * @file Entry point of the content script registered on Hacker News pages. Listens for clicks and sends the story
+ * item identifier and article URL of a qualifying click to the background worker, without cancelling the
+ * navigation.
+ */
+
 import { ARTICLE_CLICK_MESSAGE_TYPE } from '../shared/content-scripts';
 
 import { detectArticleClick } from './article-click';

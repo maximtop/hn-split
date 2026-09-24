@@ -1,3 +1,9 @@
+/**
+ * @file Manages the runtime ports opened by the side panel document. Accepts only ports from the extension's own
+ * panel document, binds each to one window, and orders the RESET, framing, synchronization and READY steps of
+ * panel initialization, retrying after an authoritative tab event when the first attempt fails.
+ */
+
 import { FOLLOW_DIAGNOSTIC_CODE } from '../shared/logger';
 import {
     SIDE_PANEL_CONTEXT,

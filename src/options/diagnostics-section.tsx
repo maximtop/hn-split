@@ -1,3 +1,8 @@
+/**
+ * @file Renders the diagnostics section of the options page: session-log status plus explicit export and clear
+ * actions that talk to the background worker through the diagnostic protocol.
+ */
+
 import {
     Button, Group, Paper, Stack, Text, Title,
 } from '@mantine/core';
@@ -50,6 +55,12 @@ export interface DiagnosticsSectionProps {
     download?: (file: DiagnosticExport) => void;
 }
 
+/**
+ * Sends a diagnostic request to the background worker through the extension runtime
+ * and resolves with the worker's raw response.
+ *
+ * @param request - The diagnostic request to send.
+ */
 const sendRuntime: DiagnosticTransport = async (request) => {
     const response: unknown = await chrome.runtime.sendMessage(request);
     return response;

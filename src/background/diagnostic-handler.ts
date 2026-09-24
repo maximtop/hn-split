@@ -1,3 +1,9 @@
+/**
+ * @file Handles diagnostic requests from the extension UI. Validates the request, confirms the sender is one of the
+ * extension's own documents, and forwards append, clear and snapshot operations to the background-owned
+ * diagnostic log.
+ */
+
 import * as v from 'valibot';
 
 import { DIAGNOSTIC_REQUEST, diagnosticRequestSchema } from '../shared/diagnostic-protocol';

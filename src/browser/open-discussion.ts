@@ -1,3 +1,8 @@
+/**
+ * @file Opens a Hacker News discussion next to its article tab, reusing the remembered discussion tab or native
+ * Split View pane when one still exists, and serializes opens per article tab.
+ */
+
 import { discussionUrl, isHnUrl } from '../domain/hn';
 import { DISCUSSION_OPEN_MODE } from '../shared/messages';
 
@@ -48,12 +53,36 @@ export interface TabClient {
      * Creates one adjacent browser tab.
      *
      * @param properties - The placement, opener, and URL for the new tab.
+     * @param properties.active - Whether the new tab becomes the active tab.
+     * @param properties.index - The position of the new tab within its window.
+     * @param properties.openerTabId - The article tab that opens the new tab.
+     * @param properties.url - The discussion URL the new tab loads.
+     * @param properties.windowId - The browser window that receives the new tab.
      */
     create(properties: {
+        /**
+         * Indicates whether the new tab becomes the active tab.
+         */
         active: boolean;
+
+        /**
+         * Contains the position of the new tab within its window.
+         */
         index: number;
+
+        /**
+         * Identifies the article tab that opens the new tab.
+         */
         openerTabId: number;
+
+        /**
+         * Contains the discussion URL the new tab loads.
+         */
         url: string;
+
+        /**
+         * Identifies the browser window that receives the new tab.
+         */
         windowId: number;
     }): Promise<TabSummary>;
 
@@ -63,8 +92,20 @@ export interface TabClient {
      *
      * @param tabId - The browser tab identifier to update.
      * @param properties - The active state and URL to apply.
+     * @param properties.active - Whether the tab becomes the active tab.
+     * @param properties.url - The discussion URL the tab navigates to.
      */
-    update(tabId: number, properties: { active: boolean; url: string }): Promise<TabSummary>;
+    update(tabId: number, properties: {
+        /**
+         * Indicates whether the tab becomes the active tab.
+         */
+        active: boolean;
+
+        /**
+         * Contains the discussion URL the tab navigates to.
+         */
+        url: string;
+    }): Promise<TabSummary>;
 }
 
 /**
@@ -137,6 +178,12 @@ export class DiscussionTabManager {
         }
     }
 
+    /**
+     * Determines whether two tabs are paired in the same native Split View.
+     *
+     * @param article - The article tab.
+     * @param discussion - The discussion tab to compare against it.
+     */
     private isSameSplitView(article: TabSummary, discussion: TabSummary): boolean {
         return article.splitViewId !== undefined
             && article.splitViewId !== -1
@@ -159,6 +206,17 @@ export class DiscussionTabManager {
             || (discussion.url !== undefined && isHnUrl(discussion.url));
     }
 
+    /**
+     * Reuses the remembered discussion tab when it still serves as the pane in
+     * the article's window, and otherwise creates a new tab next to the article
+     * and remembers it. A failure to store the association does not fail the
+     * open, because the discussion tab is already visible.
+     *
+     * @param articleTabId - The source article tab identifier.
+     * @param itemId - The Hacker News discussion item identifier.
+     *
+     * @throws When Chrome creates the discussion tab without returning its identifier.
+     */
     private async performOpen(articleTabId: number, itemId: string): Promise<OpenDiscussionResult> {
         const article = await this.tabs.get(articleTabId);
         const url = discussionUrl(itemId);

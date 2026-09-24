@@ -1,3 +1,8 @@
+/**
+ * @file Routes side-panel synchronization requests to one content manager per browser window, creating each manager
+ * on first use with adapters bound to its window and sharing the process-wide association store.
+ */
+
 import { SIDE_PANEL_CONTENT_KIND } from '../shared/side-panel-content';
 
 import {

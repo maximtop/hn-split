@@ -1,3 +1,8 @@
+/**
+ * @file Caches Hacker News lookup results in session storage under versioned keys, with separate lifetimes for found
+ * and not-found results and cleanup of entries from every cache version.
+ */
+
 import { HN_LOOKUP_STATUS, isHnLookupResult } from '../domain/hn';
 
 import type { HnLookupResult } from '../domain/hn';

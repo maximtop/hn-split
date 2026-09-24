@@ -1,3 +1,8 @@
+/**
+ * @file Runs automatic Hacker News availability lookups per tab and applies the resulting badges, dropping stale
+ * lookups and serializing badge mutations so a newer navigation always wins.
+ */
+
 import { HN_LOOKUP_STATUS } from '../domain/hn';
 
 import { EMPTY_AVAILABILITY_BADGE, badgeForLookupResult } from './availability-badge';
@@ -171,6 +176,12 @@ export class AutomaticAvailabilityUpdater {
         this.scheduledUrls.delete(tabId);
     }
 
+    /**
+     * Reserves the tab's URL acquisition and releases any earlier reservation
+     * for the same tab, so badge mutations wait for the newest URL only.
+     *
+     * @param tabId - The browser tab identifier whose URL is being acquired.
+     */
     private reserveCurrentTabUpdate(tabId: number): CurrentTabReservation {
         this.currentTabReservations.get(tabId)?.complete();
         let complete!: () => void;
@@ -182,10 +193,23 @@ export class AutomaticAvailabilityUpdater {
         return reservation;
     }
 
+    /**
+     * Determines whether a reservation is still the tab's newest one.
+     *
+     * @param tabId - The browser tab identifier to check.
+     * @param reservation - The reservation that may have been superseded.
+     */
     private isCurrentTabReservation(tabId: number, reservation: CurrentTabReservation): boolean {
         return this.currentTabReservations.get(tabId) === reservation;
     }
 
+    /**
+     * Completes a reservation and drops it from the tab map when it is still
+     * the newest one, which lets queued badge mutations for the tab proceed.
+     *
+     * @param tabId - The browser tab identifier that owns the reservation.
+     * @param reservation - The reservation to release.
+     */
     private releaseCurrentTabReservation(tabId: number, reservation: CurrentTabReservation): void {
         if (this.isCurrentTabReservation(tabId, reservation)) {
             this.currentTabReservations.delete(tabId);
@@ -193,6 +217,10 @@ export class AutomaticAvailabilityUpdater {
         reservation.complete();
     }
 
+    /**
+     * Completes and clears every tab's reservation so no badge mutation stays
+     * suspended after automatic availability is disabled.
+     */
     private releaseAllCurrentTabReservations(): void {
         for (const reservation of this.currentTabReservations.values()) {
             reservation.complete();
@@ -200,6 +228,12 @@ export class AutomaticAvailabilityUpdater {
         this.currentTabReservations.clear();
     }
 
+    /**
+     * Waits until the tab has no pending URL acquisition. It loops because a
+     * newer reservation may replace the one that just completed.
+     *
+     * @param tabId - The browser tab identifier whose reservations are awaited.
+     */
     private async waitForCurrentTabReservation(tabId: number): Promise<void> {
         let reservation = this.currentTabReservations.get(tabId);
         while (reservation !== undefined) {
@@ -208,6 +242,12 @@ export class AutomaticAvailabilityUpdater {
         }
     }
 
+    /**
+     * Starts a new generation for the tab and aborts its in-flight lookup, so
+     * any work started under an earlier generation becomes stale.
+     *
+     * @param tabId - The browser tab identifier that receives the generation.
+     */
     private nextGeneration(tabId: number): number {
         this.revision += 1;
         const generation = this.revision;
@@ -217,6 +257,16 @@ export class AutomaticAvailabilityUpdater {
         return generation;
     }
 
+    /**
+     * Queues one badge mutation behind the tab's earlier mutations. The badge is
+     * applied only if the generation is still current, no URL acquisition is
+     * pending, and, when required, automatic availability is still enabled.
+     *
+     * @param tabId - The browser tab identifier that receives the badge.
+     * @param generation - The generation that must still be current when the mutation runs.
+     * @param badge - The availability badge state to apply.
+     * @param requireEnabled - Whether automatic availability must still be enabled at apply time.
+     */
     private enqueueMutation(
         tabId: number,
         generation: number,
@@ -246,12 +296,28 @@ export class AutomaticAvailabilityUpdater {
         return tracked;
     }
 
+    /**
+     * Drops the tab's scheduled URL when it still belongs to the given
+     * generation, so a repeat of the same URL is looked up again.
+     *
+     * @param tabId - The browser tab identifier whose scheduled URL is cleared.
+     * @param url - The scheduled URL that must still match.
+     * @param generation - The generation that must still be current.
+     */
     private forgetScheduledUrl(tabId: number, url: string, generation: number): void {
         if (this.generations.get(tabId) === generation && this.scheduledUrls.get(tabId) === url) {
             this.scheduledUrls.delete(tabId);
         }
     }
 
+    /**
+     * Clears the tab's badge, looks the URL up while automatic availability is
+     * enabled, and applies the resulting badge. A newer generation, a disabled
+     * setting, or a failed lookup stops or resets the update.
+     *
+     * @param tabId - The browser tab identifier to update.
+     * @param url - The public URL to inspect.
+     */
     private async runUpdate(tabId: number, url: string): Promise<void> {
         const generation = this.nextGeneration(tabId);
         const isCurrent = (): boolean => this.generations.get(tabId) === generation;

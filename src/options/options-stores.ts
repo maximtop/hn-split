@@ -1,3 +1,8 @@
+/**
+ * @file Wires the options page's three toggle stores (availability, article click, side-panel follow) to their
+ * background request types and confirmation copy.
+ */
+
 import { BACKGROUND_REQUEST_TYPE } from '../shared/messages';
 
 import { OptionsStore } from './options-store';

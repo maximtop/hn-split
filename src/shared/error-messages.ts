@@ -1,3 +1,8 @@
+/**
+ * @file Maps stable background error codes to locale message keys and turns thrown values into user-facing
+ * text without exposing raw diagnostic text.
+ */
+
 import { t } from './i18n';
 import { BACKGROUND_ERROR_CODE } from './messages';
 

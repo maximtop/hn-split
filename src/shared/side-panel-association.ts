@@ -1,3 +1,8 @@
+/**
+ * @file Defines the session-only association between a browser tab and its reusable side-panel outcome, with
+ * the schema and type guard that validate it when it is restored from storage.
+ */
+
 import * as v from 'valibot';
 
 import { HN_LOOKUP_STATUS, isValidItemId } from '../domain/hn';

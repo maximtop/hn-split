@@ -57,7 +57,7 @@ function deferred<Value>(): Deferred<Value> {
 /**
  * Builds one found lookup result for a URL.
  *
- * @param url
+ * @param url - The article URL the result is built for.
  */
 function foundPanelResult(url: string): PanelLookupResult {
     const other = url === OTHER_LINK_URL;
@@ -81,8 +81,8 @@ function foundPanelResult(url: string): PanelLookupResult {
 /**
  * Builds strict tab-aware panel content.
  *
- * @param tabId
- * @param itemId
+ * @param tabId - The tab that owns the content.
+ * @param itemId - The Hacker News item shown for the tab.
  */
 function discussionContent(tabId: number, itemId: string): SidePanelContent {
     return { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId, itemId };
@@ -91,7 +91,7 @@ function discussionContent(tabId: number, itemId: string): SidePanelContent {
 /**
  * Builds router dependencies backed by in-memory projection and association stores.
  *
- * @param initial
+ * @param initial - The window projections stored before the test starts.
  */
 function dependencies(initial: SidePanelWindowProjection[] = []): RouterHarness {
     const projections = new Map(initial.map(({ windowId, projection }) => [windowId, projection]));

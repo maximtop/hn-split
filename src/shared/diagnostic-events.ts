@@ -1,4 +1,9 @@
 /**
+ * @file Defines the closed set of diagnostic messages and machine-readable codes the extension may record in
+ * its session log, and the mapping from side-panel failure codes to their messages.
+ */
+
+/**
  * Provides the closed set of privacy-safe side-panel diagnostic messages.
  */
 export const FOLLOW_DIAGNOSTIC_EVENT = {

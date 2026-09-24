@@ -1,3 +1,8 @@
+/**
+ * @file Defines the request and response schemas of the diagnostic channel between extension pages and the
+ * background worker, and installs the one-way transport that UI pages use to append events.
+ */
+
 import * as v from 'valibot';
 
 import { diagnosticBufferSchema, diagnosticEventSchema } from './diagnostics';

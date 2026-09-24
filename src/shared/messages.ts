@@ -1,3 +1,9 @@
+/**
+ * @file Defines the runtime message protocol between the UI surfaces, the content script, and the background
+ * worker: request and response types, side-panel port messages, their valibot schemas, and the type
+ * guards that validate incoming values.
+ */
+
 import * as v from 'valibot';
 
 import { hnLookupResultSchema } from '../domain/hn';

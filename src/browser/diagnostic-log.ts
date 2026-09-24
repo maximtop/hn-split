@@ -1,3 +1,8 @@
+/**
+ * @file Keeps the bounded diagnostic log in worker session storage, serializing appends, snapshots and clears and
+ * dropping the oldest entries once the entry or byte cap is exceeded.
+ */
+
 import * as v from 'valibot';
 
 import {

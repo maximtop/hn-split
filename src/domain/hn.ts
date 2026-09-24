@@ -1,3 +1,9 @@
+/**
+ * @file Hacker News domain model. Defines the discussion and lookup-result schemas and types, looks up and ranks
+ * discussions for article candidates through the Algolia search API with a timeout and caller cancellation, and
+ * provides the Hacker News origin, URL and item identifier helpers.
+ */
+
 import * as v from 'valibot';
 
 import { normalizeArticleUrl, sanitizeArticleUrl } from './url';
@@ -26,6 +32,10 @@ export const HN_LOOKUP_ERROR_REASON = {
     LOOKUP_FAILED: 'lookup_failed',
 } as const;
 
+/**
+ * Marks a search response that arrived but is not valid JSON of the expected shape, so the lookup reports an
+ * invalid response instead of a generic lookup failure.
+ */
 class InvalidAlgoliaResponseError extends TypeError {}
 
 const positiveItemIdSchema = v.pipe(
@@ -98,6 +108,9 @@ const algoliaResponseSchema = v.object({
     hits: v.array(algoliaHitSchema),
 });
 
+/**
+ * Describes one validated story hit returned by the Algolia search API.
+ */
 type AlgoliaHit = v.InferOutput<typeof algoliaHitSchema>;
 
 /**
@@ -135,6 +148,8 @@ function compareDiscussions(left: HnDiscussion, right: HnDiscussion): number {
  * Builds a privacy-sanitized exact-URL Algolia search request.
  *
  * @param candidate - The eligible article candidate to query.
+ *
+ * @throws When the candidate URL fails sanitization and so must not leave the extension.
  */
 function buildSearchUrl(candidate: ArticleCandidate): string {
     const sanitizedCandidateUrl = sanitizeArticleUrl(candidate.url);
@@ -319,6 +334,8 @@ export function isHnUrl(url: string): boolean {
  * Builds the canonical Hacker News discussion URL for a validated item.
  *
  * @param itemId - The validated Hacker News item identifier.
+ *
+ * @throws When the item identifier is not a positive safe integer string.
  */
 export function discussionUrl(itemId: string): string {
     if (!isValidItemId(itemId)) {

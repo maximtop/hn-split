@@ -1,3 +1,8 @@
+/**
+ * @file Provides the MobX store behind one options-page toggle: it loads the value from the background worker,
+ * applies changes through it and resynchronizes when a change fails.
+ */
+
 import { makeAutoObservable, runInAction } from 'mobx';
 
 import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';

@@ -1,3 +1,8 @@
+/**
+ * @file Provides the console logging helpers of the extension. They add the product prefix, restrict warning
+ * payloads to allow-listed identifiers, and forward sanitized events to the installed diagnostic sink.
+ */
+
 import { EXTENSION_BRAND } from './brand';
 import {
     FOLLOW_DIAGNOSTIC_CODE,
@@ -9,6 +14,9 @@ import { DIAGNOSTIC_LEVEL, normalizeDiagnostic } from './diagnostics';
 import type { FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent } from './diagnostic-events';
 import type { DiagnosticEvent } from './diagnostics';
 
+/**
+ * Represents a primitive value allowed in the inline details of a lifecycle log line.
+ */
 type DiagnosticValue = boolean | number | string | null | undefined;
 
 export { FOLLOW_DIAGNOSTIC_CODE, FOLLOW_DIAGNOSTIC_EVENT } from './diagnostic-events';

@@ -1,3 +1,9 @@
+/**
+ * @file Entry point of the background service worker. Wires the diagnostic log, framing exception and side panel
+ * port controller, registers the runtime message, connection, context-menu, tab and window listeners, and replays
+ * state the browser drops across worker restarts and extension updates.
+ */
+
 import {
     handleArticleClickMessage,
     reconcileArticleClickRegistration,

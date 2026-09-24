@@ -1,3 +1,8 @@
+/**
+ * @file Renders the options page as an observer component that binds the availability, article-click and
+ * side-panel-follow toggles, the diagnostics section and status messages to their MobX stores.
+ */
+
 import {
     Alert,
     Container,

@@ -1,3 +1,8 @@
+/**
+ * @file Playwright configuration for the end-to-end suite. Runs the `*.e2e.ts` files under `tests/e2e` serially in
+ * one worker with the line reporter, and retains traces only for failed tests.
+ */
+
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({

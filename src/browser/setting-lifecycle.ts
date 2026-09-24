@@ -1,4 +1,9 @@
 /**
+ * @file Applies changes to a background-owned setting in request order, and restores the previous value and its
+ * side effects when enabling or disabling fails.
+ */
+
+/**
  * Defines storage and effect operations for one background-owned setting.
  */
 export interface SettingLifecycleDependencies {

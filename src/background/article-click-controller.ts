@@ -1,3 +1,9 @@
+/**
+ * @file Owns the article-click setting in the background worker. Applies setting changes as serialized transactions
+ * that also register or unregister the article-click content script, replays the stored value at worker start, and
+ * handles story-click messages sent by that content script.
+ */
+
 import { respondToArticleClick } from '../browser/article-click-open';
 import { ensureArticleClickRegistration } from '../browser/article-click-registration';
 import { applySettingTransaction, createSettingQueue } from '../browser/setting-lifecycle';

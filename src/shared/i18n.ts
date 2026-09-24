@@ -1,3 +1,9 @@
+/**
+ * @file Provides the translation layer for the UI: locale resolution from the browser UI language, the
+ * document language and direction, and the `t` function, which falls back to the bundled English
+ * catalog when the browser i18n API is unavailable.
+ */
+
 import { translate } from '@adguard/translate';
 
 import baseMessages from '../../public/_locales/en/messages.json';
@@ -7,6 +13,9 @@ import { BASE_LOCALE, resolveShippedLocale } from './locales';
 import type { LocaleEntry } from './locales';
 import type { I18nInterface, Locale } from '@adguard/translate';
 
+/**
+ * Identifies one message key of the bundled English locale catalog.
+ */
 export type MessageKey = keyof typeof baseMessages;
 
 /**

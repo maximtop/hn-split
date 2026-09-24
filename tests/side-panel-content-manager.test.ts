@@ -90,8 +90,8 @@ function deferred<Value>(): Deferred<Value> {
 /**
  * Builds one found panel lookup result.
  *
- * @param itemId
- * @param articleIdentity
+ * @param itemId - The Hacker News item identifier of the primary discussion.
+ * @param articleIdentity - The normalized article identity returned with the result.
  */
 function foundPanelResult(
     itemId = ITEM_ID,
@@ -117,8 +117,8 @@ function foundPanelResult(
 /**
  * Builds one strict revisioned panel projection.
  *
- * @param revision
- * @param content
+ * @param revision - The projection revision.
+ * @param content - The panel content carried by the projection.
  */
 function projection(revision: number, content: SidePanelContent): SidePanelProjection {
     return { revision, content };
@@ -127,8 +127,8 @@ function projection(revision: number, content: SidePanelContent): SidePanelProje
 /**
  * Builds discussion content owned by one tab.
  *
- * @param tabId
- * @param itemId
+ * @param tabId - The tab that owns the content.
+ * @param itemId - The Hacker News item shown for the tab.
  */
 function discussionContent(tabId = TAB_ID, itemId = ITEM_ID): SidePanelContent {
     return { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, tabId, itemId };
@@ -137,9 +137,9 @@ function discussionContent(tabId = TAB_ID, itemId = ITEM_ID): SidePanelContent {
 /**
  * Builds a reusable found association.
  *
- * @param tabId
- * @param windowId
- * @param itemId
+ * @param tabId - The tab that owns the association.
+ * @param windowId - The window that hosts the tab.
+ * @param itemId - The Hacker News item the association points to.
  */
 function discussionAssociation(
     tabId = TAB_ID,
@@ -158,7 +158,7 @@ function discussionAssociation(
 /**
  * Creates a process-wide-style per-tab FIFO association fake.
  *
- * @param initial
+ * @param initial - The associations stored before the test starts.
  */
 function associationHarness(initial: SidePanelAssociation[] = []): AssociationHarness {
     const values = new Map(initial.map((association) => [association.tabId, association]));
@@ -214,7 +214,7 @@ function associationHarness(initial: SidePanelAssociation[] = []): AssociationHa
 /**
  * Builds observable manager dependencies.
  *
- * @param options
+ * @param options - Overrides for the stored projection, follow setting, lookup and tab window.
  */
 function dependencies(options: DependencyOptions = {}): DependencyHarness {
     const writes: SidePanelProjection[] = [];

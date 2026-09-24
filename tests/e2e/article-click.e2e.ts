@@ -23,10 +23,10 @@ const STORY_TWO = { id: '424243', path: '/story-two', title: 'Fixture story two'
  * One realistic Hacker News listing row: the external story link inside
  * `.titleline`, the nested `from?site=` chip, and the subtext comments link.
  *
- * @param story
- * @param story.id
- * @param story.path
- * @param story.title
+ * @param story - The fixture story to render.
+ * @param story.id - The Hacker News item identifier used as the row `id` and comments link.
+ * @param story.path - The article path appended to the article origin.
+ * @param story.title - The story title shown as the link text.
  */
 function storyRow(story: { id: string; path: string; title: string }): string {
     return `

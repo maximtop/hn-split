@@ -1,3 +1,9 @@
+/**
+ * @file Routes validated background requests from the popup, options page and side panel to their operations
+ * (lookup, opening a discussion, settings, side panel selection and follow), and turns failures into the stable
+ * error codes carried by the response.
+ */
+
 import { DiscussionTabManager } from '../browser/open-discussion';
 import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { logDiagnostic, logWarning } from '../shared/logger';

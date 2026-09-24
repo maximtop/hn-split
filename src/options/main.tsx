@@ -1,3 +1,8 @@
+/**
+ * @file Entry point of the options page: installs the diagnostic transport, builds and loads the settings stores,
+ * and mounts the options view.
+ */
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 

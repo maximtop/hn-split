@@ -1,3 +1,7 @@
+/**
+ * @file Reads the package version and the HEAD commit from the working tree for release packaging.
+ */
+
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -40,6 +44,8 @@ function git(rootDirectory: string, args: string[]): string {
  * @param rootDirectory Repository root containing package.json.
  *
  * @returns The validated version string.
+ *
+ * @throws When package.json declares no version of three dot-separated integers.
  */
 export function readPackageVersion(rootDirectory: string): string {
     const packageJson = JSON.parse(
@@ -58,6 +64,8 @@ export function readPackageVersion(rootDirectory: string): string {
  * @param rootDirectory Repository root.
  *
  * @returns Commit hash and committer timestamp.
+ *
+ * @throws When git reports no valid committer timestamp for HEAD.
  */
 export function readHeadCommit(rootDirectory: string): HeadCommit {
     const sha = git(rootDirectory, ['rev-parse', 'HEAD']);

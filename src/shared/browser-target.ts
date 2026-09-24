@@ -1,4 +1,9 @@
 /**
+ * @file Resolves which browser package the bundle targets and provides the helper that opens the discussion
+ * surface for that target: the Chromium side panel or the Firefox sidebar.
+ */
+
+/**
  * Browser packages produced by the release build.
  */
 export type BrowserTarget = 'chrome' | 'edge' | 'firefox';

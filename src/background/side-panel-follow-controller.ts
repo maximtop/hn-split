@@ -1,3 +1,9 @@
+/**
+ * @file Owns the side-panel-follow setting. Applies enable and disable transactions in FIFO order, synchronizes
+ * every live panel window with its active tab when following is enabled, and serves the panel's manual active-tab
+ * check and one-click enable commands.
+ */
+
 import { applySettingTransaction } from '../browser/setting-lifecycle';
 import {
     SIDE_PANEL_FOLLOW_CONTINUATION_KIND,

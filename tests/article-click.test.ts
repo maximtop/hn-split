@@ -19,10 +19,12 @@ interface StoryRowOptions {
  * Renders one realistic Hacker News listing row: the story anchor inside
  * `.titleline`, the nested `from?site=` chip, and the subtext comments link.
  *
- * @param root0
- * @param root0.rowId
- * @param root0.href
- * @param root0.rowClass
+ * @param root0 - Optional overrides for the row markup.
+ * @param root0.rowId - The `id` attribute of the row, or `null` to omit it.
+ * @param root0.href - The URL of the story anchor.
+ * @param root0.rowClass - The `class` attribute of the row.
+ *
+ * @throws When the fixture markup lacks an expected element.
  */
 function renderStoryRow({
     rowId = STORY_ID,
@@ -69,8 +71,8 @@ function renderStoryRow({
  * Fabricates the click-event fields; jsdom keeps `isTrusted` read-only on real
  * events, so the pure detector receives plain objects instead.
  *
- * @param target
- * @param overrides
+ * @param target - The value reported as the event target.
+ * @param overrides - Event fields that replace the primary-click defaults.
  */
 function clickEvent(target: unknown, overrides: Partial<ArticleClickEventLike> = {}): ArticleClickEventLike {
     return {

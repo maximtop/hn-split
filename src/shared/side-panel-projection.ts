@@ -1,3 +1,8 @@
+/**
+ * @file Defines the revisioned side-panel projection stored for one browser window and the framing-ready
+ * stamp that ties the panel framing setup to one specific projection.
+ */
+
 import * as v from 'valibot';
 
 import {

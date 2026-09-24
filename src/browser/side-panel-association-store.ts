@@ -1,3 +1,8 @@
+/**
+ * @file Stores the session association between a tab and its side-panel outcome, validating every value read or
+ * written and serializing mutations per tab across all panel windows.
+ */
+
 import {
     isSidePanelAssociation,
 } from '../shared/side-panel-association';

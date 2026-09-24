@@ -1,3 +1,9 @@
+/**
+ * @file Holds the identifiers of the article-click content script: its registration ID, its bundle file, and
+ * the runtime message type it sends. Kept free of validation-library imports so the content-script
+ * bundle stays small.
+ */
+
 const ARTICLE_CLICK_SCRIPT_ID = 'hn-article-click';
 
 /**

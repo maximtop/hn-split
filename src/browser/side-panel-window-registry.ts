@@ -1,3 +1,8 @@
+/**
+ * @file Tracks the live side-panel ports of each browser window and broadcasts lifecycle messages to them, pruning
+ * ports that throw on delivery.
+ */
+
 import {
     SIDE_PANEL_DISCARD_TAB,
 } from '../shared/messages';

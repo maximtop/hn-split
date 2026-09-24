@@ -72,7 +72,7 @@ async function settle(): Promise<void> {
 /**
  * Builds an observable Chrome-port double.
  *
- * @param options
+ * @param options - Overrides for the port name, sender id and sender URL.
  */
 function fakePort(options: Readonly<FakePortOptions> = {}): FakePort {
     const messageListeners: ((message: unknown) => void)[] = [];
@@ -129,7 +129,7 @@ function fakePort(options: Readonly<FakePortOptions> = {}): FakePort {
 /**
  * Builds one controller dependency harness.
  *
- * @param acquire
+ * @param acquire - The behavior of the framing acquire call.
  */
 function dependencies(
     acquire: () => Promise<void> = async () => undefined,

@@ -1,4 +1,9 @@
 /**
+ * @file Refreshes many tabs through a bounded pool of workers, so enabling automatic availability in a large
+ * session does not start every lookup at once.
+ */
+
+/**
  * Describes one open tab eligible for an automatic-availability refresh.
  */
 export interface TabRefreshTarget {

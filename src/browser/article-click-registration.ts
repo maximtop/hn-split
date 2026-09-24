@@ -1,4 +1,9 @@
 /**
+ * @file Keeps the article-click content-script registration in step with the setting, tolerating Chrome's errors
+ * for duplicate or missing registrations.
+ */
+
+/**
  * Defines the registration operations for the article-click content script.
  */
 export interface ContentScriptRegistry {

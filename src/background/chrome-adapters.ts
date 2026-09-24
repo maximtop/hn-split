@@ -1,3 +1,9 @@
+/**
+ * @file Adapts the Chrome extension APIs (tabs, storage, scripting, context menus, side panel and action badge) to
+ * the narrow interfaces used by the browser and controller modules. Also reads and writes the persisted settings
+ * and the per-window side panel selections.
+ */
+
 import { SidePanelAssociationStore } from '../browser/side-panel-association-store';
 import { HN_ORIGIN } from '../domain/hn';
 import { openDiscussionSurface } from '../shared/browser-target';

@@ -1,3 +1,8 @@
+/**
+ * @file Renders the browser-action popup: it looks up Hacker News discussions for the active tab through the
+ * background worker and opens the chosen one in the discussion surface or the side panel.
+ */
+
 import {
     Alert,
     Box,

@@ -1,3 +1,8 @@
+/**
+ * @file Holds the registry of priority locales shipped with the extension, with their Chrome directory codes,
+ * translator codes, and text direction, and resolves a browser UI language to a shipped locale.
+ */
+
 import type { Locale } from '@adguard/translate';
 
 /**

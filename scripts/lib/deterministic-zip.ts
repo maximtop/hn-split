@@ -1,3 +1,7 @@
+/**
+ * @file Collects directory contents and packs them into byte-reproducible zip archives.
+ */
+
 import { readFile, readdir } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 
@@ -60,6 +64,8 @@ export async function collectDirectoryEntries(directory: string): Promise<ZipEnt
  * time of the packaged commit.
  *
  * @returns The zip file bytes.
+ *
+ * @throws When two entries share one archive path.
  */
 export function createDeterministicZip(entries: ZipEntry[], mtime: Date): Uint8Array {
     const sorted = [...entries].sort((a, b) => (a.path < b.path ? -1 : 1));

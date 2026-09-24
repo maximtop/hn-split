@@ -305,6 +305,8 @@ function installChrome(options: FakeChromeOptions = {}): FakeChrome {
  *
  * @param fake - The installed Chrome double.
  * @param index - The zero-based connection index to return.
+ *
+ * @throws When no port has been connected at that index.
  */
 function requirePort(fake: FakeChrome, index: number): FakePort {
     const port = fake.ports[index];
@@ -319,6 +321,8 @@ function requirePort(fake: FakeChrome, index: number): FakePort {
  *
  * @param container - The panel DOM to search.
  * @param name - The exact localized button name.
+ *
+ * @throws When no button with that name exists in the container.
  */
 function requireButton(container: HTMLElement, name: string): HTMLButtonElement {
     const button = [...container.querySelectorAll('button')]

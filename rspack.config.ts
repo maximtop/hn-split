@@ -1,3 +1,9 @@
+/**
+ * @file Rspack production build configuration for the extension. Bundles the background worker, options page, popup,
+ * side panel and article-click content script, generates the HTML pages, and copies the generated manifest, locales
+ * and icons into the output directory of the selected browser target.
+ */
+
 import { resolve } from 'node:path';
 
 import { rspack } from '@rspack/core';

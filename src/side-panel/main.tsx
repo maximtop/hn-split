@@ -1,3 +1,8 @@
+/**
+ * @file Entry point of the side panel: installs the diagnostic transport, applies the document locale and mounts
+ * the side panel app.
+ */
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 

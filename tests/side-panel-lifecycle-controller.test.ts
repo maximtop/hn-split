@@ -37,8 +37,8 @@ function deferred<Value>(): Deferred<Value> {
 /**
  * Builds one strict terminal projection.
  *
- * @param tabId
- * @param revision
+ * @param tabId - The tab that owns the projection.
+ * @param revision - The projection revision.
  */
 function projection(tabId = TAB_ID, revision = 2): SidePanelProjection {
     return {
@@ -54,7 +54,7 @@ function projection(tabId = TAB_ID, revision = 2): SidePanelProjection {
 /**
  * Builds an observable lifecycle dependency harness.
  *
- * @param live
+ * @param live - Whether the window registry reports the window as live.
  */
 function dependencies(live = true): SidePanelLifecycleControllerDependencies {
     return {

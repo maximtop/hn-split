@@ -1,3 +1,8 @@
+/**
+ * @file Maps a Hacker News lookup result to the browser-action badge: compact comment-count text, background color
+ * and localized tooltip.
+ */
+
 import { HN_LOOKUP_STATUS } from '../domain/hn';
 import { EXTENSION_BRAND } from '../shared/brand';
 import { t } from '../shared/i18n';

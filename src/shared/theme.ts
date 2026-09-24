@@ -1,3 +1,8 @@
+/**
+ * @file Defines the shared Mantine theme and the CSS-variable overrides that keep the orange brand color and
+ * dimmed text at WCAG AA contrast in both the light and the dark color scheme.
+ */
+
 import { createTheme, virtualColor } from '@mantine/core';
 
 import type { CSSVariablesResolver, MantineColorsTuple } from '@mantine/core';

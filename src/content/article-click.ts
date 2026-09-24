@@ -1,4 +1,9 @@
 /**
+ * @file Detects clicks on Hacker News story links. Decides from a click event whether it is an unmodified primary
+ * activation of an external story link, and extracts the story's item identifier and article URL.
+ */
+
+/**
  * Selects the story link inside a Hacker News title cell. The selector
  * requires a direct child so nested anchors, such as the `from?site=` link in
  * the site chip, never qualify.

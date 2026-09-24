@@ -1,3 +1,8 @@
+/**
+ * @file Publishes the "Open in Split" context-menu item for links by rebuilding it from scratch on every worker
+ * start.
+ */
+
 import { HTTP_LINK_TARGET_PATTERNS, LINK_MENU_CONTEXT, OPEN_IN_SPLIT_MENU } from '../shared/context-menus';
 import { t } from '../shared/i18n';
 

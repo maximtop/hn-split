@@ -1,3 +1,7 @@
+/**
+ * @file Models the per-store listing requirements and validates every locale's store listing against them.
+ */
+
 import { EXTENSION_BRAND } from '../../src/shared/brand.ts';
 import { LOCALE_REGISTRY } from '../../src/shared/locales.ts';
 

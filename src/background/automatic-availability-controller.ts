@@ -1,3 +1,9 @@
+/**
+ * @file Owns the automatic-availability setting in the background worker. Applies setting changes as serialized
+ * transactions that refresh or clear the badges of open tabs, and updates or forgets per-tab badge state as tabs
+ * navigate or close.
+ */
+
 import { AutomaticAvailabilityUpdater } from '../browser/automatic-availability';
 import { refreshTabsBounded } from '../browser/bounded-tab-refresh';
 import { clearLookupCacheEntries } from '../browser/lookup-cache';
