@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process';
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -163,6 +164,80 @@ describe('collectListingIssues', () => {
         const broken = structuredClone(base);
         broken.searchTerms = ['a b c d e f g h', 'i j k l m n o p', 'q r s t u v w x'];
         expect(collectListingIssues(broken, base).join('\n')).toContain('Edge limit');
+    });
+
+    it('rejects a non-boolean reviewed field', () => {
+        const broken = { ...structuredClone(base), reviewed: 'yes' } as unknown as ListingContent;
+        expect(collectListingIssues(broken, base).join('\n')).toContain('reviewed must be a boolean');
+    });
+
+    it('rejects a caption count other than the expected three', () => {
+        const broken = structuredClone(base);
+        broken.captions = broken.captions.slice(0, 2);
+        expect(collectListingIssues(broken, base).join('\n')).toContain('captions must contain exactly 3');
+    });
+
+    it('rejects a caption heading over the layout budget', () => {
+        const broken = structuredClone(base);
+        broken.captions[0]!.heading = 'A'.repeat(81);
+        expect(collectListingIssues(broken, base).join('\n')).toContain('over the layout budget of 80');
+    });
+
+    it('rejects an assembled description under the Edge minimum', () => {
+        const broken = structuredClone(base);
+        broken.description = {
+            intro: 'Split for Hacker News is short.',
+            bullets: Array(EXPECTED_DESCRIPTION_BULLET_COUNT).fill('Feature.'),
+            disclaimer: 'Not affiliated with Y Combinator or Hacker News.',
+        };
+        expect(collectListingIssues(broken, base).join('\n')).toContain('under the Edge minimum of 250');
+    });
+
+    it('rejects an assembled description over the App Store limit', () => {
+        const broken = structuredClone(base);
+        broken.description.bullets[0] += 'A'.repeat(3000);
+        expect(collectListingIssues(broken, base).join('\n')).toContain('over the App Store limit of 4000');
+    });
+
+    it('rejects an assembled description over the Edge maximum', () => {
+        const broken = structuredClone(base);
+        broken.description.bullets[0] += 'A'.repeat(10_000);
+        expect(collectListingIssues(broken, base).join('\n')).toContain('over the Edge limit of 10000');
+    });
+
+    it('rejects release notes that do not cover the same versions as English', () => {
+        const broken = structuredClone(base);
+        broken.releaseNotes = { 'v9.9.9': 'Unrelated release notes.' };
+        expect(collectListingIssues(broken, base).join('\n')).toContain('releaseNotes must cover versions');
+    });
+
+    it('rejects a release note over the App Store What\'s New limit', () => {
+        const broken = structuredClone(base);
+        broken.releaseNotes['v0.1.0'] = 'A'.repeat(4001);
+        expect(collectListingIssues(broken, base).join('\n')).toContain('What\'s New limit of 4000');
+    });
+
+    it('rejects a search term over the Edge per-term length limit', () => {
+        const broken = structuredClone(base);
+        broken.searchTerms[0] = 'A'.repeat(31);
+        expect(collectListingIssues(broken, base).join('\n')).toContain('over the Edge limit of 30');
+    });
+
+    it('rejects search terms over the Edge term count limit', () => {
+        const broken = structuredClone(base);
+        broken.searchTerms = [...broken.searchTerms, 'extra'];
+        expect(collectListingIssues(broken, base).join('\n')).toContain('over the Edge limit of 7');
+    });
+});
+
+describe('validate-store-listings CLI', () => {
+    it('exits 0 for the current repository content', () => {
+        const output = execFileSync(process.execPath, [
+            resolve(__dirname, '../scripts/validate-store-listings.mjs'),
+        ], { encoding: 'utf8' });
+
+        expect(output).toContain('Validated');
+        expect(output).toContain('registered store listings against en');
     });
 });
 

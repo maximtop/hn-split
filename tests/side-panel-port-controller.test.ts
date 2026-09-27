@@ -484,6 +484,33 @@ describe('SidePanelPortController', () => {
         });
     });
 
+    it('ignores a context message that arrives on a port after it already disconnected', async () => {
+        const deps = dependencies();
+        const controller = new SidePanelPortController(deps);
+        const client = fakePort();
+        const registerSpy = vi.spyOn(deps.windows, 'register');
+
+        controller.accept(client.port);
+        client.receive({ type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID });
+        await settle();
+        expect(deps.connectWindow).toHaveBeenCalledExactlyOnceWith(WINDOW_ID);
+        expect(registerSpy).toHaveBeenCalledOnce();
+        registerSpy.mockClear();
+        vi.mocked(deps.connectWindow).mockClear();
+
+        client.disconnect();
+        await settle();
+        expect(deps.windows.windowIds()).toEqual([]);
+
+        client.receive({ type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID });
+        await settle();
+
+        expect(registerSpy).not.toHaveBeenCalled();
+        expect(deps.connectWindow).not.toHaveBeenCalled();
+        expect(deps.windows.windowIds()).toEqual([]);
+        expect(deps.framing.acquire).toHaveBeenCalledOnce();
+    });
+
     it('accepts exactly one validated context and ignores keepalives', async () => {
         const deps = dependencies();
         const controller = new SidePanelPortController(deps);

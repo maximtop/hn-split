@@ -126,6 +126,26 @@ describe('lookupHnDiscussions', () => {
         }
     });
 
+    it('breaks a tie on comments and points using the newer creation time', async () => {
+        const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse([
+            {
+                objectID: '1', url: 'https://example.com/story', num_comments: 5, points: 10, created_at_i: 100,
+            },
+            {
+                objectID: '2', url: 'https://example.com/story', num_comments: 5, points: 10, created_at_i: 200,
+            },
+        ]));
+
+        const result = await lookupHnDiscussions([
+            candidate('https://example.com/story', 'example.com/story'),
+        ], fetchFn);
+
+        expect(result.status).toBe('found');
+        if (result.status === 'found') {
+            expect([result.primary, ...result.alternatives].map(({ id }) => id)).toEqual(['2', '1']);
+        }
+    });
+
     it('returns not_found only when every request succeeds without an exact match', async () => {
         const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse([
             { objectID: '1', url: 'https://example.com/different' },

@@ -46,6 +46,6 @@ test('exports the session log as a local file and clears it from Options', async
             options.getByRole('status').filter({ hasText: enMessages.diagnostics_empty.message }),
         ).toBeVisible();
     } finally {
-        await extension.context.close();
+        await extension.dispose();
     }
 });

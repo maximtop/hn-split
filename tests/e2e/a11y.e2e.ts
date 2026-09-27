@@ -292,18 +292,24 @@ test.describe('extension accessibility (en)', () => {
     test('options page has no blocking axe violations in light and dark schemes', async () => {
         for (const colorScheme of ['light', 'dark'] as const) {
             const page = await openExtensionPage(extension, 'options.html', { colorScheme });
-            await expect(page.getByRole('switch', { name: 'Automatically check article URLs' }))
-                .toBeVisible();
-            await scanForBlockingViolations(page, `options ${colorScheme}`);
-            await page.close();
+            try {
+                await expect(page.getByRole('switch', { name: 'Automatically check article URLs' }))
+                    .toBeVisible();
+                await scanForBlockingViolations(page, `options ${colorScheme}`);
+            } finally {
+                await page.close();
+            }
         }
     });
 
     test('popup found state has no blocking axe violations in light and dark schemes', async () => {
         for (const colorScheme of ['light', 'dark'] as const) {
             const page = await openFoundPopup(extension, colorScheme);
-            await scanForBlockingViolations(page, `popup ${colorScheme}`);
-            await page.close();
+            try {
+                await scanForBlockingViolations(page, `popup ${colorScheme}`);
+            } finally {
+                await page.close();
+            }
         }
     });
 

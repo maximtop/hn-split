@@ -115,6 +115,26 @@ describe('SidePanelFraming', () => {
         });
     });
 
+    it('propagates a failed rule installation instead of silently swallowing it', async () => {
+        const failure = new Error('quota exceeded');
+        const rules: FramingRuleClient = { updateDynamicRules: vi.fn().mockRejectedValueOnce(failure) };
+        const framing = new SidePanelFraming(rules);
+
+        await expect(framing.acquire()).rejects.toThrow(failure);
+    });
+
+    it('propagates a failed rule removal instead of silently swallowing it', async () => {
+        const failure = new Error('worker torn down');
+        const updateDynamicRules = vi.fn()
+            .mockResolvedValueOnce(undefined)
+            .mockRejectedValueOnce(failure);
+        const rules: FramingRuleClient = { updateDynamicRules };
+        const framing = new SidePanelFraming(rules);
+        await framing.acquire();
+
+        await expect(framing.release()).rejects.toThrow(failure);
+    });
+
     it('removes a stale startup rule before an immediately overlapping acquire', async () => {
         const rules = client();
         const framing = new SidePanelFraming(rules);

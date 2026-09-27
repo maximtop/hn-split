@@ -126,6 +126,21 @@ describe('SidePanelAssociationStore', () => {
         expect(storage.set).not.toHaveBeenCalled();
     });
 
+    it('keeps the current association unchanged and resolves to it on a keep decision', async () => {
+        const { storage } = memoryStorage();
+        const store = new SidePanelAssociationStore(storage);
+        const association = discussionAssociation();
+        await store.set(association);
+        vi.mocked(storage.set).mockClear();
+
+        const result = await store.mutate(TAB_ID, () => ({ kind: 'keep' }));
+
+        expect(result).toEqual(association);
+        expect(storage.set).not.toHaveBeenCalled();
+        expect(storage.remove).not.toHaveBeenCalled();
+        await expect(store.get(TAB_ID)).resolves.toEqual(association);
+    });
+
     it('blocks settled reads behind a delayed mutation', async () => {
         const { memory, storage } = memoryStorage();
         const writeGate = deferred<void>();

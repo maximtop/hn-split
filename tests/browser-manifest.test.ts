@@ -7,7 +7,6 @@ import {
     BUILD_TARGETS,
     DEFAULT_BUILD_TARGET,
     EXTENSION_VERSION_PATTERN,
-    FIREFOX_GECKO_ID,
     buildManifest,
     parseBuildTarget,
     serializeManifest,
@@ -92,7 +91,10 @@ describe('buildManifest', () => {
         });
         expect(manifest.browser_specific_settings).toEqual({
             gecko: {
-                id: FIREFOX_GECKO_ID,
+                // Locked to a literal, not the imported FIREFOX_GECKO_ID: AMO treats this
+                // id as the extension's permanent identity, so a typo'd constant must not
+                // be able to pass this assertion.
+                id: 'hn-split@maximtop.dev',
                 strict_min_version: '140.0',
                 data_collection_permissions: {
                     required: ['browsingActivity', 'websiteContent'],

@@ -57,6 +57,18 @@ describe('OptionsStore', () => {
         expect(deps.readCurrent).toHaveBeenCalledOnce();
     });
 
+    it('concatenates the update and resync failures when both requests fail', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.requestUpdate).mockRejectedValue(new Error('worker unavailable'));
+        vi.mocked(deps.readCurrent).mockRejectedValue(new Error('worker unavailable'));
+        const store = new OptionsStore(deps, COPY);
+
+        await store.changeEnabled(true);
+
+        expect(store.message).toBe('Unable to update settings. Unable to reload settings.');
+        expect(store.busy).toBe(false);
+    });
+
     it('confirms with the injected copy keys of this setting', async () => {
         const deps = dependencies();
         const store = new OptionsStore(deps, {

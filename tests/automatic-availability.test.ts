@@ -27,6 +27,18 @@ describe('reportsAutomaticAvailabilityNavigation', () => {
         expect(reportsAutomaticAvailabilityNavigation(changeInfo)).toBe(true);
         expect(readUrl).not.toHaveBeenCalled();
     });
+
+    it('recognizes a completed navigation that carries no URL', () => {
+        const changeInfo = { status: 'complete' } as chrome.tabs.OnUpdatedInfo;
+
+        expect(reportsAutomaticAvailabilityNavigation(changeInfo)).toBe(true);
+    });
+
+    it('ignores an update with neither a URL nor a completed status', () => {
+        const changeInfo = {} as chrome.tabs.OnUpdatedInfo;
+
+        expect(reportsAutomaticAvailabilityNavigation(changeInfo)).toBe(false);
+    });
 });
 
 describe('AutomaticAvailabilityUpdater', () => {

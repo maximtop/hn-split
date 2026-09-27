@@ -155,7 +155,7 @@ test('installs the framing exception only while the side panel is open', async (
         expect(rulesWhileOpen).toMatchObject([{
             id: FRAMING_RULE_ID,
             action: { type: 'modifyHeaders' },
-            condition: { resourceTypes: ['sub_frame'] },
+            condition: { urlFilter: '||news.ycombinator.com/', resourceTypes: ['sub_frame'] },
         }]);
 
         await panel.close();

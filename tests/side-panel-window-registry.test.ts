@@ -73,6 +73,20 @@ describe('SidePanelWindowRegistry', () => {
         expect(registry.has(WINDOW_ID)).toBe(true);
     });
 
+    it('drains a window entirely when its only port always throws', () => {
+        const registry = new SidePanelWindowRegistry();
+        const throwing = client();
+        throwing.postMessage.mockImplementation(() => {
+            throw new Error('disconnected');
+        });
+        registry.register(WINDOW_ID, throwing, Promise.resolve());
+
+        expect(() => registry.broadcast(WINDOW_ID, { type: SIDE_PANEL_RESET })).not.toThrow();
+
+        expect(registry.has(WINDOW_ID)).toBe(false);
+        expect(registry.windowIds()).toEqual([]);
+    });
+
     it('waits for every currently registered framing acquisition', async () => {
         let resolveFirst: () => void = () => undefined;
         let resolveSecond: () => void = () => undefined;

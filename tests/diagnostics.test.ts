@@ -72,6 +72,15 @@ describe('diagnostic privacy boundary', () => {
         ).toEqual({});
     });
 
+    it('categorizes RangeError and plain Error distinctly from TypeError', () => {
+        expect(
+            normalizeDiagnostic(DIAGNOSTIC_LEVEL.WARNING, event.message, [new RangeError('out of bounds')])?.details,
+        ).toEqual({ errorCategory: DIAGNOSTIC_ERROR.RANGE });
+        expect(
+            normalizeDiagnostic(DIAGNOSTIC_LEVEL.WARNING, event.message, [new Error('generic failure')])?.details,
+        ).toEqual({ errorCategory: DIAGNOSTIC_ERROR.OTHER });
+    });
+
     it('keeps console output and feeds all existing logger entry points '
         + 'without content-script collection', async () => {
         const info = vi.spyOn(console, 'info').mockImplementation(() => undefined);

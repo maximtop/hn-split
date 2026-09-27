@@ -6,6 +6,8 @@ import {
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { App } from '../src/popup/popup-app';
+import { EXTENSION_BRAND } from '../src/shared/brand';
+import { FOLLOW_DIAGNOSTIC_CODE, FOLLOW_DIAGNOSTIC_EVENT } from '../src/shared/logger';
 
 import type { BackgroundResponse } from '../src/shared/messages';
 
@@ -114,6 +116,97 @@ describe('App discussion opens', () => {
             windowId: 5,
         });
         expect(chrome.windows.getCurrent).not.toHaveBeenCalled();
+        await view.unmount();
+    });
+
+    it('logs a diagnostic warning when opening the side panel surface fails', async () => {
+        const sendMessage = vi.fn(async (request: { type: string }) => {
+            if (request.type === 'lookup') {
+                return foundResponse;
+            }
+            return {
+                ok: true,
+                result: { content: { kind: 'discussion', tabId: 40, itemId: '123' } },
+            };
+        });
+        installChrome(sendMessage);
+        vi.mocked(chrome.sidePanel.open as (options: { tabId: number }) => Promise<void>)
+            .mockRejectedValue(new Error('side panel unavailable'));
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const view = await renderLoadedApp();
+        const sidePanelButton = [...view.container.querySelectorAll<HTMLButtonElement>('button')]
+            .find(({ textContent }) => textContent === enMessages.open_in_side_panel.message);
+
+        await act(async () => {
+            sidePanelButton?.click();
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
+        });
+
+        expect(warn).toHaveBeenCalledWith(
+            `${EXTENSION_BRAND}: ${FOLLOW_DIAGNOSTIC_EVENT.OPEN_FAILED} `
+            + `{"code":"${FOLLOW_DIAGNOSTIC_CODE.OPEN_FAILED}","tabId":40,"windowId":5}`,
+        );
+        await view.unmount();
+    });
+
+    it('logs a diagnostic warning when the side panel selection response is invalid', async () => {
+        const sendMessage = vi.fn(async (request: { type: string }) => {
+            if (request.type === 'lookup') {
+                return foundResponse;
+            }
+            return { ok: true, result: {} };
+        });
+        installChrome(sendMessage);
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const view = await renderLoadedApp();
+        const sidePanelButton = [...view.container.querySelectorAll<HTMLButtonElement>('button')]
+            .find(({ textContent }) => textContent === enMessages.open_in_side_panel.message);
+
+        await act(async () => {
+            sidePanelButton?.click();
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
+        });
+
+        expect(warn).toHaveBeenCalledWith(
+            `${EXTENSION_BRAND}: ${FOLLOW_DIAGNOSTIC_EVENT.SELECTION_FAILED} `
+            + `{"code":"${FOLLOW_DIAGNOSTIC_CODE.SELECTION_FAILED}","tabId":40,"windowId":5}`,
+        );
+        await view.unmount();
+    });
+
+    it('opens the exact item id of the clicked alternative, not the primary result', async () => {
+        const openRequests: unknown[] = [];
+        const sendMessage = vi.fn(async (request: { type: string }) => {
+            if (request.type === 'lookup') {
+                return foundResponse;
+            }
+            openRequests.push(request);
+            return {
+                ok: true,
+                result: { mode: 'adjacent_tab', tabId: 41 },
+            };
+        });
+        installChrome(sendMessage);
+        const view = await renderLoadedApp();
+        const buttons = [...view.container.querySelectorAll<HTMLButtonElement>('button.discussion')];
+        expect(buttons).toHaveLength(2);
+
+        await act(async () => {
+            buttons[1]?.click();
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
+        });
+
+        expect(openRequests).toEqual([{
+            type: 'open_discussion',
+            articleTabId: 40,
+            itemId: '456',
+        }]);
         await view.unmount();
     });
 

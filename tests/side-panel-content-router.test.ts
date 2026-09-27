@@ -576,6 +576,43 @@ describe('SidePanelContentRouter', () => {
         expect(deps.projections.get(OTHER_WINDOW_ID)).toEqual(shown);
     });
 
+    it('falls back to a direct association removal when no window manager exists yet', async () => {
+        const deps = dependencies();
+        deps.associationValues.set(TAB_ID, {
+            tabId: TAB_ID,
+            windowId: WINDOW_ID,
+            origin: SIDE_PANEL_ASSOCIATION_ORIGIN.MANUAL,
+            outcome: { kind: SIDE_PANEL_CONTENT_KIND.DISCUSSION, itemId: ITEM_ID },
+            articleIdentity: 'example.com/story',
+        });
+        const router = new SidePanelContentRouter(deps);
+
+        await router.forgetTab(TAB_ID);
+
+        expect(deps.associationValues.has(TAB_ID)).toBe(false);
+        expect(deps.discardFrame).not.toHaveBeenCalled();
+        expect(deps.readProjection).not.toHaveBeenCalled();
+    });
+
+    it('broadcasts a tab-close event to every window manager when the window is unknown', async () => {
+        const deps = dependencies();
+        const router = new SidePanelContentRouter(deps);
+        const first = await router.activate(WINDOW_ID, TAB_ID, async () => LINK_URL);
+        const second = await router.activate(
+            OTHER_WINDOW_ID,
+            OTHER_TAB_ID,
+            async () => OTHER_LINK_URL,
+        );
+
+        await router.forgetTab(TAB_ID);
+
+        expect(deps.discardFrame).toHaveBeenCalledTimes(2);
+        expect(deps.discardFrame).toHaveBeenCalledWith(WINDOW_ID, TAB_ID);
+        expect(deps.discardFrame).toHaveBeenCalledWith(OTHER_WINDOW_ID, TAB_ID);
+        expect(deps.projections.get(WINDOW_ID)).toEqual(first);
+        expect(deps.projections.get(OTHER_WINDOW_ID)).toEqual(second);
+    });
+
     it('forgets one window without touching another window projection', async () => {
         const first: SidePanelProjection = {
             revision: 1,
