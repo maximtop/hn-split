@@ -1,5 +1,8 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { SIDE_PANEL_FRAMING_RULE_ID, SidePanelFraming, framingRule } from '../src/background/side-panel-framing';

@@ -1,5 +1,8 @@
 import {
-    afterEach, describe, expect, it,
+    afterEach,
+    describe,
+    expect,
+    it,
 } from 'vitest';
 
 import { detectArticleClick } from '../src/content/article-click';
@@ -63,7 +66,10 @@ function renderStoryRow({
         throw new Error('Fixture markup is missing an expected element');
     }
     return {
-        storyAnchor, siteAnchor, commentsAnchor, rankCell,
+        storyAnchor,
+        siteAnchor,
+        commentsAnchor,
+        rankCell,
     };
 }
 

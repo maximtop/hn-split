@@ -2,7 +2,11 @@ import { MantineProvider } from '@mantine/core';
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-    afterEach, describe, expect, it, vi,
+    afterEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json';

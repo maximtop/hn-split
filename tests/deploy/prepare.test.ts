@@ -76,7 +76,9 @@ const STORE_CONFIG: Record<string, Record<string, string>> = {
     },
 };
 const UNSUPPORTED_MODE: Record<string, string> = {
-    chrome: 'upload', edge: 'status', firefox: 'upload',
+    chrome: 'upload',
+    edge: 'status',
+    firefox: 'upload',
 };
 const envFor = (target: string, mode = 'submit'): NodeJS.ProcessEnv => ({
     GITHUB_REPOSITORY: 'fixture/repository',

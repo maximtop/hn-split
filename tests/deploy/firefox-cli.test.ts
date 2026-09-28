@@ -6,7 +6,10 @@
 
 import { createHash } from 'node:crypto';
 import {
-    appendFileSync, mkdirSync, readFileSync, writeFileSync,
+    appendFileSync,
+    mkdirSync,
+    readFileSync,
+    writeFileSync,
 } from 'node:fs';
 import path from 'node:path';
 

@@ -1,5 +1,8 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { reportsAutomaticAvailabilityNavigation } from '../src/background/automatic-availability-controller';

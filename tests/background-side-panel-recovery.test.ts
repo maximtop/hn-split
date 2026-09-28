@@ -1,5 +1,10 @@
 import {
-    beforeAll, beforeEach, describe, expect, it, vi,
+    beforeAll,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/logger';

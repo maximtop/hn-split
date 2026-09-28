@@ -430,7 +430,10 @@ function createExplicitOperationController(
         intent: null,
         started,
         reservation: {
-            tabId, token, readiness, completion,
+            tabId,
+            token,
+            readiness,
+            completion,
         },
         settled: false,
         readinessSettled: false,

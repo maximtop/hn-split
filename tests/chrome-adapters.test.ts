@@ -1,5 +1,9 @@
 import {
-    afterEach, describe, expect, it, vi,
+    afterEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import {
@@ -64,7 +68,11 @@ function installChrome(): {
         tabs: { query },
     });
     return {
-        local, session, localSet, sessionSet, query,
+        local,
+        session,
+        localSet,
+        sessionSet,
+        query,
     };
 }
 

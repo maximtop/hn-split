@@ -6,7 +6,10 @@ import { isSidePanelProjection } from '../../src/shared/side-panel-projection';
 import { SESSION_STORAGE_KEY_PREFIX } from '../../src/shared/storage-keys';
 
 import {
-    ARTICLE_ORIGIN, installLookupFixtures, launchExtensionContext, openExtensionPage,
+    ARTICLE_ORIGIN,
+    installLookupFixtures,
+    launchExtensionContext,
+    openExtensionPage,
 } from './extension-context';
 
 import type { ExtensionContext } from './extension-context';

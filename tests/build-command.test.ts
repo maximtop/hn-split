@@ -1,7 +1,14 @@
 // @vitest-environment node
 import { execFile } from 'node:child_process';
 import {
-    cp, mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile,
+    cp,
+    mkdir,
+    mkdtemp,
+    readFile,
+    rm,
+    stat,
+    symlink,
+    writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { delimiter, resolve } from 'node:path';

@@ -6,7 +6,10 @@
 import * as v from 'valibot';
 
 import {
-    DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LIMIT, diagnosticBufferSchema, diagnosticBytes,
+    DIAGNOSTIC_FORMAT_VERSION,
+    DIAGNOSTIC_LIMIT,
+    diagnosticBufferSchema,
+    diagnosticBytes,
 } from '../shared/diagnostics';
 import { reportDiagnosticFailure } from '../shared/logger';
 
@@ -67,7 +70,10 @@ export class DiagnosticLog {
             return Promise.reject(new Error('Diagnostic queue full'));
         }
         const entry: DiagnosticEntry = {
-            ...event, details: { ...event.details }, source, timestamp: new Date().toISOString(),
+            ...event,
+            details: { ...event.details },
+            source,
+            timestamp: new Date().toISOString(),
         };
         return this.enqueue(async () => {
             const buffer = await this.read();

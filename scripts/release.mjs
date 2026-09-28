@@ -8,7 +8,11 @@
 // this line because none of them read the clock at load time.
 import { spawnSync } from 'node:child_process';
 import {
-    mkdir, readdir, readFile, rm, writeFile,
+    mkdir,
+    readdir,
+    readFile,
+    rm,
+    writeFile,
 } from 'node:fs/promises';
 import { resolve } from 'node:path';
 

@@ -353,7 +353,11 @@ export function countSearchTermWords(searchTerms: readonly string[]): number {
 export function collectListingIssues(content: ListingContent, base: ListingContent): string[] {
     const issues: string[] = [];
     const {
-        description, releaseNotes, captions, searchTerms, appStoreKeywords,
+        description,
+        releaseNotes,
+        captions,
+        searchTerms,
+        appStoreKeywords,
     } = content;
 
     if (typeof content.reviewed !== 'boolean') {

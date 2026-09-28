@@ -1,5 +1,9 @@
 import {
-    afterEach, describe, expect, it, vi,
+    afterEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { discussionUrl, isHnUrl, lookupHnDiscussions } from '../src/domain/hn';
@@ -106,13 +110,25 @@ describe('lookupHnDiscussions', () => {
     it('uses points, time, and ID as stable ranking tie-breakers', async () => {
         const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse([
             {
-                objectID: '8', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30,
+                objectID: '8',
+                url: 'https://example.com/story',
+                num_comments: 4,
+                points: 20,
+                created_at_i: 30,
             },
             {
-                objectID: '9', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30,
+                objectID: '9',
+                url: 'https://example.com/story',
+                num_comments: 4,
+                points: 20,
+                created_at_i: 30,
             },
             {
-                objectID: '7', url: 'https://example.com/story', num_comments: 4, points: 30, created_at_i: 10,
+                objectID: '7',
+                url: 'https://example.com/story',
+                num_comments: 4,
+                points: 30,
+                created_at_i: 10,
             },
         ]));
 
@@ -129,10 +145,18 @@ describe('lookupHnDiscussions', () => {
     it('breaks a tie on comments and points using the newer creation time', async () => {
         const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse([
             {
-                objectID: '1', url: 'https://example.com/story', num_comments: 5, points: 10, created_at_i: 100,
+                objectID: '1',
+                url: 'https://example.com/story',
+                num_comments: 5,
+                points: 10,
+                created_at_i: 100,
             },
             {
-                objectID: '2', url: 'https://example.com/story', num_comments: 5, points: 10, created_at_i: 200,
+                objectID: '2',
+                url: 'https://example.com/story',
+                num_comments: 5,
+                points: 10,
+                created_at_i: 200,
             },
         ]));
 

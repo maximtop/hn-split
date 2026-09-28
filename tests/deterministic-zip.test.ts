@@ -1,12 +1,19 @@
 import {
-    mkdir, mkdtemp, rm, utimes, writeFile,
+    mkdir,
+    mkdtemp,
+    rm,
+    utimes,
+    writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 import { unzipSync } from 'fflate';
 import {
-    afterEach, describe, expect, it,
+    afterEach,
+    describe,
+    expect,
+    it,
 } from 'vitest';
 
 import { collectDirectoryEntries, createDeterministicZip } from '../scripts/lib/deterministic-zip.ts';

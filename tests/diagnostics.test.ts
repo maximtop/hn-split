@@ -1,5 +1,9 @@
 import {
-    afterEach, describe, expect, it, vi,
+    afterEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { createDiagnosticHandler } from '../src/background/diagnostic-handler';
@@ -8,11 +12,19 @@ import { DIAGNOSTIC_EVENT, FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/diagnost
 import { formatDiagnosticExport } from '../src/shared/diagnostic-export';
 import { DIAGNOSTIC_REQUEST, installDiagnosticTransport } from '../src/shared/diagnostic-protocol';
 import {
-    DIAGNOSTIC_ERROR, DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_LIMIT,
-    DIAGNOSTIC_SOURCE, diagnosticBytes, normalizeDiagnostic,
+    DIAGNOSTIC_ERROR,
+    DIAGNOSTIC_FORMAT_VERSION,
+    DIAGNOSTIC_LEVEL,
+    DIAGNOSTIC_LIMIT,
+    DIAGNOSTIC_SOURCE,
+    diagnosticBytes,
+    normalizeDiagnostic,
 } from '../src/shared/diagnostics';
 import {
-    logDiagnostic, logFollowWarning, logWarning, setDiagnosticSink,
+    logDiagnostic,
+    logFollowWarning,
+    logWarning,
+    setDiagnosticSink,
 } from '../src/shared/logger';
 
 import type { DiagnosticStorage } from '../src/browser/diagnostic-log';
@@ -198,7 +210,10 @@ describe('background session collector', () => {
         {
             ...empty(),
             entries: [{
-                ...event, source: DIAGNOSTIC_SOURCE.POPUP, timestamp: new Date().toISOString(), url: 'secret',
+                ...event,
+                source: DIAGNOSTIC_SOURCE.POPUP,
+                timestamp: new Date().toISOString(),
+                url: 'secret',
             }],
         },
     ])('drops malformed storage without exporting unsafe fields', async (initial) => {
