@@ -1,5 +1,8 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import {
@@ -51,8 +54,12 @@ interface FakePortOptions {
  * Creates a manually settled promise.
  */
 function deferred<Value>(): Deferred<Value> {
-    let resolve: (value: Value) => void = () => undefined;
-    let reject: (reason: unknown) => void = () => undefined;
+    let resolve: (value: Value) => void = () => {
+        return undefined;
+    };
+    let reject: (reason: unknown) => void = () => {
+        return undefined;
+    };
     const promise = new Promise<Value>((resolvePromise, rejectPromise) => {
         resolve = resolvePromise;
         reject = rejectPromise;
@@ -482,6 +489,33 @@ describe('SidePanelPortController', () => {
         expect(updateDynamicRules).toHaveBeenLastCalledWith({
             removeRuleIds: [SIDE_PANEL_FRAMING_RULE_ID],
         });
+    });
+
+    it('ignores a context message that arrives on a port after it already disconnected', async () => {
+        const deps = dependencies();
+        const controller = new SidePanelPortController(deps);
+        const client = fakePort();
+        const registerSpy = vi.spyOn(deps.windows, 'register');
+
+        controller.accept(client.port);
+        client.receive({ type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID });
+        await settle();
+        expect(deps.connectWindow).toHaveBeenCalledExactlyOnceWith(WINDOW_ID);
+        expect(registerSpy).toHaveBeenCalledOnce();
+        registerSpy.mockClear();
+        vi.mocked(deps.connectWindow).mockClear();
+
+        client.disconnect();
+        await settle();
+        expect(deps.windows.windowIds()).toEqual([]);
+
+        client.receive({ type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID });
+        await settle();
+
+        expect(registerSpy).not.toHaveBeenCalled();
+        expect(deps.connectWindow).not.toHaveBeenCalled();
+        expect(deps.windows.windowIds()).toEqual([]);
+        expect(deps.framing.acquire).toHaveBeenCalledOnce();
     });
 
     it('accepts exactly one validated context and ignores keepalives', async () => {

@@ -22,7 +22,10 @@ export const DIAGNOSTIC_FORMAT_VERSION = 1;
  * Restricts collection to extension-owned contexts, excluding content scripts.
  */
 export const DIAGNOSTIC_SOURCE = {
-    BACKGROUND: 'background', POPUP: 'popup', OPTIONS: 'options', SIDE_PANEL: 'side_panel',
+    BACKGROUND: 'background',
+    POPUP: 'popup',
+    OPTIONS: 'options',
+    SIDE_PANEL: 'side_panel',
 } as const;
 
 /**

@@ -1,5 +1,8 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import {
@@ -78,8 +81,12 @@ interface DependencyHarness extends SidePanelContentDependencies {
  * Creates a manually controlled promise for concurrency tests.
  */
 function deferred<Value>(): Deferred<Value> {
-    let resolve: (value: Value) => void = () => undefined;
-    let reject: (reason?: unknown) => void = () => undefined;
+    let resolve: (value: Value) => void = () => {
+        return undefined;
+    };
+    let reject: (reason?: unknown) => void = () => {
+        return undefined;
+    };
     const promise = new Promise<Value>((resolvePromise, rejectPromise) => {
         resolve = resolvePromise;
         reject = rejectPromise;

@@ -40,18 +40,20 @@ const CONTROL_VALUE_PATTERN = `^(${CONTROL_VALUES.join('|')})$`;
  * @param {string} message Report message.
  * @returns {object} ESLint rule.
  */
-const selectorRule = (selector, message) => ({
-    meta: {
-        type: 'problem',
-        schema: [],
-        messages: { restricted: message },
-    },
-    create: (context) => ({
-        [selector](node) {
-            context.report({ node, messageId: 'restricted' });
+const selectorRule = (selector, message) => {
+    return {
+        meta: {
+            type: 'problem',
+            schema: [],
+            messages: { restricted: message },
         },
-    }),
-});
+        create: (context) => ({
+            [selector](node) {
+                context.report({ node, messageId: 'restricted' });
+            },
+        }),
+    };
+};
 
 const local = {
     rules: {

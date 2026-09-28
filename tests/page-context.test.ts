@@ -1,5 +1,8 @@
 import {
-    afterEach, describe, expect, it,
+    afterEach,
+    describe,
+    expect,
+    it,
 } from 'vitest';
 
 import { readPageContext } from '../src/page/context';

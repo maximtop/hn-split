@@ -1,6 +1,9 @@
 import { execFile } from 'node:child_process';
 import {
-    mkdir, mkdtemp, readFile, rm,
+    mkdir,
+    mkdtemp,
+    readFile,
+    rm,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
@@ -59,7 +62,9 @@ const baseMessages = isBaseLocale ? messages : await readMessages(BASE_LOCALE);
  * @param base - Label in the base locale.
  */
 function labelPattern(localized, base) {
-    const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const escape = (value) => {
+        return value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    };
     return new RegExp(`(?:${escape(localized)}|${escape(base)})`);
 }
 
@@ -70,7 +75,12 @@ function labelPattern(localized, base) {
  * 16px transparent padding per Chrome Web Store guidance).
  */
 async function renderSvg(page, svgPath, {
-    width, height, artWidth = width, artHeight = height, out, transparent = false,
+    width,
+    height,
+    artWidth = width,
+    artHeight = height,
+    out,
+    transparent = false,
 }) {
     const svg = await readFile(svgPath, 'base64');
     await page.setViewportSize({ width, height });
@@ -88,7 +98,13 @@ async function renderSvg(page, svgPath, {
  * displayed at half size so it stays crisp).
  */
 async function renderStage(page, {
-    heading, sub, capture, displayWidth, layout, dark = false, out,
+    heading,
+    sub,
+    capture,
+    displayWidth,
+    layout,
+    dark = false,
+    out,
 }) {
     await page.setViewportSize({ width: 1280, height: 800 });
     const background = dark

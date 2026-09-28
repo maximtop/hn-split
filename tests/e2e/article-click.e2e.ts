@@ -114,6 +114,26 @@ function fixturePageCount(extension: ExtensionContext): number {
     )).length;
 }
 
+/**
+ * Lists every open page whose origin this test did not itself open: neither a
+ * fixture Hacker News/article page, an extension surface this test navigated
+ * to, nor Chromium's own initial blank tab. `fixturePageCount` only proves the
+ * fixture-origin count is right; a regression that opens some other tab
+ * entirely (a stray `about:blank`, a real `news.ycombinator.com` navigation,
+ * or any other unrelated destination) would not change that count, so this
+ * closes that gap.
+ *
+ * @param extension - The launched extension context.
+ */
+function unexpectedPageUrls(extension: ExtensionContext): string[] {
+    return extension.context.pages()
+        .map((page) => page.url())
+        .filter((url) => url !== 'about:blank'
+            && !url.startsWith('chrome-extension://')
+            && !url.startsWith(HN_ORIGIN)
+            && !url.startsWith(ARTICLE_ORIGIN));
+}
+
 test('article clicks open the discussion beside the article only while the opt-in setting is on', async () => {
     let extension: ExtensionContext | undefined;
     try {
@@ -132,6 +152,7 @@ test('article clicks open the discussion beside the article only while the opt-i
         await hnPage.waitForURL(`${ARTICLE_ORIGIN}${STORY_ONE.path}`);
         expect(await sidePanelContent(active)).toBeUndefined();
         expect(fixturePageCount(active)).toBe(1);
+        expect(unexpectedPageUrls(active)).toEqual([]);
         const articleTabId = await active.worker.evaluate(async () => {
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             if (tab?.id === undefined) {
@@ -166,6 +187,7 @@ test('article clicks open the discussion beside the article only while the opt-i
             itemId: STORY_ONE.id,
         });
         expect(fixturePageCount(active)).toBe(1);
+        expect(unexpectedPageUrls(active)).toEqual([]);
 
         // A later click reuses the same panel selection instead of stacking
         // discussions anywhere.
@@ -178,6 +200,7 @@ test('article clicks open the discussion beside the article only while the opt-i
             itemId: STORY_TWO.id,
         });
         expect(fixturePageCount(active)).toBe(1);
+        expect(unexpectedPageUrls(active)).toEqual([]);
 
         // Turning the setting off removes the registration and freshly loaded
         // pages stop reporting clicks entirely.
@@ -197,11 +220,14 @@ test('article clicks open the discussion beside the article only while the opt-i
         await expect.poll(async () => sidePanelContent(active)).toEqual(manualContent);
         await hnPage.getByRole('link', { name: STORY_ONE.title }).click();
         await hnPage.waitForURL(`${ARTICLE_ORIGIN}${STORY_ONE.path}`);
-        // Bounded settle for the negative case: a wrongly sent message would
-        // land within this window.
+        // The real proof this click sends nothing is the empty registration
+        // list already asserted above: with no content script attached to
+        // this freshly loaded document, no click handler exists to fire. This
+        // wait is only an extra timing margin, not the safety mechanism.
         await hnPage.waitForTimeout(500);
         expect(await sidePanelContent(active)).toEqual(manualContent);
         expect(fixturePageCount(active)).toBe(1);
+        expect(unexpectedPageUrls(active)).toEqual([]);
 
         await options.close();
         await hnPage.close();

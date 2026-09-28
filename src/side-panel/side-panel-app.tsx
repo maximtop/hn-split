@@ -13,7 +13,10 @@ import {
     Text,
 } from '@mantine/core';
 import {
-    useCallback, useEffect, useRef, useState,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
 } from 'react';
 
 import { HN_LOOKUP_STATUS, HN_ORIGIN, discussionUrl } from '../domain/hn';

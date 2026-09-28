@@ -1,7 +1,14 @@
 // @vitest-environment node
 import { execFile } from 'node:child_process';
 import {
-    cp, mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile,
+    cp,
+    mkdir,
+    mkdtemp,
+    readFile,
+    rm,
+    stat,
+    symlink,
+    writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { delimiter, resolve } from 'node:path';
@@ -11,15 +18,46 @@ import { expect, it } from 'vitest';
 
 import { resolveBuildPath } from '../scripts/lib/build-paths';
 
-const run = promisify(execFile);
+const execFileAsync = promisify(execFile);
 const ROOT = resolve(import.meta.dirname, '..');
+
+/**
+ * Runs a build-tooling subprocess with CI forced on, so pnpm's
+ * dependency-drift self-check never blocks on an interactive TTY prompt
+ * regardless of how this test itself was invoked.
+ *
+ * @param command - The executable to run.
+ * @param args - The arguments passed to the executable.
+ * @param options - The working directory and optional environment overrides.
+ * @param options.cwd - The working directory the subprocess runs in.
+ * @param options.env - Environment overrides applied on top of `CI=true`.
+ */
+async function run(
+    command: string,
+    args: string[],
+    options: { cwd: string; env?: NodeJS.ProcessEnv },
+): Promise<Awaited<ReturnType<typeof execFileAsync>>> {
+    return execFileAsync(command, args, {
+        ...options,
+        env: { ...process.env, CI: 'true', ...options.env },
+    });
+}
 
 it('rebuilds Chrome, preserves siblings and propagates command failures', async () => {
     const workspace = await mkdtemp(resolve(tmpdir(), 'hn-split-build-'));
     try {
-        for (const name of ['src', 'public', 'scripts', 'package.json', 'rspack.config.ts', 'Makefile']) {
+        for (const name of [
+            'src', 'public', 'scripts', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml',
+            'rspack.config.ts', 'Makefile',
+        ]) {
             await cp(resolve(ROOT, name), resolve(workspace, name), { recursive: true });
         }
+        // pnpm's dependency-drift check compares the lockfile and workspace
+        // config against node_modules before running any command. Without a
+        // matching lockfile and workspace config here, it decides the symlinked
+        // node_modules is out of date and reinstalls into it — pruning packages
+        // from the real repository's node_modules as a side effect, since the
+        // symlink target is shared, not copied.
         await symlink(resolve(ROOT, 'node_modules'), resolve(workspace, 'node_modules'));
         const output = resolveBuildPath(workspace, 'chrome');
         await run('make', ['build'], { cwd: workspace });
@@ -47,6 +85,10 @@ it('rebuilds Chrome, preserves siblings and propagates command failures', async 
         }
         await expect(run('make', ['build', 'opera'], { cwd: workspace })).rejects.toMatchObject({ code: 2 });
         await expect(run('pnpm', ['build', '../escape'], { cwd: workspace })).rejects.toMatchObject({ code: 1 });
+        await expect(run('pnpm', ['build', 'chrome', 'firefox'], { cwd: workspace })).rejects.toMatchObject({
+            code: 1,
+            stderr: expect.stringContaining('Choose at most one browser'),
+        });
 
         const bin = resolve(workspace, 'bin');
         await mkdir(bin);

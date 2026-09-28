@@ -1,15 +1,20 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { refreshTabsBounded } from '../src/browser/bounded-tab-refresh';
 
 import type { TabRefreshTarget } from '../src/browser/bounded-tab-refresh';
 
-const targets = (count: number): TabRefreshTarget[] => Array.from(
-    { length: count },
-    (_unused, index) => ({ tabId: index + 1, url: `https://example.com/${index + 1}` }),
-);
+const targets = (count: number): TabRefreshTarget[] => {
+    return Array.from(
+        { length: count },
+        (_unused, index) => ({ tabId: index + 1, url: `https://example.com/${index + 1}` }),
+    );
+};
 
 describe('refreshTabsBounded', () => {
     it('processes every target while never exceeding the concurrency bound', async () => {

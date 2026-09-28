@@ -1,5 +1,8 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };

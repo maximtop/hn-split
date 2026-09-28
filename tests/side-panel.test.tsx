@@ -1,11 +1,16 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
-    afterEach, describe, expect, it, vi,
+    afterEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import enMessages from '../public/_locales/en/messages.json' with { type: 'json' };
 import { HN_LOOKUP_STATUS, discussionUrl } from '../src/domain/hn';
+import { FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/logger';
 import {
     BACKGROUND_ERROR_CODE,
     BACKGROUND_REQUEST_TYPE,
@@ -100,6 +105,31 @@ interface FakeChromeOptions {
      * Selects the zero-based port whose first postMessage call throws.
      */
     failInitialPostMessageForPort?: number;
+
+    /**
+     * Makes the initial chrome.windows.getCurrent() lookup reject.
+     */
+    failGetCurrentWindow?: boolean;
+
+    /**
+     * Resolves chrome.windows.getCurrent() with no window id.
+     */
+    getCurrentWindowIdUndefined?: boolean;
+
+    /**
+     * Selects how many leading chrome.runtime.connect() attempts throw synchronously.
+     */
+    failConnectAttempts?: number;
+
+    /**
+     * Selects the zero-based port whose Nth postMessage call throws.
+     */
+    failPostMessageAtCallForPort?: number;
+
+    /**
+     * Selects the one-based postMessage call index that throws for failPostMessageAtCallForPort.
+     */
+    failPostMessageAtCall?: number;
 }
 
 /**
@@ -221,9 +251,15 @@ function installChrome(options: FakeChromeOptions = {}): FakeChrome {
     }));
     const openOptionsPage = vi.fn();
     const key = sidePanelContentKey(WINDOW_ID);
+    let connectAttempts = 0;
     vi.stubGlobal('chrome', {
         runtime: {
             connect: vi.fn(() => {
+                const attemptIndex = connectAttempts;
+                connectAttempts += 1;
+                if (options.failConnectAttempts !== undefined && attemptIndex < options.failConnectAttempts) {
+                    throw new Error('Could not establish connection');
+                }
                 const messageListeners: ((message: unknown) => void)[] = [];
                 const disconnectListeners: (() => void)[] = [];
                 const portIndex = ports.length;
@@ -231,6 +267,10 @@ function installChrome(options: FakeChromeOptions = {}): FakeChrome {
                 const postMessage = vi.fn(() => {
                     postMessageAttempts += 1;
                     if (options.failInitialPostMessageForPort === portIndex && postMessageAttempts === 1) {
+                        throw new Error('The port disconnected before the message was sent');
+                    }
+                    if (options.failPostMessageAtCallForPort === portIndex
+                        && options.failPostMessageAtCall === postMessageAttempts) {
                         throw new Error('The port disconnected before the message was sent');
                     }
                 });
@@ -282,7 +322,12 @@ function installChrome(options: FakeChromeOptions = {}): FakeChrome {
             },
         },
         windows: {
-            getCurrent: vi.fn(async () => ({ id: WINDOW_ID })),
+            getCurrent: vi.fn(async () => {
+                if (options.failGetCurrentWindow === true) {
+                    throw new Error('The current window is unavailable');
+                }
+                return { id: options.getCurrentWindowIdUndefined === true ? undefined : WINDOW_ID };
+            }),
         },
     });
     return {
@@ -347,7 +392,9 @@ async function renderPanel(options: FakeChromeOptions = {}): Promise<PanelView> 
         root.render(<SidePanelApp />);
         await flush();
     });
-    const newestPort = (): FakePort => requirePort(fake, fake.ports.length - 1);
+    const newestPort = (): FakePort => {
+        return requirePort(fake, fake.ports.length - 1);
+    };
     return {
         container,
         fake,
@@ -479,6 +526,26 @@ describe('SidePanelApp', () => {
             { type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID },
             { type: SIDE_PANEL_KEEPALIVE },
         ]);
+        await view.unmount();
+    });
+
+    it('stays uninitialized and warns when the initial window lookup rejects', async () => {
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const view = await renderPanel({ failGetCurrentWindow: true });
+
+        expect(view.fake.ports).toHaveLength(0);
+        expect(console.warn).toHaveBeenCalledWith(
+            expect.stringContaining(FOLLOW_DIAGNOSTIC_CODE.INITIALIZATION_FAILED),
+        );
+        await view.unmount();
+    });
+
+    it('stays uninitialized without warning when the current window has no id', async () => {
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const view = await renderPanel({ getCurrentWindowIdUndefined: true });
+
+        expect(view.fake.ports).toHaveLength(0);
+        expect(console.warn).not.toHaveBeenCalled();
         await view.unmount();
     });
 
@@ -898,6 +965,63 @@ describe('SidePanelApp', () => {
             windowId: WINDOW_ID,
         });
         expect(failedPort.disconnect).toHaveBeenCalledOnce();
+
+        await act(async () => {
+            await vi.advanceTimersByTimeAsync(SIDE_PANEL_RECONNECT_DELAY_MS);
+            await flush();
+        });
+
+        const replacement = requirePort(view.fake, 1);
+        expect(replacement.postMessage.mock.calls.slice(0, 2).map(([message]) => message)).toEqual([
+            { type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID },
+            { type: SIDE_PANEL_KEEPALIVE },
+        ]);
+        await view.unmount();
+    });
+
+    it('reconnects after runtime.connect itself throws synchronously', async () => {
+        vi.useFakeTimers();
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const view = await renderPanel({ failConnectAttempts: 1 });
+
+        expect(view.fake.ports).toHaveLength(0);
+        expect(console.warn).toHaveBeenCalledWith(
+            expect.stringContaining(FOLLOW_DIAGNOSTIC_CODE.INITIALIZATION_FAILED),
+        );
+
+        await act(async () => {
+            await vi.advanceTimersByTimeAsync(SIDE_PANEL_RECONNECT_DELAY_MS);
+            await flush();
+        });
+
+        const port = requirePort(view.fake, 0);
+        expect(port.postMessage.mock.calls.slice(0, 2).map(([message]) => message)).toEqual([
+            { type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID },
+            { type: SIDE_PANEL_KEEPALIVE },
+        ]);
+        await view.unmount();
+    });
+
+    it('retires the port and reconnects when an interval keepalive postMessage fails', async () => {
+        vi.useFakeTimers();
+        vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const view = await renderPanel({ failPostMessageAtCallForPort: 0, failPostMessageAtCall: 3 });
+        const port = requirePort(view.fake, 0);
+        expect(port.postMessage.mock.calls.slice(0, 2).map(([message]) => message)).toEqual([
+            { type: SIDE_PANEL_CONTEXT, windowId: WINDOW_ID },
+            { type: SIDE_PANEL_KEEPALIVE },
+        ]);
+
+        await act(async () => {
+            await vi.advanceTimersByTimeAsync(SIDE_PANEL_KEEPALIVE_INTERVAL_MS);
+            await flush();
+        });
+
+        expect(port.postMessage).toHaveBeenCalledTimes(3);
+        expect(port.disconnect).toHaveBeenCalledOnce();
+        expect(console.warn).toHaveBeenCalledWith(
+            expect.stringContaining(FOLLOW_DIAGNOSTIC_CODE.DISCONNECT_FAILED),
+        );
 
         await act(async () => {
             await vi.advanceTimersByTimeAsync(SIDE_PANEL_RECONNECT_DELAY_MS);

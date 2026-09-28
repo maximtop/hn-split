@@ -412,9 +412,15 @@ function createExplicitOperationController(
     tabId: number,
     token: number,
 ): ExplicitOperationController {
-    let resolveStarted: (intent: SynchronizationIntent | null) => void = () => undefined;
-    let resolveReadiness: (projection: SidePanelProjection | null) => void = () => undefined;
-    let resolveCompletion: (projection: SidePanelProjection | null) => void = () => undefined;
+    let resolveStarted: (intent: SynchronizationIntent | null) => void = () => {
+        return undefined;
+    };
+    let resolveReadiness: (projection: SidePanelProjection | null) => void = () => {
+        return undefined;
+    };
+    let resolveCompletion: (projection: SidePanelProjection | null) => void = () => {
+        return undefined;
+    };
     const started = new Promise<SynchronizationIntent | null>((resolve) => {
         resolveStarted = resolve;
     });
@@ -430,7 +436,10 @@ function createExplicitOperationController(
         intent: null,
         started,
         reservation: {
-            tabId, token, readiness, completion,
+            tabId,
+            token,
+            readiness,
+            completion,
         },
         settled: false,
         readinessSettled: false,

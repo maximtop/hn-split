@@ -353,14 +353,20 @@ export function countSearchTermWords(searchTerms: readonly string[]): number {
 export function collectListingIssues(content: ListingContent, base: ListingContent): string[] {
     const issues: string[] = [];
     const {
-        description, releaseNotes, captions, searchTerms, appStoreKeywords,
+        description,
+        releaseNotes,
+        captions,
+        searchTerms,
+        appStoreKeywords,
     } = content;
 
     if (typeof content.reviewed !== 'boolean') {
         issues.push('reviewed must be a boolean');
     }
 
-    const nonEmpty = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
+    const nonEmpty = (value: unknown): value is string => {
+        return typeof value === 'string' && value.trim().length > 0;
+    };
 
     if (!nonEmpty(description?.intro) || !nonEmpty(description?.disclaimer)) {
         issues.push('description.intro and description.disclaimer must be non-empty strings');

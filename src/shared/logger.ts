@@ -21,7 +21,10 @@ type DiagnosticValue = boolean | number | string | null | undefined;
 
 export { FOLLOW_DIAGNOSTIC_CODE, FOLLOW_DIAGNOSTIC_EVENT } from './diagnostic-events';
 export type {
-    FollowDiagnosticCode, FollowDiagnosticDetails, FollowDiagnosticEvent, FollowWarningSink,
+    FollowDiagnosticCode,
+    FollowDiagnosticDetails,
+    FollowDiagnosticEvent,
+    FollowWarningSink,
 } from './diagnostic-events';
 
 /**

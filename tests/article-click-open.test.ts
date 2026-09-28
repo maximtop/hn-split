@@ -1,5 +1,8 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { respondToArticleClick } from '../src/browser/article-click-open';
@@ -117,7 +120,9 @@ describe('respondToArticleClick', () => {
     });
 
     it('reserves precedence and opens before a cold setting read settles', async () => {
-        let resolveEnabled: (enabled: boolean) => void = () => undefined;
+        let resolveEnabled: (enabled: boolean) => void = () => {
+            return undefined;
+        };
         const enabled = new Promise<boolean>((resolve) => {
             resolveEnabled = resolve;
         });

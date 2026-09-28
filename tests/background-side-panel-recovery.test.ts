@@ -1,6 +1,13 @@
 import {
-    beforeAll, beforeEach, describe, expect, it, vi,
+    beforeAll,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
+
+import { FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/logger';
 
 const mocks = vi.hoisted(() => {
     /**
@@ -178,5 +185,48 @@ describe('background side-panel readiness recovery', () => {
         await Promise.resolve();
 
         expect(mocks.recoverWindow).not.toHaveBeenCalled();
+    });
+
+    it('logs a tab-lifecycle diagnostic when activation handling fails', async () => {
+        mocks.handleActivated.mockRejectedValueOnce(new Error('activation failed'));
+
+        mocks.events.tabActivated.emit({ tabId: TAB_ID, windowId: WINDOW_ID } as never);
+
+        await vi.waitFor(() => {
+            expect(mocks.logFollowWarning).toHaveBeenCalledExactlyOnceWith(
+                FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED,
+                { tabId: TAB_ID, windowId: WINDOW_ID },
+            );
+        });
+        expect(mocks.recoverWindow).not.toHaveBeenCalled();
+    });
+
+    it('logs a tab-lifecycle diagnostic when update handling fails', async () => {
+        mocks.handleUpdated.mockRejectedValueOnce(new Error('update failed'));
+
+        mocks.events.tabUpdated.emit(
+            TAB_ID as never,
+            { status: 'complete' } as never,
+            { active: true, windowId: WINDOW_ID } as never,
+        );
+
+        await vi.waitFor(() => {
+            expect(mocks.logFollowWarning).toHaveBeenCalledExactlyOnceWith(
+                FOLLOW_DIAGNOSTIC_CODE.TAB_LIFECYCLE_FAILED,
+                { tabId: TAB_ID, windowId: WINDOW_ID },
+            );
+        });
+        expect(mocks.recoverWindow).not.toHaveBeenCalled();
+    });
+
+    it('does not process an update still loading with no reported url', async () => {
+        mocks.events.tabUpdated.emit(
+            TAB_ID as never,
+            { status: 'loading' } as never,
+            { active: true, windowId: WINDOW_ID } as never,
+        );
+        await Promise.resolve();
+
+        expect(mocks.handleUpdated).not.toHaveBeenCalled();
     });
 });

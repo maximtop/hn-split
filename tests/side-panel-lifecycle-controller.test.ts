@@ -1,5 +1,8 @@
 import {
-    describe, expect, it, vi,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import {
@@ -27,7 +30,9 @@ interface Deferred<Value> {
  * Creates a manually settled promise for lifecycle ordering tests.
  */
 function deferred<Value>(): Deferred<Value> {
-    let resolve: (value: Value) => void = () => undefined;
+    let resolve: (value: Value) => void = () => {
+        return undefined;
+    };
     const promise = new Promise<Value>((resolvePromise) => {
         resolve = resolvePromise;
     });
@@ -113,6 +118,17 @@ describe('SidePanelLifecycleController', () => {
         expect(deps.getTab).not.toHaveBeenCalled();
     });
 
+    it('rejects with the active-tab-unavailable message when no tab is active', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.getActiveTab).mockResolvedValueOnce(null);
+        const controller = new SidePanelLifecycleController(deps);
+
+        await expect(controller.connectWindow(WINDOW_ID)).rejects.toThrow(
+            'Active side panel tab is unavailable',
+        );
+        expect(deps.content.connect).not.toHaveBeenCalled();
+    });
+
     it('routes closed-panel URL updates only to association invalidation', async () => {
         const deps = dependencies(false);
         const controller = new SidePanelLifecycleController(deps);
@@ -171,6 +187,24 @@ describe('SidePanelLifecycleController', () => {
         expect(deps.content.resumePendingUrl).not.toHaveBeenCalled();
     });
 
+    it('reports a live panel to navigation when the panel window is live', async () => {
+        const deps = dependencies();
+        const controller = new SidePanelLifecycleController(deps);
+
+        await controller.updateTab(TAB_ID, WINDOW_ID, true, {
+            status: 'loading',
+            url: LINK_URL,
+        });
+
+        expect(deps.content.navigation).toHaveBeenCalledExactlyOnceWith(
+            WINDOW_ID,
+            TAB_ID,
+            LINK_URL,
+            true,
+            true,
+        );
+    });
+
     it('finishes replacement cleanup before synchronizing the added active tab', async () => {
         const cleanup = deferred<void>();
         const deps = dependencies();
@@ -195,6 +229,47 @@ describe('SidePanelLifecycleController', () => {
             TAB_ID,
             expect.any(Function),
         );
+    });
+
+    it('does not activate a replacement tab that no longer exists', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.getTab).mockResolvedValueOnce(null);
+        const controller = new SidePanelLifecycleController(deps);
+
+        await controller.replaceTab(TAB_ID, OTHER_TAB_ID);
+
+        expect(deps.content.forgetTab).toHaveBeenCalledExactlyOnceWith(OTHER_TAB_ID);
+        expect(deps.content.activate).not.toHaveBeenCalled();
+    });
+
+    it('does not activate a replacement tab the browser no longer attributes to it', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.getTab).mockResolvedValueOnce({
+            id: undefined,
+            windowId: WINDOW_ID,
+            active: true,
+            index: 0,
+        } as chrome.tabs.Tab);
+        const controller = new SidePanelLifecycleController(deps);
+
+        await controller.replaceTab(TAB_ID, OTHER_TAB_ID);
+
+        expect(deps.content.activate).not.toHaveBeenCalled();
+    });
+
+    it('does not activate a replacement tab that is no longer active', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.getTab).mockResolvedValueOnce({
+            id: TAB_ID,
+            windowId: WINDOW_ID,
+            active: false,
+            index: 0,
+        } as chrome.tabs.Tab);
+        const controller = new SidePanelLifecycleController(deps);
+
+        await controller.replaceTab(TAB_ID, OTHER_TAB_ID);
+
+        expect(deps.content.activate).not.toHaveBeenCalled();
     });
 
     it('validates attachment ownership before synchronizing an active destination tab', async () => {
@@ -253,5 +328,38 @@ describe('SidePanelLifecycleController', () => {
         expect(deps.content.forgetTab).toHaveBeenCalledWith(TAB_ID, WINDOW_ID);
         expect(deps.content.disconnectWindow).toHaveBeenCalledExactlyOnceWith(WINDOW_ID);
         expect(deps.content.forgetWindow).toHaveBeenCalledExactlyOnceWith(WINDOW_ID);
+    });
+
+    it('does not resynchronize when the recovery signal is already aborted', async () => {
+        const deps = dependencies();
+        const controller = new SidePanelLifecycleController(deps);
+        const abortController = new AbortController();
+        abortController.abort();
+        const recovery = {
+            windowId: WINDOW_ID,
+            token: 1,
+            signal: abortController.signal,
+        };
+
+        await controller.resynchronizeWindow(recovery);
+
+        expect(deps.getActiveTab).not.toHaveBeenCalled();
+        expect(deps.content.recover).not.toHaveBeenCalled();
+    });
+
+    it('does not resynchronize when the window loses its live panel while reading the active tab', async () => {
+        const deps = dependencies();
+        vi.mocked(deps.windows.has).mockReturnValueOnce(true).mockReturnValueOnce(false);
+        const controller = new SidePanelLifecycleController(deps);
+        const recovery = {
+            windowId: WINDOW_ID,
+            token: 1,
+            signal: new AbortController().signal,
+        };
+
+        await controller.resynchronizeWindow(recovery);
+
+        expect(deps.getActiveTab).toHaveBeenCalledExactlyOnceWith(WINDOW_ID);
+        expect(deps.content.recover).not.toHaveBeenCalled();
     });
 });

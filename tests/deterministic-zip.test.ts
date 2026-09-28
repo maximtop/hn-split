@@ -1,12 +1,19 @@
 import {
-    mkdir, mkdtemp, rm, utimes, writeFile,
+    mkdir,
+    mkdtemp,
+    rm,
+    utimes,
+    writeFile,
 } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
 import { unzipSync } from 'fflate';
 import {
-    afterEach, describe, expect, it,
+    afterEach,
+    describe,
+    expect,
+    it,
 } from 'vitest';
 
 import { collectDirectoryEntries, createDeterministicZip } from '../scripts/lib/deterministic-zip.ts';
@@ -15,9 +22,13 @@ import type { ZipEntry } from '../scripts/lib/deterministic-zip.ts';
 
 const MTIME = new Date('2026-08-01T12:00:00Z');
 
-const encode = (text: string): Uint8Array => new TextEncoder().encode(text);
+const encode = (text: string): Uint8Array => {
+    return new TextEncoder().encode(text);
+};
 
-const entry = (path: string, text: string): ZipEntry => ({ path, data: encode(text) });
+const entry = (path: string, text: string): ZipEntry => {
+    return { path, data: encode(text) };
+};
 
 describe('createDeterministicZip', () => {
     it('produces identical bytes regardless of entry order', () => {

@@ -7,7 +7,6 @@ import {
     BUILD_TARGETS,
     DEFAULT_BUILD_TARGET,
     EXTENSION_VERSION_PATTERN,
-    FIREFOX_GECKO_ID,
     buildManifest,
     parseBuildTarget,
     serializeManifest,
@@ -16,9 +15,11 @@ import { readPackageVersion } from '../scripts/lib/build-info.ts';
 
 const ROOT = resolve(import.meta.dirname, '..');
 
-const readBaseManifest = async (): Promise<Record<string, unknown>> => JSON.parse(
-    await readFile(resolve(ROOT, 'public/manifest.json'), 'utf8'),
-) as Record<string, unknown>;
+const readBaseManifest = async (): Promise<Record<string, unknown>> => {
+    return JSON.parse(
+        await readFile(resolve(ROOT, 'public/manifest.json'), 'utf8'),
+    ) as Record<string, unknown>;
+};
 
 describe('parseBuildTarget', () => {
     it('defaults to chrome when the environment leaves the target unset', () => {
@@ -92,7 +93,10 @@ describe('buildManifest', () => {
         });
         expect(manifest.browser_specific_settings).toEqual({
             gecko: {
-                id: FIREFOX_GECKO_ID,
+                // Locked to a literal, not the imported FIREFOX_GECKO_ID: AMO treats this
+                // id as the extension's permanent identity, so a typo'd constant must not
+                // be able to pass this assertion.
+                id: 'hn-split@maximtop.dev',
                 strict_min_version: '140.0',
                 data_collection_permissions: {
                     required: ['browsingActivity', 'websiteContent'],

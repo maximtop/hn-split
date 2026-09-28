@@ -1,5 +1,9 @@
 import {
-    afterEach, describe, expect, it, vi,
+    afterEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { createDiagnosticHandler } from '../src/background/diagnostic-handler';
@@ -8,11 +12,19 @@ import { DIAGNOSTIC_EVENT, FOLLOW_DIAGNOSTIC_CODE } from '../src/shared/diagnost
 import { formatDiagnosticExport } from '../src/shared/diagnostic-export';
 import { DIAGNOSTIC_REQUEST, installDiagnosticTransport } from '../src/shared/diagnostic-protocol';
 import {
-    DIAGNOSTIC_ERROR, DIAGNOSTIC_FORMAT_VERSION, DIAGNOSTIC_LEVEL, DIAGNOSTIC_LIMIT,
-    DIAGNOSTIC_SOURCE, diagnosticBytes, normalizeDiagnostic,
+    DIAGNOSTIC_ERROR,
+    DIAGNOSTIC_FORMAT_VERSION,
+    DIAGNOSTIC_LEVEL,
+    DIAGNOSTIC_LIMIT,
+    DIAGNOSTIC_SOURCE,
+    diagnosticBytes,
+    normalizeDiagnostic,
 } from '../src/shared/diagnostics';
 import {
-    logDiagnostic, logFollowWarning, logWarning, setDiagnosticSink,
+    logDiagnostic,
+    logFollowWarning,
+    logWarning,
+    setDiagnosticSink,
 } from '../src/shared/logger';
 
 import type { DiagnosticStorage } from '../src/browser/diagnostic-log';
@@ -23,7 +35,9 @@ const event: DiagnosticEvent = {
     message: DIAGNOSTIC_EVENT.FRAMING_READY,
     details: { tabId: 1 },
 };
-const empty = (): DiagnosticBuffer => ({ formatVersion: DIAGNOSTIC_FORMAT_VERSION, entries: [] });
+const empty = (): DiagnosticBuffer => {
+    return { formatVersion: DIAGNOSTIC_FORMAT_VERSION, entries: [] };
+};
 
 function memoryStorage(initial?: unknown): DiagnosticStorage & { value: unknown } {
     return {
@@ -70,6 +84,15 @@ describe('diagnostic privacy boundary', () => {
         expect(
             normalizeDiagnostic(DIAGNOSTIC_LEVEL.INFO, event.message, [{ tabId: secret, revision: Infinity }])?.details,
         ).toEqual({});
+    });
+
+    it('categorizes RangeError and plain Error distinctly from TypeError', () => {
+        expect(
+            normalizeDiagnostic(DIAGNOSTIC_LEVEL.WARNING, event.message, [new RangeError('out of bounds')])?.details,
+        ).toEqual({ errorCategory: DIAGNOSTIC_ERROR.RANGE });
+        expect(
+            normalizeDiagnostic(DIAGNOSTIC_LEVEL.WARNING, event.message, [new Error('generic failure')])?.details,
+        ).toEqual({ errorCategory: DIAGNOSTIC_ERROR.OTHER });
     });
 
     it('keeps console output and feeds all existing logger entry points '
@@ -189,7 +212,10 @@ describe('background session collector', () => {
         {
             ...empty(),
             entries: [{
-                ...event, source: DIAGNOSTIC_SOURCE.POPUP, timestamp: new Date().toISOString(), url: 'secret',
+                ...event,
+                source: DIAGNOSTIC_SOURCE.POPUP,
+                timestamp: new Date().toISOString(),
+                url: 'secret',
             }],
         },
     ])('drops malformed storage without exporting unsafe fields', async (initial) => {
@@ -217,7 +243,9 @@ describe('background session collector', () => {
 
 describe('runtime ownership and export', () => {
     const runtime = { id: 'extension-id', getURL: (path: string) => `chrome-extension://extension-id/${path}` };
-    const sender = (path: string): chrome.runtime.MessageSender => ({ id: runtime.id, url: runtime.getURL(path) });
+    const sender = (path: string): chrome.runtime.MessageSender => {
+        return { id: runtime.id, url: runtime.getURL(path) };
+    };
 
     it('collects UI contexts through the facade into one background writer '
         + 'and exports a safe versioned snapshot', async () => {

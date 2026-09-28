@@ -1,5 +1,9 @@
 import {
-    beforeEach, describe, expect, it, vi,
+    beforeEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import {
@@ -76,7 +80,9 @@ interface TabFixture {
  * Creates one manually settled promise for queue assertions.
  */
 function deferred<Value>(): Deferred<Value> {
-    let resolve: (value: Value) => void = () => undefined;
+    let resolve: (value: Value) => void = () => {
+        return undefined;
+    };
     const promise = new Promise<Value>((resolvePromise) => {
         resolve = resolvePromise;
     });

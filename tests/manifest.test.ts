@@ -9,10 +9,12 @@ interface InstalledManifest {
     [key: string]: unknown;
 }
 
-const readManifest = async (): Promise<InstalledManifest> => JSON.parse(await readFile(
-    resolve(import.meta.dirname, '../public/manifest.json'),
-    'utf8',
-)) as InstalledManifest;
+const readManifest = async (): Promise<InstalledManifest> => {
+    return JSON.parse(await readFile(
+        resolve(import.meta.dirname, '../public/manifest.json'),
+        'utf8',
+    )) as InstalledManifest;
+};
 
 describe('extension manifest', () => {
     it('installs exactly the documented permission set and no optional permissions', async () => {

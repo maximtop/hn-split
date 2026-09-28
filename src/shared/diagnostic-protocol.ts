@@ -12,7 +12,9 @@ import { setDiagnosticSink } from './logger';
  * Names the isolated diagnostic channel on the existing runtime boundary.
  */
 export const DIAGNOSTIC_REQUEST = {
-    APPEND: 'diagnostic_append', SNAPSHOT: 'diagnostic_snapshot', CLEAR: 'diagnostic_clear',
+    APPEND: 'diagnostic_append',
+    SNAPSHOT: 'diagnostic_snapshot',
+    CLEAR: 'diagnostic_clear',
 } as const;
 
 /**

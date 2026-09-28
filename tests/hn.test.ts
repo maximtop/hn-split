@@ -1,5 +1,9 @@
 import {
-    afterEach, describe, expect, it, vi,
+    afterEach,
+    describe,
+    expect,
+    it,
+    vi,
 } from 'vitest';
 
 import { discussionUrl, isHnUrl, lookupHnDiscussions } from '../src/domain/hn';
@@ -7,29 +11,35 @@ import { buildArticleCandidates } from '../src/domain/url';
 
 import type { ArticleCandidate } from '../src/domain/url';
 
-const candidate = (url: string, identity: string): ArticleCandidate => ({
-    url,
-    identity,
-    source: 'page',
-});
+const candidate = (url: string, identity: string): ArticleCandidate => {
+    return {
+        url,
+        identity,
+        source: 'page',
+    };
+};
 
-const jsonResponse = (hits: unknown[]): Response => new Response(JSON.stringify({ hits }), {
-    headers: { 'content-type': 'application/json' },
-    status: 200,
-});
+const jsonResponse = (hits: unknown[]): Response => {
+    return new Response(JSON.stringify({ hits }), {
+        headers: { 'content-type': 'application/json' },
+        status: 200,
+    });
+};
 
 /**
  * Creates a fetch stub that stays pending until its abort signal fires.
  */
-const signalBoundFetch = (): ReturnType<typeof vi.fn<typeof fetch>> => vi.fn<typeof fetch>(
-    async (_input, init) => new Promise<Response>((_resolve, reject) => {
-        init?.signal?.addEventListener('abort', () => {
-            reject(init.signal?.reason instanceof Error
-                ? init.signal.reason
-                : new DOMException('Aborted', 'AbortError'));
-        }, { once: true });
-    }),
-);
+const signalBoundFetch = (): ReturnType<typeof vi.fn<typeof fetch>> => {
+    return vi.fn<typeof fetch>(
+        async (_input, init) => new Promise<Response>((_resolve, reject) => {
+            init?.signal?.addEventListener('abort', () => {
+                reject(init.signal?.reason instanceof Error
+                    ? init.signal.reason
+                    : new DOMException('Aborted', 'AbortError'));
+            }, { once: true });
+        }),
+    );
+};
 
 afterEach(() => {
     vi.useRealTimers();
@@ -106,13 +116,25 @@ describe('lookupHnDiscussions', () => {
     it('uses points, time, and ID as stable ranking tie-breakers', async () => {
         const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse([
             {
-                objectID: '8', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30,
+                objectID: '8',
+                url: 'https://example.com/story',
+                num_comments: 4,
+                points: 20,
+                created_at_i: 30,
             },
             {
-                objectID: '9', url: 'https://example.com/story', num_comments: 4, points: 20, created_at_i: 30,
+                objectID: '9',
+                url: 'https://example.com/story',
+                num_comments: 4,
+                points: 20,
+                created_at_i: 30,
             },
             {
-                objectID: '7', url: 'https://example.com/story', num_comments: 4, points: 30, created_at_i: 10,
+                objectID: '7',
+                url: 'https://example.com/story',
+                num_comments: 4,
+                points: 30,
+                created_at_i: 10,
             },
         ]));
 
@@ -123,6 +145,34 @@ describe('lookupHnDiscussions', () => {
         expect(result.status).toBe('found');
         if (result.status === 'found') {
             expect([result.primary, ...result.alternatives].map(({ id }) => id)).toEqual(['7', '9', '8']);
+        }
+    });
+
+    it('breaks a tie on comments and points using the newer creation time', async () => {
+        const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(jsonResponse([
+            {
+                objectID: '1',
+                url: 'https://example.com/story',
+                num_comments: 5,
+                points: 10,
+                created_at_i: 100,
+            },
+            {
+                objectID: '2',
+                url: 'https://example.com/story',
+                num_comments: 5,
+                points: 10,
+                created_at_i: 200,
+            },
+        ]));
+
+        const result = await lookupHnDiscussions([
+            candidate('https://example.com/story', 'example.com/story'),
+        ], fetchFn);
+
+        expect(result.status).toBe('found');
+        if (result.status === 'found') {
+            expect([result.primary, ...result.alternatives].map(({ id }) => id)).toEqual(['2', '1']);
         }
     });
 

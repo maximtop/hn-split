@@ -160,7 +160,9 @@ export class DiscussionTabManager {
      */
     async open(articleTabId: number, itemId: string): Promise<OpenDiscussionResult> {
         const previous = this.pendingOpens.get(articleTabId) ?? Promise.resolve();
-        let release = (): void => undefined;
+        let release = (): void => {
+            return undefined;
+        };
         const turn = new Promise<void>((resolve) => {
             release = resolve;
         });

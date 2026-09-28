@@ -4,7 +4,12 @@
  */
 
 import {
-    Button, Group, Paper, Stack, Text, Title,
+    Button,
+    Group,
+    Paper,
+    Stack,
+    Text,
+    Title,
 } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
 import * as v from 'valibot';

@@ -34,7 +34,9 @@ test('exports the session log as a local file and clears it from Options', async
         const records: unknown[] = (await readFile(path, 'utf8')).trim().split('\n').map((line) => JSON.parse(line));
         expect(records[0]).toMatchObject({ formatVersion: DIAGNOSTIC_FORMAT_VERSION, extensionVersion: version });
         expect(records).toContainEqual(expect.objectContaining({
-            message: DIAGNOSTIC_EVENT.FRAMING_READY, source: DIAGNOSTIC_SOURCE.OPTIONS, details: {},
+            message: DIAGNOSTIC_EVENT.FRAMING_READY,
+            source: DIAGNOSTIC_SOURCE.OPTIONS,
+            details: {},
         }));
         expect(extension.context.pages()).toHaveLength(pagesBefore);
         await options.getByRole('button', { name: enMessages.diagnostics_clear.message }).click();
@@ -46,6 +48,6 @@ test('exports the session log as a local file and clears it from Options', async
             options.getByRole('status').filter({ hasText: enMessages.diagnostics_empty.message }),
         ).toBeVisible();
     } finally {
-        await extension.context.close();
+        await extension.dispose();
     }
 });
