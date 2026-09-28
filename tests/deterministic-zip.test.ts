@@ -22,9 +22,13 @@ import type { ZipEntry } from '../scripts/lib/deterministic-zip.ts';
 
 const MTIME = new Date('2026-08-01T12:00:00Z');
 
-const encode = (text: string): Uint8Array => new TextEncoder().encode(text);
+const encode = (text: string): Uint8Array => {
+    return new TextEncoder().encode(text);
+};
 
-const entry = (path: string, text: string): ZipEntry => ({ path, data: encode(text) });
+const entry = (path: string, text: string): ZipEntry => {
+    return { path, data: encode(text) };
+};
 
 describe('createDeterministicZip', () => {
     it('produces identical bytes regardless of entry order', () => {

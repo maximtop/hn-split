@@ -66,12 +66,14 @@ export const theme = createTheme({
  * (#495057, 8.2:1 on white) in light and dark-1 (#b8b8b8, 7.8:1 on the dark
  * surface) in dark, replacing the stock sub-AA values.
  */
-export const cssVariablesResolver: CSSVariablesResolver = () => ({
-    variables: {},
-    light: {
-        '--mantine-color-dimmed': 'var(--mantine-color-gray-7)',
-    },
-    dark: {
-        '--mantine-color-dimmed': 'var(--mantine-color-dark-1)',
-    },
-});
+export const cssVariablesResolver: CSSVariablesResolver = () => {
+    return {
+        variables: {},
+        light: {
+            '--mantine-color-dimmed': 'var(--mantine-color-gray-7)',
+        },
+        dark: {
+            '--mantine-color-dimmed': 'var(--mantine-color-dark-1)',
+        },
+    };
+};

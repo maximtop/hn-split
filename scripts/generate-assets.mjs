@@ -62,7 +62,9 @@ const baseMessages = isBaseLocale ? messages : await readMessages(BASE_LOCALE);
  * @param base - Label in the base locale.
  */
 function labelPattern(localized, base) {
-    const escape = (value) => value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    const escape = (value) => {
+        return value.replace(/[.*+?^${}()|[\]\\]/gu, '\\$&');
+    };
     return new RegExp(`(?:${escape(localized)}|${escape(base)})`);
 }
 

@@ -30,7 +30,9 @@ interface Deferred<Value> {
  * Creates a manually settled promise for lifecycle ordering tests.
  */
 function deferred<Value>(): Deferred<Value> {
-    let resolve: (value: Value) => void = () => undefined;
+    let resolve: (value: Value) => void = () => {
+        return undefined;
+    };
     const promise = new Promise<Value>((resolvePromise) => {
         resolve = resolvePromise;
     });

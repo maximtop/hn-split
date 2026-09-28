@@ -15,9 +15,11 @@ import { readPackageVersion } from '../scripts/lib/build-info.ts';
 
 const ROOT = resolve(import.meta.dirname, '..');
 
-const readBaseManifest = async (): Promise<Record<string, unknown>> => JSON.parse(
-    await readFile(resolve(ROOT, 'public/manifest.json'), 'utf8'),
-) as Record<string, unknown>;
+const readBaseManifest = async (): Promise<Record<string, unknown>> => {
+    return JSON.parse(
+        await readFile(resolve(ROOT, 'public/manifest.json'), 'utf8'),
+    ) as Record<string, unknown>;
+};
 
 describe('parseBuildTarget', () => {
     it('defaults to chrome when the environment leaves the target unset', () => {

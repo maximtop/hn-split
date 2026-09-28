@@ -289,7 +289,9 @@ describe('handleRequest routing and error mapping', () => {
     });
 
     it('reserves first, validates current ownership, and forwards the source URL', async () => {
-        let resolveTab: (tab: { windowId: number }) => void = () => undefined;
+        let resolveTab: (tab: { windowId: number }) => void = () => {
+            return undefined;
+        };
         mocks.tabsGet.mockReturnValue(new Promise((resolve) => {
             resolveTab = resolve;
         }));

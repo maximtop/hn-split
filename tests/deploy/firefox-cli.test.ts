@@ -56,7 +56,9 @@ const pending = {
     file: { status: AMO_STATUS.Unreviewed },
 };
 const request = vi.fn<typeof fetch>();
-const json = (value: unknown): Response => new Response(JSON.stringify(value));
+const json = (value: unknown): Response => {
+    return new Response(JSON.stringify(value));
+};
 
 /**
  * Build a minimal, genuinely Mozilla-signed-shaped XPI: a real zip with a matching manifest and a
@@ -85,7 +87,9 @@ const buildSignedXpi = (version: string): Buffer => {
  *
  * @returns SHA-256 label and hexadecimal digest.
  */
-const sha256 = (bytes: Buffer): string => `sha256:${createHash('sha256').update(bytes).digest('hex')}`;
+const sha256 = (bytes: Buffer): string => {
+    return `sha256:${createHash('sha256').update(bytes).digest('hex')}`;
+};
 
 beforeEach(() => {
     vi.resetAllMocks();

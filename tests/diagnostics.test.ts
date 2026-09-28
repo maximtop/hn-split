@@ -35,7 +35,9 @@ const event: DiagnosticEvent = {
     message: DIAGNOSTIC_EVENT.FRAMING_READY,
     details: { tabId: 1 },
 };
-const empty = (): DiagnosticBuffer => ({ formatVersion: DIAGNOSTIC_FORMAT_VERSION, entries: [] });
+const empty = (): DiagnosticBuffer => {
+    return { formatVersion: DIAGNOSTIC_FORMAT_VERSION, entries: [] };
+};
 
 function memoryStorage(initial?: unknown): DiagnosticStorage & { value: unknown } {
     return {
@@ -241,7 +243,9 @@ describe('background session collector', () => {
 
 describe('runtime ownership and export', () => {
     const runtime = { id: 'extension-id', getURL: (path: string) => `chrome-extension://extension-id/${path}` };
-    const sender = (path: string): chrome.runtime.MessageSender => ({ id: runtime.id, url: runtime.getURL(path) });
+    const sender = (path: string): chrome.runtime.MessageSender => {
+        return { id: runtime.id, url: runtime.getURL(path) };
+    };
 
     it('collects UI contexts through the facade into one background writer '
         + 'and exports a safe versioned snapshot', async () => {

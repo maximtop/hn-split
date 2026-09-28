@@ -320,7 +320,9 @@ export class AutomaticAvailabilityUpdater {
      */
     private async runUpdate(tabId: number, url: string): Promise<void> {
         const generation = this.nextGeneration(tabId);
-        const isCurrent = (): boolean => this.generations.get(tabId) === generation;
+        const isCurrent = (): boolean => {
+            return this.generations.get(tabId) === generation;
+        };
 
         await this.enqueueMutation(tabId, generation, EMPTY_AVAILABILITY_BADGE, false);
         if (!isCurrent()) {

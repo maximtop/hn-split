@@ -23,11 +23,13 @@ const createStore = (initial?: number): SessionStore & { value?: number } => {
     return store;
 };
 
-const unexpectedUpdate = (): ReturnType<typeof vi.fn<TabClient['update']>> => vi.fn<TabClient['update']>(
-    async () => {
-        throw new Error('update is not expected in this scenario');
-    },
-);
+const unexpectedUpdate = (): ReturnType<typeof vi.fn<TabClient['update']>> => {
+    return vi.fn<TabClient['update']>(
+        async () => {
+            throw new Error('update is not expected in this scenario');
+        },
+    );
+};
 
 describe('DiscussionTabManager', () => {
     it('opens the first discussion in a normal adjacent tab', async () => {

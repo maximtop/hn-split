@@ -364,7 +364,9 @@ export function collectListingIssues(content: ListingContent, base: ListingConte
         issues.push('reviewed must be a boolean');
     }
 
-    const nonEmpty = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
+    const nonEmpty = (value: unknown): value is string => {
+        return typeof value === 'string' && value.trim().length > 0;
+    };
 
     if (!nonEmpty(description?.intro) || !nonEmpty(description?.disclaimer)) {
         issues.push('description.intro and description.disclaimer must be non-empty strings');

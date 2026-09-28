@@ -11,29 +11,35 @@ import { buildArticleCandidates } from '../src/domain/url';
 
 import type { ArticleCandidate } from '../src/domain/url';
 
-const candidate = (url: string, identity: string): ArticleCandidate => ({
-    url,
-    identity,
-    source: 'page',
-});
+const candidate = (url: string, identity: string): ArticleCandidate => {
+    return {
+        url,
+        identity,
+        source: 'page',
+    };
+};
 
-const jsonResponse = (hits: unknown[]): Response => new Response(JSON.stringify({ hits }), {
-    headers: { 'content-type': 'application/json' },
-    status: 200,
-});
+const jsonResponse = (hits: unknown[]): Response => {
+    return new Response(JSON.stringify({ hits }), {
+        headers: { 'content-type': 'application/json' },
+        status: 200,
+    });
+};
 
 /**
  * Creates a fetch stub that stays pending until its abort signal fires.
  */
-const signalBoundFetch = (): ReturnType<typeof vi.fn<typeof fetch>> => vi.fn<typeof fetch>(
-    async (_input, init) => new Promise<Response>((_resolve, reject) => {
-        init?.signal?.addEventListener('abort', () => {
-            reject(init.signal?.reason instanceof Error
-                ? init.signal.reason
-                : new DOMException('Aborted', 'AbortError'));
-        }, { once: true });
-    }),
-);
+const signalBoundFetch = (): ReturnType<typeof vi.fn<typeof fetch>> => {
+    return vi.fn<typeof fetch>(
+        async (_input, init) => new Promise<Response>((_resolve, reject) => {
+            init?.signal?.addEventListener('abort', () => {
+                reject(init.signal?.reason instanceof Error
+                    ? init.signal.reason
+                    : new DOMException('Aborted', 'AbortError'));
+            }, { once: true });
+        }),
+    );
+};
 
 afterEach(() => {
     vi.useRealTimers();

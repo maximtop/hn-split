@@ -91,8 +91,12 @@ describe('SidePanelWindowRegistry', () => {
     });
 
     it('waits for every currently registered framing acquisition', async () => {
-        let resolveFirst: () => void = () => undefined;
-        let resolveSecond: () => void = () => undefined;
+        let resolveFirst: () => void = () => {
+            return undefined;
+        };
+        let resolveSecond: () => void = () => {
+            return undefined;
+        };
         const firstFramed = new Promise<void>((resolve) => {
             resolveFirst = resolve;
         });

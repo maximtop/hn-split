@@ -392,7 +392,9 @@ async function renderPanel(options: FakeChromeOptions = {}): Promise<PanelView> 
         root.render(<SidePanelApp />);
         await flush();
     });
-    const newestPort = (): FakePort => requirePort(fake, fake.ports.length - 1);
+    const newestPort = (): FakePort => {
+        return requirePort(fake, fake.ports.length - 1);
+    };
     return {
         container,
         fake,
