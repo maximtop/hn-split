@@ -17,6 +17,7 @@ import {
     setSidePanelContent,
     setSidePanelFollowEnabled,
     sidePanelAssociations,
+    tabs,
 } from '../src/background/chrome-adapters';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../src/shared/content-scripts';
 import { SIDE_PANEL_ASSOCIATION_ORIGIN } from '../src/shared/side-panel-association';
@@ -291,4 +292,54 @@ describe('context menu registration failure reporting', () => {
             targetUrlPatterns: ['http://*/*', 'https://*/*'],
         })).rejects.toThrow('Duplicate id');
     });
+});
+
+describe('native Split View Chrome adapter', () => {
+    it('returns unsupported when createSplit is absent', async () => {
+        installChrome();
+        await expect(tabs.createSplit?.([7, 8])).resolves.toBeUndefined();
+    });
+
+    it('calls the detected API with exactly two tab IDs', async () => {
+        const createSplit = vi.fn(async () => 42);
+        vi.stubGlobal('chrome', { tabs: { createSplit } });
+        await expect(tabs.createSplit?.([7, 8])).resolves.toBe(42);
+        expect(createSplit).toHaveBeenCalledExactlyOnceWith([7, 8]);
+    });
+
+    it('propagates native API failures to the fallback owner', async () => {
+        const error = new Error('Incompatible tabs');
+        vi.stubGlobal('chrome', {
+            tabs: {
+                createSplit: vi.fn(async () => {
+                    throw error;
+                }),
+            },
+        });
+        await expect(tabs.createSplit?.([7, 8])).rejects.toBe(error);
+    });
+
+    it('preserves compatibility fields when reading a tab', async () => {
+        const tab = {
+
+            id: 7,
+            index: 2,
+            windowId: 3,
+            pinned: true,
+            groupId: 4,
+            splitViewId: -1,
+        };
+        vi.stubGlobal('chrome', { tabs: { get: vi.fn(async () => tab) } });
+        await expect(tabs.get(7)).resolves.toEqual(tab);
+    });
+});
+
+it.each(['edge', 'firefox'])('does not invoke a native API in the %s package', async (browser) => {
+    vi.stubGlobal('BUILD_TARGET_BROWSER', browser);
+    const createSplit = vi.fn(async () => 42);
+    vi.stubGlobal('chrome', { tabs: { createSplit } });
+    vi.resetModules();
+    const adapter = await import('../src/background/chrome-adapters');
+    await expect(adapter.tabs.createSplit?.([7, 8])).resolves.toBeUndefined();
+    expect(createSplit).not.toHaveBeenCalled();
 });

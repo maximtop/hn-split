@@ -317,6 +317,12 @@ test.describe('extension accessibility (en)', () => {
         const page = await openFoundPopup(extension, 'light');
 
         await page.keyboard.press('Tab');
+        await expect(page.getByRole('checkbox', {
+            name: enMessages.native_split_experiment.message,
+        })).toBeFocused();
+        await expectVisibleFocusIndicator(page);
+
+        await page.keyboard.press('Tab');
         await expect(page.getByRole('button', { name: EN_BUTTON_NAMES.primary })).toBeFocused();
         await expectVisibleFocusIndicator(page);
 

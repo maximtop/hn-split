@@ -26,6 +26,13 @@ describe('isBackgroundRequest', () => {
         { type: 'lookup', context: { pageUrl: 3, canonicalHref: null } },
         { type: 'lookup', context: { pageUrl: 'https://example.com', canonicalHref: 3 } },
         { type: 'open_discussion' },
+        {
+
+            type: 'open_discussion',
+            articleTabId: 1,
+            itemId: '123',
+            preferNativeSplit: 'yes',
+        },
         { type: 'open_discussion', articleTabId: -1, itemId: '123' },
         { type: 'open_discussion', articleTabId: 1.5, itemId: '123' },
         { type: 'open_discussion', articleTabId: Number.POSITIVE_INFINITY, itemId: '123' },
@@ -94,6 +101,20 @@ describe('isBackgroundRequest', () => {
         { type: 'lookup', context: { pageUrl: 'https://example.com', canonicalHref: 'https://example.com/story' } },
         { type: 'open_discussion', articleTabId: 0, itemId: '1' },
         { type: 'open_discussion', articleTabId: 42, itemId: '123456' },
+        {
+
+            type: 'open_discussion',
+            articleTabId: 42,
+            itemId: '123456',
+            preferNativeSplit: true,
+        },
+        {
+
+            type: 'open_discussion',
+            articleTabId: 42,
+            itemId: '123456',
+            preferNativeSplit: false,
+        },
         { type: 'set_availability_setting', enabled: true },
         { type: 'set_availability_setting', enabled: false },
         { type: 'get_availability_setting' },

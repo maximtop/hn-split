@@ -4,9 +4,13 @@
  */
 
 import { discussionUrl, isHnUrl } from '../domain/hn';
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
+import { logWarning } from '../shared/logger';
 import { DISCUSSION_OPEN_MODE } from '../shared/messages';
 
 import type { OpenDiscussionResult } from '../shared/messages';
+
+const SPLIT_VIEW_ID_NONE = -1;
 
 /**
  * Describes the tab fields needed for discussion placement and reuse.
@@ -36,12 +40,29 @@ export interface TabSummary {
      * Contains the tab's committed URL when Chrome reports one.
      */
     url?: string;
+
+    /**
+     * Indicates whether the tab is pinned, when reported by the browser.
+     */
+    pinned?: boolean;
+
+    /**
+     * Contains the tab group identifier, when reported by the browser.
+     */
+    groupId?: number;
 }
 
 /**
  * Defines the browser tab operations used by discussion opening.
  */
 export interface TabClient {
+    /**
+     * Pairs adjacent compatible tabs if native Split View is supported.
+     *
+     * @param tabIds - The article and discussion tab identifiers.
+     */
+    createSplit?(tabIds: [number, number]): Promise<number | undefined>;
+
     /**
      * Reads one browser tab.
      *
@@ -157,8 +178,9 @@ export class DiscussionTabManager {
      *
      * @param articleTabId - The source article tab identifier.
      * @param itemId - The Hacker News discussion item identifier.
+     * @param preferNativeSplit - Whether the user explicitly requested the native experiment.
      */
-    async open(articleTabId: number, itemId: string): Promise<OpenDiscussionResult> {
+    async open(articleTabId: number, itemId: string, preferNativeSplit = false): Promise<OpenDiscussionResult> {
         const previous = this.pendingOpens.get(articleTabId) ?? Promise.resolve();
         let release = (): void => {
             return undefined;
@@ -171,7 +193,7 @@ export class DiscussionTabManager {
 
         await previous.catch(() => undefined);
         try {
-            return await this.performOpen(articleTabId, itemId);
+            return await this.performOpen(articleTabId, itemId, preferNativeSplit);
         } finally {
             release();
             if (this.pendingOpens.get(articleTabId) === pending) {
@@ -188,7 +210,7 @@ export class DiscussionTabManager {
      */
     private isSameSplitView(article: TabSummary, discussion: TabSummary): boolean {
         return article.splitViewId !== undefined
-            && article.splitViewId !== -1
+            && article.splitViewId !== SPLIT_VIEW_ID_NONE
             && article.splitViewId === discussion.splitViewId;
     }
 
@@ -209,6 +231,44 @@ export class DiscussionTabManager {
     }
 
     /**
+     * Attempts the opt-in native pairing without moving tabs or changing an existing split.
+     * A rejected split leaves the already-opened discussion available as the fallback.
+     *
+     * @param articleTabId - The source article tab identifier.
+     * @param discussionTabId - The opened discussion tab identifier.
+     */
+    private async tryNativeSplit(articleTabId: number, discussionTabId: number): Promise<boolean> {
+        if (this.tabs.createSplit === undefined) {
+            return false;
+        }
+        try {
+            // Re-read placement after navigation/creation: the user may have moved either tab.
+            const [article, discussion] = await Promise.all([
+                this.tabs.get(articleTabId),
+                this.tabs.get(discussionTabId),
+            ]);
+            if (this.isSameSplitView(article, discussion)) {
+                return true;
+            }
+            const isUnsplit = (tab: TabSummary): boolean => {
+                return tab.splitViewId === undefined || tab.splitViewId === SPLIT_VIEW_ID_NONE;
+            };
+            if (!isUnsplit(article) || !isUnsplit(discussion)
+                || article.windowId !== discussion.windowId
+                || Math.abs(article.index - discussion.index) !== 1
+                || article.pinned !== discussion.pinned
+                || article.groupId !== discussion.groupId) {
+                return false;
+            }
+            const splitId = await this.tabs.createSplit([articleTabId, discussionTabId]);
+            return splitId !== undefined && splitId !== SPLIT_VIEW_ID_NONE;
+        } catch {
+            logWarning(DIAGNOSTIC_EVENT.NATIVE_SPLIT_FAILED);
+            return false;
+        }
+    }
+
+    /**
      * Reuses the remembered discussion tab when it still serves as the pane in
      * the article's window, and otherwise creates a new tab next to the article
      * and remembers it. A failure to store the association does not fail the
@@ -216,10 +276,15 @@ export class DiscussionTabManager {
      *
      * @param articleTabId - The source article tab identifier.
      * @param itemId - The Hacker News discussion item identifier.
+     * @param preferNativeSplit - Whether to try pairing the opened tabs using the documented native API.
      *
      * @throws When Chrome creates the discussion tab without returning its identifier.
      */
-    private async performOpen(articleTabId: number, itemId: string): Promise<OpenDiscussionResult> {
+    private async performOpen(
+        articleTabId: number,
+        itemId: string,
+        preferNativeSplit: boolean,
+    ): Promise<OpenDiscussionResult> {
         const article = await this.tabs.get(articleTabId);
         const url = discussionUrl(itemId);
         const rememberedTabId = await this.store.get(articleTabId);
@@ -236,7 +301,8 @@ export class DiscussionTabManager {
                 && this.isStillDiscussionPane(article, rememberedTab)) {
                 await this.tabs.update(rememberedTabId, { active: true, url });
                 return {
-                    mode: this.isSameSplitView(article, rememberedTab)
+                    mode: (this.isSameSplitView(article, rememberedTab)
+                        || (preferNativeSplit && await this.tryNativeSplit(articleTabId, rememberedTabId)))
                         ? DISCUSSION_OPEN_MODE.SPLIT_VIEW
                         : DISCUSSION_OPEN_MODE.REUSED_TAB,
                     tabId: rememberedTabId,
@@ -265,6 +331,10 @@ export class DiscussionTabManager {
             // The discussion tab is already visible, so the open succeeded;
             // losing the association only downgrades the next open to a new tab.
         }
-        return { mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: created.id };
+        const split = preferNativeSplit && await this.tryNativeSplit(articleTabId, created.id);
+        return {
+            mode: split ? DISCUSSION_OPEN_MODE.SPLIT_VIEW : DISCUSSION_OPEN_MODE.ADJACENT_TAB,
+            tabId: created.id,
+        };
     }
 }

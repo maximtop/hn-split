@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "Очистити журнал", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "Запитано завантаження журналу.", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "Журнал очищено.", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "Не вдалося відкрити або експортувати журнал. Спробуйте ще раз.", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "Не вдалося відкрити або експортувати журнал. Спробуйте ще раз.", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

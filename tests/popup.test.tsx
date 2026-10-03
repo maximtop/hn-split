@@ -214,6 +214,33 @@ describe('App discussion opens', () => {
         await view.unmount();
     });
 
+    it('keeps native opening opt-in and sends the selected alternative after enabling it', async () => {
+        const sendMessage = vi.fn(async (request: { type: string }) => (
+            request.type === 'lookup' ? foundResponse : { ok: true, result: { mode: 'split_view', tabId: 41 } }
+        ));
+        installChrome(sendMessage);
+        const view = await renderLoadedApp();
+        const checkbox = view.container.querySelector<HTMLInputElement>('input[type="checkbox"]');
+        expect(checkbox?.checked).toBe(false);
+        expect(view.container.textContent).toContain(enMessages.native_split_experiment.message);
+        await act(async () => checkbox?.click());
+        expect(checkbox?.checked).toBe(true);
+        const buttons = [...view.container.querySelectorAll<HTMLButtonElement>('button.discussion')];
+        await act(async () => {
+            buttons[1]?.click();
+            await new Promise((resolve) => {
+                setTimeout(resolve, 0);
+            });
+        });
+        expect(sendMessage).toHaveBeenLastCalledWith({
+            type: 'open_discussion',
+            articleTabId: 40,
+            itemId: '456',
+            preferNativeSplit: true,
+        });
+        await view.unmount();
+    });
+
     it('shows an actionable error and re-enables buttons when messaging rejects', async () => {
         const sendMessage = vi.fn()
             .mockResolvedValueOnce(foundResponse)

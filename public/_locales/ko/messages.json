@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "로그 지우기", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "로그 파일 다운로드를 요청했습니다.", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "로그를 지웠습니다.", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "진단 정보에 접근하거나 내보낼 수 없습니다. 다시 시도하세요.", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "진단 정보에 접근하거나 내보낼 수 없습니다. 다시 시도하세요.", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

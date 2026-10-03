@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
     tabsGet: vi.fn(),
     tabsCreate: vi.fn(),
     tabsUpdate: vi.fn(),
+    tabsCreateSplit: vi.fn(),
     sessionGet: vi.fn(),
     sessionSet: vi.fn(),
     sessionRemove: vi.fn(),
@@ -46,6 +47,7 @@ vi.mock('../src/background/chrome-adapters', () => ({
         get: mocks.tabsGet,
         create: mocks.tabsCreate,
         update: mocks.tabsUpdate,
+        createSplit: mocks.tabsCreateSplit,
     },
 }));
 
@@ -394,6 +396,26 @@ describe('handleRequest routing and error mapping', () => {
             windowId: WINDOW_ID,
         });
         expect(mocks.sessionSet).toHaveBeenCalledExactlyOnceWith(TAB_ID, NEW_DISCUSSION_TAB_ID);
+    });
+
+    it('forwards explicit native opt-in through the request handler', async () => {
+        mocks.sessionGet.mockResolvedValue(undefined);
+        mocks.tabsGet.mockImplementation(async (id: number) => ({
+            id,
+            index: id === TAB_ID ? 0 : 1,
+            windowId: WINDOW_ID,
+            pinned: false,
+            groupId: -1,
+        }));
+        mocks.tabsCreate.mockResolvedValue({ id: 99, index: 1, windowId: WINDOW_ID });
+        mocks.tabsCreateSplit.mockResolvedValue(42);
+        await expect(handleRequest({
+            type: BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION,
+            articleTabId: TAB_ID,
+            itemId: ITEM_ID,
+            preferNativeSplit: true,
+        })).resolves.toEqual({ ok: true, result: { mode: 'split_view', tabId: 99 } });
+        expect(mocks.tabsCreateSplit).toHaveBeenCalledExactlyOnceWith([TAB_ID, 99]);
     });
 
     it('maps a failure to open the discussion tab to open_discussion_failed', async () => {

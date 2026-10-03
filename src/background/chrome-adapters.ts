@@ -6,7 +6,7 @@
 
 import { SidePanelAssociationStore } from '../browser/side-panel-association-store';
 import { HN_ORIGIN } from '../domain/hn';
-import { openDiscussionSurface } from '../shared/browser-target';
+import { CURRENT_BROWSER, openDiscussionSurface } from '../shared/browser-target';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../shared/content-scripts';
 import { isSidePanelProjection } from '../shared/side-panel-projection';
 import {
@@ -25,6 +25,19 @@ import type { SidePanelAssociationStorage } from '../browser/side-panel-associat
 import type { SidePanelProjection } from '../shared/side-panel-projection';
 
 /**
+ * Documents the Chrome 155 API missing from the pinned Chrome type package.
+ * See https://developer.chrome.com/docs/extensions/reference/api/tabs#method-createSplit.
+ */
+interface NativeSplitTabs {
+    /**
+     * Pairs two adjacent, unsplit tabs with matching window, pinned and group states.
+     *
+     * @param tabIds - The two tabs to pair into a native Split View.
+     */
+    createSplit?: (tabIds: [number, number]) => Promise<number>;
+}
+
+/**
  * Converts a Chrome tab into the fields used by discussion placement.
  *
  * @param tab - The Chrome tab to convert.
@@ -34,6 +47,8 @@ function toTabSummary(tab: chrome.tabs.Tab): TabSummary {
         ...(tab.id === undefined ? {} : { id: tab.id }),
         index: tab.index,
         windowId: tab.windowId,
+        pinned: tab.pinned,
+        groupId: tab.groupId,
         ...(tab.splitViewId === undefined ? {} : { splitViewId: tab.splitViewId }),
         ...(tab.url === undefined ? {} : { url: tab.url }),
     };
@@ -52,6 +67,13 @@ function discussionTabKey(articleTabId: number): string {
  * Adapts the Chrome tabs API to discussion-tab operations.
  */
 export const tabs: TabClient = {
+    async createSplit(tabIds) {
+        const nativeTabs = chrome.tabs as typeof chrome.tabs & NativeSplitTabs;
+        if (CURRENT_BROWSER !== 'chrome' || typeof nativeTabs.createSplit !== 'function') {
+            return undefined;
+        }
+        return nativeTabs.createSplit(tabIds);
+    },
     async get(tabId) {
         return toTabSummary(await chrome.tabs.get(tabId));
     },
