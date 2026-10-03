@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "Borrar registros", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "Se ha solicitado la descarga del registro.", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "Registros borrados.", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "No se pudo acceder al diagnóstico o exportarlo. Inténtalo de nuevo.", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "No se pudo acceder al diagnóstico o exportarlo. Inténtalo de nuevo.", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

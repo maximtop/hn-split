@@ -112,6 +112,7 @@ export const DIAGNOSTIC_EVENT = {
     NORMALIZATION_FAILED: 'normalizing the side panel content failed.',
     AVAILABILITY_FAILED: 'automatic availability update failed.',
     POPUP_LOOKUP_FAILED: 'popup lookup failed.',
+    NATIVE_SPLIT_FAILED: 'native Split View failed; keeping the discussion tab.',
     DISCUSSION_OPEN_FAILED: 'opening the discussion failed.',
     REQUEST_FAILED: 'background request failed.',
     SETTING_LOAD_FAILED: 'loading the setting failed.',

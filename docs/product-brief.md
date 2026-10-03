@@ -137,7 +137,7 @@ Success is measured through deterministic fixtures, CI, local performance runs, 
 
 ## 9. Constraints and assumptions
 
-- Public Chrome documentation currently exposes `splitViewId` on tab data, but this does not by itself prove that extensions can create Split View. The capability check during implementation confirmed there is no supported creation API; section 10 records the shipped fallback.
+- Chrome 140 exposes Split View state; Chrome 155 adds a documented creation API. The [native Split View experiment](native-split-view.md) tries that API only after explicit popup opt-in and preserves the shipped fallback.
 - Publisher canonical metadata is inconsistent. Normalization must remain conservative and preserve multiple candidate URLs when necessary.
 - Hacker News can contain multiple submissions for the same article. The top result must be deterministic, while alternatives remain available as a secondary path.
 - Manifest V3 service workers can be suspended. The architecture must not assume a permanently running background process.
@@ -147,7 +147,7 @@ Success is measured through deterministic fixtures, CI, local performance runs, 
 
 The MVP implementation resolved most of the questions originally delegated to spikes:
 
-- **Split View creation — resolved.** Chrome 140 documents Split View state (`Tab.splitViewId`, Split View queries and update events) but no extension API that creates Split View. The MVP uses only documented behavior.
+- **Split View creation — experimental.** The original Chrome 140 MVP used only Split View state. Chrome 155 adds `tabs.createSplit`; the [opt-in experiment](native-split-view.md) implements that documented path. Native UI and proportions still require Chrome 155+ validation before considering a fallback replacement.
 - **Fallback — resolved.** The first explicit click opens a normal adjacent tab and the extension remembers it. If the user pairs that tab with the article through native Chrome Split View, later selections reuse the same tab, preserving the browser-managed pane. No iframe or undocumented API is involved in this adjacent-tab flow.
 - **Side panel — added after the original brief and later made tab-aware.** Explicit user actions can open the real Hacker News discussion in Chrome's side panel. An independent off-by-default preference can then follow active tabs while that panel remains open, or the user can check one tab without opting in. Session associations prevent stale cross-tab content, and up to three opaque real Hacker News documents may be retained for best-effort return position. The implementation uses a disclosed framing exception lasting from the first live panel connection through the last; the adjacent-tab flow remains the fallback.
 - **HN lookup endpoint — resolved.** The public Algolia Hacker News Search API (`https://hn.algolia.com/api/v1/search`) with `tags=story`, `restrictSearchableAttributes=url`, and local exact-identity verification of every hit, under one five-second lookup timeout. No API key, backend, or fallback endpoint is required; the full contract lives in [docs/url-matching.md](url-matching.md).

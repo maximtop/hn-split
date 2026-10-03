@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "लॉग साफ़ करें", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "लॉग फ़ाइल डाउनलोड का अनुरोध किया गया।", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "लॉग साफ़ किए गए।", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "निदान खोलना या निर्यात करना संभव नहीं हुआ। फिर से प्रयास करें।", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "निदान खोलना या निर्यात करना संभव नहीं हुआ। फिर से प्रयास करें।", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

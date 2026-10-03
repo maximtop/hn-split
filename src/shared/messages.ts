@@ -144,6 +144,7 @@ const openDiscussionRequestSchema = v.object({
     type: v.literal(BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION),
     articleTabId: nonNegativeSafeIntegerSchema,
     itemId: positiveItemIdSchema,
+    preferNativeSplit: v.optional(v.boolean()),
 });
 
 const availabilitySettingSetRequestSchema = v.object({

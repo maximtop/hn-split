@@ -10,6 +10,7 @@ import {
     Divider,
     MantineProvider,
     Stack,
+    Checkbox,
     Text,
     Title,
     UnstyledButton,
@@ -18,7 +19,7 @@ import { useEffect, useState } from 'react';
 
 import { HN_LOOKUP_STATUS } from '../domain/hn';
 import { readPageContext } from '../page/context';
-import { openDiscussionSurface, USES_FIREFOX_SIDEBAR } from '../shared/browser-target';
+import { CURRENT_BROWSER, openDiscussionSurface, USES_FIREFOX_SIDEBAR } from '../shared/browser-target';
 import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
 import { UserFacingError, messageKeyForBackgroundError, userFacingMessage } from '../shared/error-messages';
 import { t } from '../shared/i18n';
@@ -168,6 +169,7 @@ function DiscussionButton(props: DiscussionButtonProps): React.JSX.Element {
  * Renders and coordinates the HN Split browser-action popup.
  */
 export function App(): React.JSX.Element {
+    const [preferNativeSplit, setPreferNativeSplit] = useState(false);
     const [state, setState] = useState<PopupState>(initialState);
 
     useEffect(() => {
@@ -238,6 +240,7 @@ export function App(): React.JSX.Element {
                 type: BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION,
                 articleTabId: state.articleTabId,
                 itemId,
+                ...(preferNativeSplit ? { preferNativeSplit: true } : {}),
             });
             if (!isOpenDiscussionResponse(response)) {
                 throw new UserFacingError(t('invalid_extension_response'));
@@ -333,6 +336,15 @@ export function App(): React.JSX.Element {
 
                     {found !== null && (
                         <Stack component="section" gap="xs" aria-label={t('discussion_results')}>
+                            {CURRENT_BROWSER === 'chrome' && (
+                                <Checkbox
+                                    label={t('native_split_experiment')}
+                                    description={t('native_split_experiment_help')}
+                                    checked={preferNativeSplit}
+                                    disabled={state.openingId !== null}
+                                    onChange={(event) => setPreferNativeSplit(event.currentTarget.checked)}
+                                />
+                            )}
                             <DiscussionButton
                                 discussion={found.primary}
                                 opening={state.openingId !== null}

@@ -163,7 +163,7 @@ export async function handleRequest(request: BackgroundRequest): Promise<Backgro
         if (request.type === BACKGROUND_REQUEST_TYPE.OPEN_DISCUSSION) {
             return {
                 ok: true,
-                result: await discussionTabs.open(request.articleTabId, request.itemId),
+                result: await discussionTabs.open(request.articleTabId, request.itemId, request.preferNativeSplit),
             };
         }
 

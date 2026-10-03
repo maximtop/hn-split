@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "ניקוי יומנים", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "התבקשה הורדת קובץ היומן.", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "היומנים נוקו.", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "לא ניתן לגשת לנתוני האבחון או לייצא אותם. נסו שוב.", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "לא ניתן לגשת לנתוני האבחון או לייצא אותם. נסו שוב.", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

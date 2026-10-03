@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "লগ মুছুন", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "লগ ফাইল ডাউনলোডের অনুরোধ করা হয়েছে।", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "লগ মুছে ফেলা হয়েছে।", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "রোগনির্ণয়ের তথ্য খোলা বা রপ্তানি করা যায়নি। আবার চেষ্টা করুন।", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "রোগনির্ণয়ের তথ্য খোলা বা রপ্তানি করা যায়নি। আবার চেষ্টা করুন।", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

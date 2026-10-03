@@ -7,7 +7,7 @@ import {
 
 import { DiscussionTabManager } from '../src/browser/open-discussion';
 
-import type { SessionStore, TabClient } from '../src/browser/open-discussion';
+import type { SessionStore, TabClient, TabSummary } from '../src/browser/open-discussion';
 
 const createStore = (initial?: number): SessionStore & { value?: number } => {
     const store: SessionStore & { value?: number } = {
@@ -366,5 +366,173 @@ describe('DiscussionTabManager', () => {
         expect(tabs.create).not.toHaveBeenCalled();
         expect(store.remove).not.toHaveBeenCalled();
         expect(store.value).toBe(91);
+    });
+});
+
+describe('opt-in native Split View', () => {
+    const articleId = 40;
+    const discussionId = 91;
+    const makeFixture = (remembered = false) => {
+        const article: TabSummary = {
+            id: articleId,
+            index: 4,
+            windowId: 2,
+            splitViewId: -1,
+            pinned: false,
+            groupId: -1,
+        };
+        const discussion: TabSummary = {
+            id: discussionId,
+            index: 5,
+            windowId: 2,
+            splitViewId: -1,
+            pinned: false,
+            groupId: -1,
+            url: 'https://news.ycombinator.com/item?id=123',
+        };
+        const createSplit = vi.fn<TabClient['createSplit'] & object>(async () => 7);
+        const tabs: TabClient = {
+            get: vi.fn(async (id) => (id === articleId ? article : discussion)),
+            create: vi.fn(async () => discussion),
+            update: vi.fn(async () => discussion),
+            createSplit,
+        };
+        const store = createStore(remembered ? discussionId : undefined);
+        return {
+
+            article,
+            discussion,
+            tabs,
+            store,
+            createSplit,
+            manager: new DiscussionTabManager(tabs, store),
+        };
+    };
+
+    it('does not use the native API without explicit opt-in', async () => {
+        const { manager, createSplit } = makeFixture();
+        await expect(manager.open(articleId, '123')).resolves.toEqual({
+            mode: 'adjacent_tab',
+            tabId: discussionId,
+        });
+        expect(createSplit).not.toHaveBeenCalled();
+    });
+
+    it.each([false, true])('pairs one opened discussion, remembered=%s', async (remembered) => {
+        const {
+
+            manager,
+            tabs,
+            store,
+            createSplit,
+        } = makeFixture(remembered);
+        await expect(manager.open(articleId, '456', true)).resolves.toEqual({
+            mode: 'split_view',
+            tabId: discussionId,
+        });
+        expect(createSplit).toHaveBeenCalledExactlyOnceWith([articleId, discussionId]);
+        expect(tabs.create).toHaveBeenCalledTimes(remembered ? 0 : 1);
+        expect(tabs.update).toHaveBeenCalledTimes(remembered ? 1 : 0);
+        expect(store.value).toBe(discussionId);
+        const opening = remembered ? tabs.update : tabs.create;
+        expect(vi.mocked(opening).mock.calls[0]?.at(-1)).toMatchObject({
+            url: 'https://news.ycombinator.com/item?id=456',
+        });
+    });
+
+    it('falls back when the browser has no native adapter', async () => {
+        const { manager, tabs } = makeFixture();
+        delete tabs.createSplit;
+        await expect(manager.open(articleId, '123', true)).resolves.toEqual({
+            mode: 'adjacent_tab',
+            tabId: discussionId,
+        });
+        expect(tabs.create).toHaveBeenCalledTimes(1);
+    });
+
+    it.each([undefined, -1])('keeps one tab when the native adapter returns %s', async (splitId) => {
+        const { manager, tabs, createSplit } = makeFixture();
+        createSplit.mockResolvedValueOnce(splitId);
+        await expect(manager.open(articleId, '123', true)).resolves.toEqual({
+            mode: 'adjacent_tab',
+            tabId: discussionId,
+        });
+        expect(tabs.create).toHaveBeenCalledTimes(1);
+    });
+
+    it.each([false, true])('keeps the opened tab when Chrome rejects pairing, remembered=%s', async (remembered) => {
+        const {
+
+            manager,
+            tabs,
+            store,
+            createSplit,
+        } = makeFixture(remembered);
+        createSplit.mockRejectedValueOnce(new Error('Tabs cannot be edited right now'));
+        await expect(manager.open(articleId, '123', true)).resolves.toEqual({
+            mode: remembered ? 'reused_tab' : 'adjacent_tab',
+            tabId: discussionId,
+        });
+        expect(tabs.create).toHaveBeenCalledTimes(remembered ? 0 : 1);
+        expect(store.value).toBe(discussionId);
+    });
+
+    it('keeps the opened discussion when tab revalidation fails', async () => {
+        const { manager, tabs, createSplit } = makeFixture();
+        vi.mocked(tabs.get).mockResolvedValueOnce({ id: articleId, index: 4, windowId: 2 })
+            .mockRejectedValueOnce(new Error('Article closed'));
+        await expect(manager.open(articleId, '123', true)).resolves.toEqual({
+            mode: 'adjacent_tab',
+            tabId: discussionId,
+        });
+        expect(createSplit).not.toHaveBeenCalled();
+        expect(tabs.create).toHaveBeenCalledTimes(1);
+    });
+
+    it.each([
+        { splitViewId: 8 },
+        { windowId: 3 },
+        { index: 8 },
+        { pinned: true },
+        { groupId: 2 },
+    ])('does not rearrange or split an incompatible discussion: %j', async (change) => {
+        const { manager, discussion, createSplit } = makeFixture();
+        Object.assign(discussion, change);
+        await expect(manager.open(articleId, '123', true)).resolves.toEqual({
+            mode: 'adjacent_tab',
+            tabId: discussionId,
+        });
+        expect(createSplit).not.toHaveBeenCalled();
+    });
+
+    it("does not replace the article's existing unrelated split", async () => {
+        const { manager, article, createSplit } = makeFixture();
+        article.splitViewId = 8;
+        await expect(manager.open(articleId, '123', true)).resolves.toEqual({
+            mode: 'adjacent_tab',
+            tabId: discussionId,
+        });
+        expect(createSplit).not.toHaveBeenCalled();
+    });
+
+    it('recognizes a pairing made by the user while the discussion is being opened', async () => {
+        const {
+
+            manager,
+            article,
+            discussion,
+            tabs,
+            createSplit,
+        } = makeFixture();
+        vi.mocked(tabs.create).mockImplementationOnce(async () => {
+            article.splitViewId = 7;
+            discussion.splitViewId = 7;
+            return discussion;
+        });
+        await expect(manager.open(articleId, '123', true)).resolves.toEqual({
+            mode: 'split_view',
+            tabId: discussionId,
+        });
+        expect(createSplit).not.toHaveBeenCalled();
     });
 });

@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "ログを消去", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "ログファイルのダウンロードを要求しました。", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "ログを消去しました。", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "診断情報にアクセスまたはエクスポートできません。もう一度お試しください。", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "診断情報にアクセスまたはエクスポートできません。もう一度お試しください。", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

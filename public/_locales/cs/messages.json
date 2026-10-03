@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "Vymazat protokol", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "Bylo vyžádáno stažení protokolu.", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "Protokol byl vymazán.", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "Diagnostiku nelze otevřít ani exportovat. Zkuste to znovu.", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "Diagnostiku nelze otevřít ani exportovat. Zkuste to znovu.", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

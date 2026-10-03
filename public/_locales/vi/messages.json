@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "Xóa nhật ký", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "Đã yêu cầu tải tệp nhật ký.", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "Đã xóa nhật ký.", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "Không thể truy cập hoặc xuất dữ liệu chẩn đoán. Hãy thử lại.", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "Không thể truy cập hoặc xuất dữ liệu chẩn đoán. Hãy thử lại.", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }

@@ -67,5 +67,7 @@
   "diagnostics_clear": {"message": "Vymazať denník", "description": "Local diagnostics: clear"},
   "diagnostics_exported": {"message": "Vyžiadané stiahnutie denníka.", "description": "Local diagnostics: exported"},
   "diagnostics_cleared": {"message": "Denník bol vymazaný.", "description": "Local diagnostics: cleared"},
-  "diagnostics_failure": {"message": "Diagnostiku nemožno otvoriť ani exportovať. Skúste to znova.", "description": "Local diagnostics: failure"}
+  "diagnostics_failure": {"message": "Diagnostiku nemožno otvoriť ani exportovať. Skúste to znova.", "description": "Local diagnostics: failure"},
+  "native_split_experiment": {"message": "Try native Split View (experimental)", "description": "Opt-in Chrome experiment; temporary English copy"},
+  "native_split_experiment_help": {"message": "Chrome 155+. Select a discussion below; if pairing is unavailable, it opens in a tab.", "description": "Native Split View requirements and fallback; temporary English copy"}
 }
