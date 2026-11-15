@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Не удалось выполнить поиск на Hacker News.", "description": "Ошибка поиска" },
   "open_discussion_failed": { "message": "Не удалось открыть вкладку обсуждения.", "description": "Ошибка открытия вкладки обсуждения" },
   "discussion_results": { "message": "Обсуждения на Hacker News", "description": "Метка списка результатов" },
-  "split_view_help": { "message": "При первом выборе результата откроется соседняя вкладка. Объедините её со статьёй через Chrome Split View; следующие обсуждения откроются в той же вкладке.", "description": "Подсказка по Split View" },
+  "split_view_help": { "message": "Открывает обсуждение рядом со статьёй в нативном Split View, если он доступен, иначе — в соседней вкладке. Следующие обсуждения открываются в той же вкладке.", "description": "Подсказка по Split View" },
   "availability_settings": { "message": "Настройки", "description": "Ссылка на настройки" },
   "options_heading": { "message": "Конфиденциальность и поведение", "description": "Заголовок страницы настроек" },
   "options_document_title": { "message": "Настройки Split for Hacker News", "description": "Заголовок вкладки с настройками" },

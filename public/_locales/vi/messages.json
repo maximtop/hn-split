@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Không thể hoàn tất tìm kiếm trên Hacker News.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Không thể mở thẻ thảo luận.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Các cuộc thảo luận trên Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Lần đầu bạn chọn kết quả sẽ mở một thẻ liền kề. Ghép thẻ đó với bài viết bằng Chrome Split View; các lựa chọn sau sẽ dùng lại thẻ đó.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Mở thảo luận cạnh bài viết trong chế độ chia đôi tích hợp nếu có, nếu không thì mở trong thẻ liền kề. Các lựa chọn sau dùng lại thẻ thảo luận.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Cài đặt", "description": "Options page link" },
   "options_heading": { "message": "Quyền riêng tư và hành vi", "description": "Options page heading" },
   "options_document_title": { "message": "Cài đặt Split for Hacker News", "description": "Options browser-tab title" },

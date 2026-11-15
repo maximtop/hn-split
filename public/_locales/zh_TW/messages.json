@@ -17,7 +17,7 @@
   "lookup_error": { "message": "無法完成 Hacker News 搜尋。", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "無法開啟討論分頁。", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News 討論", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "第一次選擇結果會開啟相鄰分頁。使用 Chrome Split View 將其與文章並排；之後的選擇會重複使用該分頁。", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "如果支援，會在瀏覽器原生分割畫面中於文章旁開啟討論，否則在相鄰分頁中開啟。後續選擇會重複使用同一討論分頁。", "description": "Split View usage guidance" },
   "availability_settings": { "message": "設定", "description": "Options page link" },
   "options_heading": { "message": "隱私權與行為", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News 設定", "description": "Options browser-tab title" },

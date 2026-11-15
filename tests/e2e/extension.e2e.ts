@@ -29,7 +29,7 @@ interface OpenResponse {
     error?: string;
 }
 
-test('loads the unpacked extension and verifies lookup plus adjacent tab reuse', async () => {
+test('loads the unpacked extension and verifies lookup plus discussion tab reuse', async () => {
     let extension: ExtensionContext | undefined;
 
     try {
@@ -172,6 +172,9 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         ));
         expect(sessionKeysAfterDisable.filter((key) => key.startsWith('hn_lookup_v1:'))).toEqual([]);
 
+        const nativeSplitAvailable = await worker.evaluate(() => (
+            typeof (chrome.tabs as { createSplit?: unknown }).createSplit === 'function'
+        ));
         const firstOpen = await options.evaluate(async ({ tabId, itemId }): Promise<OpenResponse> => (
             chrome.runtime.sendMessage({
                 type: 'open_discussion',
@@ -179,7 +182,10 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
                 itemId,
             })
         ), { tabId: articleTabId as number, itemId: FIRST_ITEM_ID });
-        expect(firstOpen).toMatchObject({ ok: true, result: { mode: 'adjacent_tab' } });
+        expect(firstOpen).toMatchObject({
+            ok: true,
+            result: { mode: nativeSplitAvailable ? 'split_view' : 'adjacent_tab' },
+        });
 
         const firstDiscussionTabId = firstOpen.result?.tabId;
         expect(typeof firstDiscussionTabId).toBe('number');
@@ -187,6 +193,10 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         const articleTab = firstTabs.find(({ id }) => id === articleTabId);
         const firstDiscussionTab = firstTabs.find(({ id }) => id === firstDiscussionTabId);
         expect(firstDiscussionTab?.index).toBe((articleTab?.index ?? -2) + 1);
+        if (nativeSplitAvailable) {
+            expect(articleTab?.splitViewId).toBeGreaterThanOrEqual(0);
+            expect(firstDiscussionTab?.splitViewId).toBe(articleTab?.splitViewId);
+        }
         const firstDiscussionUrl = `https://news.ycombinator.com/item?id=${FIRST_ITEM_ID}`;
         await expect.poll(() => context?.pages().map((page) => page.url()) ?? [])
             .toContain(firstDiscussionUrl);
@@ -202,7 +212,10 @@ test('loads the unpacked extension and verifies lookup plus adjacent tab reuse',
         ), { tabId: articleTabId as number, itemId: SECOND_ITEM_ID });
         expect(secondOpen).toMatchObject({
             ok: true,
-            result: { tabId: firstDiscussionTabId, mode: 'reused_tab' },
+            result: {
+                tabId: firstDiscussionTabId,
+                mode: nativeSplitAvailable ? 'split_view' : 'reused_tab',
+            },
         });
 
         const finalTabs = await options.evaluate(async () => chrome.tabs.query({ currentWindow: true }));

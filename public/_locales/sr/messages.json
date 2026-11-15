@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Претрагу на Hacker News-у није могуће довршити.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Картицу са дискусијом није могуће отворити.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Дискусије на Hacker News-у", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Први избор резултата отвара суседну картицу. Упарите је са чланком помоћу Chrome Split View-а; каснији избори ће поново користити ту картицу.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Отвара дискусију поред чланка у уграђеном подељеном приказу, ако је доступан, иначе на суседној картици. Наредни избори поново користе картицу дискусије.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Подешавања", "description": "Options page link" },
   "options_heading": { "message": "Приватност и понашање", "description": "Options page heading" },
   "options_document_title": { "message": "Подешавања Split for Hacker News-а", "description": "Options browser-tab title" },

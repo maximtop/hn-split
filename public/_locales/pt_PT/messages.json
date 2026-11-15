@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Não foi possível concluir a pesquisa no Hacker News.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Não foi possível abrir o separador da discussão.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Discussões do Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "A primeira seleção de um resultado abre um separador adjacente. Emparelhe-o com o artigo através do Chrome Split View; as seleções seguintes reutilizarão esse separador.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Abre a discussão ao lado do artigo na vista dividida nativa, quando disponível, ou num separador adjacente. As seleções seguintes reutilizam o separador da discussão.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Definições", "description": "Options page link" },
   "options_heading": { "message": "Privacidade e comportamento", "description": "Options page heading" },
   "options_document_title": { "message": "Definições do Split for Hacker News", "description": "Options browser-tab title" },

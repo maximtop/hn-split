@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Hindi nakumpleto ang paghahanap sa Hacker News.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Hindi mabuksan ang tab ng talakayan.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Mga talakayan sa Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Ang una mong pagpili ng resulta ay nagbubukas ng katabing tab. Ipares ito sa artikulo gamit ang Chrome Split View; gagamitin muli ng mga susunod na pagpili ang tab na iyon.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Binubuksan ang talakayan sa tabi ng artikulo sa katutubong Split View kung available, o sa katabing tab kung hindi. Ginagamit muli ng mga susunod na pagpili ang tab ng talakayan.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Mga setting", "description": "Options page link" },
   "options_heading": { "message": "Privacy at gawi", "description": "Options page heading" },
   "options_document_title": { "message": "Mga setting ng Split for Hacker News", "description": "Options browser-tab title" },

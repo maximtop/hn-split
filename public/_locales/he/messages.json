@@ -17,7 +17,7 @@
   "lookup_error": { "message": "לא ניתן היה להשלים את החיפוש ב‑Hacker News.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "לא ניתן לפתוח את כרטיסיית הדיון.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "דיוני Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "בחירת התוצאה הראשונה פותחת כרטיסייה סמוכה. שייכו אותה למאמר באמצעות Chrome Split View; בחירות נוספות ישתמשו שוב באותה כרטיסייה.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "פותח את הדיון לצד המאמר בתצוגה המפוצלת המובנית, אם היא זמינה, ואחרת בכרטיסייה סמוכה. הבחירות הבאות משתמשות שוב בכרטיסיית הדיון.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "הגדרות", "description": "Options page link" },
   "options_heading": { "message": "פרטיות והתנהגות", "description": "Options page heading" },
   "options_document_title": { "message": "הגדרות Split for Hacker News", "description": "Options browser-tab title" },

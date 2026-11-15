@@ -17,7 +17,7 @@
   "lookup_error": { "message": "جست‌وجو در Hacker News کامل نشد.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "باز کردن زبانهٔ بحث ممکن نیست.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "بحث‌های Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "نخستین انتخاب نتیجه، یک زبانهٔ مجاور باز می‌کند. آن را با Chrome Split View به مقاله متصل کنید؛ انتخاب‌های بعدی همان زبانه را دوباره به‌کار می‌گیرند.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "اگر نمای تقسیم‌شدهٔ بومی در دسترس باشد، بحث را کنار مقاله در آن باز می‌کند؛ در غیر این صورت در زبانهٔ مجاور باز می‌کند. انتخاب‌های بعدی از همان زبانهٔ بحث استفاده می‌کنند.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "تنظیمات", "description": "Options page link" },
   "options_heading": { "message": "حریم خصوصی و رفتار", "description": "Options page heading" },
   "options_document_title": { "message": "تنظیمات Split for Hacker News", "description": "Options browser-tab title" },

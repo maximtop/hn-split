@@ -143,6 +143,8 @@ export async function launchExtensionContext(
     }
     const extensionPath = localizedExtensionPath ?? builtExtensionPath;
     const chromeUiLanguage = options.catalogLocale?.replaceAll('_', '-');
+    // Allows the same boundary suite to exercise browsers before and after Chrome 155.
+    const executablePath = process.env.HN_SPLIT_CHROMIUM_EXECUTABLE;
     const args = [
         `--disable-extensions-except=${extensionPath}`,
         `--load-extension=${extensionPath}`,
@@ -162,6 +164,7 @@ export async function launchExtensionContext(
     try {
         context = await chromium.launchPersistentContext(userDataDir, {
             channel: 'chromium',
+            ...(executablePath === undefined ? {} : { executablePath }),
             headless: true,
             args,
             ...(chromeUiLanguage === undefined ? {} : { locale: chromeUiLanguage }),

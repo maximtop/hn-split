@@ -102,6 +102,7 @@ export const FOLLOW_DIAGNOSTIC_EVENT_BY_CODE: Record<FollowDiagnosticCode, Follo
  * Lists the only application messages admitted to the session log.
  */
 export const DIAGNOSTIC_EVENT = {
+    NATIVE_SPLIT_FAILED: 'opening native Split View failed; using the existing tab flow.',
     ...FOLLOW_DIAGNOSTIC_EVENT,
     FRAMING_READY: 'side panel framing ready.',
     PROJECTION_LOADED: 'side panel projection loaded.',

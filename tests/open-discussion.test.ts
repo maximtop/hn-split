@@ -368,3 +368,157 @@ describe('DiscussionTabManager', () => {
         expect(store.value).toBe(91);
     });
 });
+
+describe('native Split View opening', () => {
+    const article = {
+
+        id: 40,
+        index: 4,
+        windowId: 2,
+        splitViewId: -1,
+    };
+    const discussion = {
+        id: 91,
+        index: 5,
+        windowId: 2,
+        splitViewId: -1,
+        url: 'https://news.ycombinator.com/item?id=123',
+    };
+    const nativeTabs = (): TabClient => {
+        return {
+            get: vi.fn(async (id) => (id === article.id ? { ...article } : { ...discussion })),
+            create: vi.fn(async () => ({ ...discussion, splitViewId: 7 })),
+            update: vi.fn(async () => ({ ...discussion })),
+            createSplit: vi.fn(async () => 7),
+        };
+    };
+
+    it('creates the first discussion directly in a native split', async () => {
+        const tabs = nativeTabs();
+        const store = createStore();
+        await expect(new DiscussionTabManager(tabs, store).open(40, '123'))
+            .resolves.toEqual({ mode: 'split_view', tabId: 91 });
+        expect(tabs.create).toHaveBeenCalledExactlyOnceWith({
+            active: true,
+            index: 5,
+            openerTabId: 40,
+            splitWithTabId: 40,
+            url: discussion.url,
+            windowId: 2,
+        });
+        expect(tabs.createSplit).not.toHaveBeenCalled();
+        expect(store.set).toHaveBeenCalledWith(40, 91);
+    });
+
+    it('falls back once without the native option when native creation rejects', async () => {
+        const tabs = nativeTabs();
+        vi.mocked(tabs.create).mockRejectedValueOnce(new Error('Split View is unavailable'))
+            .mockResolvedValueOnce(discussion);
+        await expect(new DiscussionTabManager(tabs, createStore()).open(40, '123'))
+            .resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+        expect(tabs.create).toHaveBeenCalledTimes(2);
+        expect(vi.mocked(tabs.create).mock.calls[1]?.[0]).not.toHaveProperty('splitWithTabId');
+    });
+
+    it('propagates a fallback failure without retrying or remembering a missing tab', async () => {
+        const tabs = nativeTabs();
+        const store = createStore();
+        const failure = new Error('Window was closed');
+        vi.mocked(tabs.create).mockRejectedValue(failure);
+        await expect(new DiscussionTabManager(tabs, store).open(40, '123')).rejects.toBe(failure);
+        expect(tabs.create).toHaveBeenCalledTimes(2);
+        expect(store.set).not.toHaveBeenCalled();
+    });
+
+    it('keeps the created tab if the browser ignores the native option', async () => {
+        const tabs = nativeTabs();
+        vi.mocked(tabs.create).mockResolvedValue(discussion);
+        await expect(new DiscussionTabManager(tabs, createStore()).open(40, '123'))
+            .resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+        expect(tabs.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not create a duplicate if native creation returns no tab identifier', async () => {
+        const tabs = nativeTabs();
+        const missingId = { index: 5, windowId: 2, splitViewId: 7 };
+        vi.mocked(tabs.create).mockResolvedValue(missingId);
+        await expect(new DiscussionTabManager(tabs, createStore()).open(40, '123'))
+            .rejects.toThrow('Chrome did not return an ID');
+        expect(tabs.create).toHaveBeenCalledTimes(1);
+    });
+
+    it('pairs a remembered adjacent discussion without creating another tab', async () => {
+        const tabs = nativeTabs();
+        await expect(new DiscussionTabManager(tabs, createStore(91)).open(40, '456'))
+            .resolves.toEqual({ mode: 'split_view', tabId: 91 });
+        expect(tabs.createSplit).toHaveBeenCalledExactlyOnceWith([40, 91]);
+        expect(tabs.update).toHaveBeenCalledWith(91, {
+            active: true,
+            url: 'https://news.ycombinator.com/item?id=456',
+        });
+        expect(tabs.create).not.toHaveBeenCalled();
+    });
+
+    it('reuses a remembered tab when pairing rejects incompatible tabs', async () => {
+        const tabs = nativeTabs();
+        vi.mocked(tabs.createSplit!).mockRejectedValue(new Error('Pinned/group state mismatch'));
+        await expect(new DiscussionTabManager(tabs, createStore(91)).open(40, '456'))
+            .resolves.toEqual({ mode: 'reused_tab', tabId: 91 });
+        expect(tabs.createSplit).toHaveBeenCalledOnce();
+        expect(tabs.create).not.toHaveBeenCalled();
+    });
+
+    it.each([
+        ['article already paired', { ...article, splitViewId: 8 }, discussion],
+        ['discussion already paired', article, { ...discussion, splitViewId: 9 }],
+        ['nonadjacent tabs', article, { ...discussion, index: 8 }],
+    ])('preserves placement when %s', async (_scenario, articleTab, discussionTab) => {
+        const tabs = nativeTabs();
+        vi.mocked(tabs.get).mockImplementation(async (id) => (id === 40 ? articleTab : discussionTab));
+        await expect(new DiscussionTabManager(tabs, createStore(91)).open(40, '456'))
+            .resolves.toEqual({ mode: 'reused_tab', tabId: 91 });
+        expect(tabs.createSplit).not.toHaveBeenCalled();
+        expect(tabs.create).not.toHaveBeenCalled();
+    });
+
+    it('does not try to replace an existing native pair when creating a discussion', async () => {
+        const tabs = nativeTabs();
+        vi.mocked(tabs.get).mockResolvedValue({ ...article, splitViewId: 8 });
+        vi.mocked(tabs.create).mockResolvedValue(discussion);
+        await expect(new DiscussionTabManager(tabs, createStore()).open(40, '123'))
+            .resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+        expect(vi.mocked(tabs.create).mock.calls[0]?.[0]).not.toHaveProperty('splitWithTabId');
+        expect(tabs.createSplit).not.toHaveBeenCalled();
+    });
+
+    it('does not create or pair another tab after a navigation failure', async () => {
+        const tabs = nativeTabs();
+        const failure = new Error('Navigation failed');
+        vi.mocked(tabs.update).mockRejectedValue(failure);
+        await expect(new DiscussionTabManager(tabs, createStore(91)).open(40, '456')).rejects.toBe(failure);
+        expect(tabs.create).not.toHaveBeenCalled();
+        expect(tabs.createSplit).not.toHaveBeenCalled();
+    });
+
+    it('serializes native opens and reuses the resulting pair', async () => {
+        const tabs = nativeTabs();
+        let splitViewId = -1;
+        vi.mocked(tabs.get).mockImplementation(async (id) => ({
+            ...(id === 40 ? article : discussion),
+            splitViewId,
+        }));
+        vi.mocked(tabs.create).mockImplementation(async () => {
+            splitViewId = 7;
+            return { ...discussion, splitViewId };
+        });
+        const manager = new DiscussionTabManager(tabs, createStore());
+        await expect(Promise.all([manager.open(40, '123'), manager.open(40, '456')]))
+            .resolves.toEqual([
+                { mode: 'split_view', tabId: 91 },
+                { mode: 'split_view', tabId: 91 },
+            ]);
+        expect(tabs.create).toHaveBeenCalledTimes(1);
+        expect(tabs.createSplit).not.toHaveBeenCalled();
+        expect(tabs.update).toHaveBeenCalledTimes(1);
+    });
+});

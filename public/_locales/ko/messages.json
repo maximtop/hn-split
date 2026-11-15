@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Hacker News 검색을 완료할 수 없습니다.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "토론 탭을 열 수 없습니다.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News 토론", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "첫 번째 검색 결과를 선택하면 인접한 탭이 열립니다. Chrome Split View로 기사와 나란히 배치하면 이후 선택은 해당 탭을 재사용합니다.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "지원되는 경우 브라우저의 기본 분할 보기에서 기사 옆에 토론을 열고, 그렇지 않으면 인접한 탭에서 엽니다. 이후 선택 시 같은 토론 탭을 다시 사용합니다.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "설정", "description": "Options page link" },
   "options_heading": { "message": "개인정보 보호 및 동작", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News 설정", "description": "Options browser-tab title" },

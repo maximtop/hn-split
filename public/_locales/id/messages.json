@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Pencarian Hacker News tidak dapat diselesaikan.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Tidak dapat membuka tab diskusi.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Diskusi Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Pilihan hasil pertama Anda membuka tab yang bersebelahan. Pasangkan dengan artikel menggunakan Chrome Split View; pilihan berikutnya akan menggunakan kembali tab itu.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Membuka diskusi di samping artikel dalam tampilan terbagi bawaan jika tersedia, atau di tab sebelahnya. Pilihan berikutnya menggunakan kembali tab diskusi.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Pengaturan", "description": "Options page link" },
   "options_heading": { "message": "Privasi dan perilaku", "description": "Options page heading" },
   "options_document_title": { "message": "Pengaturan Split for Hacker News", "description": "Options browser-tab title" },

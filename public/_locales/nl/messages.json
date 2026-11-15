@@ -17,7 +17,7 @@
   "lookup_error": { "message": "De Hacker News-zoekopdracht kon niet worden voltooid.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Kan het discussietabblad niet openen.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News-discussies", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "De eerste selectie van een resultaat opent een aangrenzend tabblad. Koppel het aan het artikel met Chrome Split View; latere selecties hergebruiken dat tabblad.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Opent de discussie naast het artikel in de ingebouwde gesplitste weergave als die beschikbaar is, anders in een aangrenzend tabblad. Latere selecties hergebruiken het discussietabblad.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Instellingen", "description": "Options page link" },
   "options_heading": { "message": "Privacy en gedrag", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News-instellingen", "description": "Options browser-tab title" },

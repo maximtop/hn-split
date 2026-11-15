@@ -17,7 +17,7 @@
   "lookup_error": { "message": "ไม่สามารถค้นหาบน Hacker News ให้เสร็จสิ้นได้", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "ไม่สามารถเปิดแท็บการสนทนาได้", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "การสนทนาบน Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "การเลือกผลลัพธ์แรกจะเปิดแท็บข้างเคียง จับคู่แท็บนั้นกับบทความด้วย Chrome Split View การเลือกครั้งถัดไปจะใช้แท็บเดิมซ้ำ", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "เปิดการสนทนาข้างบทความในมุมมองแยกในตัวของเบราว์เซอร์หากรองรับ มิฉะนั้นจะเปิดในแท็บข้างเคียง การเลือกครั้งต่อไปจะใช้แท็บการสนทนาเดิม", "description": "Split View usage guidance" },
   "availability_settings": { "message": "การตั้งค่า", "description": "Options page link" },
   "options_heading": { "message": "ความเป็นส่วนตัวและลักษณะการทำงาน", "description": "Options page heading" },
   "options_document_title": { "message": "การตั้งค่า Split for Hacker News", "description": "Options browser-tab title" },

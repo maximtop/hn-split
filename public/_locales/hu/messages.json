@@ -17,7 +17,7 @@
   "lookup_error": { "message": "A Hacker News-keresést nem sikerült befejezni.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "A vita lapja nem nyitható meg.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News-viták", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Az első találat kiválasztása egy szomszédos lapot nyit meg. Párosítsa a cikkel a Chrome Split View segítségével; a későbbi választások ezt a lapot használják újra.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Ha elérhető, a böngésző beépített osztott nézetében nyitja meg a beszélgetést a cikk mellett, egyébként a szomszédos lapon. A későbbi választások ugyanazt a beszélgetéslapot használják.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Beállítások", "description": "Options page link" },
   "options_heading": { "message": "Adatvédelem és működés", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News beállításai", "description": "Options browser-tab title" },
