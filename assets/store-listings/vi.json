@@ -6,7 +6,7 @@
         "bullets": [
             "Chọn một kết quả trong cửa sổ bật lên để mở các bình luận Hacker News tương ứng.",
             "Khớp URL chính xác — không đoán mò; các bản trùng lặp được liệt kê làm lựa chọn thay thế.",
-            "Lần đầu bạn chọn kết quả sẽ mở một thẻ liền kề; ghép thẻ đó với bài viết bằng Chrome Split View và các lựa chọn sau sẽ dùng lại ngăn đó.",
+            "Mở thảo luận cạnh bài viết trong chế độ chia đôi tích hợp nếu có, nếu không thì mở trong thẻ liền kề. Các lựa chọn sau dùng lại thẻ thảo luận.",
             "Hoặc mở cuộc thảo luận trong bảng bên của trình duyệt. Để nhúng trang Hacker News thật, Split tạm thời xóa các header chặn hiển thị trong khung chỉ khỏi phản hồi của khung con Hacker News trong khi bảng đang mở. Ngoại lệ áp dụng cho mọi khung con Hacker News trong hồ sơ trình duyệt, kể cả ngoài bảng điều khiển, và gỡ hạn chế tập lệnh CSP cho đến khi bảng cuối cùng đóng. Các trang cấp cao nhất và máy chủ khác không bị ảnh hưởng.",
             "Tùy chọn: khi bảng bên đã mở, tự động theo dõi các thẻ đang hoạt động; tính năng này tắt theo mặc định, hoặc dùng “Kiểm tra thẻ này” một lần. Tính năng không bao giờ mở hay sắp xếp lại thẻ và có thể duy trì tối đa ba cuộc thảo luận gần đây để quay lại nhanh hơn và cố gắng giữ vị trí cuộn.",
             "“Mở trong Split” trong menu chuột phải của liên kết: liên kết mở trong thẻ hiện tại và cuộc thảo luận Hacker News của nó mở trong bảng bên.",

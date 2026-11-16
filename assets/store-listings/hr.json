@@ -6,7 +6,7 @@
         "bullets": [
             "Odaberite rezultat u skočnom prozoru kako biste otvorili njegove komentare na Hacker Newsu.",
             "Točno podudaranje URL-a — bez približnih nagađanja; duplikati se prikazuju kao alternative.",
-            "Prvi odabir rezultata otvara susjednu karticu; uparite je s člankom pomoću Chrome Split Viewa i kasniji odabiri ponovno će koristiti to okno.",
+            "Otvara raspravu uz članak u ugrađenom podijeljenom prikazu ako je dostupan, inače na susjednoj kartici. Sljedeći odabiri ponovno koriste karticu rasprave.",
             "Ili otvorite raspravu u bočnoj ploči preglednika. Da bi ugradio stvarnu stranicu Hacker Newsa, Split privremeno uklanja zaglavlja koja onemogućuju uokvirivanje samo iz odgovora podokvira Hacker Newsa i samo dok je ploča otvorena. Iznimka obuhvaća sve podokvire Hacker Newsa u profilu preglednika, čak i izvan ploče, te uklanja ograničenja skripti CSP-a do zatvaranja posljednje ploče. Stranice najviše razine i ostali poslužitelji nisu pogođeni.",
             "Neobavezno: dok je bočna ploča već otvorena, automatski pratite aktivne kartice; funkcija je prema zadanim postavkama isključena, ili jednom upotrijebite „Provjeri ovu karticu”. Nikada ne otvara niti premješta kartice, a može zadržati aktivnima do tri nedavne rasprave radi bržeg povratka i očuvanja položaja pomicanja kad god je to moguće.",
             "„Otvori u Splitu“ u izborniku desnog klika na poveznicu: poveznica se otvara u trenutačnoj kartici, a njezina rasprava s Hacker Newsa u bočnoj ploči.",

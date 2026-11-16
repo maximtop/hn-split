@@ -173,7 +173,7 @@ test('clicking the primary result in the real popup opens exactly the primary it
         expect(reused.discussion.splitViewId).toBe(opened.discussions[0]?.splitViewId);
 
         if (opened.nativeAvailable) {
-            // Exercise createSplit on existing tabs after the browser removes their pairing.
+            // An explicit Unsplit remains in effect across subsequent result selections.
             await extension.worker.evaluate(async (splitViewId) => {
                 const nativeTabs = chrome.tabs as typeof chrome.tabs & {
                     unsplit(splitId: number): Promise<void>;
@@ -183,16 +183,27 @@ test('clicking the primary result in the real popup opens exactly the primary it
             await primaryButton.click();
             await expect.poll(() => extension?.context.pages().map((page) => page.url()) ?? [])
                 .toContain(primaryUrl);
-            await expect.poll(async () => extension!.worker.evaluate(async ([sourceId, discussionId]) => {
-                const source = await chrome.tabs.get(sourceId!);
-                const pane = await chrome.tabs.get(discussionId!);
-                return source.splitViewId !== undefined && source.splitViewId !== -1
-                    && source.splitViewId === pane.splitViewId;
-            }, [articleTabId, opened.discussions[0]!.id!])).toBe(true);
-            const countAfterPairing = await extension.worker.evaluate(async () => (
-                (await chrome.tabs.query({ currentWindow: true })).length
-            ));
-            expect(countAfterPairing).toBe(opened.count);
+            await expect(primaryButton).toBeEnabled();
+            const afterUnsplit = await extension.worker.evaluate(async ([sourceId, discussionId]) => ({
+                source: await chrome.tabs.get(sourceId!),
+                pane: await chrome.tabs.get(discussionId!),
+                count: (await chrome.tabs.query({ currentWindow: true })).length,
+            }), [articleTabId, opened.discussions[0]!.id!]);
+            expect(afterUnsplit.source.splitViewId).toBe(-1);
+            expect(afterUnsplit.pane.splitViewId).toBe(-1);
+            expect(afterUnsplit.pane.url).toBe(primaryUrl);
+            expect(afterUnsplit.count).toBe(opened.count);
+
+            await popup.getByRole('button', { name: enMessages.open_alternative.message }).click();
+            await expect.poll(() => extension?.context.pages().map((page) => page.url()) ?? [])
+                .toContain(alternativeUrl);
+            await expect(primaryButton).toBeEnabled();
+            const nextSelection = await extension.worker.evaluate(
+                async (tabId) => chrome.tabs.get(tabId),
+                opened.discussions[0]!.id!,
+            );
+            expect(nextSelection.splitViewId).toBe(-1);
+            expect(nextSelection.url).toBe(alternativeUrl);
         }
 
         await popup.close();

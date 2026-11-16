@@ -170,7 +170,7 @@ Chrome 155+ documents [`tabs.create({ splitWithTabId })` and `tabs.createSplit`]
 - **Discussion tab (popup):**
   1. An explicit result click creates the discussion beside its article in native Split View when the API is present and the article is not already paired. The browser inherits the article's group and pinned state.
   2. Without the API, or if native creation rejects, the same click opens a normal adjacent tab. A successful creation is never retried just because the browser returned no split ID.
-  3. Later clicks reuse the remembered discussion. An existing native pair is preserved. An unpaired, adjacent remembered discussion can be paired through `createSplit`; rejection retains ordinary tab reuse. The extension never moves tabs, changes groups or pinned states, or breaks another pair to make pairing possible.
+  3. Later clicks reuse the remembered discussion. An existing native pair is preserved. An unpaired remembered discussion stays unpaired, including after an explicit Unsplit and across service-worker restarts. Reuse only navigates the existing tab. The extension never moves tabs, changes groups or pinned states, or breaks another pair to make pairing possible.
 - **Side panel (popup button, or the opt-in article-click setting):** the discussion renders in Chrome's side panel beside the page, using the disclosed framing exception described above. Firefox Sidebar remains a separate flow.
 
 Both tab modes open the real Hacker News item without modifying the article page and remain available if Hacker News breaks framing. Native layout proportions remain browser-controlled. Native API failures emit a privacy-safe session diagnostic and retain the current fallback.

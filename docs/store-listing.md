@@ -62,7 +62,7 @@ string unchanged.
 
 ### Full description
 
-The master description, also applicable to Chrome 0.1.1: its release tag already contains following and retained discussions. The [public-copy handoff](public-copy.md) records the release evidence and publication/translation gates. Chrome uses this copy; Edge requires 250–10,000
+The master description follows the current source. Native Split View is part of the pending implementation, not a claim about already published store builds. The [public-copy handoff](public-copy.md) records the earlier release evidence and publication/translation gates. Chrome uses this copy; Edge requires 250–10,000
 characters (it fits); AMO and the App Store use it with browser-specific
 bullets re-cut to the shipped feature set of that port.
 
@@ -70,7 +70,7 @@ bullets re-cut to the shipped feature set of that port.
 >
 > - Select a result in the popup to open its Hacker News comments.
 > - Exact URL matching — no fuzzy guesses, duplicates are listed as alternatives.
-> - The first result selection opens an adjacent tab. You can pair it manually with the article using Chrome Split View; later selections reuse that tab. The extension does not create native Split View.
+> - Opens beside the article in native Split View when available, or in an adjacent tab otherwise. Later selections reuse the discussion tab.
 > - Or open the real Hacker News discussion in the side panel. While at least one panel is open, a temporary rule removes framing and CSP headers from all Hacker News sub-frame responses in that browser profile, including frames outside the panel. This also removes HN script restrictions inside those frames; top-level pages and other hosts are unaffected. The rule is removed after the last panel closes.
 > - Optional: while the side panel is already open, follow active tabs automatically; off by default, or use Check this tab once. It never opens or rearranges tabs, and may keep up to three recent discussions alive for faster return and best-effort scroll position.
 > - Open in Split in the link right-click menu: the link opens in the current tab and its Hacker News discussion opens in the side panel.
@@ -85,7 +85,7 @@ bullets re-cut to the shipped feature set of that port.
 > Privacy: https://github.com/maximtop/hn-split/blob/master/PRIVACY.md
 > Support: https://github.com/maximtop/hn-split/issues
 
-The English description now includes explicit open-source/backend claims, full framing scope, network/cookie disclosures, and trust links. The other 39 localized descriptions retain their earlier reviewed wording: translate and review this revision before publishing them together. Do not interpret their existing `reviewed` flags as approval of this new English revision.
+The English description now includes explicit open-source/backend claims, full framing scope, network/cookie disclosures, and trust links. The Split View bullet is synchronized across all 40 listings with the localized popup help. Other wording in the 39 non-English descriptions retains its earlier reviewed version: translate and review the remaining English revision before publishing them together. Do not interpret their existing `reviewed` flags as approval of this new English revision.
 
 ### Feature list
 

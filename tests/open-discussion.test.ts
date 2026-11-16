@@ -1,4 +1,5 @@
 import {
+    afterEach,
     describe,
     expect,
     it,
@@ -6,8 +7,16 @@ import {
 } from 'vitest';
 
 import { DiscussionTabManager } from '../src/browser/open-discussion';
+import { DIAGNOSTIC_EVENT } from '../src/shared/diagnostic-events';
+import { DIAGNOSTIC_ERROR, DIAGNOSTIC_LEVEL } from '../src/shared/diagnostics';
+import { setDiagnosticSink } from '../src/shared/logger';
+import { DISCUSSION_OPEN_MODE } from '../src/shared/messages';
 
 import type { SessionStore, TabClient } from '../src/browser/open-discussion';
+
+afterEach(() => {
+    setDiagnosticSink(undefined);
+});
 
 const createStore = (initial?: number): SessionStore & { value?: number } => {
     const store: SessionStore & { value?: number } = {
@@ -61,7 +70,7 @@ describe('DiscussionTabManager', () => {
             windowId: 2,
         });
         expect(store.set).toHaveBeenCalledWith(40, 91);
-        expect(result).toEqual({ mode: 'adjacent_tab', tabId: 91 });
+        expect(result).toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 91 });
     });
 
     it('reuses the remembered discussion tab and preserves native Split View', async () => {
@@ -99,7 +108,7 @@ describe('DiscussionTabManager', () => {
             url: 'https://news.ycombinator.com/item?id=456',
         });
         expect(tabs.create).not.toHaveBeenCalled();
-        expect(result).toEqual({ mode: 'split_view', tabId: 91 });
+        expect(result).toEqual({ mode: DISCUSSION_OPEN_MODE.SPLIT_VIEW, tabId: 91 });
     });
 
     it('serializes concurrent opens for the same article and creates only one tab', async () => {
@@ -133,8 +142,8 @@ describe('DiscussionTabManager', () => {
         resolveCreated?.({ id: 91, index: 5, windowId: 2 });
 
         await expect(Promise.all([first, second])).resolves.toEqual([
-            { mode: 'adjacent_tab', tabId: 91 },
-            { mode: 'reused_tab', tabId: 91 },
+            { mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 91 },
+            { mode: DISCUSSION_OPEN_MODE.REUSED_TAB, tabId: 91 },
         ]);
         expect(createsBeforeFirstCompleted).toBe(1);
         expect(tabs.create).toHaveBeenCalledTimes(1);
@@ -180,7 +189,7 @@ describe('DiscussionTabManager', () => {
             url: 'https://news.ycombinator.com/item?id=456',
         });
         expect(tabs.create).not.toHaveBeenCalled();
-        expect(result).toEqual({ mode: 'reused_tab', tabId: 91 });
+        expect(result).toEqual({ mode: DISCUSSION_OPEN_MODE.REUSED_TAB, tabId: 91 });
     });
 
     it('opens a replacement instead of taking over a tab navigated away from Hacker News', async () => {
@@ -216,7 +225,7 @@ describe('DiscussionTabManager', () => {
 
         expect(store.remove).toHaveBeenCalledWith(40);
         expect(store.set).toHaveBeenCalledWith(40, 92);
-        expect(result).toEqual({ mode: 'adjacent_tab', tabId: 92 });
+        expect(result).toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 92 });
     });
 
     it('keeps reusing a native Split View pane even after it left Hacker News', async () => {
@@ -255,7 +264,7 @@ describe('DiscussionTabManager', () => {
             url: 'https://news.ycombinator.com/item?id=456',
         });
         expect(tabs.create).not.toHaveBeenCalled();
-        expect(result).toEqual({ mode: 'split_view', tabId: 91 });
+        expect(result).toEqual({ mode: DISCUSSION_OPEN_MODE.SPLIT_VIEW, tabId: 91 });
     });
 
     it('creates a replacement when the remembered tab no longer exists', async () => {
@@ -286,7 +295,7 @@ describe('DiscussionTabManager', () => {
 
         expect(store.remove).toHaveBeenCalledWith(40);
         expect(store.set).toHaveBeenCalledWith(40, 92);
-        expect(result).toEqual({ mode: 'adjacent_tab', tabId: 92 });
+        expect(result).toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 92 });
     });
 
     it('reports success when the tab opened but remembering the association failed', async () => {
@@ -309,7 +318,7 @@ describe('DiscussionTabManager', () => {
         vi.mocked(store.set).mockRejectedValue(new Error('session storage unavailable'));
         const manager = new DiscussionTabManager(tabs, store);
 
-        await expect(manager.open(40, '123')).resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+        await expect(manager.open(40, '123')).resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 91 });
         expect(tabs.create).toHaveBeenCalledTimes(1);
     });
 
@@ -338,7 +347,7 @@ describe('DiscussionTabManager', () => {
         vi.mocked(store.remove).mockRejectedValue(new Error('session storage unavailable'));
         const manager = new DiscussionTabManager(tabs, store);
 
-        await expect(manager.open(40, '789')).resolves.toEqual({ mode: 'adjacent_tab', tabId: 92 });
+        await expect(manager.open(40, '789')).resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 92 });
         expect(store.set).toHaveBeenCalledWith(40, 92);
     });
 
@@ -397,7 +406,7 @@ describe('native Split View opening', () => {
         const tabs = nativeTabs();
         const store = createStore();
         await expect(new DiscussionTabManager(tabs, store).open(40, '123'))
-            .resolves.toEqual({ mode: 'split_view', tabId: 91 });
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.SPLIT_VIEW, tabId: 91 });
         expect(tabs.create).toHaveBeenCalledExactlyOnceWith({
             active: true,
             index: 5,
@@ -411,16 +420,25 @@ describe('native Split View opening', () => {
     });
 
     it('falls back once without the native option when native creation rejects', async () => {
+        const sink = vi.fn(async () => undefined);
+        setDiagnosticSink(sink);
         const tabs = nativeTabs();
         vi.mocked(tabs.create).mockRejectedValueOnce(new Error('Split View is unavailable'))
             .mockResolvedValueOnce(discussion);
         await expect(new DiscussionTabManager(tabs, createStore()).open(40, '123'))
-            .resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 91 });
         expect(tabs.create).toHaveBeenCalledTimes(2);
         expect(vi.mocked(tabs.create).mock.calls[1]?.[0]).not.toHaveProperty('splitWithTabId');
+        expect(sink).toHaveBeenCalledExactlyOnceWith({
+            level: DIAGNOSTIC_LEVEL.WARNING,
+            message: DIAGNOSTIC_EVENT.NATIVE_SPLIT_CREATION_FAILED,
+            details: { errorCategory: DIAGNOSTIC_ERROR.OTHER },
+        });
     });
 
     it('propagates a fallback failure without retrying or remembering a missing tab', async () => {
+        const sink = vi.fn(async () => undefined);
+        setDiagnosticSink(sink);
         const tabs = nativeTabs();
         const store = createStore();
         const failure = new Error('Window was closed');
@@ -428,13 +446,18 @@ describe('native Split View opening', () => {
         await expect(new DiscussionTabManager(tabs, store).open(40, '123')).rejects.toBe(failure);
         expect(tabs.create).toHaveBeenCalledTimes(2);
         expect(store.set).not.toHaveBeenCalled();
+        expect(sink).toHaveBeenCalledExactlyOnceWith({
+            level: DIAGNOSTIC_LEVEL.WARNING,
+            message: DIAGNOSTIC_EVENT.NATIVE_SPLIT_CREATION_FAILED,
+            details: { errorCategory: DIAGNOSTIC_ERROR.OTHER },
+        });
     });
 
     it('keeps the created tab if the browser ignores the native option', async () => {
         const tabs = nativeTabs();
         vi.mocked(tabs.create).mockResolvedValue(discussion);
         await expect(new DiscussionTabManager(tabs, createStore()).open(40, '123'))
-            .resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 91 });
         expect(tabs.create).toHaveBeenCalledTimes(1);
     });
 
@@ -447,28 +470,37 @@ describe('native Split View opening', () => {
         expect(tabs.create).toHaveBeenCalledTimes(1);
     });
 
-    it('pairs a remembered adjacent discussion without creating another tab', async () => {
+    it('preserves an explicit Unsplit across selections and manager recreation', async () => {
         const tabs = nativeTabs();
-        await expect(new DiscussionTabManager(tabs, createStore(91)).open(40, '456'))
-            .resolves.toEqual({ mode: 'split_view', tabId: 91 });
-        expect(tabs.createSplit).toHaveBeenCalledExactlyOnceWith([40, 91]);
-        expect(tabs.update).toHaveBeenCalledWith(91, {
+        const sink = vi.fn(async () => undefined);
+        setDiagnosticSink(sink);
+        let splitViewId = 7;
+        vi.mocked(tabs.get).mockImplementation(async (id) => ({
+            ...(id === 40 ? article : discussion),
+            splitViewId,
+        }));
+        const store = createStore(91);
+        const manager = new DiscussionTabManager(tabs, store);
+        await expect(manager.open(40, '123'))
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.SPLIT_VIEW, tabId: 91 });
+        splitViewId = -1;
+        await expect(manager.open(40, '456'))
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.REUSED_TAB, tabId: 91 });
+        await expect(new DiscussionTabManager(tabs, store).open(40, '789'))
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.REUSED_TAB, tabId: 91 });
+        expect(tabs.update).toHaveBeenLastCalledWith(91, {
             active: true,
-            url: 'https://news.ycombinator.com/item?id=456',
+            url: 'https://news.ycombinator.com/item?id=789',
         });
+        expect(tabs.createSplit).not.toHaveBeenCalled();
         expect(tabs.create).not.toHaveBeenCalled();
-    });
-
-    it('reuses a remembered tab when pairing rejects incompatible tabs', async () => {
-        const tabs = nativeTabs();
-        vi.mocked(tabs.createSplit!).mockRejectedValue(new Error('Pinned/group state mismatch'));
-        await expect(new DiscussionTabManager(tabs, createStore(91)).open(40, '456'))
-            .resolves.toEqual({ mode: 'reused_tab', tabId: 91 });
-        expect(tabs.createSplit).toHaveBeenCalledOnce();
-        expect(tabs.create).not.toHaveBeenCalled();
+        expect(sink).not.toHaveBeenCalled();
     });
 
     it.each([
+        ['unpaired adjacent tabs', article, discussion],
+        ['different groups', { ...article, groupId: 1 }, { ...discussion, groupId: 2 }],
+        ['different pinned states', { ...article, pinned: true }, { ...discussion, pinned: false }],
         ['article already paired', { ...article, splitViewId: 8 }, discussion],
         ['discussion already paired', article, { ...discussion, splitViewId: 9 }],
         ['nonadjacent tabs', article, { ...discussion, index: 8 }],
@@ -476,7 +508,7 @@ describe('native Split View opening', () => {
         const tabs = nativeTabs();
         vi.mocked(tabs.get).mockImplementation(async (id) => (id === 40 ? articleTab : discussionTab));
         await expect(new DiscussionTabManager(tabs, createStore(91)).open(40, '456'))
-            .resolves.toEqual({ mode: 'reused_tab', tabId: 91 });
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.REUSED_TAB, tabId: 91 });
         expect(tabs.createSplit).not.toHaveBeenCalled();
         expect(tabs.create).not.toHaveBeenCalled();
     });
@@ -486,7 +518,7 @@ describe('native Split View opening', () => {
         vi.mocked(tabs.get).mockResolvedValue({ ...article, splitViewId: 8 });
         vi.mocked(tabs.create).mockResolvedValue(discussion);
         await expect(new DiscussionTabManager(tabs, createStore()).open(40, '123'))
-            .resolves.toEqual({ mode: 'adjacent_tab', tabId: 91 });
+            .resolves.toEqual({ mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: 91 });
         expect(vi.mocked(tabs.create).mock.calls[0]?.[0]).not.toHaveProperty('splitWithTabId');
         expect(tabs.createSplit).not.toHaveBeenCalled();
     });
@@ -514,8 +546,8 @@ describe('native Split View opening', () => {
         const manager = new DiscussionTabManager(tabs, createStore());
         await expect(Promise.all([manager.open(40, '123'), manager.open(40, '456')]))
             .resolves.toEqual([
-                { mode: 'split_view', tabId: 91 },
-                { mode: 'split_view', tabId: 91 },
+                { mode: DISCUSSION_OPEN_MODE.SPLIT_VIEW, tabId: 91 },
+                { mode: DISCUSSION_OPEN_MODE.SPLIT_VIEW, tabId: 91 },
             ]);
         expect(tabs.create).toHaveBeenCalledTimes(1);
         expect(tabs.createSplit).not.toHaveBeenCalled();

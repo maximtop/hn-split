@@ -6,7 +6,7 @@
         "bullets": [
             "Pumili ng resulta sa popup para buksan ang mga komento nito sa Hacker News.",
             "Eksaktong pagtutugma ng URL — walang pahapyaw na hula; ang mga duplicate ay ipinapakita bilang mga alternatibo.",
-            "Ang una mong pagpili ng resulta ay nagbubukas ng katabing tab; ipares ito sa artikulo gamit ang Chrome Split View at gagamitin muli ng mga susunod na pagpili ang pane na iyon.",
+            "Binubuksan ang talakayan sa tabi ng artikulo sa katutubong Split View kung available, o sa katabing tab kung hindi. Ginagamit muli ng mga susunod na pagpili ang tab ng talakayan.",
             "O buksan ang talakayan sa side panel ng browser. Para i-embed ang tunay na pahina ng Hacker News, pansamantalang inaalis ng Split ang mga framing header mula lang sa mga tugon ng Hacker News sub-frame habang bukas ang panel. Saklaw ng pagbubukod ang lahat ng Hacker News subframe sa browser profile, pati sa labas ng panel, at inaalis nito ang mga paghihigpit sa script ng CSP hanggang isara ang huling panel. Hindi apektado ang mga pangunahing pahina at ibang host.",
             "Opsyonal: habang nakabukas na ang side panel, awtomatikong sundan ang mga aktibong tab; naka-off ito bilang default, o gamitin nang isang beses ang “Suriin ang tab na ito”. Hindi ito kailanman nagbubukas o nag-aayos muli ng mga tab, at maaari nitong panatilihing aktibo ang hanggang tatlong kamakailang talakayan para mas mabilis balikan at subukang mapanatili ang posisyon ng pag-scroll.",
             "“Buksan sa Split” sa right-click menu ng mga link: bubukas ang link sa kasalukuyang tab at bubukas ang talakayan nito sa Hacker News sa side panel.",

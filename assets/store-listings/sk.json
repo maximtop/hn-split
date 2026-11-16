@@ -6,7 +6,7 @@
         "bullets": [
             "Vyberte výsledok vo vyskakovacom okne a otvorte jeho komentáre na Hacker News.",
             "Presná zhoda URL — žiadne približné odhady; duplicity sa zobrazujú ako alternatívy.",
-            "Prvý výber výsledku otvorí susednú kartu; spárujte ju s článkom cez Chrome Split View a neskoršie výbery toto podokno znova použijú.",
+            "Otvorí diskusiu vedľa článku v natívnom rozdelenom zobrazení, ak je dostupné, inak na susednej karte. Ďalšie výbery znova použijú kartu diskusie.",
             "Alebo otvorte diskusiu v bočnom paneli prehliadača. Aby mohol vložiť skutočnú stránku Hacker News, Split dočasne odstraňuje hlavičky zakazujúce vkladanie iba z odpovedí podrámcov Hacker News a len kým je panel otvorený. Výnimka platí pre všetky podrámce Hacker News v profile prehliadača, aj mimo panela, a odstraňuje obmedzenia skriptov CSP až do zatvorenia posledného panela. Stránky najvyššej úrovne a ostatní hostitelia nie sú ovplyvnení.",
             "Voliteľné: kým je bočný panel už otvorený, automaticky sledujte aktívne karty; táto funkcia je predvolene vypnutá alebo jednorazovo použite „Skontrolovať túto kartu“. Nikdy neotvára ani nepresúva karty a môže ponechať aktívne až tri nedávne diskusie na rýchlejší návrat a zachovanie polohy posúvania, ak to bude možné.",
             "„Otvoriť v Splite“ v ponuke pravého tlačidla na odkaze: odkaz sa otvorí na aktuálnej karte a jeho diskusia na Hacker News v bočnom paneli.",

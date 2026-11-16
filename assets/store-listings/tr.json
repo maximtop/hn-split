@@ -6,7 +6,7 @@
         "bullets": [
             "Hacker News yorumlarını açmak için açılır pencerede bir sonuç seçin.",
             "Tam URL eşleşmesi — yaklaşık tahmin yok; kopyalar alternatif olarak listelenir.",
-            "İlk sonuç seçiminiz bitişik bir sekme açar; Chrome Split View ile makaleyle eşleştirin, sonraki seçimler o bölmeyi yeniden kullanır.",
+            "Destekleniyorsa tartışmayı tarayıcının yerleşik bölünmüş görünümünde makalenin yanında, aksi takdirde bitişik sekmede açar. Sonraki seçimler aynı tartışma sekmesini kullanır.",
             "Ya da tartışmayı tarayıcının yan panelinde açın. Split, gerçek Hacker News sayfasını gömmek için çerçevelemeyi engelleyen üstbilgileri geçici olarak yalnızca Hacker News alt çerçeve yanıtlarından ve yalnızca panel açıkken kaldırır. İstisna, panel dışındakiler de dahil olmak üzere tarayıcı profilindeki tüm Hacker News alt çerçevelerini kapsar ve son panel kapanana kadar CSP betik kısıtlamalarını kaldırır. Üst düzey sayfalar ve diğer sunucular etkilenmez.",
             "İsteğe bağlı: yan panel zaten açıkken etkin sekmeleri otomatik olarak takip edin; özellik varsayılan olarak kapalıdır veya “Bu sekmeyi kontrol et” seçeneğini bir kez kullanın. Sekmeleri asla açmaz veya yeniden düzenlemez; daha hızlı dönmek ve kaydırma konumunu mümkün olduğunca korumak için en fazla üç güncel tartışmayı etkin tutabilir.",
             "Bağlantıların sağ tıklama menüsünde “Split'te aç”: bağlantı geçerli sekmede, Hacker News tartışması ise yan panelde açılır.",

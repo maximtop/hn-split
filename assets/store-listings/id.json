@@ -6,7 +6,7 @@
         "bullets": [
             "Pilih hasil di popup untuk membuka komentar Hacker News-nya.",
             "Pencocokan URL yang tepat — tanpa tebakan samar; duplikat ditampilkan sebagai alternatif.",
-            "Pilihan hasil pertama Anda membuka tab yang bersebelahan; pasangkan dengan artikel menggunakan Chrome Split View dan pilihan berikutnya akan menggunakan kembali panel itu.",
+            "Membuka diskusi di samping artikel dalam tampilan terbagi bawaan jika tersedia, atau di tab sebelahnya. Pilihan berikutnya menggunakan kembali tab diskusi.",
             "Atau buka diskusi di panel samping browser. Untuk menyematkan halaman Hacker News yang sebenarnya, Split untuk sementara menghapus header yang memblokir penayangan dalam frame hanya dari respons subframe Hacker News selama panel terbuka. Pengecualian ini mencakup semua subframe Hacker News dalam profil browser, termasuk di luar panel, dan menghapus pembatasan skrip CSP hingga panel terakhir ditutup. Halaman tingkat atas dan host lain tidak terpengaruh.",
             "Opsional: saat panel samping sudah terbuka, ikuti tab aktif secara otomatis; fitur ini nonaktif secara default, atau gunakan “Periksa tab ini” satu kali. Fitur ini tidak pernah membuka atau mengatur ulang tab, dan dapat mempertahankan hingga tiga diskusi terbaru agar tetap aktif supaya Anda dapat kembali lebih cepat serta mempertahankan posisi gulir sebisa mungkin.",
             "“Buka di Split” di menu klik kanan tautan: tautan terbuka di tab saat ini dan diskusi Hacker News-nya terbuka di panel samping.",

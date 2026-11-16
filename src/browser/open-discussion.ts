@@ -97,8 +97,8 @@ export interface TabClient {
     }): Promise<TabSummary>;
 
     /**
-     * Pairs two existing adjacent tabs when the browser supports native creation.
-     * Its presence also gates the splitWithTabId creation option (Chrome 155+).
+     * Exposes the browser capability that gates splitWithTabId (Chrome 155+).
+     * Remembered discussions are never re-paired automatically.
      *
      * @param tabIds - The article and discussion tab identifiers.
      */
@@ -261,22 +261,12 @@ export class DiscussionTabManager {
                 && rememberedTab.windowId === article.windowId
                 && this.isStillDiscussionPane(article, rememberedTab)) {
                 await this.tabs.update(rememberedTabId, { active: true, url });
-                let paired = this.isSameSplitView(article, rememberedTab);
-                if (!paired
-                    && !this.hasSplitView(article)
-                    && !this.hasSplitView(rememberedTab)
-                    && Math.abs(article.index - rememberedTab.index) === 1
-                    && this.tabs.createSplit !== undefined) {
-                    try {
-                        await this.tabs.createSplit([articleTabId, rememberedTabId]);
-                        paired = true;
-                    } catch (error) {
-                        // Group/pinned mismatches or tab changes must not prevent reuse.
-                        logWarning(DIAGNOSTIC_EVENT.NATIVE_SPLIT_FAILED, error);
-                    }
-                }
+                // Preserve the user's layout, including an explicit Unsplit. Only a newly
+                // created discussion tab opts into native pairing; reuse only navigates.
                 return {
-                    mode: paired ? DISCUSSION_OPEN_MODE.SPLIT_VIEW : DISCUSSION_OPEN_MODE.REUSED_TAB,
+                    mode: this.isSameSplitView(article, rememberedTab)
+                        ? DISCUSSION_OPEN_MODE.SPLIT_VIEW
+                        : DISCUSSION_OPEN_MODE.REUSED_TAB,
                     tabId: rememberedTabId,
                 };
             }
@@ -300,7 +290,7 @@ export class DiscussionTabManager {
                 created = await this.tabs.create({ ...properties, splitWithTabId: articleTabId });
             } catch (error) {
                 // Older or restricted browser implementations retain the adjacent-tab flow.
-                logWarning(DIAGNOSTIC_EVENT.NATIVE_SPLIT_FAILED, error);
+                logWarning(DIAGNOSTIC_EVENT.NATIVE_SPLIT_CREATION_FAILED, error);
             }
         }
         created ??= await this.tabs.create(properties);

@@ -66,7 +66,7 @@ function discussionTabKey(articleTabId: number): string {
  */
 export const tabs: TabClient = {
     get createSplit() {
-        const nativeTabs: NativeSplitTabs = chrome.tabs as typeof chrome.tabs & NativeSplitTabs;
+        const nativeTabs = chrome.tabs as typeof chrome.tabs & NativeSplitTabs;
         return typeof nativeTabs.createSplit === 'function'
             ? nativeTabs.createSplit.bind(nativeTabs)
             : undefined;
