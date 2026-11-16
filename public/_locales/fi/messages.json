@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Hacker News -hakua ei voitu suorittaa loppuun.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Keskusteluvälilehteä ei voi avata.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News -keskustelut", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Ensimmäinen tulosvalintasi avaa viereisen välilehden. Yhdistä se artikkeliin Chrome Split View -toiminnolla; myöhemmät valinnat käyttävät samaa välilehteä.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Avaa keskustelun artikkelin viereen selaimen jaettuun näkymään, jos se on käytettävissä, muuten viereiseen välilehteen. Myöhemmät valinnat käyttävät samaa keskusteluvälilehteä.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Asetukset", "description": "Options page link" },
   "options_heading": { "message": "Tietosuoja ja toiminta", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker Newsin asetukset", "description": "Options browser-tab title" },

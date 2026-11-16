@@ -17,7 +17,7 @@
   "lookup_error": { "message": "La recherche Hacker News n’a pas pu aboutir.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Impossible d’ouvrir l’onglet de discussion.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Discussions Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "La première sélection d’un résultat ouvre un onglet adjacent. Associez-le à l’article avec Chrome Split View ; les sélections suivantes réutiliseront cet onglet.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Ouvre la discussion à côté de l’article dans la vue fractionnée native si elle est disponible, sinon dans un onglet adjacent. Les sélections suivantes réutilisent l’onglet de discussion.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Paramètres", "description": "Options page link" },
   "options_heading": { "message": "Confidentialité et comportement", "description": "Options page heading" },
   "options_document_title": { "message": "Paramètres de Split for Hacker News", "description": "Options browser-tab title" },

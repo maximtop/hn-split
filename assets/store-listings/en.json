@@ -6,7 +6,7 @@
         "bullets": [
             "Select a result in the popup to open its Hacker News comments.",
             "Exact URL matching — no fuzzy guesses, duplicates are listed as alternatives.",
-            "The first result selection opens an adjacent tab. You can pair it manually with the article using Chrome Split View; later selections reuse that tab. The extension does not create native Split View.",
+            "Opens beside the article in native Split View when available, or in an adjacent tab otherwise. Later selections reuse the discussion tab.",
             "Or open the real Hacker News discussion in the side panel. While at least one panel is open, a temporary rule removes framing and CSP headers from all Hacker News sub-frame responses in that browser profile, including frames outside the panel. This also removes HN script restrictions inside those frames; top-level pages and other hosts are unaffected. The rule is removed after the last panel closes.",
             "Optional: while the side panel is already open, follow active tabs automatically; off by default, or use Check this tab once. It never opens or rearranges tabs, and may keep up to three recent discussions alive for faster return and best-effort scroll position.",
             "Open in Split in the link right-click menu: the link opens in the current tab and its Hacker News discussion opens in the side panel.",

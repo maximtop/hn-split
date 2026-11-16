@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Hacker News-søgningen kunne ikke fuldføres.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Kan ikke åbne diskussionsfanen.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News-diskussioner", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Det første valg af et resultat åbner en tilstødende fane. Par den med artiklen via Chrome Split View; senere valg genbruger den fane.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Åbner diskussionen ved siden af artiklen i browserens delte visning, hvis den er tilgængelig, ellers i en nabofane. Senere valg genbruger diskussionsfanen.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Indstillinger", "description": "Options page link" },
   "options_heading": { "message": "Privatliv og adfærd", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News-indstillinger", "description": "Options browser-tab title" },

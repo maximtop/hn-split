@@ -6,7 +6,7 @@
         "bullets": [
             "Velg et resultat i popupvinduet for å åpne kommentarene på Hacker News.",
             "Nøyaktig URL-samsvar — ingen omtrentlige gjetninger; duplikater vises som alternativer.",
-            "Det første resultatvalget åpner en tilstøtende fane; koble den til artikkelen med Chrome Split View, og senere valg gjenbruker den fanen.",
+            "Åpner diskusjonen ved siden av artikkelen i nettleserens delte visning hvis den er tilgjengelig, ellers i en nabofane. Senere valg gjenbruker diskusjonsfanen.",
             "Eller åpne diskusjonen i nettleserens sidepanel. For å bygge inn den ekte Hacker News-siden fjerner Split midlertidig HTTP-hodene som blokkerer innramming, kun fra svar fra Hacker News-underrammer og kun mens et panel er åpent. Unntaket gjelder alle Hacker News-underrammer i nettleserprofilen, også utenfor panelet, og fjerner CSP-begrensninger for skript til det siste panelet lukkes. Sider på øverste nivå og andre verter påvirkes ikke.",
             "Valgfritt: Mens sidepanelet allerede er åpent, kan aktive faner følges automatisk. Funksjonen er av som standard, eller bruk «Sjekk denne fanen» én gang. Den åpner eller flytter aldri faner og kan holde opptil tre nylige diskusjoner aktive, slik at du kan gå raskere tilbake og beholde rulleposisjonen så langt det er mulig.",
             "«Åpne i Split» i høyreklikkmenyen for lenker: lenken åpnes i gjeldende fane, og dens Hacker News-diskusjon åpnes i sidepanelet.",

@@ -17,6 +17,7 @@ import {
     setSidePanelContent,
     setSidePanelFollowEnabled,
     sidePanelAssociations,
+    tabs,
 } from '../src/background/chrome-adapters';
 import { ARTICLE_CLICK_CONTENT_SCRIPT } from '../src/shared/content-scripts';
 import { SIDE_PANEL_ASSOCIATION_ORIGIN } from '../src/shared/side-panel-association';
@@ -290,5 +291,47 @@ describe('context menu registration failure reporting', () => {
             contexts: ['link'],
             targetUrlPatterns: ['http://*/*', 'https://*/*'],
         })).rejects.toThrow('Duplicate id');
+    });
+});
+
+describe('native Split View tab adapter', () => {
+    it.each([undefined, null, true])('does not expose a noncallable native API (%s)', (createSplit) => {
+        vi.stubGlobal('chrome', { tabs: { createSplit } });
+        expect(tabs.createSplit).toBeUndefined();
+    });
+
+    it('detects the callable API at use time and preserves its receiver', async () => {
+        const native = {
+            createSplit: vi.fn(async function pair(this: unknown, ids: [number, number]) {
+                expect(this).toBe(native);
+                expect(ids).toEqual([40, 91]);
+                return 7;
+            }),
+        };
+        vi.stubGlobal('chrome', { tabs: native });
+        await expect(tabs.createSplit?.([40, 91])).resolves.toBe(7);
+    });
+
+    it('passes native creation properties through and preserves the returned split ID', async () => {
+        const properties = {
+            active: true,
+            index: 5,
+            openerTabId: 40,
+            splitWithTabId: 40,
+            windowId: 2,
+            url: 'https://news.ycombinator.com/item?id=123',
+        };
+        const created = {
+
+            id: 91,
+            index: 5,
+            windowId: 2,
+            splitViewId: 7,
+            url: properties.url,
+        };
+        const create = vi.fn(async () => created);
+        vi.stubGlobal('chrome', { tabs: { create } });
+        await expect(tabs.create(properties)).resolves.toEqual(created);
+        expect(create).toHaveBeenCalledExactlyOnceWith(properties);
     });
 });

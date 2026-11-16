@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Vyhľadávanie na Hacker News sa nepodarilo dokončiť.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Kartu s diskusiou nie je možné otvoriť.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Diskusie na Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Prvý výber výsledku otvorí susednú kartu. Spárujte ju s článkom cez Chrome Split View; neskoršie výbery túto kartu znova použijú.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Otvorí diskusiu vedľa článku v natívnom rozdelenom zobrazení, ak je dostupné, inak na susednej karte. Ďalšie výbery znova použijú kartu diskusie.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Nastavenia", "description": "Options page link" },
   "options_heading": { "message": "Súkromie a správanie", "description": "Options page heading" },
   "options_document_title": { "message": "Nastavenia Split for Hacker News", "description": "Options browser-tab title" },

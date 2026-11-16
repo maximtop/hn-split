@@ -6,7 +6,7 @@
         "bullets": [
             "Avaa Hacker News -kommentit valitsemalla tulos ponnahdusikkunasta.",
             "Täsmällinen URL-vastaavuus — ei likimääräisiä arvauksia; kaksoiskappaleet näytetään vaihtoehtoina.",
-            "Ensimmäinen tulosvalintasi avaa viereisen välilehden; yhdistä se artikkeliin Chrome Split View -toiminnolla, ja myöhemmät valinnat käyttävät samaa ruutua.",
+            "Avaa keskustelun artikkelin viereen selaimen jaettuun näkymään, jos se on käytettävissä, muuten viereiseen välilehteen. Myöhemmät valinnat käyttävät samaa keskusteluvälilehteä.",
             "Voit myös avata keskustelun selaimen sivupaneelissa. Oikean Hacker News -sivun upottamiseksi Split poistaa kehystämisen estävät otsakkeet väliaikaisesti vain Hacker News -alikehysten vastauksista ja vain paneelin ollessa auki. Poikkeus koskee kaikkia selainprofiilin Hacker News -alikehyksiä, myös paneelin ulkopuolella, ja poistaa CSP:n skriptirajoitukset viimeisen paneelin sulkemiseen asti. Ylimmän tason sivuihin ja muihin palvelimiin se ei vaikuta.",
             "Valinnainen: kun sivupaneeli on jo auki, aktiivisia välilehtiä voidaan seurata automaattisesti. Toiminto on oletuksena pois käytöstä, tai voit käyttää kerran toimintoa ”Tarkista tämä välilehti”. Se ei koskaan avaa eikä järjestä välilehtiä uudelleen ja voi pitää enintään kolme viimeaikaista keskustelua aktiivisena nopeampaa paluuta ja vierityskohdan mahdollisuuksien mukaista säilyttämistä varten.",
             "”Avaa Splitissä” linkin hiiren oikean painikkeen valikossa: linkki avautuu nykyiseen välilehteen ja sen Hacker News -keskustelu sivupaneeliin.",

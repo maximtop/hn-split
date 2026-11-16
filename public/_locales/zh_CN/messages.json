@@ -17,7 +17,7 @@
   "lookup_error": { "message": "无法完成 Hacker News 搜索。", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "无法打开讨论标签页。", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News 讨论", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "首次选择结果会打开相邻标签页。使用 Chrome Split View 将其与文章并排；之后的选择将复用该标签页。", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "如果支持，将在浏览器原生分屏视图中于文章旁打开讨论，否则在相邻标签页中打开。后续选择会重复使用同一讨论标签页。", "description": "Split View usage guidance" },
   "availability_settings": { "message": "设置", "description": "Options page link" },
   "options_heading": { "message": "隐私和行为", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News 设置", "description": "Options browser-tab title" },

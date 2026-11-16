@@ -6,7 +6,7 @@
         "bullets": [
             "Sélectionnez un résultat dans la fenêtre contextuelle pour ouvrir ses commentaires Hacker News.",
             "Correspondance d'URL exacte — pas de devinettes approximatives ; les doublons sont proposés comme alternatives.",
-            "La première sélection d'un résultat ouvre un onglet adjacent ; associez-le à l'article avec Chrome Split View, et les sélections suivantes réutiliseront cet onglet.",
+            "Ouvre la discussion à côté de l’article dans la vue fractionnée native si elle est disponible, sinon dans un onglet adjacent. Les sélections suivantes réutilisent l’onglet de discussion.",
             "Ou ouvrez la discussion dans le panneau latéral du navigateur. Pour intégrer la véritable page Hacker News, Split retire temporairement les en-têtes qui empêchent l'affichage dans un cadre, uniquement des réponses des sous-cadres Hacker News et seulement tant qu'un panneau est ouvert. L’exception couvre tous les sous-cadres Hacker News du profil du navigateur, même hors du panneau, et supprime les restrictions de scripts CSP jusqu’à la fermeture du dernier panneau. Les pages de premier niveau et les autres hôtes ne sont pas affectés.",
             "Facultatif : tant que le panneau latéral est déjà ouvert, suivez automatiquement les onglets actifs ; cette fonction est désactivée par défaut, ou utilisez une fois « Vérifier cet onglet ». Elle n'ouvre ni ne réorganise jamais les onglets et peut conserver jusqu'à trois discussions récentes actives pour y revenir plus rapidement et préserver au mieux la position de défilement.",
             "« Ouvrir dans Split » dans le menu contextuel des liens : le lien s'ouvre dans l'onglet actuel et sa discussion Hacker News s'ouvre dans le panneau latéral.",

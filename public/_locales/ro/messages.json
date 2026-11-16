@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Căutarea pe Hacker News nu a putut fi finalizată.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Fila discuției nu poate fi deschisă.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Discuții pe Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Prima selectare a unui rezultat deschide o filă adiacentă. Asociați-o cu articolul folosind Chrome Split View; selecțiile ulterioare vor reutiliza acea filă.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Deschide discuția lângă articol în vizualizarea divizată nativă, dacă este disponibilă, altfel într-o filă alăturată. Selecțiile ulterioare reutilizează fila discuției.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Setări", "description": "Options page link" },
   "options_heading": { "message": "Confidențialitate și comportament", "description": "Options page heading" },
   "options_document_title": { "message": "Setările Split for Hacker News", "description": "Options browser-tab title" },

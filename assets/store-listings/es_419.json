@@ -6,7 +6,7 @@
         "bullets": [
             "Selecciona un resultado en la ventana emergente para abrir sus comentarios de Hacker News.",
             "Coincidencia exacta de URL — sin conjeturas aproximadas; los duplicados se muestran como alternativas.",
-            "La primera selección de un resultado abre una pestaña adyacente; emparéjala con el artículo mediante Chrome Split View y las selecciones posteriores reutilizarán esa pestaña.",
+            "Abre la discusión junto al artículo en la vista dividida nativa si está disponible; de lo contrario, en una pestaña adyacente. Las selecciones posteriores reutilizan la pestaña de discusión.",
             "O abre la discusión en el panel lateral del navegador. Para insertar la página real de Hacker News, Split elimina temporalmente los encabezados que impiden mostrarla en un marco únicamente de las respuestas de los submarcos de Hacker News mientras haya un panel abierto. La excepción abarca todos los submarcos de Hacker News del perfil del navegador, incluso fuera del panel, y elimina las restricciones de scripts de CSP hasta cerrar el último panel. Las páginas de nivel superior y los demás hosts no se ven afectados.",
             "Opcional: mientras el panel lateral ya esté abierto, puedes seguir automáticamente las pestañas activas; está desactivado de forma predeterminada, o usa «Revisar esta pestaña» una vez. Nunca abre ni reorganiza pestañas y puede mantener activas hasta tres conversaciones recientes para volver más rápido e intentar conservar la posición de desplazamiento.",
             "«Abrir en Split» en el menú del botón derecho de los enlaces: el enlace se abre en la pestaña actual y su discusión de Hacker News se abre en el panel lateral.",

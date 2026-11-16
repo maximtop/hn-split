@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Не вдалося завершити пошук на Hacker News.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Не вдалося відкрити вкладку обговорення.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Обговорення на Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Перший вибір результату відкриває сусідню вкладку. Поєднайте її зі статтею через Chrome Split View; наступні вибори використовуватимуть цю саму вкладку.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Відкриває обговорення поруч зі статтею у вбудованому розділеному поданні, якщо воно доступне, інакше — у сусідній вкладці. Наступні вибори використовують ту саму вкладку обговорення.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Налаштування", "description": "Options page link" },
   "options_heading": { "message": "Конфіденційність і поведінка", "description": "Options page heading" },
   "options_document_title": { "message": "Налаштування Split for Hacker News", "description": "Options browser-tab title" },

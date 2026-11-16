@@ -25,6 +25,19 @@ import type { SidePanelAssociationStorage } from '../browser/side-panel-associat
 import type { SidePanelProjection } from '../shared/side-panel-projection';
 
 /**
+ * Adds the documented Chrome 155 API missing from the pinned Chrome typings.
+ * https://developer.chrome.com/docs/extensions/reference/api/tabs#method-createSplit
+ */
+interface NativeSplitTabs {
+    /**
+     * Pairs compatible adjacent tabs, resolving to their native Split View ID.
+     *
+     * @param tabIds - The two existing tabs to pair.
+     */
+    createSplit?: (tabIds: [number, number]) => Promise<number>;
+}
+
+/**
  * Converts a Chrome tab into the fields used by discussion placement.
  *
  * @param tab - The Chrome tab to convert.
@@ -52,6 +65,12 @@ function discussionTabKey(articleTabId: number): string {
  * Adapts the Chrome tabs API to discussion-tab operations.
  */
 export const tabs: TabClient = {
+    get createSplit() {
+        const nativeTabs = chrome.tabs as typeof chrome.tabs & NativeSplitTabs;
+        return typeof nativeTabs.createSplit === 'function'
+            ? nativeTabs.createSplit.bind(nativeTabs)
+            : undefined;
+    },
     async get(tabId) {
         return toTabSummary(await chrome.tabs.get(tabId));
     },

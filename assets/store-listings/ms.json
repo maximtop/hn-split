@@ -6,7 +6,7 @@
         "bullets": [
             "Pilih hasil dalam pop timbul untuk membuka komen Hacker News yang berkaitan.",
             "Padanan URL yang tepat — tiada tekaan kasar; pendua dipaparkan sebagai alternatif.",
-            "Pilihan hasil pertama anda membuka tab bersebelahan; padankan dengan artikel menggunakan Chrome Split View dan pilihan seterusnya akan menggunakan semula anak tetingkap itu.",
+            "Membuka perbincangan di sebelah artikel dalam paparan terbahagi terbina dalam jika tersedia, atau dalam tab bersebelahan. Pilihan seterusnya menggunakan semula tab perbincangan.",
             "Atau buka perbincangan dalam panel sisi pelayar. Untuk membenamkan halaman Hacker News yang sebenar, Split mengalih keluar pengepala yang menyekat pembingkaian buat sementara waktu daripada respons subbingkai Hacker News sahaja semasa panel dibuka. Pengecualian ini meliputi semua subbingkai Hacker News dalam profil pelayar, termasuk di luar panel, dan membuang sekatan skrip CSP sehingga panel terakhir ditutup. Halaman peringkat teratas dan hos lain tidak terjejas.",
             "Pilihan: semasa panel sisi sudah dibuka, ikuti tab aktif secara automatik; ciri ini dimatikan secara lalai, atau gunakan “Semak tab ini” sekali. Ciri ini tidak pernah membuka atau menyusun semula tab dan boleh mengekalkan sehingga tiga perbincangan terkini agar aktif untuk kembali dengan lebih pantas serta mengekalkan kedudukan tatal sebaik mungkin.",
             "“Buka dalam Split” dalam menu klik kanan pautan: pautan dibuka dalam tab semasa dan perbincangan Hacker News-nya dibuka dalam panel sisi.",

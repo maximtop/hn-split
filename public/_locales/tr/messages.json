@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Hacker News araması tamamlanamadı.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Tartışma sekmesi açılamıyor.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News tartışmaları", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "İlk sonuç seçiminiz bitişik bir sekme açar. Chrome Split View ile makaleyle eşleştirin; sonraki seçimler o sekmeyi yeniden kullanır.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Destekleniyorsa tartışmayı tarayıcının yerleşik bölünmüş görünümünde makalenin yanında, aksi takdirde bitişik sekmede açar. Sonraki seçimler aynı tartışma sekmesini kullanır.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Ayarlar", "description": "Options page link" },
   "options_heading": { "message": "Gizlilik ve davranış", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News ayarları", "description": "Options browser-tab title" },

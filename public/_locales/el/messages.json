@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Η αναζήτηση στο Hacker News δεν ολοκληρώθηκε.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "Δεν είναι δυνατό το άνοιγμα της καρτέλας συζήτησης.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Συζητήσεις στο Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "Η πρώτη επιλογή αποτελέσματος ανοίγει μια γειτονική καρτέλα. Συνδέστε την με το άρθρο μέσω του Chrome Split View· οι επόμενες επιλογές θα επαναχρησιμοποιούν αυτήν την καρτέλα.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "Ανοίγει τη συζήτηση δίπλα στο άρθρο στην εγγενή διαιρεμένη προβολή, αν είναι διαθέσιμη, αλλιώς σε διπλανή καρτέλα. Οι επόμενες επιλογές χρησιμοποιούν ξανά την καρτέλα συζήτησης.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "Ρυθμίσεις", "description": "Options page link" },
   "options_heading": { "message": "Απόρρητο και συμπεριφορά", "description": "Options page heading" },
   "options_document_title": { "message": "Ρυθμίσεις Split for Hacker News", "description": "Options browser-tab title" },

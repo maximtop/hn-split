@@ -6,7 +6,7 @@
         "bullets": [
             "Kies een resultaat in de pop-up om de bijbehorende Hacker News-reacties te openen.",
             "Exacte URL-overeenkomst — geen vage gissingen; duplicaten worden als alternatieven getoond.",
-            "De eerste selectie van een resultaat opent een aangrenzend tabblad; koppel het aan het artikel met Chrome Split View, en latere selecties hergebruiken dat tabblad.",
+            "Opent de discussie naast het artikel in de ingebouwde gesplitste weergave als die beschikbaar is, anders in een aangrenzend tabblad. Latere selecties hergebruiken het discussietabblad.",
             "Of open de discussie in het zijpaneel van de browser. Om de echte Hacker News-pagina in te sluiten, verwijdert Split tijdelijk de headers die framing blokkeren, alleen uit reacties van Hacker News-subframes en alleen zolang een paneel open is. De uitzondering geldt voor alle Hacker News-subframes in het browserprofiel, ook buiten het paneel, en verwijdert CSP-scriptbeperkingen totdat het laatste paneel sluit. Pagina’s op het hoogste niveau en andere hosts worden niet beïnvloed.",
             "Optioneel: zolang het zijpaneel al is geopend, actieve tabbladen automatisch volgen; standaard uitgeschakeld, of gebruik ‘Dit tabblad controleren’ één keer. De functie opent of herschikt nooit tabbladen en kan maximaal drie recente discussies actief houden, zodat u sneller kunt terugkeren en de schuifpositie waar mogelijk behouden blijft.",
             "“Openen in Split” in het rechtsklikmenu van links: de link opent in het huidige tabblad en de bijbehorende Hacker News-discussie opent in het zijpaneel.",

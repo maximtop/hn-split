@@ -6,7 +6,7 @@
         "bullets": [
             "Selecione um resultado no pop-up para abrir os comentários dele no Hacker News.",
             "Correspondência exata de URL — sem palpites aproximados; duplicatas aparecem como alternativas.",
-            "A primeira seleção de um resultado abre uma aba adjacente; emparelhe essa aba com o artigo usando o Chrome Split View e as próximas seleções reutilizarão essa aba.",
+            "Abre a discussão ao lado do artigo na visualização dividida nativa, quando disponível, ou em uma aba adjacente. As próximas seleções reutilizam a aba da discussão.",
             "Ou abra a discussão no painel lateral do navegador. Para incorporar a página real do Hacker News, o Split remove temporariamente os cabeçalhos que impedem a exibição em frames apenas das respostas de subframes do Hacker News e apenas enquanto um painel estiver aberto. A exceção abrange todos os subframes do Hacker News no perfil do navegador, inclusive fora do painel, e remove as restrições de scripts da CSP até o último painel ser fechado. Páginas de nível superior e outros hosts não são afetados.",
             "Opcional: enquanto o painel lateral já estiver aberto, acompanhe automaticamente as abas ativas; o recurso vem desativado por padrão, ou use “Verificar esta aba” uma vez. Ele nunca abre nem reorganiza abas e pode manter até três discussões recentes ativas para você voltar mais rápido e preservar a posição da rolagem quando possível.",
             "“Abrir no Split” no menu do botão direito dos links: o link abre na aba atual e a discussão dele no Hacker News abre no painel lateral.",

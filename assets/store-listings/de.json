@@ -6,7 +6,7 @@
         "bullets": [
             "Wählen Sie im Pop-up ein Ergebnis aus, um dessen Hacker-News-Kommentare zu öffnen.",
             "Exakter URL-Abgleich — kein ungefähres Raten; Duplikate erscheinen als Alternativen.",
-            "Die erste Auswahl eines Ergebnisses öffnet einen benachbarten Tab; verbinden Sie ihn über Chrome Split View mit dem Artikel, und spätere Auswahlen verwenden diesen Tab erneut.",
+            "Öffnet die Diskussion neben dem Artikel in der nativen geteilten Ansicht, sofern verfügbar, sonst in einem benachbarten Tab. Weitere Auswahlen verwenden den Diskussionstab erneut.",
             "Oder öffnen Sie die Diskussion in der Seitenleiste des Browsers. Um die echte Hacker-News-Seite einzubetten, entfernt Split vorübergehend die Framing-Schutz-Header ausschließlich aus Antworten von Hacker-News-Unterframes und nur, solange eine Seitenleiste geöffnet ist. Die Ausnahme gilt für alle Hacker-News-Unterframes im Browserprofil, auch außerhalb des Panels, und entfernt die CSP-Skriptbeschränkungen, bis das letzte Panel geschlossen wird. Seiten der obersten Ebene und andere Hosts sind nicht betroffen.",
             "Optional: Solange die Seitenleiste bereits geöffnet ist, aktiven Tabs automatisch folgen; standardmäßig deaktiviert, alternativ einmal „Diesen Tab prüfen“ verwenden. Die Funktion öffnet oder verschiebt niemals Tabs und kann bis zu drei zuletzt verwendete Diskussionen aktiv halten, damit Sie schneller zurückkehren und die Scrollposition nach Möglichkeit erhalten bleibt.",
             "„In Split öffnen“ im Rechtsklickmenü von Links: Der Link öffnet sich im aktuellen Tab und seine Hacker-News-Diskussion in der Seitenleiste.",

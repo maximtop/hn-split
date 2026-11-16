@@ -17,7 +17,7 @@
   "lookup_error": { "message": "تعذّر إكمال البحث في Hacker News.", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "تعذّر فتح علامة تبويب المناقشة.", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "مناقشات Hacker News", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "يؤدي اختيارك الأول لإحدى النتائج إلى فتح علامة تبويب مجاورة. اربطها بالمقالة باستخدام Chrome Split View؛ وستعيد الاختيارات اللاحقة استخدام علامة التبويب نفسها.", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "يفتح النقاش بجانب المقال في العرض المقسّم الأصلي عند توفره، وإلا ففي علامة تبويب مجاورة. تستخدم الاختيارات اللاحقة علامة تبويب النقاش نفسها.", "description": "Split View usage guidance" },
   "availability_settings": { "message": "الإعدادات", "description": "Options page link" },
   "options_heading": { "message": "الخصوصية والسلوك", "description": "Options page heading" },
   "options_document_title": { "message": "إعدادات Split for Hacker News", "description": "Options browser-tab title" },

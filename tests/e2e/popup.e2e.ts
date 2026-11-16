@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+import enMessages from '../../public/_locales/en/messages.json' with { type: 'json' };
+
 import {
     ARTICLE_ORIGIN,
     installLookupFixtures,
@@ -82,7 +84,7 @@ test('clicking a search result in the real popup opens exactly that item, never 
         // every alternative button to the primary's item id (or vice versa)
         // must fail this test, not just a unit test of the button wiring.
         const popup = await openPopupForArticleTab(extension, articleTabId);
-        const alternativeButton = popup.getByRole('button', { name: /Open alternative/ });
+        const alternativeButton = popup.getByRole('button', { name: enMessages.open_alternative.message });
         await expect(alternativeButton).toBeVisible();
         await alternativeButton.click();
 
@@ -138,6 +140,71 @@ test('clicking the primary result in the real popup opens exactly the primary it
         await expect.poll(() => extension?.context.pages().map((page) => page.url()) ?? [])
             .toContain(primaryUrl);
         expect(extension.context.pages().some((page) => page.url() === alternativeUrl)).toBe(false);
+
+        const opened = await extension.worker.evaluate(async ({ sourceId, url }) => {
+            const allTabs = await chrome.tabs.query({ currentWindow: true });
+            return {
+                nativeAvailable: typeof (chrome.tabs as { createSplit?: unknown }).createSplit === 'function',
+                article: allTabs.find(({ id }) => id === sourceId),
+                discussions: allTabs.filter((tab) => tab.url === url),
+                count: allTabs.length,
+            };
+        }, { sourceId: articleTabId, url: primaryUrl });
+        test.info().annotations.push(
+            { type: 'browser-version', description: extension.context.browser()?.version() ?? 'unknown' },
+            { type: 'native-split-api', description: String(opened.nativeAvailable) },
+        );
+        expect(opened.discussions).toHaveLength(1);
+        if (opened.nativeAvailable) {
+            expect(opened.article?.splitViewId).toBeGreaterThanOrEqual(0);
+            expect(opened.discussions[0]?.splitViewId).toBe(opened.article?.splitViewId);
+        }
+
+        // A second real result click must navigate the same pane, not create a duplicate.
+        await popup.getByRole('button', { name: enMessages.open_alternative.message }).click();
+        await expect.poll(() => extension?.context.pages().map((page) => page.url()) ?? [])
+            .toContain(alternativeUrl);
+        const reused = await extension.worker.evaluate(async (tabId) => ({
+            discussion: await chrome.tabs.get(tabId),
+            count: (await chrome.tabs.query({ currentWindow: true })).length,
+        }), opened.discussions[0]!.id!);
+        expect(reused.discussion.url).toBe(alternativeUrl);
+        expect(reused.count).toBe(opened.count);
+        expect(reused.discussion.splitViewId).toBe(opened.discussions[0]?.splitViewId);
+
+        if (opened.nativeAvailable) {
+            // An explicit Unsplit remains in effect across subsequent result selections.
+            await extension.worker.evaluate(async (splitViewId) => {
+                const nativeTabs = chrome.tabs as typeof chrome.tabs & {
+                    unsplit(splitId: number): Promise<void>;
+                };
+                await nativeTabs.unsplit(splitViewId);
+            }, opened.article!.splitViewId!);
+            await primaryButton.click();
+            await expect.poll(() => extension?.context.pages().map((page) => page.url()) ?? [])
+                .toContain(primaryUrl);
+            await expect(primaryButton).toBeEnabled();
+            const afterUnsplit = await extension.worker.evaluate(async ([sourceId, discussionId]) => ({
+                source: await chrome.tabs.get(sourceId!),
+                pane: await chrome.tabs.get(discussionId!),
+                count: (await chrome.tabs.query({ currentWindow: true })).length,
+            }), [articleTabId, opened.discussions[0]!.id!]);
+            expect(afterUnsplit.source.splitViewId).toBe(-1);
+            expect(afterUnsplit.pane.splitViewId).toBe(-1);
+            expect(afterUnsplit.pane.url).toBe(primaryUrl);
+            expect(afterUnsplit.count).toBe(opened.count);
+
+            await popup.getByRole('button', { name: enMessages.open_alternative.message }).click();
+            await expect.poll(() => extension?.context.pages().map((page) => page.url()) ?? [])
+                .toContain(alternativeUrl);
+            await expect(primaryButton).toBeEnabled();
+            const nextSelection = await extension.worker.evaluate(
+                async (tabId) => chrome.tabs.get(tabId),
+                opened.discussions[0]!.id!,
+            );
+            expect(nextSelection.splitViewId).toBe(-1);
+            expect(nextSelection.url).toBe(alternativeUrl);
+        }
 
         await popup.close();
         await article.close();

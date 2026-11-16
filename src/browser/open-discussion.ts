@@ -1,12 +1,16 @@
 /**
- * @file Opens a Hacker News discussion next to its article tab, reusing the remembered discussion tab or native
- * Split View pane when one still exists, and serializes opens per article tab.
+ * @file Opens a Hacker News discussion in native Split View when available, with adjacent-tab fallback,
+ * remembered discussion reuse, and per-article serialization.
  */
 
 import { discussionUrl, isHnUrl } from '../domain/hn';
+import { DIAGNOSTIC_EVENT } from '../shared/diagnostic-events';
+import { logWarning } from '../shared/logger';
 import { DISCUSSION_OPEN_MODE } from '../shared/messages';
 
 import type { OpenDiscussionResult } from '../shared/messages';
+
+const NO_SPLIT_VIEW_ID = -1;
 
 /**
  * Describes the tab fields needed for discussion placement and reuse.
@@ -58,6 +62,7 @@ export interface TabClient {
      * @param properties.openerTabId - The article tab that opens the new tab.
      * @param properties.url - The discussion URL the new tab loads.
      * @param properties.windowId - The browser window that receives the new tab.
+     * @param properties.splitWithTabId - The optional article to pair with using native Split View.
      */
     create(properties: {
         /**
@@ -84,7 +89,20 @@ export interface TabClient {
          * Identifies the browser window that receives the new tab.
          */
         windowId: number;
+
+        /**
+         * Identifies the article to pair with when native Split View is available.
+         */
+        splitWithTabId?: number;
     }): Promise<TabSummary>;
+
+    /**
+     * Exposes the browser capability that gates splitWithTabId (Chrome 155+).
+     * Remembered discussions are never re-paired automatically.
+     *
+     * @param tabIds - The article and discussion tab identifiers.
+     */
+    createSplit?: ((tabIds: [number, number]) => Promise<number>) | undefined;
 
     /**
      * Navigates and activates an existing browser tab, resolving only after
@@ -181,14 +199,22 @@ export class DiscussionTabManager {
     }
 
     /**
+     * Reports whether a tab already belongs to a native Split View.
+     *
+     * @param tab - The tab whose pairing is checked.
+     */
+    private hasSplitView(tab: TabSummary): boolean {
+        return tab.splitViewId !== undefined && tab.splitViewId !== NO_SPLIT_VIEW_ID;
+    }
+
+    /**
      * Determines whether two tabs are paired in the same native Split View.
      *
      * @param article - The article tab.
      * @param discussion - The discussion tab to compare against it.
      */
     private isSameSplitView(article: TabSummary, discussion: TabSummary): boolean {
-        return article.splitViewId !== undefined
-            && article.splitViewId !== -1
+        return this.hasSplitView(article)
             && article.splitViewId === discussion.splitViewId;
     }
 
@@ -235,6 +261,8 @@ export class DiscussionTabManager {
                 && rememberedTab.windowId === article.windowId
                 && this.isStillDiscussionPane(article, rememberedTab)) {
                 await this.tabs.update(rememberedTabId, { active: true, url });
+                // Preserve the user's layout, including an explicit Unsplit. Only a newly
+                // created discussion tab opts into native pairing; reuse only navigates.
                 return {
                     mode: this.isSameSplitView(article, rememberedTab)
                         ? DISCUSSION_OPEN_MODE.SPLIT_VIEW
@@ -249,13 +277,23 @@ export class DiscussionTabManager {
             }
         }
 
-        const created = await this.tabs.create({
+        const properties = {
             active: true,
             index: article.index + 1,
             openerTabId: articleTabId,
             url,
             windowId: article.windowId,
-        });
+        };
+        let created: TabSummary | undefined;
+        if (!this.hasSplitView(article) && this.tabs.createSplit !== undefined) {
+            try {
+                created = await this.tabs.create({ ...properties, splitWithTabId: articleTabId });
+            } catch (error) {
+                // Older or restricted browser implementations retain the adjacent-tab flow.
+                logWarning(DIAGNOSTIC_EVENT.NATIVE_SPLIT_CREATION_FAILED, error);
+            }
+        }
+        created ??= await this.tabs.create(properties);
         if (created.id === undefined) {
             throw new Error('Chrome did not return an ID for the discussion tab');
         }
@@ -265,6 +303,9 @@ export class DiscussionTabManager {
             // The discussion tab is already visible, so the open succeeded;
             // losing the association only downgrades the next open to a new tab.
         }
-        return { mode: DISCUSSION_OPEN_MODE.ADJACENT_TAB, tabId: created.id };
+        return {
+            mode: this.hasSplitView(created) ? DISCUSSION_OPEN_MODE.SPLIT_VIEW : DISCUSSION_OPEN_MODE.ADJACENT_TAB,
+            tabId: created.id,
+        };
     }
 }

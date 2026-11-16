@@ -17,7 +17,7 @@
   "lookup_error": { "message": "Hacker News खोज पूरी नहीं हो सकी।", "description": "Lookup failure status" },
   "open_discussion_failed": { "message": "चर्चा टैब नहीं खोला जा सका।", "description": "Discussion tab opening failure" },
   "discussion_results": { "message": "Hacker News चर्चाएँ", "description": "Discussion result list accessible label" },
-  "split_view_help": { "message": "पहला परिणाम चुनने पर बगल में एक टैब खुलता है। उसे Chrome Split View से लेख के साथ जोड़ें; बाद के चयन उसी टैब का फिर से उपयोग करेंगे।", "description": "Split View usage guidance" },
+  "split_view_help": { "message": "उपलब्ध होने पर चर्चा को ब्राउज़र के मूल स्प्लिट व्यू में लेख के बगल में खोलता है, अन्यथा पास वाले टैब में। अगले चयन उसी चर्चा टैब का उपयोग करते हैं।", "description": "Split View usage guidance" },
   "availability_settings": { "message": "सेटिंग", "description": "Options page link" },
   "options_heading": { "message": "गोपनीयता और व्यवहार", "description": "Options page heading" },
   "options_document_title": { "message": "Split for Hacker News सेटिंग", "description": "Options browser-tab title" },

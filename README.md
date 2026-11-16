@@ -11,7 +11,7 @@ Find the Hacker News discussion behind the article you are reading, then open it
 ## Highlights
 
 - **Exact discussions, not fuzzy guesses.** URL candidates are normalized conservatively, every result is verified, and duplicate submissions remain available as alternatives.
-- **Choose the reading flow.** Open comments in Chrome's side panel, or use an adjacent discussion tab. You pair the tabs manually with Chrome Split View; the extension does not create that layout.
+- **Choose the reading flow.** Open comments in Chrome's side panel, or open a discussion tab beside the article. When the browser exposes the native Split View API (Chrome 155+), the extension pairs the tabs automatically. Otherwise, or if pairing fails, it keeps the adjacent-tab flow; you can pair the tabs manually. Later selections reuse the discussion tab and preserve its layout, including after you unsplit it.
 - **Useful shortcuts, only when you ask.** Use **Open in Split** on a link, opt in to opening discussions beside Hacker News story clicks, or enable a comment-count toolbar badge.
 - **An active companion when you want one.** An already-open side panel can follow active tabs automatically, or **Check this tab** can inspect one tab without changing the preference. Following is separate from the toolbar badge and off by default.
 - **Fast return, best effort.** The panel can keep up to three recent real Hacker News discussions alive in memory, so switching back usually preserves the browser-managed position until eviction, reconnect, reload, or memory pressure resets it.

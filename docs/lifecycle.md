@@ -16,18 +16,19 @@ These rules bound every row of the matrices below:
 
 ## Flow A — discussion tab (popup click, adjacent tab or native Split View)
 
-The pairing is **tab-scoped, not article-scoped**: the discussion tab is "this reading tab's companion pane". The association `articleTabId → discussionTabId` lives in session storage and changes the world only when the user clicks the comments action.
+The pairing is **tab-scoped, not article-scoped**: the discussion tab is "this reading tab's companion pane". The association `articleTabId → discussionTabId` lives in session storage and changes the world only when the user clicks the comments action. A new discussion uses native Split View when the creation API is available and the article is unpaired; absent support or a rejected native creation falls back to an adjacent tab. Reusing a discussion only navigates that tab and preserves the current layout.
 
 | Event | Stored association | Tabs | What the user sees |
 | --- | --- | --- | --- |
 | Article tab closed | Discarded (`tabs.onRemoved`) | Discussion tab untouched | Nothing moves; the comments tab lives on as an ordinary tab |
-| Discussion tab closed | Entry goes stale; discarded on the next click when `tabs.get` fails | Never recreated automatically | Nothing until the next click, which opens a fresh adjacent tab |
-| Article tab navigates (any URL, Back/Forward) | Preserved | None now | The next click swaps the same companion pane to the new discussion; a hand-built Split View pair survives, since Chrome has no API to recreate one |
+| Discussion tab closed | Entry goes stale; discarded on the next click when `tabs.get` fails | Never recreated automatically | Nothing until the next click, which opens a fresh discussion tab (native Split View when available, otherwise adjacent) |
+| Article tab navigates (any URL, Back/Forward) | Preserved | None now | The next click swaps the same companion pane to the new discussion; an existing native pair survives; an unpaired companion stays unpaired |
+| User chooses Unsplit | Preserved | No automatic re-pairing, including after a worker restart | Later selections reuse the same full-width discussion tab |
 | Discussion tab navigates within Hacker News | Preserved | None now | The next click reuses the pane |
-| Discussion tab navigates off Hacker News | Discarded at the next click, unless the tab is in a native Split View with the article | The repurposed tab is left alone; the click opens a fresh adjacent tab | A tab taken over for something else is never yanked back to Hacker News |
-| Discussion tab moved to another window | Discarded at the next click | The click opens a fresh adjacent tab in the article's window | Focus never jumps to another window |
+| Discussion tab navigates off Hacker News | Discarded at the next click, unless the tab is in a native Split View with the article | The repurposed tab is left alone; the click opens a fresh discussion tab (native Split View when available, otherwise adjacent) | A tab taken over for something else is never yanked back to Hacker News |
+| Discussion tab moved to another window | Discarded at the next click | The click opens a fresh discussion tab (native Split View when available, otherwise adjacent) in the article's window | Focus never jumps to another window |
 | Window or session close and restore | Gone with session storage (tab IDs change anyway) | Restored tabs are ordinary tabs | The first click after a restore behaves like a first click |
-| Comments click | Reuse when the remembered tab is alive, in the same window, and still the pane (rules above); otherwise discard and create one adjacent tab | Opens per click are serialized per article tab | One companion pane per reading tab; no duplicate discussions |
+| Comments click | Reuse when the remembered tab is alive, in the same window, and still the pane (rules above); otherwise discard and create one discussion tab with native creation or adjacent fallback | Opens per click are serialized per article tab | One companion pane per reading tab; no duplicate discussions |
 
 ## Flow B — side panel
 

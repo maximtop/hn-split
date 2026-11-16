@@ -6,7 +6,7 @@
         "bullets": [
             "Wybierz wynik w wyskakującym oknie, aby otworzyć jego komentarze na Hacker News.",
             "Dokładne dopasowanie URL — bez przybliżonych domysłów; duplikaty są pokazywane jako alternatywy.",
-            "Pierwszy wybór wyniku otwiera sąsiednią kartę; połącz ją z artykułem za pomocą Chrome Split View, a kolejne wybory ponownie użyją tego obszaru widoku dzielonego.",
+            "Otwiera dyskusję obok artykułu we wbudowanym widoku podzielonym, jeśli jest dostępny, a w przeciwnym razie na sąsiedniej karcie. Kolejne wybory używają tej samej karty dyskusji.",
             "Możesz też otworzyć dyskusję w panelu bocznym przeglądarki. Aby osadzić prawdziwą stronę Hacker News, Split tymczasowo usuwa nagłówki blokujące osadzanie wyłącznie z odpowiedzi ramek podrzędnych Hacker News i tylko wtedy, gdy panel jest otwarty. Wyjątek obejmuje wszystkie podramki Hacker News w profilu przeglądarki, także poza panelem, i usuwa ograniczenia skryptów CSP do zamknięcia ostatniego panelu. Nie wpływa na strony najwyższego poziomu ani innych hostów.",
             "Opcjonalnie: gdy panel boczny jest już otwarty, automatycznie śledź aktywne karty; funkcja jest domyślnie wyłączona, możesz też jednorazowo użyć opcji „Sprawdź tę kartę”. Nigdy nie otwiera ani nie zmienia kolejności kart i może utrzymać aktywność maksymalnie trzech ostatnich dyskusji, aby umożliwić szybszy powrót i w miarę możliwości zachować pozycję przewijania.",
             "„Otwórz w Split” w menu prawego przycisku na linku: link otwiera się w bieżącej karcie, a jego dyskusja z Hacker News — w panelu bocznym.",

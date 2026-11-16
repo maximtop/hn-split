@@ -6,7 +6,7 @@
         "bullets": [
             "Selectați un rezultat în fereastra pop-up pentru a deschide comentariile sale de pe Hacker News.",
             "Potrivire exactă a URL-ului — fără presupuneri aproximative; duplicatele sunt afișate ca alternative.",
-            "Prima selectare a unui rezultat deschide o filă adiacentă; asociați-o cu articolul folosind Chrome Split View, iar selecțiile ulterioare vor reutiliza acea filă.",
+            "Deschide discuția lângă articol în vizualizarea divizată nativă, dacă este disponibilă, altfel într-o filă alăturată. Selecțiile ulterioare reutilizează fila discuției.",
             "Sau deschideți discuția în panoul lateral al browserului. Pentru a încorpora pagina Hacker News reală, Split elimină temporar antetele care blochează încadrarea numai din răspunsurile subcadrelor Hacker News și numai cât timp este deschis un panou. Excepția acoperă toate subcadrele Hacker News din profilul browserului, inclusiv în afara panoului, și elimină restricțiile CSP pentru scripturi până la închiderea ultimului panou. Paginile de nivel superior și celelalte gazde nu sunt afectate.",
             "Opțional: cât timp panoul lateral este deja deschis, urmăriți automat filele active; funcția este dezactivată în mod implicit sau utilizați o singură dată „Verificați această filă”. Nu deschide și nu rearanjează niciodată filele și poate păstra active până la trei discuții recente pentru a reveni mai rapid și a păstra, atunci când este posibil, poziția de derulare.",
             "„Deschide în Split” în meniul de clic dreapta al linkurilor: linkul se deschide în fila curentă, iar discuția lui de pe Hacker News se deschide în panoul lateral.",

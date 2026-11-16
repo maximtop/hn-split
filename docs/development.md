@@ -45,7 +45,7 @@ pnpm test:e2e
 pnpm verify
 ```
 
-`pnpm dev` produces a one-shot development build; pass `--watch` (`pnpm dev --watch`) to rebuild on file changes. `pnpm build` creates the unpacked extension with Rspack. `test:e2e` builds the extension, launches Playwright's Chromium with `build/chrome` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, automatic-badge lifecycle, the real background lookup, adjacent/reused discussion-tab behavior, article-click registration, and side-panel consent, active-tab synchronization, newest-target wins, retained-frame visibility, and framing cleanup. It does not claim to create native Chrome Split View or prove browser-managed scroll preservation and native global-panel focus behavior; those require the documented manual Chrome checks.
+`pnpm dev` produces a one-shot development build; pass `--watch` (`pnpm dev --watch`) to rebuild on file changes. `pnpm build` creates the unpacked extension with Rspack. `test:e2e` builds the extension, launches Playwright's Chromium with `build/chrome` loaded as an unpacked MV3 extension, serves deterministic article and Hacker News fixtures, and verifies required `tabs` access, automatic-badge lifecycle, the real background lookup, native Split View or adjacent/reused discussion-tab behavior, article-click registration, and side-panel consent, active-tab synchronization, newest-target wins, retained-frame visibility, and framing cleanup. The discussion tests detect the runtime API and assert native pairing when available, or adjacent-tab fallback otherwise. Set `HN_SPLIT_CHROMIUM_EXECUTABLE` to an absolute Chrome for Testing executable path to run the same suite on versions before and after Chrome 155. Browser-managed scroll preservation and native global-panel focus behavior still require the documented manual Chrome checks.
 
 `pnpm locales:validate` verifies that every locale has the English message keys and that placeholders and tags are structurally valid according to `@adguard/translate`.
 
@@ -165,15 +165,15 @@ worker start by clearing first and creating again.
 
 ## Split View behavior
 
-Chrome 140 documents `Tab.splitViewId`, Split View queries, and Split View update events, but does not document a `tabs.create` option that creates a Split View (an explicit creation API is still an open upstream proposal, [w3c/webextensions#967](https://github.com/w3c/webextensions/issues/967)). HN Split therefore offers two side-by-side flows built only on documented behavior:
+Chrome 155+ documents [`tabs.create({ splitWithTabId })` and `tabs.createSplit`](https://developer.chrome.com/docs/extensions/reference/api/tabs). HN Split detects the callable `createSplit` method at runtime; `Tab.splitViewId` alone is not a creation capability. The extension's minimum Chrome version and permissions remain unchanged.
 
-- **Adjacent tab (popup):**
-  1. The first explicit discussion click opens a normal adjacent tab.
-  2. The user can place the article and discussion tabs into native Chrome Split View.
-  3. HN Split remembers and reuses that discussion tab, so subsequent explicit selections preserve the browser-managed Split View.
-- **Side panel (popup button, or the opt-in article-click setting):** the discussion renders in Chrome's side panel beside the page, using the disclosed framing exception described above.
+- **Discussion tab (popup):**
+  1. An explicit result click creates the discussion beside its article in native Split View when the API is present and the article is not already paired. The browser inherits the article's group and pinned state.
+  2. Without the API, or if native creation rejects, the same click opens a normal adjacent tab. A successful creation is never retried just because the browser returned no split ID.
+  3. Later clicks reuse the remembered discussion. An existing native pair is preserved. An unpaired remembered discussion stays unpaired, including after an explicit Unsplit and across service-worker restarts. Reuse only navigates the existing tab. The extension never moves tabs, changes groups or pinned states, or breaks another pair to make pairing possible.
+- **Side panel (popup button, or the opt-in article-click setting):** the discussion renders in Chrome's side panel beside the page, using the disclosed framing exception described above. Firefox Sidebar remains a separate flow.
 
-The adjacent-tab flow modifies no page and remains the fallback if Hacker News ever breaks framing. The side panel embeds the real Hacker News page inside the extension's own panel — never inside a page the user is reading — and no undocumented browser API is used anywhere.
+Both tab modes open the real Hacker News item without modifying the article page and remain available if Hacker News breaks framing. Native layout proportions remain browser-controlled. Native API failures emit a privacy-safe session diagnostic and retain the current fallback.
 
 ## Session diagnostics
 

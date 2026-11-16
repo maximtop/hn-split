@@ -6,7 +6,7 @@
         "bullets": [
             "Välj ett resultat i popup-fönstret för att öppna dess kommentarer på Hacker News.",
             "Exakt URL-matchning — inga ungefärliga gissningar; dubbletter visas som alternativ.",
-            "Det första valet av ett resultat öppnar en intilliggande flik; para ihop den med artikeln via Chrome Split View, och senare val återanvänder den fliken.",
+            "Öppnar diskussionen bredvid artikeln i webbläsarens delade vy om den är tillgänglig, annars i en intilliggande flik. Senare val återanvänder diskussionsfliken.",
             "Eller öppna diskussionen i webbläsarens sidopanel. För att bädda in den riktiga Hacker News-sidan tar Split tillfälligt bort HTTP-huvudena som blockerar inramning, enbart från svar från Hacker News-underramar och bara medan en panel är öppen. Undantaget gäller alla Hacker News-underramar i webbläsarprofilen, även utanför panelen, och tar bort CSP:s skriptbegränsningar tills den sista panelen stängs. Sidor på översta nivån och andra värdar påverkas inte.",
             "Valfritt: Medan sidopanelen redan är öppen kan aktiva flikar följas automatiskt. Funktionen är av som standard, eller använd ”Kontrollera den här fliken” en gång. Den öppnar eller flyttar aldrig flikar och kan hålla upp till tre nyliga diskussioner aktiva så att du snabbare kan återvända och rullningspositionen bevaras så långt det är möjligt.",
             "”Öppna i Split” i länkarnas högerklicksmeny: länken öppnas i den aktuella fliken och dess Hacker News-diskussion öppnas i sidopanelen.",

@@ -6,7 +6,7 @@
         "bullets": [
             "Seleccioneu un resultat a la finestra emergent per obrir-ne els comentaris a Hacker News.",
             "Coincidència exacta d'URL — sense conjectures aproximades; els duplicats es mostren com a alternatives.",
-            "La primera selecció d'un resultat obre una pestanya adjacent; emparelleu-la amb l'article mitjançant Chrome Split View i les seleccions posteriors reutilitzaran aquesta pestanya.",
+            "Obre la discussió al costat de l’article amb la vista dividida nativa si està disponible, o en una pestanya adjacent. Les seleccions posteriors reutilitzen la pestanya de discussió.",
             "O obriu la discussió al plafó lateral del navegador. Per incrustar la pàgina real de Hacker News, Split elimina temporalment, només de les respostes dels submarcs de Hacker News, les capçaleres que impedeixen l'emmarcament, i ho fa únicament mentre hi ha un plafó obert. L’excepció afecta tots els submarcs de Hacker News del perfil del navegador, també fora del panell, i elimina les restriccions de scripts de CSP fins que es tanca l’últim panell. Les pàgines principals i els altres amfitrions no es veuen afectats.",
             "Opcional: mentre el plafó lateral ja sigui obert, seguiu automàticament les pestanyes actives; està desactivat per defecte, o bé feu servir «Comprova aquesta pestanya» una sola vegada. Mai no obre ni reordena pestanyes i pot mantenir actives fins a tres discussions recents per tornar-hi més ràpidament i conservar, quan sigui possible, la posició de desplaçament.",
             "«Obre a Split» al menú del botó dret dels enllaços: l'enllaç s'obre a la pestanya actual i la seva discussió de Hacker News s'obre al plafó lateral.",
